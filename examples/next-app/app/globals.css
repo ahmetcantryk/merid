@@ -1,0 +1,208 @@
+/* App-level layout only; components come styled from @merid/react. */
+
+/* Merid ships no global reset; its controls use width: 100% with padding. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+}
+
+main:focus {
+  outline: none;
+}
+
+a.mrd-button {
+  text-decoration: none;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--mrd-space-3);
+  top: -100px;
+  z-index: var(--mrd-z-toast);
+  padding: var(--mrd-space-2) var(--mrd-space-4);
+  border-radius: var(--mrd-radius-md);
+  background: var(--mrd-surface);
+  color: var(--mrd-ink);
+  box-shadow: var(--mrd-shadow-md);
+}
+
+.skip-link:focus {
+  top: var(--mrd-space-3);
+}
+
+.plain-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--mrd-z-sticky);
+  border-bottom: 1px solid var(--mrd-line);
+  background: var(--mrd-bg);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--mrd-space-7);
+  max-width: var(--mrd-container, 1160px);
+  height: 60px;
+  margin-inline: auto;
+  padding-inline: var(--mrd-gutter, 24px);
+}
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--mrd-space-2);
+  margin-left: auto;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mrd-space-3);
+  color: var(--mrd-ink);
+  text-decoration: none;
+  font-weight: var(--mrd-weight-semibold);
+  border-radius: var(--mrd-radius-sm);
+}
+
+.brand:focus-visible {
+  outline: none;
+  box-shadow: var(--mrd-focus-ring);
+}
+
+.brand__mark {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--mrd-radius-md);
+  background: var(--mrd-accent-solid);
+  color: var(--mrd-on-accent);
+  font-size: var(--mrd-text-sm);
+}
+
+.show-sm {
+  display: none !important;
+}
+
+.hero {
+  max-width: 760px;
+}
+
+.hero__lead {
+  max-width: 600px;
+}
+
+.inline-hint {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--mrd-accent);
+  font: inherit;
+  cursor: help;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  border-radius: var(--mrd-radius-xs);
+}
+
+.inline-hint:focus-visible {
+  outline: none;
+  box-shadow: var(--mrd-focus-ring);
+}
+
+.icon-tile {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--mrd-radius-lg);
+  background: var(--mrd-accent-soft);
+  color: var(--mrd-accent-strong);
+}
+
+.auth {
+  display: grid;
+  justify-items: center;
+  gap: var(--mrd-space-5);
+  padding: var(--mrd-space-14) var(--mrd-space-4);
+}
+
+.auth__card {
+  width: 100%;
+  max-width: 420px;
+}
+
+.forgot {
+  justify-self: start;
+  font-size: var(--mrd-text-sm);
+}
+
+.drawer-body {
+  margin-top: var(--mrd-space-5);
+}
+
+.tab-panel {
+  padding-top: var(--mrd-space-6);
+}
+
+.form-narrow {
+  max-width: 420px;
+}
+
+.pref-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mrd-space-5);
+}
+
+.plan {
+  height: 100%;
+  cursor: pointer;
+}
+
+.plan__price {
+  margin: 0;
+  font-size: var(--mrd-text-h3);
+  font-weight: var(--mrd-weight-semibold);
+  letter-spacing: var(--mrd-tracking-h3);
+}
+
+.plan__features {
+  display: grid;
+  gap: var(--mrd-space-2);
+}
+
+.plan__features li {
+  display: flex;
+  align-items: center;
+  gap: var(--mrd-space-2);
+  color: var(--mrd-success);
+}
+
+@media (max-width: 720px) {
+  .site-header__inner {
+    padding-inline: var(--mrd-space-4);
+  }
+
+  .site-header__nav,
+  .hide-sm {
+    display: none !important;
+  }
+
+  .show-sm {
+    display: inline-flex !important;
+  }
+}
