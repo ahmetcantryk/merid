@@ -1,0 +1,45 @@
+@layer merid.components {
+  .mrd-link {
+    color: var(--mrd-accent);
+    font-weight: var(--mrd-weight-medium);
+    text-decoration: none;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    border-radius: var(--mrd-radius-xs);
+    cursor: pointer;
+    transition: color var(--mrd-duration) var(--mrd-ease);
+  }
+
+  .mrd-link:hover {
+    color: var(--mrd-accent-hover);
+  }
+
+  .mrd-link[data-tone="ink"] {
+    color: var(--mrd-ink);
+  }
+
+  .mrd-link[data-tone="muted"] {
+    color: var(--mrd-muted);
+  }
+
+  .mrd-link[data-tone="ink"]:hover,
+  .mrd-link[data-tone="muted"]:hover {
+    color: var(--mrd-ink);
+  }
+
+  .mrd-link[data-underline="always"],
+  .mrd-link[data-underline="hover"]:hover {
+    text-decoration-line: underline;
+  }
+
+  .mrd-link:focus-visible {
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-link {
+      transition: none;
+    }
+  }
+}

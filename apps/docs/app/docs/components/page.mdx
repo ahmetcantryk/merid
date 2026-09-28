@@ -1,0 +1,18 @@
+import { ComponentCatalog } from "@/components/ComponentCatalog";
+
+export const metadata = {
+  title: "Components",
+  description: "Every Merid component, grouped by purpose, with its current status.",
+};
+
+# Components
+
+Merid's components are grouped by what they do. Each will have its own page with a live preview, props, keyboard interactions and usage guidance.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" /> <span>API settled</span>
+  <StatusBadge status="beta" /> <span>Released, API may still change</span>
+  <StatusBadge status="planned" /> <span>On the roadmap</span>
+</div>
+
+<ComponentCatalog />

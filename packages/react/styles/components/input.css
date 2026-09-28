@@ -1,0 +1,119 @@
+@layer merid.components {
+  .mrd-input,
+  .mrd-textarea {
+    --mrd-input-height: var(--mrd-input-md);
+
+    display: block;
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--mrd-line);
+    border-radius: var(--mrd-radius-lg);
+    background: var(--mrd-surface);
+    color: var(--mrd-ink);
+    font-family: inherit;
+    font-size: var(--mrd-text-sm);
+    line-height: var(--mrd-leading-sm);
+    font-variant-numeric: tabular-nums;
+    transition:
+      border-color var(--mrd-duration) var(--mrd-ease),
+      box-shadow var(--mrd-duration) var(--mrd-ease);
+  }
+
+  .mrd-input {
+    height: var(--mrd-input-height);
+    padding: 0 14px;
+  }
+
+  .mrd-input[data-size="sm"],
+  .mrd-input-group[data-size="sm"] {
+    --mrd-input-height: var(--mrd-input-sm);
+
+    font-size: var(--mrd-text-xs);
+  }
+
+  .mrd-input[data-size="lg"],
+  .mrd-input-group[data-size="lg"] {
+    --mrd-input-height: var(--mrd-input-lg);
+
+    font-size: var(--mrd-text-md);
+  }
+
+  .mrd-input::placeholder,
+  .mrd-textarea::placeholder {
+    color: var(--mrd-placeholder);
+    opacity: 1;
+  }
+
+  .mrd-input:hover:not(:disabled, :focus),
+  .mrd-textarea:hover:not(:disabled, :focus) {
+    border-color: var(--mrd-line-strong);
+  }
+
+  .mrd-input:focus,
+  .mrd-textarea:focus {
+    outline: none;
+    border-color: var(--mrd-accent);
+    box-shadow: var(--mrd-focus-ring);
+  }
+
+  .mrd-input[aria-invalid="true"],
+  .mrd-textarea[aria-invalid="true"] {
+    border-color: var(--mrd-danger);
+  }
+
+  .mrd-input:disabled,
+  .mrd-textarea:disabled {
+    background: var(--mrd-tray);
+    color: var(--mrd-muted);
+    cursor: not-allowed;
+  }
+
+  .mrd-input:read-only:not(:disabled) {
+    background: var(--mrd-subtle);
+  }
+
+  /* leading / trailing addons */
+  .mrd-input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .mrd-input-group__addon {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    color: var(--mrd-muted);
+    pointer-events: none;
+  }
+
+  .mrd-input-group__addon > svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .mrd-input-group__addon[data-side="leading"] {
+    left: 14px;
+  }
+
+  .mrd-input-group__addon[data-side="trailing"] {
+    right: 14px;
+  }
+
+  .mrd-input-group:has([data-side="leading"]) .mrd-input {
+    padding-left: 42px;
+  }
+
+  .mrd-input-group:has([data-side="trailing"]) .mrd-input {
+    padding-right: 42px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-input,
+    .mrd-textarea {
+      transition: none;
+    }
+  }
+}

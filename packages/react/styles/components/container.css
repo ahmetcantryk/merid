@@ -1,0 +1,14 @@
+@layer merid.components {
+  .mrd-container {
+    --mrd-container-width: var(--mrd-container);
+
+    width: 100%;
+    max-width: calc(var(--mrd-container-width) + var(--mrd-gutter) * 2);
+    margin-inline: auto;
+    padding-inline: var(--mrd-gutter);
+  }
+
+  .mrd-container[data-size="prose"] {
+    --mrd-container-width: var(--mrd-prose);
+  }
+}

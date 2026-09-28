@@ -1,0 +1,47 @@
+export const metadata = {
+  title: "Breakpoints and layers",
+  description: "Merid's two breakpoints, coarse-pointer sizing and the z-index scale.",
+};
+
+# Breakpoints and layers
+
+## Breakpoints
+
+Merid uses two breakpoints, in CSS only. Components adapt to the space they have; there is no JavaScript breakpoint API.
+
+<table>
+  <thead>
+    <tr><th>Width</th><th>What changes</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>920px and below</td><td>Multi-column layouts collapse; section padding drops to 80px.</td></tr>
+    <tr><td>640px and below</td><td>Mobile pass: gutter becomes 20px, section padding 64px, dialogs become bottom sheets.</td></tr>
+  </tbody>
+</table>
+
+Custom properties cannot be used inside media queries, so the values are written out:
+
+```css
+@media (max-width: 920px) { /* layout collapse */ }
+@media (max-width: 640px) { /* mobile pass */ }
+```
+
+## Coarse pointers
+
+On touch screens (`pointer: coarse`), controls grow to be easier to hit: the default button becomes 48px tall, inputs 50px and segmented pills 40px.
+
+## Z-index scale
+
+<table>
+  <thead>
+    <tr><th>Token</th><th>Value</th><th>Use</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>--mrd-z-sticky</code></td><td>50</td><td>Sticky headers and toolbars</td></tr>
+    <tr><td><code>--mrd-z-overlay</code></td><td>100</td><td>Dialogs, drawers, popovers, menus</td></tr>
+    <tr><td><code>--mrd-z-toast</code></td><td>110</td><td>Toasts, above overlays</td></tr>
+    <tr><td><code>--mrd-z-tooltip</code></td><td>120</td><td>Tooltips, above everything</td></tr>
+  </tbody>
+</table>
+
+Use these tokens instead of arbitrary numbers so your own layers stack predictably with Merid's.

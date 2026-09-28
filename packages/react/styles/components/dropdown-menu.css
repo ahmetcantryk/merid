@@ -1,0 +1,106 @@
+@layer merid.components {
+  .mrd-menu {
+    z-index: var(--mrd-z-overlay);
+    min-width: 200px;
+    max-width: min(320px, calc(100vw - 16px));
+    max-height: min(420px, calc(100dvh - 32px));
+    overflow-y: auto;
+    padding: var(--mrd-space-2);
+    background: var(--mrd-surface);
+    border: 1px solid var(--mrd-line);
+    border-radius: var(--mrd-radius-2xl);
+    box-shadow: var(--mrd-shadow-xl);
+    font-size: var(--mrd-text-sm);
+    line-height: var(--mrd-leading-sm);
+    animation: mrd-floating-in var(--mrd-duration) var(--mrd-ease) both;
+  }
+
+  .mrd-menu:focus {
+    outline: none;
+  }
+
+  .mrd-menu__item {
+    display: flex;
+    align-items: center;
+    gap: var(--mrd-space-3);
+    min-height: 40px;
+    padding: 10px 12px;
+    border-radius: var(--mrd-radius-md);
+    color: var(--mrd-ink);
+    font-weight: var(--mrd-weight-medium);
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    transition: background-color var(--mrd-duration) var(--mrd-ease);
+  }
+
+  .mrd-menu__item:focus,
+  .mrd-menu__item:hover {
+    background: var(--mrd-tray);
+  }
+
+  .mrd-menu__item:focus-visible {
+    box-shadow: inset 0 0 0 1.5px var(--mrd-accent);
+  }
+
+  .mrd-menu__item[data-disabled] {
+    color: var(--mrd-muted);
+    cursor: not-allowed;
+    background: transparent;
+  }
+
+  .mrd-menu__leading,
+  .mrd-menu__check {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    color: var(--mrd-muted);
+  }
+
+  .mrd-menu__check {
+    color: var(--mrd-accent);
+  }
+
+  .mrd-menu__label-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .mrd-menu__trailing {
+    margin-left: auto;
+    color: var(--mrd-muted);
+    font-size: var(--mrd-text-2xs);
+    font-weight: var(--mrd-weight-regular);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mrd-menu__label {
+    padding: var(--mrd-space-2) 12px var(--mrd-space-1);
+    color: var(--mrd-muted);
+    font-size: var(--mrd-text-3xs);
+    line-height: var(--mrd-leading-3xs);
+    font-weight: var(--mrd-weight-medium);
+  }
+
+  .mrd-menu__separator {
+    height: 1px;
+    margin: 6px calc(var(--mrd-space-2) * -1);
+    background: var(--mrd-line);
+  }
+
+  @media (pointer: coarse) {
+    .mrd-menu__item {
+      min-height: 44px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-menu,
+    .mrd-menu__item {
+      animation: none;
+      transition: none;
+    }
+  }
+}

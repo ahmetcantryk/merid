@@ -1,0 +1,66 @@
+@layer merid.components {
+  .mrd-text {
+    margin: 0;
+    color: var(--mrd-body);
+    font-size: var(--mrd-text-md);
+    line-height: var(--mrd-leading-md);
+    font-weight: var(--mrd-weight-regular);
+  }
+
+  .mrd-text[data-size="lg"] {
+    font-size: var(--mrd-text-lg);
+    line-height: var(--mrd-leading-lg);
+  }
+
+  .mrd-text[data-size="sm"] {
+    font-size: var(--mrd-text-sm);
+    line-height: var(--mrd-leading-sm);
+  }
+
+  .mrd-text[data-size="xs"] {
+    font-size: var(--mrd-text-xs);
+    line-height: var(--mrd-leading-xs);
+  }
+
+  .mrd-text[data-size="2xs"] {
+    font-size: var(--mrd-text-2xs);
+    line-height: var(--mrd-leading-2xs);
+  }
+
+  .mrd-text[data-size="3xs"] {
+    font-size: var(--mrd-text-3xs);
+    line-height: var(--mrd-leading-3xs);
+  }
+
+  .mrd-text[data-tone="ink"] {
+    color: var(--mrd-ink);
+  }
+
+  .mrd-text[data-tone="muted"] {
+    color: var(--mrd-muted);
+  }
+
+  .mrd-text[data-tone="accent"] {
+    color: var(--mrd-accent);
+  }
+
+  .mrd-text[data-tone="danger"] {
+    color: var(--mrd-danger-strong);
+  }
+
+  .mrd-text[data-weight="medium"] {
+    font-weight: var(--mrd-weight-medium);
+  }
+
+  .mrd-text[data-weight="semibold"] {
+    font-weight: var(--mrd-weight-semibold);
+  }
+
+  .mrd-text[data-numeric] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mrd-text[data-prose] {
+    max-width: var(--mrd-prose);
+  }
+}

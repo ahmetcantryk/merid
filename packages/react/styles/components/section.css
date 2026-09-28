@@ -1,0 +1,23 @@
+@layer merid.components {
+  .mrd-section {
+    padding-block: var(--mrd-section);
+  }
+
+  .mrd-section[data-spacing="compact"] {
+    padding-block: calc(var(--mrd-section) / 2);
+  }
+
+  .mrd-section[data-spacing="none"] {
+    padding-block: 0;
+  }
+
+  .mrd-section[data-tone="tray"] {
+    background: var(--mrd-tray);
+  }
+
+  /* Cards on a tray section flip to surface + soft shadow. */
+  .mrd-section[data-tone="tray"] .mrd-card[data-variant="tray"] {
+    background: var(--mrd-surface);
+    box-shadow: var(--mrd-shadow-md), var(--mrd-elevated-ring);
+  }
+}

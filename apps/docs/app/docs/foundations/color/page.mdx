@@ -1,0 +1,55 @@
+import { ColorTables } from "@/components/foundations";
+
+export const metadata = {
+  title: "Color",
+  description: "Merid's colour tokens in light and dark, their roles and measured contrast ratios.",
+};
+
+# Color
+
+Merid's palette is one cool blue and a set of ink-tinted neutrals. The accent marks interaction and selection; neutrals carry everything else. Status colours appear as soft tints with strong text, never as large saturated fills.
+
+## Rules
+
+- Use the accent for things people can act on, and for the current selection. Do not use it for decoration or emphasis.
+- Separate regions with `--mrd-tray` before reaching for a border. When a border is needed it is 1px `--mrd-line`.
+- Build hierarchy with the three text tones — `ink`, `body`, `muted` — and weight, not with colour.
+- A page has at most one filled colour block.
+
+## Tokens
+
+<ColorTables />
+
+## Contrast
+
+Ratios below are measured against the page background (`--mrd-bg`) unless noted. The AA thresholds are 4.5:1 for normal text and 3:1 for large text and user-interface components.
+
+<table>
+  <thead>
+    <tr><th>Pair</th><th>Light</th><th>Dark</th><th>Use</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>ink on bg</td><td>18.74</td><td>17.03</td><td>Headings, strong text</td></tr>
+    <tr><td>body on bg</td><td>6.94</td><td>8.24</td><td>Body text</td></tr>
+    <tr><td>body on tray</td><td>6.42</td><td>7.39</td><td>Text on recessed sections</td></tr>
+    <tr><td>accent-strong on accent-soft</td><td>6.98</td><td>—</td><td>Selected items, info tints</td></tr>
+    <tr><td>danger / warning / success strong on soft</td><td>5.94 / 5.46 / 5.30</td><td>—</td><td>Notices</td></tr>
+    <tr><td>muted on bg</td><td>3.21</td><td>4.25</td><td>Meta text only</td></tr>
+    <tr><td>accent on bg</td><td>4.32</td><td>6.20</td><td>Links, focus ring, controls</td></tr>
+    <tr><td>on-accent on accent</td><td>4.32</td><td>3.13</td><td>Primary button label</td></tr>
+  </tbody>
+</table>
+
+<Callout tone="warning" title="Known contrast gaps in 0.1">
+  Three pairs fall short of 4.5:1 for normal-size text: the muted tone on the page, the light accent used as link text, and white labels on the accent fill (most noticeably in dark mode). They meet the 3:1 threshold for large text and UI components. Fixes to `--mrd-muted`, `--mrd-accent` and the dark `--mrd-on-accent` are tracked for the next minor release and will be listed in the changelog. Until then, avoid muted text for anything a reader must understand.
+</Callout>
+
+## Using colour in your own components
+
+```css
+.notice {
+  background: var(--mrd-warning-soft);
+  color: var(--mrd-warning-strong);
+  border-radius: var(--mrd-radius-lg);
+}
+```

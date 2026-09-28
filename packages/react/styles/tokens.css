@@ -1,0 +1,262 @@
+/*
+ * Merid tokens.
+ * Inter Variable ships in the package at `@merid/react/fonts/InterVariable.woff2`.
+ * The @font-face below resolves it relative to dist/ (`../fonts/InterVariable.woff2`).
+ * The font is opt-out: set `--mrd-font-sans` to your own stack and the bundled
+ * face is never requested (browsers only fetch faces that are actually used).
+ */
+@layer merid.tokens {
+  @font-face {
+    font-family: "Inter Variable";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("../fonts/InterVariable.woff2") format("woff2");
+  }
+
+  :root {
+    /* colour */
+    --mrd-accent: #3f63f5;
+    --mrd-accent-solid: #3f63f5;
+    --mrd-accent-solid-hover: #3355e6;
+    --mrd-accent-hover: #3355e6;
+    --mrd-accent-soft: #eef1ff;
+    --mrd-accent-strong: #2c46b8;
+    --mrd-on-accent: #fff;
+    --mrd-bg: #fff;
+    --mrd-surface: #fff;
+    --mrd-tray: #f5f6f8;
+    --mrd-tray-2: #eceef2;
+    --mrd-subtle: #fbfbfc;
+    --mrd-line: #e6e8ec;
+    --mrd-line-strong: #cfd4dc;
+    --mrd-ink: #0f1219;
+    --mrd-body: #535a67;
+    --mrd-muted: #6b7280;
+    --mrd-placeholder: #b0b5be;
+    --mrd-control-off: #d7dbe2;
+    --mrd-danger: #e5484d;
+    --mrd-danger-soft: #fff0f0;
+    --mrd-danger-strong: #b42318;
+    --mrd-warning-soft: #fff8eb;
+    --mrd-warning-strong: #93580a;
+    --mrd-success: #1f9d63;
+    --mrd-success-soft: #ecf8f1;
+    --mrd-success-strong: #17744a;
+    --mrd-tooltip-bg: #0f1219;
+    --mrd-tooltip-fg: #fff;
+    --mrd-backdrop: rgb(15 18 25 / 40%);
+
+    /* radius */
+    --mrd-radius-xs: 6px;
+    --mrd-radius-sm: 8px;
+    --mrd-radius-md: 10px;
+    --mrd-radius-lg: 12px;
+    --mrd-radius-xl: 14px;
+    --mrd-radius-2xl: 16px;
+    --mrd-radius-card: 20px;
+    --mrd-radius-3xl: 24px;
+    --mrd-radius-full: 999px;
+
+    /* shadow (ink-tinted) */
+    --mrd-shadow-xs: 0 1px 3px rgb(15 18 25 / 10%);
+    --mrd-shadow-sm: 0 2px 6px rgb(15 18 25 / 5%);
+    --mrd-shadow-md: 0 12px 32px rgb(15 18 25 / 6%);
+    --mrd-shadow-lg: 0 10px 28px rgb(15 18 25 / 10%);
+    --mrd-shadow-xl: 0 16px 40px rgb(15 18 25 / 10%);
+    --mrd-shadow-2xl: 0 24px 64px rgb(15 18 25 / 18%);
+    --mrd-shadow-accent: 0 8px 20px rgb(71 108 255 / 28%);
+    --mrd-focus-ring: 0 0 0 4px rgb(71 108 255 / 12%);
+
+    /* added to elevated surfaces; a 1px line ring in dark mode */
+    --mrd-elevated-ring: 0 0 0 0 transparent;
+
+    /* typography */
+    --mrd-font-sans: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mrd-font-mono: ui-monospace, sfmono-regular, menlo, monospace;
+    --mrd-font-features: "cv11", "ss01";
+    --mrd-text-display: clamp(40px, 6vw, 72px);
+    --mrd-leading-display: 1.05;
+    --mrd-tracking-display: -0.04em;
+    --mrd-text-h2: clamp(30px, 3.6vw, 40px);
+    --mrd-leading-h2: 1.1;
+    --mrd-tracking-h2: -0.03em;
+    --mrd-text-h3: 20px;
+    --mrd-leading-h3: 1.3;
+    --mrd-tracking-h3: -0.015em;
+    --mrd-text-lg: 18px;
+    --mrd-leading-lg: 1.6;
+    --mrd-text-md: 16px;
+    --mrd-leading-md: 1.6;
+    --mrd-text-sm: 15px;
+    --mrd-leading-sm: 1.5;
+    --mrd-text-xs: 14px;
+    --mrd-leading-xs: 1.45;
+    --mrd-text-2xs: 13px;
+    --mrd-leading-2xs: 1.4;
+    --mrd-text-3xs: 12px;
+    --mrd-leading-3xs: 1.3;
+    --mrd-weight-regular: 400;
+    --mrd-weight-medium: 500;
+    --mrd-weight-semibold: 600;
+
+    /* spacing */
+    --mrd-space-1: 4px;
+    --mrd-space-2: 8px;
+    --mrd-space-3: 12px;
+    --mrd-space-4: 16px;
+    --mrd-space-5: 20px;
+    --mrd-space-6: 24px;
+    --mrd-space-7: 28px;
+    --mrd-space-8: 32px;
+    --mrd-space-10: 40px;
+    --mrd-space-14: 56px;
+    --mrd-space-16: 64px;
+    --mrd-space-18: 72px;
+    --mrd-space-28: 112px;
+
+    /* layout */
+    --mrd-container: 1160px;
+    --mrd-gutter: 24px;
+    --mrd-section: 112px;
+    --mrd-prose: 720px;
+
+    /* control sizes */
+    --mrd-control-sm: 36px;
+    --mrd-control-md: 44px;
+    --mrd-control-lg: 50px;
+    --mrd-input-sm: 36px;
+    --mrd-input-md: 46px;
+    --mrd-input-lg: 50px;
+    --mrd-icon-button-sm: 32px;
+    --mrd-icon-button-md: 36px;
+    --mrd-icon-button-lg: 40px;
+    --mrd-pill: 34px;
+
+    /* motion */
+    --mrd-duration-fast: 100ms;
+    --mrd-duration: 150ms;
+    --mrd-duration-slow: 200ms;
+    --mrd-duration-enter: 220ms;
+    --mrd-ease: cubic-bezier(0.2, 0, 0, 1);
+
+    /* z-index */
+    --mrd-z-sticky: 50;
+    --mrd-z-overlay: 100;
+    --mrd-z-toast: 110;
+    --mrd-z-tooltip: 120;
+
+    color-scheme: light;
+  }
+
+  @media (width <= 920px) {
+    :root {
+      --mrd-section: 80px;
+    }
+  }
+
+  @media (width <= 640px) {
+    :root {
+      --mrd-gutter: 20px;
+      --mrd-section: 64px;
+    }
+  }
+
+  @media (pointer: coarse) {
+    :root {
+      --mrd-control-md: 48px;
+      --mrd-input-md: 50px;
+      --mrd-pill: 40px;
+    }
+  }
+
+  [data-theme="dark"] {
+    --mrd-accent: #6b8aff;
+    --mrd-accent-solid: #4466f0;
+    --mrd-accent-solid-hover: #3a58dc;
+    --mrd-accent-hover: #8aa2ff;
+    --mrd-accent-soft: rgb(107 138 255 / 14%);
+    --mrd-accent-strong: #a9bbff;
+    --mrd-on-accent: #fff;
+    --mrd-bg: #0b0d12;
+    --mrd-surface: #12151c;
+    --mrd-tray: #161a22;
+    --mrd-tray-2: #1d222c;
+    --mrd-subtle: #10131a;
+    --mrd-line: #262b35;
+    --mrd-line-strong: #3a404c;
+    --mrd-ink: #eef0f4;
+    --mrd-body: #a3a9b5;
+    --mrd-muted: #858c98;
+    --mrd-placeholder: #565d69;
+    --mrd-control-off: #343a46;
+    --mrd-danger: #ff6369;
+    --mrd-danger-soft: rgb(229 72 77 / 12%);
+    --mrd-danger-strong: #ff8a8e;
+    --mrd-warning-soft: rgb(245 166 35 / 12%);
+    --mrd-warning-strong: #f5c46b;
+    --mrd-success: #3ecf8e;
+    --mrd-success-soft: rgb(62 207 142 / 12%);
+    --mrd-success-strong: #7ee2b0;
+    --mrd-tooltip-bg: #eef0f4;
+    --mrd-tooltip-fg: #0f1219;
+    --mrd-backdrop: rgb(0 0 0 / 60%);
+    --mrd-shadow-xs: 0 1px 3px rgb(0 0 0 / 40%);
+    --mrd-shadow-sm: 0 2px 6px rgb(0 0 0 / 40%);
+    --mrd-shadow-md: 0 12px 32px rgb(0 0 0 / 40%);
+    --mrd-shadow-lg: 0 10px 28px rgb(0 0 0 / 50%);
+    --mrd-shadow-xl: 0 16px 40px rgb(0 0 0 / 50%);
+    --mrd-shadow-2xl: 0 24px 64px rgb(0 0 0 / 60%);
+    --mrd-shadow-accent: 0 8px 20px rgb(0 0 0 / 40%);
+    --mrd-focus-ring: 0 0 0 4px rgb(107 138 255 / 22%);
+    --mrd-elevated-ring: 0 0 0 1px var(--mrd-line);
+
+    color-scheme: dark;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --mrd-accent: #6b8aff;
+    --mrd-accent-solid: #4466f0;
+    --mrd-accent-solid-hover: #3a58dc;
+      --mrd-accent-hover: #8aa2ff;
+      --mrd-accent-soft: rgb(107 138 255 / 14%);
+      --mrd-accent-strong: #a9bbff;
+      --mrd-on-accent: #fff;
+      --mrd-bg: #0b0d12;
+      --mrd-surface: #12151c;
+      --mrd-tray: #161a22;
+      --mrd-tray-2: #1d222c;
+      --mrd-subtle: #10131a;
+      --mrd-line: #262b35;
+      --mrd-line-strong: #3a404c;
+      --mrd-ink: #eef0f4;
+      --mrd-body: #a3a9b5;
+      --mrd-muted: #858c98;
+      --mrd-placeholder: #565d69;
+      --mrd-control-off: #343a46;
+      --mrd-danger: #ff6369;
+      --mrd-danger-soft: rgb(229 72 77 / 12%);
+      --mrd-danger-strong: #ff8a8e;
+      --mrd-warning-soft: rgb(245 166 35 / 12%);
+      --mrd-warning-strong: #f5c46b;
+      --mrd-success: #3ecf8e;
+      --mrd-success-soft: rgb(62 207 142 / 12%);
+      --mrd-success-strong: #7ee2b0;
+      --mrd-tooltip-bg: #eef0f4;
+      --mrd-tooltip-fg: #0f1219;
+      --mrd-backdrop: rgb(0 0 0 / 60%);
+      --mrd-shadow-xs: 0 1px 3px rgb(0 0 0 / 40%);
+      --mrd-shadow-sm: 0 2px 6px rgb(0 0 0 / 40%);
+      --mrd-shadow-md: 0 12px 32px rgb(0 0 0 / 40%);
+      --mrd-shadow-lg: 0 10px 28px rgb(0 0 0 / 50%);
+      --mrd-shadow-xl: 0 16px 40px rgb(0 0 0 / 50%);
+      --mrd-shadow-2xl: 0 24px 64px rgb(0 0 0 / 60%);
+      --mrd-shadow-accent: 0 8px 20px rgb(0 0 0 / 40%);
+      --mrd-focus-ring: 0 0 0 4px rgb(107 138 255 / 22%);
+      --mrd-elevated-ring: 0 0 0 1px var(--mrd-line);
+
+      color-scheme: dark;
+    }
+  }
+}

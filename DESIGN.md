@@ -33,10 +33,11 @@ If a value is not here, derive it from an existing one — do not invent a new c
 
 | Token | Light | Dark | Role |
 |---|---|---|---|
-| `--mrd-accent` | `#476cff` | `#6b8aff` | interactive, selection, focus |
+| `--mrd-accent` | `#3f63f5` | `#6b8aff` | interactive, selection, focus |
 | `--mrd-accent-hover` | `#3355e6` | `#8aa2ff` | hover of accent and links |
 | `--mrd-accent-soft` | `#eef1ff` | `rgba(107,138,255,.14)` | tint: selected row, icon tile, info |
 | `--mrd-accent-strong` | `#2c46b8` | `#a9bbff` | text on accent-soft |
+| `--mrd-accent-solid` / `-hover` | `#3f63f5` / `#3355e6` | `#4466f0` / `#3a58dc` | fills that carry on-accent text (AA ≥ 4.5:1) |
 | `--mrd-on-accent` | `#ffffff` | `#ffffff` | text on accent fill |
 | `--mrd-bg` | `#ffffff` | `#0b0d12` | page |
 | `--mrd-surface` | `#ffffff` | `#12151c` | cards on tray, dialogs, inputs, menus |
@@ -47,7 +48,7 @@ If a value is not here, derive it from an existing one — do not invent a new c
 | `--mrd-line-strong` | `#cfd4dc` | `#3a404c` | dashed dropzone, switch-off border |
 | `--mrd-ink` | `#0f1219` | `#eef0f4` | headings, strong text |
 | `--mrd-body` | `#535a67` | `#a3a9b5` | body text |
-| `--mrd-muted` | `#8a909b` | `#6f7682` | meta, icons |
+| `--mrd-muted` | `#6b7280` | `#858c98` | meta, icons |
 | `--mrd-placeholder` | `#b0b5be` | `#565d69` | input placeholder |
 | `--mrd-control-off` | `#d7dbe2` | `#343a46` | switch off |
 | `--mrd-danger` | `#e5484d` | `#ff6369` | invalid border, danger fill |

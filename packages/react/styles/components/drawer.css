@@ -1,0 +1,86 @@
+@layer merid.components {
+  .mrd-drawer__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: var(--mrd-z-overlay);
+    display: flex;
+    justify-content: flex-end;
+    background: var(--mrd-backdrop);
+    animation: mrd-overlay-fade var(--mrd-duration-slow) var(--mrd-ease) both;
+  }
+
+  .mrd-drawer__backdrop[data-side="left"] {
+    justify-content: flex-start;
+  }
+
+  .mrd-drawer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: min(420px, calc(100vw - 48px));
+    height: 100%;
+    overflow-y: auto;
+    padding: var(--mrd-space-8) var(--mrd-space-7);
+    background: var(--mrd-surface);
+    color: var(--mrd-body);
+    box-shadow: var(--mrd-shadow-2xl), var(--mrd-elevated-ring);
+    font-size: var(--mrd-text-sm);
+    line-height: var(--mrd-leading-sm);
+    animation: mrd-drawer-in-right var(--mrd-duration-enter) var(--mrd-ease) both;
+  }
+
+  .mrd-drawer[data-side="right"] {
+    border-radius: var(--mrd-radius-card) 0 0 var(--mrd-radius-card);
+  }
+
+  .mrd-drawer[data-side="left"] {
+    border-radius: 0 var(--mrd-radius-card) var(--mrd-radius-card) 0;
+    animation-name: mrd-drawer-in-left;
+  }
+
+  .mrd-drawer:focus {
+    outline: none;
+  }
+
+  .mrd-drawer .mrd-dialog__footer {
+    margin-top: auto;
+    padding-top: var(--mrd-space-6);
+  }
+
+  @keyframes mrd-drawer-in-right {
+    from {
+      transform: translateX(24px);
+      opacity: 0;
+    }
+
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  @keyframes mrd-drawer-in-left {
+    from {
+      transform: translateX(-24px);
+      opacity: 0;
+    }
+
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  @media (width <= 640px) {
+    .mrd-drawer {
+      padding: var(--mrd-space-6) var(--mrd-gutter);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-drawer__backdrop,
+    .mrd-drawer {
+      animation: none;
+    }
+  }
+}

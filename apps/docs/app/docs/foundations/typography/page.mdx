@@ -1,0 +1,40 @@
+import { TypeSpecimen } from "@/components/foundations";
+
+export const metadata = {
+  title: "Typography",
+  description: "Merid's typeface, type scale, weights and typesetting rules.",
+};
+
+# Typography
+
+Merid sets text in **Inter Variable** with the `cv11` and `ss01` features, which give a single-storey `a` and open digits. Numbers are tabular everywhere, so figures line up in tables and prices do not shift as they change.
+
+## Scale
+
+Sizes are tokens: `--mrd-text-*` for the size, with matching `--mrd-leading-*` for line height and `--mrd-tracking-*` for letter spacing where it applies.
+
+<TypeSpecimen />
+
+The display and section sizes use `clamp()` and scale with the viewport. Specimens above show them at a representative desktop size.
+
+## Weights
+
+- **400** (`--mrd-weight-regular`) — body text.
+- **500** (`--mrd-weight-medium`) — all interface text: buttons, labels, navigation, tabs.
+- **600** (`--mrd-weight-semibold`) — headings and figures that need emphasis.
+
+Weight 700 is never used. When 600 is not enough contrast, change the tone instead.
+
+## Rules
+
+- Large headings are tight: negative tracking and a line height close to 1. Body text is relaxed at 1.6.
+- Headings use `text-wrap: balance` so short titles do not leave a single word on the last line.
+- Keep reading width at or below `--mrd-prose` (720px).
+- Use the three text tones for hierarchy: `--mrd-ink` for headings, `--mrd-body` for text, `--mrd-muted` for meta.
+
+## Font stacks
+
+```css
+--mrd-font-sans: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+--mrd-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+```

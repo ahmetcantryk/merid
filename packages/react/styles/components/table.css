@@ -1,0 +1,95 @@
+@layer merid.components {
+  .mrd-table-frame {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: var(--mrd-radius-lg);
+    box-shadow: inset 0 0 0 1px var(--mrd-line);
+    background: var(--mrd-surface);
+  }
+
+  .mrd-table-frame:focus-visible {
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 3px;
+  }
+
+  .mrd-table {
+    --mrd-table-cell-padding: 14px var(--mrd-space-4);
+
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: var(--mrd-body);
+    font-size: var(--mrd-text-xs);
+    line-height: var(--mrd-leading-xs);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mrd-table[data-density="sm"] {
+    --mrd-table-cell-padding: 10px var(--mrd-space-3);
+  }
+
+  .mrd-table__header,
+  .mrd-table__cell {
+    padding: var(--mrd-table-cell-padding);
+    text-align: start;
+    vertical-align: middle;
+  }
+
+  .mrd-table__header {
+    background: var(--mrd-subtle);
+    border-bottom: 1px solid var(--mrd-line);
+    color: var(--mrd-muted);
+    font-size: var(--mrd-text-3xs);
+    font-weight: var(--mrd-weight-medium);
+    white-space: nowrap;
+  }
+
+  .mrd-table__head .mrd-table__row:first-child .mrd-table__header:first-child {
+    border-top-left-radius: var(--mrd-radius-lg);
+  }
+
+  .mrd-table__head .mrd-table__row:first-child .mrd-table__header:last-child {
+    border-top-right-radius: var(--mrd-radius-lg);
+  }
+
+  .mrd-table__header[data-align="center"],
+  .mrd-table__cell[data-align="center"] {
+    text-align: center;
+  }
+
+  .mrd-table__header[data-align="end"],
+  .mrd-table__cell[data-align="end"] {
+    text-align: end;
+  }
+
+  .mrd-table__body .mrd-table__row:not(:last-child) > * {
+    border-bottom: 1px solid var(--mrd-line);
+  }
+
+  .mrd-table__cell {
+    color: var(--mrd-body);
+  }
+
+  .mrd-table__body .mrd-table__row {
+    transition: background-color var(--mrd-duration) var(--mrd-ease);
+  }
+
+  .mrd-table[data-hoverable] .mrd-table__body .mrd-table__row:hover {
+    background: var(--mrd-tray);
+  }
+
+  .mrd-table__row[data-selected],
+  .mrd-table[data-hoverable] .mrd-table__body .mrd-table__row[data-selected]:hover {
+    background: var(--mrd-accent-soft);
+  }
+
+  .mrd-table__row[data-selected] .mrd-table__cell {
+    color: var(--mrd-ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-table__body .mrd-table__row {
+      transition: none;
+    }
+  }
+}

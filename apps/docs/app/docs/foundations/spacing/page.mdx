@@ -1,0 +1,35 @@
+import { SpacingScale } from "@/components/foundations";
+
+export const metadata = {
+  title: "Spacing",
+  description: "The spacing scale and layout widths used across Merid.",
+};
+
+# Spacing
+
+Spacing is built on a 4px base with an 8px rhythm. The scale skips steps on purpose: fewer choices make layouts more consistent.
+
+## Scale
+
+<SpacingScale />
+
+## Layout tokens
+
+<table>
+  <thead>
+    <tr><th>Token</th><th>Value</th><th>Use</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>--mrd-container</code></td><td>1160px</td><td>Maximum content width</td></tr>
+    <tr><td><code>--mrd-gutter</code></td><td>24px, 20px at 640px and below</td><td>Horizontal page padding</td></tr>
+    <tr><td><code>--mrd-section</code></td><td>112px, 80px at 920px, 64px at 640px</td><td>Vertical section padding</td></tr>
+    <tr><td><code>--mrd-prose</code></td><td>720px</td><td>Maximum reading width</td></tr>
+  </tbody>
+</table>
+
+## Rules
+
+- Prefer air. Sections are separated by generous padding, not by rules or boxes.
+- Space inside a component is smaller than the space between components.
+- Card padding is `--mrd-space-7` (28px); dialog padding is `--mrd-space-8` (32px).
+- Use `gap` on flex and grid containers rather than margins on children.

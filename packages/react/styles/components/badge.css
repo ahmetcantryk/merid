@@ -1,0 +1,49 @@
+@layer merid.components {
+  .mrd-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 22px;
+    padding: 0 var(--mrd-space-2);
+    border-radius: var(--mrd-radius-full);
+    background: var(--mrd-tray);
+    color: var(--mrd-body);
+    font-size: var(--mrd-text-3xs);
+    font-weight: var(--mrd-weight-medium);
+    line-height: 1;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mrd-badge__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--mrd-radius-full);
+    background: currentcolor;
+  }
+
+  .mrd-badge[data-tone="accent"] {
+    background: var(--mrd-accent-soft);
+    color: var(--mrd-accent-strong);
+  }
+
+  .mrd-badge[data-tone="success"] {
+    background: var(--mrd-success-soft);
+    color: var(--mrd-success-strong);
+  }
+
+  .mrd-badge[data-tone="warning"] {
+    background: var(--mrd-warning-soft);
+    color: var(--mrd-warning-strong);
+  }
+
+  .mrd-badge[data-tone="danger"] {
+    background: var(--mrd-danger-soft);
+    color: var(--mrd-danger-strong);
+  }
+
+  .mrd-badge[data-tone="solid"] {
+    background: var(--mrd-accent-solid);
+    color: var(--mrd-on-accent);
+  }
+}

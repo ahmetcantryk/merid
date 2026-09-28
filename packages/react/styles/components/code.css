@@ -1,0 +1,31 @@
+@layer merid.components {
+  .mrd-code {
+    font-family: var(--mrd-font-mono);
+    font-size: 0.875em;
+    color: var(--mrd-ink);
+  }
+
+  .mrd-code[data-variant="inline"] {
+    padding: 0.15em 0.4em;
+    border-radius: var(--mrd-radius-xs);
+    background: var(--mrd-tray);
+    overflow-wrap: anywhere;
+  }
+
+  .mrd-code[data-variant="block"] {
+    margin: 0;
+    padding: var(--mrd-space-4) var(--mrd-space-5);
+    border: 1px solid var(--mrd-line);
+    border-radius: var(--mrd-radius-lg);
+    background: var(--mrd-subtle);
+    font-size: var(--mrd-text-2xs);
+    line-height: 1.7;
+    overflow-x: auto;
+    tab-size: 2;
+  }
+
+  .mrd-code[data-variant="block"]:focus-visible {
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 3px;
+  }
+}

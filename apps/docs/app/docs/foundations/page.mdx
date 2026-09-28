@@ -1,0 +1,58 @@
+export const metadata = {
+  title: "Design tokens",
+  description: "How Merid's design tokens are named, tiered and consumed.",
+};
+
+# Design tokens
+
+Every colour, size, shadow and duration in Merid is a CSS custom property. Components never contain a raw value that is not also a token, so changing a token changes every place it is used.
+
+## Naming
+
+All tokens share the `--mrd-` prefix and fall into three tiers.
+
+<table>
+  <thead>
+    <tr><th>Tier</th><th>Example</th><th>Purpose</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Primitive</td><td><code>--mrd-space-4</code></td><td>A raw step on a scale. Has no meaning on its own.</td></tr>
+    <tr><td>Semantic</td><td><code>--mrd-accent</code>, <code>--mrd-tray</code></td><td>Named for its role. Changes between light and dark.</td></tr>
+    <tr><td>Component</td><td><code>--mrd-control-md</code></td><td>Sizes shared by a family of components.</td></tr>
+  </tbody>
+</table>
+
+Prefer semantic tokens in your own code. `var(--mrd-tray)` follows dark mode; a hex value does not.
+
+## Categories
+
+- [Color](/docs/foundations/color) — accent, surfaces, lines, text tones and status.
+- [Typography](/docs/foundations/typography) — font stacks, nine sizes with line height and tracking, three weights.
+- [Spacing](/docs/foundations/spacing) — a 4 and 8 pixel scale plus layout widths.
+- [Radius](/docs/foundations/radius) — nine corner sizes that step down as surfaces nest.
+- [Elevation](/docs/foundations/elevation) — ink-tinted shadows and the focus halo.
+- [Motion](/docs/foundations/motion) — durations and the single easing curve.
+- [Breakpoints and layers](/docs/foundations/layout) — the two breakpoints and the z-index scale.
+
+## Consuming tokens
+
+Import the tokens without the component rules when you only need the variables:
+
+```tsx
+import "@merid/react/tokens.css";
+```
+
+Then use them anywhere CSS accepts a value:
+
+```css
+.panel {
+  padding: var(--mrd-space-7);
+  border-radius: var(--mrd-radius-card);
+  background: var(--mrd-tray);
+  color: var(--mrd-body);
+}
+```
+
+## Overriding tokens
+
+Set a token on `:root` to change it globally, or on any element to scope the change to that subtree. Tokens live in the `merid.tokens` layer, so a plain unlayered declaration always wins. See [Styling and CSS layers](/docs/styling).

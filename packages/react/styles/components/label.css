@@ -1,0 +1,19 @@
+@layer merid.components {
+  .mrd-label {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 2px;
+    color: var(--mrd-ink);
+    font-size: var(--mrd-text-xs);
+    line-height: var(--mrd-leading-xs);
+    font-weight: var(--mrd-weight-medium);
+  }
+
+  .mrd-label__required {
+    color: var(--mrd-danger);
+  }
+
+  .mrd-label[data-disabled] {
+    opacity: 0.5;
+  }
+}

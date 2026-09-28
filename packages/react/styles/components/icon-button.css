@@ -1,0 +1,88 @@
+@layer merid.components {
+  .mrd-icon-button {
+    --mrd-icon-button-size: var(--mrd-icon-button-md);
+
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--mrd-icon-button-size);
+    height: var(--mrd-icon-button-size);
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: var(--mrd-radius-md);
+    background: transparent;
+    color: var(--mrd-body);
+    cursor: pointer;
+    transition:
+      background-color var(--mrd-duration) var(--mrd-ease),
+      color var(--mrd-duration) var(--mrd-ease),
+      transform var(--mrd-duration-fast) var(--mrd-ease);
+  }
+
+  .mrd-icon-button[data-size="sm"] {
+    --mrd-icon-button-size: var(--mrd-icon-button-sm);
+  }
+
+  .mrd-icon-button[data-size="lg"] {
+    --mrd-icon-button-size: var(--mrd-icon-button-lg);
+  }
+
+  .mrd-icon-button__icon {
+    display: inline-flex;
+  }
+
+  .mrd-icon-button__icon > svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .mrd-icon-button:hover:not(:disabled) {
+    background: var(--mrd-tray);
+    color: var(--mrd-ink);
+  }
+
+  .mrd-icon-button[data-variant="secondary"] {
+    background: var(--mrd-surface);
+    border-color: var(--mrd-line);
+    color: var(--mrd-ink);
+  }
+
+  .mrd-icon-button[data-variant="secondary"]:hover:not(:disabled) {
+    background: var(--mrd-tray);
+  }
+
+  .mrd-icon-button[data-variant="primary"] {
+    background: var(--mrd-accent-solid);
+    color: var(--mrd-on-accent);
+  }
+
+  .mrd-icon-button[data-variant="primary"]:hover:not(:disabled) {
+    background: var(--mrd-accent-solid-hover);
+    color: var(--mrd-on-accent);
+  }
+
+  .mrd-icon-button:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  .mrd-icon-button:focus-visible {
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 3px;
+  }
+
+  .mrd-icon-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-icon-button {
+      transition: none;
+    }
+
+    .mrd-icon-button:active:not(:disabled) {
+      transform: none;
+    }
+  }
+}

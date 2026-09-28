@@ -1,0 +1,99 @@
+@layer merid.components {
+  .mrd-checkbox {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: var(--mrd-ink);
+    font-size: var(--mrd-text-sm);
+    line-height: var(--mrd-leading-sm);
+  }
+
+  .mrd-checkbox[data-disabled] {
+    opacity: 0.5;
+  }
+
+  .mrd-checkbox__control {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    width: 18px;
+    height: 18px;
+
+    /* centre the 18px box on the first line of 15px/1.5 text */
+    margin-top: calc((1lh - 18px) / 2);
+  }
+
+  /* The real input sits on top (transparent) so it keeps native semantics and a 24px hit area. */
+  .mrd-checkbox__input {
+    position: absolute;
+    inset: -3px;
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .mrd-checkbox__icon {
+    width: 18px;
+    height: 18px;
+    padding: 1px;
+    border: 1px solid var(--mrd-line-strong);
+    border-radius: 5px;
+    background: var(--mrd-surface);
+    color: transparent;
+    transition:
+      background-color var(--mrd-duration) var(--mrd-ease),
+      border-color var(--mrd-duration) var(--mrd-ease),
+      color var(--mrd-duration) var(--mrd-ease);
+  }
+
+  .mrd-checkbox:hover .mrd-checkbox__input:not(:disabled, :checked, [data-indeterminate]) + .mrd-checkbox__icon {
+    border-color: var(--mrd-muted);
+  }
+
+  .mrd-checkbox__input:checked + .mrd-checkbox__icon,
+  .mrd-checkbox__input[data-indeterminate] + .mrd-checkbox__icon {
+    border-color: var(--mrd-accent);
+    background: var(--mrd-accent-solid);
+    color: var(--mrd-on-accent);
+  }
+
+  .mrd-checkbox__input[aria-invalid="true"] + .mrd-checkbox__icon {
+    border-color: var(--mrd-danger);
+  }
+
+  .mrd-checkbox__input:focus-visible + .mrd-checkbox__icon {
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 3px;
+  }
+
+  .mrd-checkbox__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .mrd-checkbox__label {
+    font-weight: var(--mrd-weight-medium);
+    cursor: pointer;
+  }
+
+  .mrd-checkbox[data-disabled] .mrd-checkbox__label,
+  .mrd-checkbox__input:disabled {
+    cursor: not-allowed;
+  }
+
+  .mrd-checkbox__description {
+    color: var(--mrd-muted);
+    font-size: var(--mrd-text-2xs);
+    line-height: var(--mrd-leading-2xs);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-checkbox__icon {
+      transition: none;
+    }
+  }
+}

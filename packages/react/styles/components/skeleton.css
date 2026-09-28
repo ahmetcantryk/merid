@@ -1,0 +1,32 @@
+@layer merid.components {
+  .mrd-skeleton {
+    display: block;
+    width: 100%;
+    height: 1em;
+    border-radius: var(--mrd-radius-xs);
+    background: linear-gradient(90deg, var(--mrd-tray) 0%, var(--mrd-tray-2) 50%, var(--mrd-tray) 100%);
+    background-size: 200% 100%;
+    animation: mrd-shimmer 1.4s ease-in-out infinite;
+  }
+
+  .mrd-skeleton[data-shape="circle"] {
+    border-radius: var(--mrd-radius-full);
+  }
+
+  @keyframes mrd-shimmer {
+    from {
+      background-position: 100% 0;
+    }
+
+    to {
+      background-position: -100% 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-skeleton {
+      animation: none;
+      background: var(--mrd-tray);
+    }
+  }
+}

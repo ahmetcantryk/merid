@@ -1,0 +1,28 @@
+name: Feature request
+description: Propose a new component, prop or behaviour.
+labels: [enhancement, triage]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to build, and what is missing today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API
+      description: How would you like to use it? A code sample helps.
+      render: tsx
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: contract
+    attributes:
+      label: Design contract
+      options:
+        - label: I have read the principles and this proposal fits within the existing tokens.
+          required: true

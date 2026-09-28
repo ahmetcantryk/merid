@@ -1,0 +1,79 @@
+@layer merid.components {
+  .mrd-card {
+    --mrd-card-padding: var(--mrd-space-7);
+
+    display: block;
+    position: relative;
+    padding: var(--mrd-card-padding);
+    border-radius: var(--mrd-radius-card);
+    background: var(--mrd-tray);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      transform var(--mrd-duration-slow) var(--mrd-ease),
+      box-shadow var(--mrd-duration) var(--mrd-ease),
+      background-color var(--mrd-duration) var(--mrd-ease);
+  }
+
+  .mrd-card[data-padding="none"] {
+    --mrd-card-padding: 0;
+  }
+
+  .mrd-card[data-padding="sm"] {
+    --mrd-card-padding: var(--mrd-space-5);
+  }
+
+  .mrd-card[data-padding="lg"] {
+    --mrd-card-padding: var(--mrd-space-8);
+  }
+
+  .mrd-card[data-variant="elevated"] {
+    background: var(--mrd-surface);
+    box-shadow: var(--mrd-shadow-md), var(--mrd-elevated-ring);
+  }
+
+  .mrd-card[data-variant="outline"] {
+    background: var(--mrd-surface);
+    box-shadow: inset 0 0 0 1px var(--mrd-line);
+  }
+
+  .mrd-card[data-interactive] {
+    cursor: pointer;
+  }
+
+  .mrd-card[data-interactive]:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--mrd-shadow-md), var(--mrd-elevated-ring);
+  }
+
+  .mrd-card[data-selected],
+  .mrd-card[data-selected]:hover {
+    box-shadow: inset 0 0 0 1.5px var(--mrd-accent);
+  }
+
+  .mrd-card:focus-visible {
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 3px;
+  }
+
+  @media (width <= 640px) {
+    .mrd-card {
+      border-radius: var(--mrd-radius-2xl);
+    }
+
+    .mrd-card:not([data-padding]),
+    .mrd-card[data-padding="md"] {
+      --mrd-card-padding: var(--mrd-space-6);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-card {
+      transition: none;
+    }
+
+    .mrd-card[data-interactive]:hover {
+      transform: none;
+    }
+  }
+}

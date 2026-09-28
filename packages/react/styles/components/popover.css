@@ -1,0 +1,38 @@
+@layer merid.components {
+  .mrd-popover {
+    z-index: var(--mrd-z-overlay);
+    width: max-content;
+    max-width: min(360px, calc(100vw - 16px));
+    padding: var(--mrd-space-4);
+    background: var(--mrd-surface);
+    color: var(--mrd-body);
+    border: 1px solid var(--mrd-line);
+    border-radius: var(--mrd-radius-xl);
+    box-shadow: var(--mrd-shadow-lg);
+    font-size: var(--mrd-text-sm);
+    line-height: var(--mrd-leading-sm);
+    animation: mrd-floating-in var(--mrd-duration) var(--mrd-ease) both;
+  }
+
+  .mrd-popover:focus {
+    outline: none;
+  }
+
+  @keyframes mrd-floating-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-popover {
+      animation: none;
+    }
+  }
+}

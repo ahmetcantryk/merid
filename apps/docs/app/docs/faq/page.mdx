@@ -1,0 +1,34 @@
+export const metadata = {
+  title: "FAQ",
+  description: "Answers to common questions about Merid.",
+};
+
+# FAQ
+
+## Can I use Merid without React?
+
+The stylesheet can be used on its own with the documented class names and data attributes, but the behaviour — focus management, keyboard handling, ARIA wiring — lives in the React components. Only React is supported.
+
+## Does it work with Tailwind CSS?
+
+Yes. Declare Merid's cascade layers before Tailwind's utilities layer so utilities still win. See [Styling and CSS layers](/docs/styling).
+
+## Can I change the accent colour?
+
+Yes, through `--mrd-accent` and its related tokens. Merid is designed around one accent, so there is no second brand colour to configure.
+
+## Why no gradients?
+
+Gradients compete with content and age quickly. The only gradient in the library is the skeleton shimmer, and it is removed under reduced motion.
+
+## Is there a Figma library?
+
+Not yet. The tokens are documented precisely enough to rebuild them as variables, and a Figma library is under consideration after 1.0.
+
+## How large is the stylesheet?
+
+The full stylesheet is plain CSS without generated utilities. Import `tokens.css` alone if you only need the variables.
+
+## Who maintains Merid?
+
+Merid is an independent open-source project. See [Contributing](/docs/contributing) if you would like to help.

@@ -1,0 +1,46 @@
+name: Bug report
+description: Something in @merid/react does not work as documented.
+labels: [bug, triage]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to report this. A minimal reproduction is the fastest way to a fix.
+  - type: input
+    id: version
+    attributes:
+      label: "@merid/react version"
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      placeholder: Dialog
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: input
+    id: reproduction
+    attributes:
+      label: Reproduction link
+      description: A CodeSandbox, StackBlitz or repository that shows the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser and version, operating system, React version, framework, and assistive technology if relevant.
+    validations:
+      required: true
+  - type: checkboxes
+    id: accessibility
+    attributes:
+      label: Accessibility
+      options:
+        - label: This bug affects keyboard, screen reader or other assistive technology users.

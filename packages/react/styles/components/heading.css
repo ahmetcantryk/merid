@@ -1,0 +1,43 @@
+@layer merid.components {
+  .mrd-heading {
+    margin: 0;
+    color: var(--mrd-ink);
+    font-family: inherit;
+    font-weight: var(--mrd-weight-semibold);
+    text-wrap: balance;
+  }
+
+  .mrd-heading[data-size="display"] {
+    font-size: var(--mrd-text-display);
+    line-height: var(--mrd-leading-display);
+    letter-spacing: var(--mrd-tracking-display);
+  }
+
+  .mrd-heading[data-size="h2"] {
+    font-size: var(--mrd-text-h2);
+    line-height: var(--mrd-leading-h2);
+    letter-spacing: var(--mrd-tracking-h2);
+  }
+
+  .mrd-heading[data-size="h3"] {
+    font-size: var(--mrd-text-h3);
+    line-height: var(--mrd-leading-h3);
+    letter-spacing: var(--mrd-tracking-h3);
+  }
+
+  .mrd-heading[data-size="lg"] {
+    font-size: var(--mrd-text-lg);
+    line-height: var(--mrd-leading-h3);
+    letter-spacing: -0.01em;
+  }
+
+  .mrd-heading[data-size="md"] {
+    font-size: var(--mrd-text-md);
+    line-height: var(--mrd-leading-sm);
+  }
+
+  .mrd-heading[data-size="sm"] {
+    font-size: var(--mrd-text-sm);
+    line-height: var(--mrd-leading-sm);
+  }
+}

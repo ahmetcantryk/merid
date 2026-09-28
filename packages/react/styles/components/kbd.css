@@ -1,0 +1,36 @@
+@layer merid.components {
+  .mrd-kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border: 1px solid var(--mrd-line);
+    border-radius: var(--mrd-radius-xs);
+    background: var(--mrd-surface);
+    box-shadow: 0 1px 0 var(--mrd-line);
+    color: var(--mrd-body);
+    font-family: var(--mrd-font-sans);
+    font-size: var(--mrd-text-3xs);
+    font-weight: var(--mrd-weight-medium);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .mrd-kbd[data-size="sm"] {
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    font-size: 11px;
+  }
+
+  .mrd-kbd > .mrd-kbd {
+    min-width: 0;
+    height: auto;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    background: none;
+  }
+}

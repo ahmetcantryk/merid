@@ -1,0 +1,39 @@
+export const metadata = {
+  title: "Browser support",
+  description: "The browsers Merid supports and the CSS features it relies on.",
+};
+
+# Browser support
+
+Merid supports the last two major versions of evergreen browsers and the Safari releases that are still receiving security updates.
+
+<table>
+  <thead>
+    <tr><th>Browser</th><th>Minimum version</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Chrome and Edge</td><td>111</td></tr>
+    <tr><td>Firefox</td><td>113</td></tr>
+    <tr><td>Safari (macOS and iOS)</td><td>16.4</td></tr>
+  </tbody>
+</table>
+
+Internet Explorer and legacy Edge are not supported.
+
+## CSS features in use
+
+The minimum versions follow from a short list of CSS features that Merid depends on:
+
+- **Cascade layers** (`@layer`) for the override model.
+- **`:where()`** for zero-specificity base styles.
+- **`color-mix()`** for a few derived tints.
+- **`:focus-visible`** for keyboard-only focus rings.
+- **`text-wrap: balance`** for headings. Where it is missing, headings simply wrap normally.
+
+## React versions
+
+React 18.2 and newer are supported, including React 19. Merid does not rely on experimental React APIs.
+
+## Testing
+
+Components are tested in jsdom for behaviour and accessibility, and checked manually in the browsers above before each minor release, with VoiceOver on macOS and iOS and NVDA on Windows.

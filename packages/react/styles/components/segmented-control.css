@@ -1,0 +1,74 @@
+@layer merid.components {
+  .mrd-segmented {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    border-radius: var(--mrd-radius-full);
+    background: var(--mrd-tray);
+    max-width: 100%;
+  }
+
+  .mrd-segmented[data-full-width] {
+    display: flex;
+    width: 100%;
+  }
+
+  .mrd-segmented[data-full-width] .mrd-segmented__item {
+    flex: 1 1 0;
+  }
+
+  .mrd-segmented__item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: var(--mrd-pill);
+    padding: 0 14px;
+    border: 0;
+    border-radius: var(--mrd-radius-full);
+    background: transparent;
+    color: var(--mrd-body);
+    font-family: inherit;
+    font-size: var(--mrd-text-xs);
+    font-weight: var(--mrd-weight-medium);
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color var(--mrd-duration) var(--mrd-ease),
+      color var(--mrd-duration) var(--mrd-ease),
+      box-shadow var(--mrd-duration) var(--mrd-ease);
+  }
+
+  .mrd-segmented__item:hover:not(:disabled, [data-state="on"]) {
+    color: var(--mrd-ink);
+  }
+
+  .mrd-segmented__item[data-state="on"] {
+    background: var(--mrd-surface);
+    color: var(--mrd-ink);
+    box-shadow: var(--mrd-shadow-xs);
+  }
+
+  .mrd-segmented__item:focus-visible {
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 2px;
+  }
+
+  .mrd-segmented__item:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  /* On a tray surface the track steps down to tray-2. */
+  .mrd-section[data-tone="tray"] .mrd-segmented,
+  .mrd-card[data-variant="tray"] .mrd-segmented {
+    background: var(--mrd-tray-2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-segmented__item {
+      transition: none;
+    }
+  }
+}

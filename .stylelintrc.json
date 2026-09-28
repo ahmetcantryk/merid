@@ -1,0 +1,25 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "selector-class-pattern": null,
+    "custom-property-pattern": null,
+    "no-descending-specificity": null,
+    "color-no-hex": true,
+    "color-named": "never",
+    "function-disallowed-list": ["rgb", "rgba", "hsl", "hsla", "linear-gradient", "radial-gradient"],
+    "declaration-property-value-disallowed-list": {
+      "font-weight": ["700", "800", "900", "bold", "bolder"],
+      "/^border/": ["/\\b2px\\b/"]
+    }
+  },
+  "overrides": [
+    {
+      "files": ["**/tokens.css"],
+      "rules": { "color-no-hex": null, "function-disallowed-list": null }
+    },
+    {
+      "files": ["**/skeleton.css"],
+      "rules": { "function-disallowed-list": ["rgb", "rgba", "hsl", "hsla"] }
+    }
+  ]
+}

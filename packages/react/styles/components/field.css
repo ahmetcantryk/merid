@@ -1,0 +1,23 @@
+@layer merid.components {
+  .mrd-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mrd-space-2);
+    min-width: 0;
+  }
+
+  .mrd-field__description,
+  .mrd-field__error {
+    margin: 0;
+    font-size: var(--mrd-text-2xs);
+    line-height: var(--mrd-leading-2xs);
+  }
+
+  .mrd-field__description {
+    color: var(--mrd-muted);
+  }
+
+  .mrd-field__error {
+    color: var(--mrd-danger-strong);
+  }
+}

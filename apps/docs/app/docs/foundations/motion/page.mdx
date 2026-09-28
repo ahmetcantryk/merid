@@ -1,0 +1,39 @@
+import { MotionDemo, MotionTable } from "@/components/foundations";
+
+export const metadata = {
+  title: "Motion",
+  description: "Durations, easing and the interaction patterns that use them.",
+};
+
+# Motion
+
+Motion in Merid is quiet. It confirms that something happened and never asks to be watched.
+
+## Tokens
+
+<MotionTable />
+
+Enter animations use a 220ms fade: opacity from 0 to 1 while the element rises 4px into place.
+
+## Patterns
+
+- **Hover** tints the background or lifts the element by 2–3px.
+- **Press** scales to `.97` over 100ms.
+- **Open** fades and rises; overlays fade their backdrop at the same time.
+- **Rotate** is reserved for disclosure icons, such as the accordion plus turning 45°.
+
+<MotionDemo />
+
+## Reduced motion
+
+When the user has asked for reduced motion, Merid removes transitions and animations entirely, including the skeleton shimmer. State still changes instantly, so nothing is lost.
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .your-component {
+    transition: none;
+  }
+}
+```
+
+Merid's base layer already applies this to everything inside `.mrd-root`.

@@ -1,0 +1,52 @@
+@layer merid.components {
+  .mrd-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mrd-stack-gap, var(--mrd-space-4));
+    min-width: 0;
+  }
+
+  .mrd-stack[data-direction="row"] {
+    flex-direction: row;
+  }
+
+  .mrd-stack[data-wrap] {
+    flex-wrap: wrap;
+  }
+
+  .mrd-stack[data-align="start"] {
+    align-items: flex-start;
+  }
+
+  .mrd-stack[data-align="center"] {
+    align-items: center;
+  }
+
+  .mrd-stack[data-align="end"] {
+    align-items: flex-end;
+  }
+
+  .mrd-stack[data-align="stretch"] {
+    align-items: stretch;
+  }
+
+  .mrd-stack[data-align="baseline"] {
+    align-items: baseline;
+  }
+
+  .mrd-stack[data-justify="start"] {
+    justify-content: flex-start;
+  }
+
+  .mrd-stack[data-justify="center"] {
+    justify-content: center;
+  }
+
+  .mrd-stack[data-justify="end"] {
+    justify-content: flex-end;
+  }
+
+  .mrd-stack[data-justify="between"] {
+    justify-content: space-between;
+  }
+}

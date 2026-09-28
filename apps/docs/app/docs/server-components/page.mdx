@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Server components",
+  description: "Which Merid components render on the server and how interactive components behave in the App Router.",
+};
+
+# Server components
+
+Merid works in React Server Components environments such as the Next.js App Router without wrappers.
+
+## How the package is split
+
+- **Static components** — layout, typography helpers, badges, cards, skeletons — contain no state or effects. They render on the server and send no JavaScript to the browser.
+- **Interactive components** — dialogs, menus, tabs, form controls with internal state — begin with a `"use client"` directive. You can import them from a server component; React places the client boundary at the component for you.
+
+## Passing props across the boundary
+
+Props passed from a server component to a client component must be serialisable. Strings, numbers, plain objects and React elements are fine. Functions are not, so event handlers such as `onOpenChange` must be defined in a client component.
+
+```tsx
+// app/settings/page.tsx — a server component
+import { Card } from "@merid/react";
+import { DeleteAccount } from "./delete-account"; // "use client" inside
+
+export default function Settings() {
+  return (
+    <Card>
+      <h2>Danger zone</h2>
+      <DeleteAccount />
+    </Card>
+  );
+}
+```
+
+## Styles
+
+The stylesheet is static CSS, so it is collected at build time and never depends on rendering. There is no style injection at runtime and no flash of unstyled content during streaming.
+
+## Portals
+
+Overlays render into `document.body` through a portal after hydration. On the server they render nothing, which keeps the initial HTML free of closed dialogs and menus.

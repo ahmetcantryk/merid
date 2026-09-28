@@ -1,0 +1,55 @@
+@layer merid.components {
+  .mrd-progress {
+    --mrd-progress-height: 6px;
+
+    position: relative;
+    width: 100%;
+    height: var(--mrd-progress-height);
+    overflow: hidden;
+    border-radius: var(--mrd-radius-full);
+    background: var(--mrd-tray-2);
+  }
+
+  .mrd-progress[data-size="sm"] {
+    --mrd-progress-height: 4px;
+  }
+
+  .mrd-progress[data-size="lg"] {
+    --mrd-progress-height: 8px;
+  }
+
+  .mrd-progress__bar {
+    width: var(--mrd-progress-value, 0%);
+    height: 100%;
+    border-radius: inherit;
+    background: var(--mrd-accent);
+    transition: width var(--mrd-duration-slow) var(--mrd-ease);
+  }
+
+  .mrd-progress[data-state="indeterminate"] .mrd-progress__bar {
+    width: 40%;
+    animation: mrd-progress-slide 1.4s var(--mrd-ease) infinite;
+  }
+
+  @keyframes mrd-progress-slide {
+    from {
+      transform: translateX(-100%);
+    }
+
+    to {
+      transform: translateX(250%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-progress__bar {
+      transition: none;
+    }
+
+    .mrd-progress[data-state="indeterminate"] .mrd-progress__bar {
+      width: 100%;
+      opacity: 0.4;
+      animation: none;
+    }
+  }
+}

@@ -1,0 +1,66 @@
+export const metadata = {
+  title: "Styling and CSS layers",
+  description: "How Merid's cascade layers work and how to override tokens and components without !important.",
+};
+
+# Styling and CSS layers
+
+Merid is plain CSS. Every rule lives inside a named cascade layer, which means any CSS you write outside those layers wins — regardless of selector specificity or import order.
+
+## The three layers
+
+```css
+@layer merid.tokens, merid.base, merid.components;
+```
+
+- **`merid.tokens`** declares the custom properties, their dark values and the font face.
+- **`merid.base`** is opt-in. It applies to elements inside `.mrd-root`: font, text colour, heading weight, focus ring and reduced-motion handling. Every selector is wrapped in `:where()`, so it has zero specificity.
+- **`merid.components`** holds the rules for each component, keyed on `.mrd-` classes and data attributes.
+
+Unlayered styles always beat layered ones. Your application CSS, CSS Modules and utility classes are unlayered unless you put them in a layer yourself, so they override Merid without `!important`.
+
+## Override a token
+
+Tokens are the preferred way to change the look. Set them on `:root` to change the whole app, or on any element to change a subtree.
+
+```css
+:root {
+  --mrd-accent: #0f7b6c;
+  --mrd-accent-hover: #0b6358;
+  --mrd-radius-lg: 8px;
+}
+
+.compact-panel {
+  --mrd-control-md: 38px;
+}
+```
+
+When you change the accent, change `--mrd-accent-soft`, `--mrd-accent-strong` and `--mrd-focus-ring` in the same step and check contrast in both themes.
+
+## Override a component
+
+Target the component class and its data attributes. A plain class selector is enough — it is unlayered, so it wins.
+
+```css
+.mrd-button[data-variant="primary"] {
+  box-shadow: none;
+}
+```
+
+To style a single instance, pass a `className`. It is merged with the component class.
+
+## Put your own CSS in a layer
+
+If your app already uses layers, declare the order once so that Merid sits below your components:
+
+```css
+@layer reset, merid.tokens, merid.base, merid.components, app;
+```
+
+<Callout tone="warning" title="Tailwind CSS">
+  Tailwind v4 emits its utilities into a `utilities` layer. Declare Merid's layers before Tailwind's so that utilities still win: `@layer theme, base, merid.tokens, merid.base, merid.components, components, utilities;`
+</Callout>
+
+## Class names are public API
+
+`.mrd-` class names, part names such as `.mrd-dialog__title`, and the data attributes documented on each component page are covered by semantic versioning. Internal wrapper elements that are not documented may change in a minor release.
