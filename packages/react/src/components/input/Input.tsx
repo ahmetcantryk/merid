@@ -7,7 +7,7 @@ import { useFieldControlProps } from "../field/field-context";
 export type InputSize = "sm" | "md" | "lg";
 
 export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
-  /** Height: `sm` 36px, `md` 46px (default), `lg` 50px. */
+  /** Height: `sm` 28px, `md` 32px (default), `lg` 40px. */
   size?: InputSize;
   /** Forces the invalid style and `aria-invalid`. Inside a `Field`, derived from its `error`. */
   invalid?: boolean;

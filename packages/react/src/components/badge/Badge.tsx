@@ -10,7 +10,7 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   dot?: boolean;
 }
 
-/** A 22px pill for status and counts. Not interactive. */
+/** A 20px pill for status and counts. Not interactive. */
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
   { tone = "neutral", dot = false, className, children, ...props },
   ref,

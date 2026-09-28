@@ -14,7 +14,7 @@ export interface RadioProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
 }
 
 /**
- * A native radio with an 18px circle and accent dot. Use inside `RadioGroup`,
+ * A native radio with a 16px circle and accent dot. Use inside `RadioGroup`,
  * which supplies `name`, the checked state and arrow-key roving.
  * `className` and `style` go on the outer wrapper.
  */

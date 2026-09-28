@@ -3,8 +3,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 22px;
-    height: 22px;
+    min-width: 20px;
+    height: 20px;
     padding: 0 6px;
     border: 1px solid var(--mrd-line);
     border-radius: var(--mrd-radius-xs);

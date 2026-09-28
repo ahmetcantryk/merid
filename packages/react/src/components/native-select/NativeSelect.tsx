@@ -5,7 +5,7 @@ import { cx } from "../../utils/cx";
 import { useFieldControlProps } from "../field/field-context";
 
 export interface NativeSelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "size"> {
-  /** Height: `sm` 36px, `md` 46px (default), `lg` 50px. */
+  /** Height: `sm` 28px, `md` 32px (default), `lg` 40px. */
   size?: "sm" | "md" | "lg";
   /** Forces the invalid style and `aria-invalid`. Inside a `Field`, derived from its `error`. */
   invalid?: boolean;

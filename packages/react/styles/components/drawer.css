@@ -20,7 +20,7 @@
     width: min(420px, calc(100vw - 48px));
     height: 100%;
     overflow-y: auto;
-    padding: var(--mrd-space-8) var(--mrd-space-7);
+    padding: var(--mrd-space-6);
     background: var(--mrd-surface);
     color: var(--mrd-body);
     box-shadow: var(--mrd-shadow-2xl), var(--mrd-elevated-ring);

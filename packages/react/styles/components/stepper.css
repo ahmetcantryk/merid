@@ -51,8 +51,8 @@
     flex: none;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     border-radius: var(--mrd-radius-full);
     background: var(--mrd-tray);
     color: var(--mrd-muted);
@@ -79,7 +79,7 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
-    padding-top: 3px;
+    padding-top: 2px;
   }
 
   .mrd-stepper__title {

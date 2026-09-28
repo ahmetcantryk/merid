@@ -13,19 +13,19 @@
   }
 
   .mrd-table {
-    --mrd-table-cell-padding: 14px var(--mrd-space-4);
+    --mrd-table-cell-padding: 8px 12px;
 
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     color: var(--mrd-body);
-    font-size: var(--mrd-text-xs);
+    font-size: 13.5px;
     line-height: var(--mrd-leading-xs);
     font-variant-numeric: tabular-nums;
   }
 
   .mrd-table[data-density="sm"] {
-    --mrd-table-cell-padding: 10px var(--mrd-space-3);
+    --mrd-table-cell-padding: 6px 10px;
   }
 
   .mrd-table__header,

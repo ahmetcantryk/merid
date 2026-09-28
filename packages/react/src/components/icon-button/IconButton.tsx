@@ -11,7 +11,7 @@ export interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonEle
   icon: ReactNode;
   /** Visual style. Defaults to `ghost`. */
   variant?: IconButtonVariant;
-  /** Square size: `sm` 32px, `md` 36px, `lg` 40px. Defaults to `md`. */
+  /** Square size: `sm` 24px, `md` 28px, `lg` 32px. Defaults to `md`. */
   size?: IconButtonSize;
 }
 

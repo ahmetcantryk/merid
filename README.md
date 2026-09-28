@@ -83,4 +83,4 @@ Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code
 
 ## License
 
-[MIT](LICENSE) © 2026 Ahmet Can Tiryaki. Inter Variable is bundled under the SIL Open Font License 1.1 — see [NOTICE](NOTICE).
+[MIT](LICENSE) © 2026 Ahmet Can Tiryaki. Geist and Geist Mono (© Vercel) are bundled under the SIL Open Font License 1.1 — see [NOTICE](NOTICE).

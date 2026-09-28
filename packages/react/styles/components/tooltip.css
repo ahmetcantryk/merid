@@ -2,13 +2,13 @@
   .mrd-tooltip {
     z-index: var(--mrd-z-tooltip);
     max-width: 280px;
-    padding: 6px 10px;
+    padding: 4px 8px;
     background: var(--mrd-tooltip-bg);
     color: var(--mrd-tooltip-fg);
     border-radius: var(--mrd-radius-sm);
     box-shadow: var(--mrd-shadow-lg);
-    font-size: var(--mrd-text-2xs);
-    line-height: var(--mrd-leading-2xs);
+    font-size: var(--mrd-text-3xs);
+    line-height: var(--mrd-leading-3xs);
     font-weight: var(--mrd-weight-medium);
     pointer-events: none;
     animation: mrd-tooltip-in var(--mrd-duration) var(--mrd-ease) both;

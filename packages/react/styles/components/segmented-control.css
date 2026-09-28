@@ -3,7 +3,7 @@
     display: inline-flex;
     align-items: center;
     gap: 2px;
-    padding: 4px;
+    padding: 2px;
     border-radius: var(--mrd-radius-full);
     background: var(--mrd-tray);
     max-width: 100%;
@@ -24,7 +24,7 @@
     justify-content: center;
     gap: 6px;
     height: var(--mrd-pill);
-    padding: 0 14px;
+    padding: 0 10px;
     border: 0;
     border-radius: var(--mrd-radius-full);
     background: transparent;

@@ -14,7 +14,7 @@
     justify-content: space-between;
     gap: var(--mrd-space-6);
     width: 100%;
-    padding: 22px 0;
+    padding: 16px 0;
     border: 0;
     background: none;
     color: var(--mrd-ink);
@@ -51,7 +51,7 @@
   }
 
   .mrd-accordion__content {
-    padding: 0 var(--mrd-space-10) 22px 0;
+    padding: 0 var(--mrd-space-10) 16px 0;
     color: var(--mrd-body);
     font-size: var(--mrd-text-sm);
     line-height: var(--mrd-leading-md);

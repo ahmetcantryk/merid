@@ -15,7 +15,7 @@
 
   .mrd-sidebar-nav__group-label {
     display: block;
-    padding: 0 12px var(--mrd-space-2);
+    padding: 0 8px var(--mrd-space-2);
     color: var(--mrd-muted);
     font-size: var(--mrd-text-3xs);
     line-height: var(--mrd-leading-3xs);
@@ -25,9 +25,9 @@
   .mrd-sidebar-nav__item {
     display: flex;
     align-items: center;
-    gap: var(--mrd-space-3);
-    min-height: 36px;
-    padding: 6px 12px;
+    gap: var(--mrd-space-2);
+    min-height: 30px;
+    padding: 6px 8px;
     border-radius: var(--mrd-radius-md);
     color: var(--mrd-body);
     font-size: var(--mrd-text-sm);

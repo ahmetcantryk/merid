@@ -17,7 +17,7 @@ export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement
 }
 
 /**
- * A native checkbox with an 18px box. Space toggles it; it participates in forms.
+ * A native checkbox with a 16px box. Space toggles it; it participates in forms.
  * `className` and `style` go on the outer wrapper; other props on the `<input>`.
  *
  * Inside a `Field`, the Field label names the checkbox. If children are also given they still
