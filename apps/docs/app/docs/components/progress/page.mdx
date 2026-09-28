@@ -1,0 +1,116 @@
+import {
+  ProgressDemo,
+  ProgressSizes,
+  ProgressIndeterminate,
+  ProgressValueText,
+  ProgressLive,
+} from "@/examples/progress";
+
+export const metadata = {
+  title: "Progress",
+  description: "A linear progress bar for determinate and indeterminate tasks.",
+};
+
+# Progress
+
+A linear bar that shows how far a task has got — an upload, an export, an onboarding checklist. Without a value it becomes an indeterminate loading bar.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/progress">Source</a>
+</div>
+
+<ComponentPreview code={`<Progress aria-label="Upload" value={64} />`}>
+  <ProgressDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Progress } from "@merid/react";
+```
+
+## Examples
+
+### Sizes
+
+`sm` 4px, `md` 6px (default), `lg` 8px thick.
+
+<ComponentPreview code={`<Progress aria-label="Small" size="sm" value={40} />
+<Progress aria-label="Medium" size="md" value={60} />
+<Progress aria-label="Large" size="lg" value={80} />`}>
+  <ProgressSizes />
+</ComponentPreview>
+
+### Indeterminate
+
+Omit `value` (or pass `null`) when the duration is unknown.
+
+<ComponentPreview code={`<Progress aria-label="Preparing export" />`}>
+  <ProgressIndeterminate />
+</ComponentPreview>
+
+### Custom max and value text
+
+`max` changes the scale; `valueText` replaces the default percentage that screen readers announce.
+
+<ComponentPreview code={`<Progress aria-label="Onboarding" value={3} max={5} valueText="3 of 5 steps" />`}>
+  <ProgressValueText />
+</ComponentPreview>
+
+### Updating
+
+Values are clamped between 0 and `max`. The bar reaches `data-state="complete"` at 100%.
+
+<ComponentPreview code={`const [value, setValue] = useState(0);
+// update value as work completes
+
+<Progress aria-label="Syncing" value={value} />`}>
+  <ProgressLive />
+</ComponentPreview>
+
+## API reference
+
+Renders a `div` with `role="progressbar"`; the ref and other div attributes are forwarded.
+
+<PropsTable rows={[
+  { name: "value", type: "number | null", default: "null", description: "Current value. Omit or pass null for an indeterminate bar." },
+  { name: "max", type: "number", default: "100", description: "Maximum value. Non-positive values fall back to 100." },
+  { name: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Bar thickness: sm 4px, md 6px, lg 8px." },
+  { name: "valueText", type: "string", description: "Human-readable value for AT, e.g. \"3 of 5 steps\". Defaults to the percentage." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-progress</code></td><td>Track</td></tr>
+    <tr><td><code>.mrd-progress__bar</code></td><td>Filled bar</td></tr>
+    <tr><td><code>data-size</code></td><td><code>sm</code> · <code>md</code> · <code>lg</code></td></tr>
+    <tr><td><code>data-state</code></td><td><code>loading</code> · <code>complete</code> · <code>indeterminate</code></td></tr>
+  </tbody>
+</table>
+
+Component variables: `--mrd-progress-height` (set per size) and `--mrd-progress-value` (the fill percentage, set inline).
+
+## Accessibility
+
+- `role="progressbar"` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow` and `aria-valuetext`. In the indeterminate state `aria-valuenow` and `aria-valuetext` are omitted.
+- Always name the bar with `aria-label` or `aria-labelledby` — the element has no text of its own.
+- Under `prefers-reduced-motion` the indeterminate animation is removed.
+
+## Guidelines
+
+<DoDont
+  do={<p>Use a determinate bar when you can measure progress, and pair it with a visible label of what is happening.</p>}
+  dont={<p>Fake progress with a timer that stalls at 99% — use the indeterminate bar or a <a href="/docs/components/spinner">Spinner</a>.</p>}
+/>
+
+## Related
+
+- [Spinner](/docs/components/spinner) — compact indeterminate indicator.
+- [Skeleton](/docs/components/skeleton) — placeholder while content loads.
+- [Stepper](/docs/components/stepper) — progress through named steps.

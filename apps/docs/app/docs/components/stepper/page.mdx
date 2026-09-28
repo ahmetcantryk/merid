@@ -1,0 +1,113 @@
+import { stepperBasicCode, stepperVerticalCode } from "@/examples/stepper.code";
+import { StepperBasic, StepperVertical } from "@/examples/stepper";
+
+export const metadata = {
+  title: "Stepper",
+  description: "A read-only display of progress through a multi-step flow.",
+};
+
+# Stepper
+
+A read-only display of progress through a multi-step flow.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/stepper">Source</a>
+</div>
+
+<ComponentPreview code={stepperBasicCode}>
+  <StepperBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Stepper } from "@merid/react";
+```
+
+## Anatomy
+
+```tsx
+<Stepper.Root current={0}>
+  <Stepper.Step title="…" description="…" />
+</Stepper.Root>
+```
+
+- `Stepper.Root` — an ordered list. `current` is the zero-based index of the active step; earlier steps are complete, later ones upcoming.
+- `Stepper.Step` — one step with a numbered marker (a check when complete), a title and an optional description.
+
+## Examples
+
+### Vertical with descriptions
+
+<ComponentPreview code={stepperVerticalCode} align="start">
+  <StepperVertical />
+</ComponentPreview>
+
+### Responsive behaviour
+
+In horizontal orientation at 640px and below, only the current step keeps its text; other steps show just their marker.
+
+## API reference
+
+### Stepper.Root
+
+Renders `<ol>` and accepts all its HTML attributes.
+
+<PropsTable
+  rows={[
+    { name: "current", type: "number", required: true, description: "Zero-based index of the current step. Steps before it are complete." },
+    { name: "orientation", type: '"horizontal" | "vertical"', default: '"horizontal"', description: "Layout direction." },
+    { name: "aria-label", type: "string", default: '"Progress"', description: "Accessible name for the step list." },
+    { name: "ref", type: "Ref<HTMLOListElement>", description: "Forwarded ref to the list." },
+  ]}
+/>
+
+### Stepper.Step
+
+Renders `<li>` and accepts its HTML attributes except `title`. Must be a direct child of `Stepper.Root`.
+
+<PropsTable
+  rows={[
+    { name: "title", type: "ReactNode", required: true, description: "Step name." },
+    { name: "description", type: "ReactNode", description: "Optional supporting line." },
+    { name: "statusLabels", type: 'Partial<Record<"complete" | "current" | "upcoming", string>>', default: '{ complete: "Completed", current: "Current step", upcoming: "Not started" }', description: "Screen-reader status words appended to each step." },
+  ]}
+/>
+
+## Styling
+
+- `.mrd-stepper[data-orientation]` — root list, `horizontal` or `vertical`.
+- `.mrd-stepper__step[data-state]` — `complete`, `current` or `upcoming`.
+- `.mrd-stepper__marker` — 28px circle: `--mrd-tray` when upcoming, a 1.5px `--mrd-accent` ring when current, `--mrd-accent-soft` when complete.
+- `.mrd-stepper__title` / `.mrd-stepper__description` — text; the title turns `--mrd-ink` on the current step.
+- `.mrd-stepper__step::after` — the 1px `--mrd-line` connector between steps.
+
+## Accessibility
+
+There is no APG pattern for steppers. It is a static ordered list — the same structure the [APG landmark and list guidance](https://www.w3.org/WAI/ARIA/apg/practices/structural-roles/) recommends for structured content — and it is not interactive.
+
+- The list is named "Progress" by default; set `aria-label` to describe the flow.
+- The current step has `aria-current="step"`.
+- Each step ends with a visually hidden status word ("Completed", "Current step", "Not started"), overridable with `statusLabels` for localisation.
+- Markers are `aria-hidden`; the number is conveyed by list position.
+
+Steps are not focusable, so there are no keyboard interactions. If people can jump back to a step, put links or buttons inside the step content.
+
+## Guidelines
+
+<DoDont
+  do="Use short, noun-like step titles and keep the number of steps between three and six."
+  dont="Use a stepper as tabs or as the only way to navigate between steps."
+/>
+
+<DoDont
+  do="Localise statusLabels along with the titles."
+  dont="Mark a step complete before its data is actually saved."
+/>
+
+## Related
+
+- [Progress](/docs/components/progress)
+- [Tabs](/docs/components/tabs)
+- [Pagination](/docs/components/pagination)

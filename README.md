@@ -30,17 +30,21 @@ npm i @merid/react
 
 ```tsx
 import "@merid/react/styles.css";
-import { Dialog } from "@merid/react";
+import { AlertDialog } from "@merid/react";
 
-export function DeleteProject() {
+export function DeleteProject({ onDelete }: { onDelete: () => void }) {
   return (
-    <Dialog.Root>
-      <Dialog.Trigger>Delete project</Dialog.Trigger>
-      <Dialog.Content>
-        <Dialog.Title>Delete this project?</Dialog.Title>
-        <Dialog.Description>This removes all of its files. It cannot be undone.</Dialog.Description>
-      </Dialog.Content>
-    </Dialog.Root>
+    <AlertDialog.Root>
+      <AlertDialog.Trigger>Delete project</AlertDialog.Trigger>
+      <AlertDialog.Content>
+        <AlertDialog.Title>Delete this project?</AlertDialog.Title>
+        <AlertDialog.Description>This removes all of its files. It cannot be undone.</AlertDialog.Description>
+        <AlertDialog.Footer>
+          <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+          <AlertDialog.Action onClick={onDelete}>Delete</AlertDialog.Action>
+        </AlertDialog.Footer>
+      </AlertDialog.Content>
+    </AlertDialog.Root>
   );
 }
 ```

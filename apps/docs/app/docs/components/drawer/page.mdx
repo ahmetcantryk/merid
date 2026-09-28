@@ -1,0 +1,130 @@
+import { DrawerDemo, DrawerSidesDemo } from "@/examples/drawer";
+
+export const metadata = {
+  title: "Drawer",
+  description: "A modal side sheet that slides in from the left or right edge.",
+};
+
+# Drawer
+
+A modal side sheet that slides in from an edge. Same behaviour and parts as Dialog, with a `side` prop on Content.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" /> <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/drawer">View source</a>
+</div>
+
+## Import
+
+```tsx
+import { Drawer } from "@merid/react";
+```
+
+<ComponentPreview code={`<Drawer.Root>
+  <Drawer.Trigger className="mrd-button" data-variant="secondary" data-size="md">
+    Open right
+  </Drawer.Trigger>
+  <Drawer.Content side="right">
+    <Drawer.Title>Filters</Drawer.Title>
+    <Drawer.Description>Narrow the list of invoices.</Drawer.Description>
+    <Drawer.Footer>
+      <Drawer.Close className="mrd-button" data-variant="secondary" data-size="md">Reset</Drawer.Close>
+      <Drawer.Close className="mrd-button" data-variant="primary" data-size="md">Apply</Drawer.Close>
+    </Drawer.Footer>
+    <Drawer.Close />
+  </Drawer.Content>
+</Drawer.Root>`}>
+  <DrawerDemo />
+</ComponentPreview>
+
+## Anatomy
+
+```tsx
+<Drawer.Root>
+  <Drawer.Trigger />
+  <Drawer.Content side="right">
+    <Drawer.Title />
+    <Drawer.Description />
+    <Drawer.Footer />
+    <Drawer.Close />
+  </Drawer.Content>
+</Drawer.Root>
+```
+
+Root, Trigger, Title, Description, Close and Footer are the [Dialog](/docs/components/dialog) parts. The Footer is pushed to the bottom of the sheet.
+
+## Examples
+
+### Sides
+
+<ComponentPreview code={`<Drawer.Content side="left">…</Drawer.Content>
+<Drawer.Content side="right">…</Drawer.Content>`}>
+  <DrawerSidesDemo />
+</ComponentPreview>
+
+### Controlled
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<Drawer.Root open={open} onOpenChange={setOpen}>
+  <Drawer.Content>…</Drawer.Content>
+</Drawer.Root>
+```
+
+## API reference
+
+### Drawer.Root
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled open state." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Initial open state when uncontrolled." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Called when the open state should change." },
+  { name: "children", type: "ReactNode", description: "Trigger, Content and anything else sharing this drawer's state." },
+]} />
+
+### Drawer.Content
+
+Accepts every `<div>` attribute except `role`.
+
+<PropsTable rows={[
+  { name: "side", type: "\"left\" | \"right\"", default: "\"right\"", description: "Edge the sheet slides in from." },
+  { name: "closeOnOutsidePress", type: "boolean", default: "true", description: "Close when the backdrop is pressed." },
+  { name: "closeOnEscape", type: "boolean", default: "true", description: "Close on Escape." },
+  { name: "initialFocus", type: "RefObject<HTMLElement | null>", description: "Element to focus when opened; defaults to [data-autofocus], then the first tabbable element." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal target." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the drawer element." },
+]} />
+
+Trigger, Title, Description, Close and Footer take the same props as in [Dialog](/docs/components/dialog#api-reference).
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-drawer__backdrop` | Fixed backdrop; aligns the sheet to its side |
+| `.mrd-drawer` | The sheet: `min(420px, 100vw - 48px)` wide, full height |
+
+Both carry `data-side="left" | "right"` and `data-state="open"`. Title, description, footer and close use the `.mrd-dialog__*` classes. Motion is removed under `prefers-reduced-motion`.
+
+## Accessibility
+
+Follows the [WAI-ARIA Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/): `role="dialog"`, `aria-modal="true"`, focus trap, scroll lock and focus return.
+
+<KeyboardTable rows={[
+  { keys: ["Space", "Enter"], action: "On the trigger, opens the drawer." },
+  { keys: ["Tab"], action: "Moves focus forward, wrapping inside the drawer." },
+  { keys: ["Shift", "Tab"], action: "Moves focus backwards, wrapping inside the drawer." },
+  { keys: ["Esc"], action: "Closes the drawer and returns focus to the trigger." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do="Use a drawer for secondary content that benefits from keeping the page in view: filters, details, settings."
+  dont="Put a multi-step flow in a drawer; use a page."
+/>
+
+## Related
+
+- [Dialog](/docs/components/dialog)
+- [SidebarNav](/docs/components/sidebar-nav) for persistent navigation.

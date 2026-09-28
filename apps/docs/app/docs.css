@@ -202,6 +202,9 @@
 .component-group { margin-top: 20px; border-top: 1px solid var(--mrd-line); }
 .component-row { display: grid; grid-template-columns: 180px minmax(0, 1fr) auto; gap: 16px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--mrd-line); font-size: var(--mrd-text-sm); }
 .component-row__name { color: var(--mrd-ink); font-weight: var(--mrd-weight-medium); }
+.component-row { text-decoration: none; color: inherit; transition: background-color 150ms; }
+.component-row:hover .component-row__name { color: var(--mrd-accent); }
+.component-row:focus-visible { outline: 2px solid var(--mrd-accent); outline-offset: 2px; border-radius: var(--mrd-radius-xs); }
 @media (max-width: 640px) { .component-row { grid-template-columns: 1fr auto; } .component-row__desc { grid-column: 1 / -1; order: 3; } }
 
 /* Pager */

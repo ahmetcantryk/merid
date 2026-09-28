@@ -1,0 +1,104 @@
+import { EmptyStateDemo, EmptyStatePlain, EmptyStateMinimal } from "@/examples/empty-state";
+
+export const metadata = {
+  title: "EmptyState",
+  description: "A centred placeholder for empty lists, searches with no results and first-run screens.",
+};
+
+# EmptyState
+
+A centred placeholder for the moments when there is nothing to show: an empty list, a search with no results, a first-run screen. It explains why and offers the next step.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/empty-state">Source</a>
+</div>
+
+<ComponentPreview code={`<EmptyState
+  icon={<InboxIcon />}
+  title="No invoices yet"
+  description="Invoices you create or receive will show up here."
+  action={<Button variant="primary" leadingIcon={<PlusIcon />}>New invoice</Button>}
+/>`}>
+  <EmptyStateDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { EmptyState } from "@merid/react";
+```
+
+## Examples
+
+### Plain
+
+`variant="plain"` drops the tray background — use it inside a card or table frame that already has a surface. `titleLevel` sets the heading level to fit the page outline.
+
+<ComponentPreview code={`<EmptyState
+  variant="plain"
+  icon={<SearchIcon />}
+  title="No results for “quarterly”"
+  description="Try a shorter search or check the spelling."
+  action={<Button>Clear search</Button>}
+  titleLevel={2}
+/>`}>
+  <EmptyStatePlain />
+</ComponentPreview>
+
+### Title only
+
+Only `title` is required.
+
+<ComponentPreview code={`<EmptyState title="Nothing to review" />`}>
+  <EmptyStateMinimal />
+</ComponentPreview>
+
+## API reference
+
+Renders a `div`; the ref and other div attributes are forwarded (the native `title` attribute is replaced by the `title` prop).
+
+<PropsTable rows={[
+  { name: "title", type: "ReactNode", required: true, description: "Short headline, e.g. \"No invoices yet\"." },
+  { name: "description", type: "ReactNode", description: "One or two sentences explaining what to do next." },
+  { name: "icon", type: "ReactNode", description: "Icon shown in a soft accent tile. Decorative." },
+  { name: "action", type: "ReactNode", description: "Primary action(s), usually a Button." },
+  { name: "titleLevel", type: "1 | 2 | 3 | 4 | 5 | 6", default: "3", description: "Heading level for title." },
+  { name: "variant", type: '"tray" | "plain"', default: '"tray"', description: "Surface: tray is a recessed panel, plain has no background." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-empty-state</code></td><td>Root; <code>data-variant</code> = <code>tray</code> · <code>plain</code></td></tr>
+    <tr><td><code>.mrd-empty-state__icon</code></td><td>Accent-soft icon tile</td></tr>
+    <tr><td><code>.mrd-empty-state__title</code></td><td>Heading</td></tr>
+    <tr><td><code>.mrd-empty-state__description</code></td><td>Body text</td></tr>
+    <tr><td><code>.mrd-empty-state__action</code></td><td>Action row</td></tr>
+  </tbody>
+</table>
+
+EmptyState has no component variables.
+
+## Accessibility
+
+- The title is a real heading (`h3` by default); set `titleLevel` so it fits the surrounding outline.
+- The icon is `aria-hidden`; the title must carry the meaning on its own.
+- When the empty state replaces results after a search, announce the change — for example render the result count in a polite live region.
+
+## Guidelines
+
+<DoDont
+  do={<p>Say what is missing and how to fill it: “No invoices yet” plus a “New invoice” button.</p>}
+  dont={<p>Show a bare “No data” or a large illustration with no way forward.</p>}
+/>
+
+## Related
+
+- [Table](/docs/components/table) — the most common place an empty state appears.
+- [Skeleton](/docs/components/skeleton) — while data is still loading, before you know it is empty.
+- [Button](/docs/components/button) — the action.

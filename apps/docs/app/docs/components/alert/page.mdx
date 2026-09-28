@@ -1,0 +1,129 @@
+import { AlertDemo, AlertTones, AlertAction, AlertNoIcon } from "@/examples/alert";
+
+export const metadata = {
+  title: "Alert",
+  description: "An inline notice on a tinted surface for info, success, warning and error messages.",
+};
+
+# Alert
+
+An inline notice on a soft tinted surface. It tells people about something that affects the page they are on — a failed sync, a trial ending, a successful payment.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/alert">Source</a>
+</div>
+
+<ComponentPreview code={`<Alert title="New version available">
+  Reload the page to get the latest features.
+</Alert>`}>
+  <AlertDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Alert } from "@merid/react";
+```
+
+## Examples
+
+### Tones
+
+Each tone brings its own tint, text colour and icon.
+
+<ComponentPreview code={`<Alert tone="info" title="Heads up">Maintenance is scheduled for Sunday 02:00 UTC.</Alert>
+<Alert tone="success" title="Payment received">Your invoice has been marked as paid.</Alert>
+<Alert tone="warning" title="Storage almost full">You have used 92% of your quota.</Alert>
+<Alert tone="danger" title="Sync failed">We could not reach the server. Check your connection.</Alert>`}>
+  <AlertTones />
+</ComponentPreview>
+
+### With an action
+
+`action` is a trailing slot for a button or a dismiss [IconButton](/docs/components/icon-button). Dismissal is up to you: remove the alert from your state.
+
+<ComponentPreview code={`<Alert
+  tone="warning"
+  title="Trial ends in 3 days"
+  action={<IconButton size="sm" label="Dismiss" icon={<CloseIcon />} onClick={() => setOpen(false)} />}
+>
+  Add a payment method to keep your workspace.
+</Alert>
+
+<Alert tone="info" action={<Button size="sm">Review</Button>}>
+  2 members are waiting for approval.
+</Alert>`}>
+  <AlertAction />
+</ComponentPreview>
+
+### Without icon or live region
+
+`icon={null}` hides the icon; any node replaces it. `live="off"` renders a plain note with no role.
+
+<ComponentPreview code={`<Alert icon={null} live="off">
+  Plain note without an icon or live region.
+</Alert>`}>
+  <AlertNoIcon />
+</ComponentPreview>
+
+## API reference
+
+Renders a `div`; the ref and other div attributes are forwarded (the native `title` attribute is replaced by the `title` prop).
+
+<PropsTable rows={[
+  { name: "tone", type: '"info" | "success" | "warning" | "danger"', default: '"info"', description: "Colour tone and default icon." },
+  { name: "title", type: "ReactNode", description: "Medium-weight first line." },
+  { name: "icon", type: "ReactNode | null", description: "Leading icon. Defaults to a tone glyph; null hides it." },
+  { name: "action", type: "ReactNode", description: "Trailing slot, e.g. an action button or dismiss IconButton." },
+  { name: "live", type: '"polite" | "assertive" | "off"', description: "Live-region behaviour. Defaults to polite for info/success and assertive for warning/danger." },
+  { name: "children", type: "ReactNode", description: "Body text." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-alert</code></td><td>Root</td></tr>
+    <tr><td><code>.mrd-alert__icon</code></td><td>Icon slot</td></tr>
+    <tr><td><code>.mrd-alert__content</code>, <code>__title</code>, <code>__body</code></td><td>Text column</td></tr>
+    <tr><td><code>.mrd-alert__action</code></td><td>Trailing action slot</td></tr>
+    <tr><td><code>data-tone</code></td><td><code>info</code> · <code>success</code> · <code>warning</code> · <code>danger</code></td></tr>
+  </tbody>
+</table>
+
+Component variables: `--mrd-alert-bg` and `--mrd-alert-fg`, set per tone to the matching `-soft` and `-strong` tokens.
+
+```css
+.billing .mrd-alert[data-tone="info"] {
+  --mrd-alert-bg: var(--mrd-tray);
+  --mrd-alert-fg: var(--mrd-ink);
+}
+```
+
+## Accessibility
+
+- `polite` renders `role="status"`, `assertive` renders `role="alert"`. Live regions only announce content that changes after they mount, so render the alert when the event happens rather than toggling `hidden`.
+- Use `live="off"` for static notes present on page load, so screen readers do not interrupt.
+- The icon is decorative; the title and body carry the meaning, so do not rely on colour alone.
+
+## Guidelines
+
+<DoDont
+  do={<p>Say what happened and what to do next in one or two sentences: “Sync failed. Check your connection.”</p>}
+  dont={<p>Stack several alerts at the top of a page, or use <code>danger</code> for anything that is not an error.</p>}
+/>
+
+<DoDont
+  do={<p>Use an Alert for messages tied to the current page that should stay visible.</p>}
+  dont={<p>Use it for short-lived confirmations — those are a <a href="/docs/components/toast">Toast</a>.</p>}
+/>
+
+## Related
+
+- [Toast](/docs/components/toast) — transient notifications.
+- [AlertDialog](/docs/components/alert-dialog) — confirmations that need an answer.
+- [Badge](/docs/components/badge) — compact status labels.

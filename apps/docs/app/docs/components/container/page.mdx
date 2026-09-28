@@ -1,0 +1,94 @@
+import { ContainerDemo, ContainerProse } from "@/examples/container";
+
+export const metadata = {
+  title: "Container",
+  description: "Centres content, caps its width and adds the responsive side gutter.",
+};
+
+# Container
+
+Centres content, caps its width at 1160px and adds the responsive side gutter. Put one inside each [Section](/docs/components/section) so page bands stay full-bleed while their content lines up.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/container">Source</a>
+</div>
+
+<ComponentPreview code={`<Container>
+  <Box>Content capped at 1160px, centred, with a side gutter</Box>
+</Container>`}>
+  <ContainerDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Container } from "@merid/react";
+```
+
+## Examples
+
+### Prose width
+
+`size="prose"` caps content at 720px, the reading width for long-form text.
+
+<ComponentPreview code={`<Container size="prose">
+  <Box>Reading width: 720px</Box>
+</Container>`}>
+  <ContainerProse />
+</ComponentPreview>
+
+### In a page band
+
+```tsx
+<Section tone="tray">
+  <Container>
+    <Heading level={2}>Pricing</Heading>
+  </Container>
+</Section>
+```
+
+## API reference
+
+Renders a `div` unless `as` is given; forwards its ref and passes all HTML attributes through.
+
+<PropsTable rows={[
+  { name: "size", type: '"default" | "prose"', default: '"default"', description: "Max content width: default 1160px, prose 720px." },
+  { name: "as", type: "ElementType", default: '"div"', description: "Element or component to render instead of a div, e.g. main." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-container</code></td><td>Root element</td></tr>
+    <tr><td><code>data-size</code></td><td><code>default</code> · <code>prose</code></td></tr>
+  </tbody>
+</table>
+
+Component variable: `--mrd-container-width`, which resolves to `--mrd-container` (1160px) or `--mrd-prose` (720px).
+
+```css
+.wide.mrd-container {
+  --mrd-container-width: 1320px;
+}
+```
+
+## Accessibility
+
+- Container is layout only and adds no role. Use `as="main"` for the page's main landmark when it is the outermost wrapper.
+
+## Guidelines
+
+<DoDont
+  do={<p>Put backgrounds on the full-bleed <code>Section</code> and the width cap on the <code>Container</code> inside it.</p>}
+  dont={<p>Nest containers, or give a container a background colour — the colour stops short of the viewport edges.</p>}
+/>
+
+## Related
+
+- [Section](/docs/components/section) — the full-bleed band around a container.
+- [Grid](/docs/components/grid) and [Stack](/docs/components/stack) — layout inside a container.

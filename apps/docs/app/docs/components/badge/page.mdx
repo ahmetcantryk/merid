@@ -1,0 +1,100 @@
+import { BadgeDemo, BadgeTones, BadgeDots, BadgeCount } from "@/examples/badge";
+
+export const metadata = {
+  title: "Badge",
+  description: "A small, non-interactive pill for status and counts.",
+};
+
+# Badge
+
+A 22px pill that labels status or shows a count. Badges are read-only — they never take focus or respond to clicks.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/badge">Source</a>
+</div>
+
+<ComponentPreview code={`<Badge tone="success" dot>Active</Badge>`}>
+  <BadgeDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Badge } from "@merid/react";
+```
+
+## Examples
+
+### Tones
+
+Each tone is a soft tint with strong text. `solid` is the only filled tone — reserve it for the one badge that must stand out.
+
+<ComponentPreview code={`<Badge>Neutral</Badge>
+<Badge tone="accent">Accent</Badge>
+<Badge tone="success">Success</Badge>
+<Badge tone="warning">Warning</Badge>
+<Badge tone="danger">Danger</Badge>
+<Badge tone="solid">Solid</Badge>`}>
+  <BadgeTones />
+</ComponentPreview>
+
+### Status dot
+
+`dot` adds a small leading dot in the current text colour, which reads well for live states.
+
+<ComponentPreview code={`<Badge tone="success" dot>Online</Badge>
+<Badge tone="warning" dot>Degraded</Badge>
+<Badge tone="danger" dot>Down</Badge>`}>
+  <BadgeDots />
+</ComponentPreview>
+
+### Count
+
+Numbers inside badges use tabular numerals, so counts don't shift width as they change.
+
+<ComponentPreview code={`<Badge tone="accent">12</Badge>`}>
+  <BadgeCount />
+</ComponentPreview>
+
+## API reference
+
+Forwards its ref to the `<span>` and passes native span attributes through.
+
+<PropsTable rows={[
+  { name: "tone", type: '"neutral" | "accent" | "success" | "warning" | "danger" | "solid"', default: '"neutral"', description: "Colour tone. solid is the only filled tone." },
+  { name: "dot", type: "boolean", default: "false", description: "Shows a small leading status dot in the current text colour." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-badge</code></td><td>Root <code>{"<span>"}</code></td></tr>
+    <tr><td><code>.mrd-badge__dot</code></td><td>Leading status dot (aria-hidden)</td></tr>
+    <tr><td><code>data-tone</code></td><td><code>neutral</code> · <code>accent</code> · <code>success</code> · <code>warning</code> · <code>danger</code> · <code>solid</code></td></tr>
+  </tbody>
+</table>
+
+Badge has no component variables; tones map to the `--mrd-*-soft` and `--mrd-*-strong` colour tokens.
+
+## Accessibility
+
+- A badge is plain text; its content is read in document order. Make sure it makes sense next to what it labels.
+- The dot is decorative. Never rely on the dot's colour alone — the text must say the status.
+- A bare number (“12”) needs context. Add a visually hidden suffix if the meaning isn't clear from nearby text, e.g. `12 <VisuallyHidden>unread</VisuallyHidden>`.
+
+## Guidelines
+
+<DoDont
+  do={<p>Keep badge text to one or two words: “Draft”, “Past due”.</p>}
+  dont={<p>Use a badge as a button or filter chip — it is not interactive and cannot receive focus.</p>}
+/>
+
+## Related
+
+- [Alert](/docs/components/alert) — for status that needs a sentence.
+- [VisuallyHidden](/docs/components/visually-hidden) — to give counts an accessible meaning.

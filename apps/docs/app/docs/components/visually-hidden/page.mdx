@@ -1,0 +1,77 @@
+import { VisuallyHiddenDemo, VisuallyHiddenHeading } from "@/examples/visually-hidden";
+
+export const metadata = {
+  title: "VisuallyHidden",
+  description: "Hides content visually while keeping it available to screen readers.",
+};
+
+# VisuallyHidden
+
+Hides content from sight while keeping it in the accessibility tree. Use it for context that is obvious visually but not when read aloud.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/visually-hidden">Source</a>
+</div>
+
+<ComponentPreview code={`<Text>
+  Revenue up 12%
+  <VisuallyHidden> compared with last month</VisuallyHidden>
+</Text>`}>
+  <VisuallyHiddenDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { VisuallyHidden } from "@merid/react";
+```
+
+## Examples
+
+### Hidden heading
+
+A region that is obvious from layout still benefits from a heading for screen-reader navigation. `as` renders the right element.
+
+<ComponentPreview code={`<nav aria-labelledby="vh-nav">
+  <VisuallyHidden as="h2" id="vh-nav">Account settings</VisuallyHidden>
+  <IconButton label="Settings" icon={<SettingsIcon />} />
+</nav>`}>
+  <VisuallyHiddenHeading />
+</ComponentPreview>
+
+## API reference
+
+Renders a `<span>` by default, forwards its ref and passes other HTML attributes through.
+
+<PropsTable rows={[
+  { name: "as", type: "ElementType", default: '"span"', description: "Element or component to render instead." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-visually-hidden</code></td><td>The clip pattern; usable on any element without the component</td></tr>
+  </tbody>
+</table>
+
+## Accessibility
+
+- Content stays readable by screen readers and in the tab order if focusable. Do not hide focusable elements — a sighted keyboard user would focus something invisible.
+- For icon-only buttons, prefer [IconButton](/docs/components/icon-button)'s `label`, which sets `aria-label` directly.
+
+## Guidelines
+
+<DoDont
+  do={<p>Add short context that the visual layout already implies, like “compared with last month”.</p>}
+  dont={<p>Hide keyword-stuffed text or content that sighted users also need.</p>}
+/>
+
+## Related
+
+- [IconButton](/docs/components/icon-button) — names icon-only actions.
+- [Link](/docs/components/link) — uses the same class for its “opens in a new tab” hint.

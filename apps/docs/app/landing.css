@@ -54,11 +54,12 @@
 .showcase__stage {
   display: grid; place-items: center; min-height: 380px; padding: 40px; background: var(--mrd-tray);
 }
-.showcase__pending { max-width: 300px; text-align: center; color: var(--mrd-muted); font-size: var(--mrd-text-2xs); }
-.showcase__pending strong { display: block; margin-bottom: 6px; color: var(--mrd-ink); font-size: var(--mrd-text-sm); font-weight: var(--mrd-weight-medium); }
+.showcase__stage > .mrd-card { width: min(100%, 380px); }
+.showcase__stage .mrd-field { align-self: stretch; }
+.window .shiki { font-size: 12.5px; white-space: pre-wrap; overflow-wrap: anywhere; }
 @media (max-width: 920px) {
   .showcase { grid-template-columns: 1fr; }
-  .showcase__stage { min-height: 280px; }
+  .showcase__stage { min-height: 280px; padding: 24px 16px; }
 }
 
 /* Principles: hairline grid, no cards */

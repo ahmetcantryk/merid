@@ -1,0 +1,83 @@
+import { KbdDemo, KbdSizes, KbdChord } from "@/examples/kbd";
+
+export const metadata = {
+  title: "Kbd",
+  description: "A keyboard key cap for documenting shortcuts.",
+};
+
+# Kbd
+
+A key cap for showing keyboard shortcuts in text, menus and tooltips. Renders a semantic `<kbd>`.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/kbd">Source</a>
+</div>
+
+<ComponentPreview code={`<Text>
+  Press <Kbd>Ctrl</Kbd> <Kbd>K</Kbd> to search.
+</Text>`}>
+  <KbdDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Kbd } from "@merid/react";
+```
+
+## Examples
+
+### Sizes
+
+`md` (default) sits in body text; `sm` fits inside menu items, tooltips and dense rows.
+
+<ComponentPreview code={`<Kbd size="sm">Esc</Kbd>
+<Kbd size="md">Esc</Kbd>`}>
+  <KbdSizes />
+</ComponentPreview>
+
+### Chords
+
+Render one `Kbd` per key and put the separator between them as plain text.
+
+<ComponentPreview code={`<Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>P</Kbd>`}>
+  <KbdChord />
+</ComponentPreview>
+
+## API reference
+
+`Kbd` forwards its ref to the `<kbd>` and passes other HTML attributes through.
+
+<PropsTable rows={[
+  { name: "size", type: '"sm" | "md"', default: '"md"', description: "Size of the key cap." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-kbd</code></td><td>Root {"<kbd>"}</td></tr>
+    <tr><td><code>data-size</code></td><td><code>sm</code> · <code>md</code></td></tr>
+  </tbody>
+</table>
+
+## Accessibility
+
+- `<kbd>` is read as its text. Spell out symbols that screen readers pronounce poorly — prefer “Ctrl” over “⌃”, or add a [VisuallyHidden](/docs/components/visually-hidden) name next to the glyph.
+- Kbd is not interactive; it documents a shortcut, it does not bind one.
+
+## Guidelines
+
+<DoDont
+  do={<p>Use one cap per key, with the key names your users see on their keyboard.</p>}
+  dont={<p>Put a whole shortcut like “Ctrl+Shift+P” inside a single cap.</p>}
+/>
+
+## Related
+
+- [Code](/docs/components/code) — inline code and commands.
+- [Text](/docs/components/text) — the running text Kbd usually sits in.

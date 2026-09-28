@@ -3,17 +3,23 @@ import { CodeBlock } from "@/components/CodeBlock";
 import { CopyButton } from "@/components/CopyButton";
 import { site } from "@/lib/site";
 import { FoundationIndex } from "./_landing/FoundationIndex";
+import { Workspace } from "./_landing/Workspace";
 
-const SHOWCASE_CODE = `import { Button, Card, Field, Input, Switch } from "@merid/react";
+const SHOWCASE_CODE = `import {
+  Button, Card, Field,
+  Input, Stack, Switch,
+} from "@merid/react";
 
 export function Workspace() {
   return (
     <Card variant="elevated">
-      <Field label="Workspace name">
-        <Input defaultValue="Northwind" />
-      </Field>
-      <Switch label="Weekly digest" defaultChecked />
-      <Button variant="primary">Save changes</Button>
+      <Stack gap={5} align="start">
+        <Field label="Workspace name">
+          <Input defaultValue="Northwind" />
+        </Field>
+        <Switch defaultChecked>Weekly digest</Switch>
+        <Button variant="primary">Save changes</Button>
+      </Stack>
     </Card>
   );
 }`;
@@ -79,11 +85,7 @@ export default function HomePage() {
             <div className="window">
               <div className="window__bar">Preview</div>
               <div className="showcase__stage">
-                {/* TODO(component-pages): render <Workspace /> from @merid/react here once Card, Field, Input, Switch and Button are exported. */}
-                <p className="showcase__pending">
-                  <strong>Live preview</strong>
-                  The rendered example appears here as soon as the form components are published.
-                </p>
+                <Workspace />
               </div>
             </div>
           </div>

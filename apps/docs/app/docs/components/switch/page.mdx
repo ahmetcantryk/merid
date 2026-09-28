@@ -1,0 +1,130 @@
+import { SwitchDemo, SwitchControlled, SwitchLabelPosition, SwitchStates, SwitchForm } from "@/examples/switch";
+
+export const metadata = {
+  title: "Switch",
+  description: "An on/off toggle for settings that take effect immediately.",
+};
+
+# Switch
+
+A 34×20 on/off toggle for settings that take effect as soon as they change. It is a `<button role="switch">`, not a checkbox.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/switch">Source</a>
+</div>
+
+<ComponentPreview code={`<Switch defaultChecked>Dark mode</Switch>`}>
+  <SwitchDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Switch } from "@merid/react";
+```
+
+## Examples
+
+### Controlled
+
+`defaultChecked` keeps state inside the switch. For controlled use pass `checked` and `onCheckedChange`, which receives the next boolean.
+
+<ComponentPreview code={`const [on, setOn] = useState(false);
+
+<Switch checked={on} onCheckedChange={setOn}>
+  Auto-save drafts
+</Switch>`}>
+  <SwitchControlled />
+</ComponentPreview>
+
+### Label position
+
+<ComponentPreview code={`<Switch labelPosition="start">Label at start</Switch>
+<Switch labelPosition="end">Label at end</Switch>`}>
+  <SwitchLabelPosition />
+</ComponentPreview>
+
+### Disabled and unlabelled
+
+Without children, give the switch an `aria-label`.
+
+<ComponentPreview code={`<Switch disabled>Disabled off</Switch>
+<Switch disabled defaultChecked>Disabled on</Switch>
+<Switch aria-label="Notifications" />`}>
+  <SwitchStates />
+</ComponentPreview>
+
+### In a form
+
+A button does not submit a value on its own. Set `name` and the switch renders a hidden input that submits `value` (default `"on"`) while it is on — nothing is submitted while off.
+
+<ComponentPreview code={`<form>
+  <Switch name="newsletter" value="yes" defaultChecked>
+    Subscribe to newsletter
+  </Switch>
+</form>`}>
+  <SwitchForm />
+</ComponentPreview>
+
+## API reference
+
+The ref and remaining button attributes go to the track `<button>`; `className` goes to the outer wrapper.
+
+<PropsTable rows={[
+  { name: "checked", type: "boolean", description: "On state (controlled)." },
+  { name: "defaultChecked", type: "boolean", default: "false", description: "Initial on state (uncontrolled)." },
+  { name: "onCheckedChange", type: "(checked: boolean) => void", description: "Called with the new state when toggled." },
+  { name: "children", type: "ReactNode", description: "Visible label; becomes the accessible name. Otherwise pass aria-label." },
+  { name: "labelPosition", type: '"start" | "end"', default: '"end"', description: "Which side the label sits on." },
+  { name: "name", type: "string", description: "When set, a hidden input with this name submits value while on." },
+  { name: "value", type: "string", default: '"on"', description: "Submitted value when on." },
+  { name: "disabled", type: "boolean", description: "Disables the switch and dims the label." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-switch</code></td><td>Wrapper; receives <code>className</code></td></tr>
+    <tr><td><code>.mrd-switch__track</code></td><td>The {"<button role=\"switch\">"}</td></tr>
+    <tr><td><code>.mrd-switch__thumb</code></td><td>Moving thumb</td></tr>
+    <tr><td><code>.mrd-switch__label</code></td><td>Visible label</td></tr>
+    <tr><td><code>data-state</code></td><td><code>on</code> · <code>off</code> (wrapper and track)</td></tr>
+    <tr><td><code>data-label-position</code></td><td><code>start</code> · <code>end</code></td></tr>
+    <tr><td><code>data-disabled</code></td><td>On the wrapper when disabled</td></tr>
+  </tbody>
+</table>
+
+Switch has no component variables; the off track uses `--mrd-control-off` and the on track `--mrd-accent`.
+
+## Accessibility
+
+- Exposed as `role="switch"` with `aria-checked`, so screen readers announce “on” / “off”.
+- The visible label is linked with `aria-labelledby`; clicking it also toggles the switch.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Moves focus to the switch." },
+  { keys: ["Space"], action: "Toggles the switch." },
+  { keys: ["Enter"], action: "Toggles the switch." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Use a switch for settings that apply instantly, and label it with the setting name: “Dark mode”.</p>}
+  dont={<p>Use a switch in a form that needs a Save button — use a <a href="/docs/components/checkbox">Checkbox</a>.</p>}
+/>
+
+<DoDont
+  do={<p>Keep the label static; the switch itself shows the state.</p>}
+  dont={<p>Change the label between “On” and “Off” — it duplicates the state and confuses screen reader users.</p>}
+/>
+
+## Related
+
+- [Checkbox](/docs/components/checkbox) — choices applied on submit.
+- [SegmentedControl](/docs/components/segmented-control) — pick between named modes.

@@ -1,0 +1,77 @@
+import { CodeDemo, CodeBlockDemo } from "@/examples/code";
+
+export const metadata = {
+  title: "Code",
+  description: "Monospace code, inline in a tray chip or as a multi-line block.",
+};
+
+# Code
+
+Monospace code, either inline in a tray chip or as a multi-line block. Syntax highlighting is left to you.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/code">Source</a>
+</div>
+
+<ComponentPreview code={`<Text>
+  Import the stylesheet once with <Code>@merid/react/styles.css</Code>.
+</Text>`}>
+  <CodeDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Code } from "@merid/react";
+```
+
+## Examples
+
+### Block
+
+`variant="block"` renders `<pre><code>` for multi-line snippets. Whitespace is preserved and long lines scroll horizontally.
+
+<ComponentPreview code={`<Code variant="block">
+  {'npm i @merid/react\\nimport "@merid/react/styles.css";'}
+</Code>`}>
+  <CodeBlockDemo />
+</ComponentPreview>
+
+## API reference
+
+`Code` forwards its ref to the `<code>` (inline) or `<pre>` (block) and passes other HTML attributes to that element.
+
+<PropsTable rows={[
+  { name: "variant", type: '"inline" | "block"', default: '"inline"', description: "inline renders <code> in a tray chip; block renders <pre><code>." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-code</code></td><td>Root: {"<code>"} or {"<pre>"}</td></tr>
+    <tr><td><code>data-variant</code></td><td><code>inline</code> · <code>block</code></td></tr>
+  </tbody>
+</table>
+
+To add highlighting, pass pre-highlighted children or style the inner `code` element from your highlighter's output.
+
+## Accessibility
+
+- Code is read as plain text. A block that overflows horizontally should be reachable by keyboard; add `tabIndex={0}` and an `aria-label` to the block when snippets can be wide.
+
+## Guidelines
+
+<DoDont
+  do={<p>Use inline <code>Code</code> for identifiers, file names and short commands inside a sentence.</p>}
+  dont={<p>Wrap whole paragraphs or UI labels in <code>Code</code> for a “technical” look.</p>}
+/>
+
+## Related
+
+- [Kbd](/docs/components/kbd) — keyboard shortcuts.
+- [Text](/docs/components/text) — the surrounding copy.

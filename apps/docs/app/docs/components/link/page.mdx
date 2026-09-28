@@ -1,0 +1,125 @@
+import { LinkDemo, LinkTones, LinkUnderlines, LinkExternal } from "@/examples/link";
+
+export const metadata = {
+  title: "Link",
+  description: "A styled anchor for navigation, inline or standalone.",
+};
+
+# Link
+
+A styled `<a>` for navigation — inline in text or standalone in lists and footers. Use a [Button](/docs/components/button) when the result is an action rather than a new location.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/link">Source</a>
+</div>
+
+<ComponentPreview code={`<Text>
+  Read the <Link href="/docs/installation">installation guide</Link> before you start.
+</Text>`}>
+  <LinkDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Link } from "@merid/react";
+```
+
+## Examples
+
+### Tones
+
+`accent` (default) is for links inside running text. `ink` and `muted` are quieter, for navigation lists and footers where every item is a link.
+
+<ComponentPreview code={`<Link href="#" tone="accent">Accent</Link>
+<Link href="#" tone="ink">Ink</Link>
+<Link href="#" tone="muted">Muted</Link>`}>
+  <LinkTones />
+</ComponentPreview>
+
+### Underline
+
+`hover` (default) shows the underline on hover and focus. Use `always` when the link must be distinguishable without colour — for example inside a paragraph of muted text.
+
+<ComponentPreview code={`<Link href="#" underline="hover">Underline on hover</Link>
+<Link href="#" underline="always">Always underlined</Link>
+<Link href="#" underline="none">No underline</Link>`}>
+  <LinkUnderlines />
+</ComponentPreview>
+
+### External
+
+`external` opens the link in a new tab, sets `rel="noopener noreferrer"`, and appends a visually hidden “(opens in a new tab)” so screen reader users are warned.
+
+<ComponentPreview code={`<Link href="https://github.com/merid-ui/merid" external>
+  GitHub repository
+</Link>`}>
+  <LinkExternal />
+</ComponentPreview>
+
+### With a client-side router
+
+`Link` renders a plain anchor. For Next.js or React Router links, put the class and data attributes on the router's own component:
+
+```tsx
+import NextLink from "next/link";
+
+<NextLink href="/pricing" className="mrd-link" data-tone="accent" data-underline="hover">
+  Pricing
+</NextLink>
+```
+
+## API reference
+
+Forwards its ref to the `<a>` and passes all native anchor attributes through. When `external` is set, it overrides `target` and `rel`.
+
+<PropsTable rows={[
+  { name: "tone", type: '"accent" | "ink" | "muted"', default: '"accent"', description: "Text colour." },
+  { name: "underline", type: '"hover" | "always" | "none"', default: '"hover"', description: "When the underline shows." },
+  { name: "external", type: "boolean", default: "false", description: "Opens in a new tab with rel=\"noopener noreferrer\" and appends a visually hidden hint." },
+  { name: "href", type: "string", description: "Native link target." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-link</code></td><td>Root <code>{"<a>"}</code></td></tr>
+    <tr><td><code>data-tone</code></td><td><code>accent</code> · <code>ink</code> · <code>muted</code></td></tr>
+    <tr><td><code>data-underline</code></td><td><code>hover</code> · <code>always</code> · <code>none</code></td></tr>
+  </tbody>
+</table>
+
+Link has no component variables; it reads `--mrd-accent`, `--mrd-accent-hover`, `--mrd-ink` and `--mrd-muted`.
+
+## Accessibility
+
+- Renders a native `<a>`: Enter follows it, and it appears in the screen reader's links list.
+- Link text must make sense out of context — “Read the pricing guide”, not “click here”.
+- `external` adds the new-tab warning; do not open new tabs silently with `target="_blank"` alone.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Moves focus to the link." },
+  { keys: ["Enter"], action: "Follows the link." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Use <code>Link</code> when something takes the user somewhere; use <code>Button</code> when it does something.</p>}
+  dont={<p>Attach an <code>onClick</code> to a link with <code>href="#"</code> to trigger an action.</p>}
+/>
+
+<DoDont
+  do={<p>Underline links that sit in muted or dense text so they are not identified by colour alone.</p>}
+  dont={<p>Use <code>underline="none"</code> for links in running text.</p>}
+/>
+
+## Related
+
+- [Button](/docs/components/button) — the `link` variant looks like a link but performs an action.
+- [VisuallyHidden](/docs/components/visually-hidden) — the utility behind the external-link hint.

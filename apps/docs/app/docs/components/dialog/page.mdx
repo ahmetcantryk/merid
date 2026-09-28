@@ -1,0 +1,203 @@
+import { DialogDemo, DialogControlledDemo } from "@/examples/dialog";
+
+export const metadata = {
+  title: "Dialog",
+  description: "A modal window for a focused task, with focus trap, scroll lock and dismiss handling.",
+};
+
+# Dialog
+
+A modal window for a focused task. Focus is trapped while it is open and returned to the trigger when it closes.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" /> <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/dialog">View source</a>
+</div>
+
+## Import
+
+```tsx
+import { Dialog } from "@merid/react";
+```
+
+<ComponentPreview code={`<Dialog.Root>
+  <Dialog.Trigger className="mrd-button" data-variant="secondary" data-size="md">
+    Edit profile
+  </Dialog.Trigger>
+  <Dialog.Content>
+    <Dialog.Title>Edit profile</Dialog.Title>
+    <Dialog.Description>Changes are visible to everyone in your workspace.</Dialog.Description>
+    <Field label="Display name">
+      <Input defaultValue="Ada Lovelace" />
+    </Field>
+    <Dialog.Footer>
+      <Dialog.Close className="mrd-button" data-variant="secondary" data-size="md">Cancel</Dialog.Close>
+      <Dialog.Close className="mrd-button" data-variant="primary" data-size="md">Save</Dialog.Close>
+    </Dialog.Footer>
+    <Dialog.Close />
+  </Dialog.Content>
+</Dialog.Root>`}>
+  <DialogDemo />
+</ComponentPreview>
+
+## Anatomy
+
+```tsx
+<Dialog.Root>
+  <Dialog.Trigger />
+  <Dialog.Content>
+    <Dialog.Title />
+    <Dialog.Description />
+    <Dialog.Footer>
+      <Dialog.Close>Cancel</Dialog.Close>
+    </Dialog.Footer>
+    <Dialog.Close />
+  </Dialog.Content>
+</Dialog.Root>
+```
+
+- **Root** holds the open state. It renders no element.
+- **Trigger** is a `<button>` that toggles the dialog.
+- **Content** is the modal surface, portalled to `document.body` with a backdrop.
+- **Title** labels the dialog (`aria-labelledby`). Always include one.
+- **Description** is linked with `aria-describedby` when present.
+- **Footer** lays out actions, right-aligned.
+- **Close** with no children renders the top-right icon button; with children it renders an unstyled button around them.
+
+## Examples
+
+### Controlled
+
+Pass `open` and `onOpenChange` to keep the state in your component, for example to open the dialog from somewhere other than a Trigger.
+
+<ComponentPreview code={`const [open, setOpen] = useState(false);
+
+<Button variant="secondary" onClick={() => setOpen(true)}>Open from state</Button>
+<Dialog.Root open={open} onOpenChange={setOpen}>
+  <Dialog.Content>
+    <Dialog.Title>Controlled dialog</Dialog.Title>
+    <Dialog.Description>Open state lives in the parent component.</Dialog.Description>
+    <Dialog.Footer>
+      <Button variant="primary" onClick={() => setOpen(false)}>Done</Button>
+    </Dialog.Footer>
+    <Dialog.Close />
+  </Dialog.Content>
+</Dialog.Root>`}>
+  <DialogControlledDemo />
+</ComponentPreview>
+
+### Initial focus
+
+Focus moves to the element passed as `initialFocus`, then to an element with `data-autofocus`, then to the first tabbable element.
+
+```tsx
+<Dialog.Content>
+  <Dialog.Title>Rename</Dialog.Title>
+  <Input data-autofocus defaultValue="Northwind" />
+</Dialog.Content>
+```
+
+### Blocking dismissal
+
+Set `closeOnOutsidePress={false}` or `closeOnEscape={false}` when losing unsaved work would be costly. Prefer [AlertDialog](/docs/components/alert-dialog) for confirmations.
+
+## API reference
+
+### Dialog.Root
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled open state." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Initial open state when uncontrolled." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Called when the open state should change." },
+  { name: "children", type: "ReactNode", description: "Trigger, Content and anything else sharing this dialog's state." },
+]} />
+
+### Dialog.Trigger
+
+Accepts every `<button>` attribute. `type` defaults to `"button"`.
+
+<PropsTable rows={[
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the button." },
+]} />
+
+### Dialog.Content
+
+Accepts every `<div>` attribute except `role`.
+
+<PropsTable rows={[
+  { name: "closeOnOutsidePress", type: "boolean", default: "true", description: "Close when the backdrop is pressed." },
+  { name: "closeOnEscape", type: "boolean", default: "true", description: "Close on Escape." },
+  { name: "initialFocus", type: "RefObject<HTMLElement | null>", description: "Element to focus when opened; defaults to [data-autofocus], then the first tabbable element." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal target." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the dialog element." },
+]} />
+
+### Dialog.Title
+
+Renders an `<h2>`. Accepts every heading attribute.
+
+<PropsTable rows={[
+  { name: "ref", type: "Ref<HTMLHeadingElement>", description: "Forwarded ref to the heading." },
+]} />
+
+### Dialog.Description
+
+Renders a `<p>`. Accepts every paragraph attribute.
+
+<PropsTable rows={[
+  { name: "ref", type: "Ref<HTMLParagraphElement>", description: "Forwarded ref to the paragraph." },
+]} />
+
+### Dialog.Close
+
+Accepts every `<button>` attribute.
+
+<PropsTable rows={[
+  { name: "icon", type: "boolean", default: "true without children", description: "Render the standard top-right icon button. When false (default if children are given) the button renders its children unstyled." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the button." },
+]} />
+
+### Dialog.Footer
+
+Renders a `<div>` and accepts every `<div>` attribute; it has no additional props.
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-dialog__backdrop` | Fixed backdrop, `var(--mrd-backdrop)` |
+| `.mrd-dialog` | The surface: 560px max width, `--mrd-radius-card`, `--mrd-shadow-2xl` |
+| `.mrd-dialog__title` | Heading |
+| `.mrd-dialog__description` | Supporting text |
+| `.mrd-dialog__footer` | Action row |
+| `.mrd-dialog__close` | Icon close button |
+
+Content and backdrop carry `data-state="open"` while mounted; the trigger carries `data-state="open" | "closed"`. At 640px and below the dialog becomes a bottom sheet and the footer stacks its actions. Tokens used: `--mrd-backdrop`, `--mrd-surface`, `--mrd-z-overlay`, `--mrd-duration-enter`. Trigger and text-child Close buttons are unstyled; add `className="mrd-button"` with `data-variant` and `data-size`, as in the examples.
+
+## Accessibility
+
+Follows the [WAI-ARIA Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/). Content has `role="dialog"` and `aria-modal="true"`; the Trigger has `aria-haspopup="dialog"` and `aria-expanded`. Page scroll is locked while open.
+
+<KeyboardTable rows={[
+  { keys: ["Space", "Enter"], action: "On the trigger, opens the dialog." },
+  { keys: ["Tab"], action: "Moves focus to the next tabbable element inside the dialog, wrapping at the end." },
+  { keys: ["Shift", "Tab"], action: "Moves focus to the previous tabbable element, wrapping at the start." },
+  { keys: ["Esc"], action: "Closes the dialog and returns focus to the trigger." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do="Use a dialog for a short, focused task the person asked for, such as editing one record."
+  dont="Open a dialog unprompted, or nest a dialog inside another dialog."
+/>
+
+<DoDont
+  do="Name the primary action with a verb that says what happens: Save, Invite, Rename."
+  dont="Use vague labels like OK or Yes for the primary action."
+/>
+
+## Related
+
+- [AlertDialog](/docs/components/alert-dialog) for confirmations that need a response.
+- [Drawer](/docs/components/drawer) for longer content alongside the page.
+- [Popover](/docs/components/popover) for non-modal, anchored content.

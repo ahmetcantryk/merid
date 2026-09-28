@@ -1,0 +1,103 @@
+import { GridDemo, GridColumns, GridAuto } from "@/examples/grid";
+
+export const metadata = {
+  title: "Grid",
+  description: "Two-dimensional grid layout with fixed or auto-fit columns.",
+};
+
+# Grid
+
+A two-dimensional CSS grid for rows of cards, stats and tiles. Pick a fixed column count, or let columns auto-fit by a minimum width.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/grid">Source</a>
+</div>
+
+<ComponentPreview code={`<Grid>
+  <Box>1</Box>
+  <Box>2</Box>
+  <Box>3</Box>
+  <Box>4</Box>
+  <Box>5</Box>
+  <Box>6</Box>
+</Grid>`}>
+  <GridDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Grid } from "@merid/react";
+```
+
+## Examples
+
+### Fixed columns
+
+`columns` sets 1–6 equal columns (default 3). At 640px and below, a fixed grid collapses to a single column.
+
+<ComponentPreview code={`<Grid columns={4} gap={3}>
+  {items.map((item) => <Box key={item.id}>{item.label}</Box>)}
+</Grid>`}>
+  <GridColumns />
+</ComponentPreview>
+
+### Auto-fit
+
+`minItemWidth` switches to `auto-fit`: as many columns as fit, each at least that wide. It overrides `columns` and needs no breakpoint.
+
+<ComponentPreview code={`<Grid minItemWidth={140} gap={4}>
+  {items.map((item) => <Box key={item.id}>{item.label}</Box>)}
+</Grid>`}>
+  <GridAuto />
+</ComponentPreview>
+
+## API reference
+
+Renders a `div` unless `as` is given; forwards its ref and passes all HTML attributes through.
+
+<PropsTable rows={[
+  { name: "columns", type: "1 | 2 | 3 | 4 | 5 | 6", default: "3", description: "Fixed number of equal columns. Collapses to one at ≤ 640px. Ignored when minItemWidth is set." },
+  { name: "minItemWidth", type: "number | string", description: "Responsive auto-fit: each column is at least this wide (number = px)." },
+  { name: "gap", type: "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 10 | 14 | 16 | 18 | 28", default: "6", description: "Gap from the --mrd-space-* scale (6 = 24px)." },
+  { name: "as", type: "ElementType", default: '"div"', description: "Element or component to render instead of a div." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-grid</code></td><td>Root element</td></tr>
+    <tr><td><code>data-layout</code></td><td><code>fixed</code> (columns) · <code>auto</code> (minItemWidth)</td></tr>
+  </tbody>
+</table>
+
+Component variables, set inline from props: `--mrd-grid-gap`, `--mrd-grid-columns` (fixed layout) and `--mrd-grid-min` (auto layout).
+
+```css
+@media (min-width: 1024px) {
+  .dashboard.mrd-grid { --mrd-grid-columns: 4; }
+}
+```
+
+## Accessibility
+
+- Grid is layout only and adds no role — it is not an ARIA `grid`. Use `as="ul"` with `li` children for a list of items.
+- Items flow in DOM order; keep that order meaningful for keyboard and screen reader users.
+
+## Guidelines
+
+<DoDont
+  do={<p>Prefer <code>minItemWidth</code> for card collections so the grid adapts to any container width.</p>}
+  dont={<p>Use Grid for a single row of buttons or form controls — that is a <code>Stack</code>.</p>}
+/>
+
+## Related
+
+- [Stack](/docs/components/stack) — one-dimensional layout.
+- [Card](/docs/components/card) — the usual grid item.
+- [Container](/docs/components/container) — caps the grid's width.

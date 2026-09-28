@@ -1,0 +1,179 @@
+import {
+  SelectBasic,
+  SelectControlled,
+  SelectSizes,
+} from "@/examples/select";
+import { selectBasicCode, selectControlledCode, selectSizesCode } from "@/examples/select.code";
+
+export const metadata = {
+  title: "Select",
+  description: "Choose one option from a styled list.",
+};
+
+# Select
+
+Choose one option from a styled list.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/select">Source</a>
+</div>
+
+<ComponentPreview code={selectBasicCode}>
+  <SelectBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Select } from "@merid/react";
+```
+
+## Anatomy
+
+```tsx
+<Select.Root>
+  <Select.Trigger />
+  <Select.Content>
+    <Select.Item value="a">A</Select.Item>
+  </Select.Content>
+</Select.Root>
+```
+
+- **Root** holds the value and open state, and renders a hidden `<input>` when `name` is set.
+- **Trigger** is the `role="combobox"` button. It shows the selected label or the placeholder.
+- **Content** is the portalled `role="listbox"`. It stays mounted (hidden) so options can report their labels.
+- **Item** is one `role="option"`. Its text children are the label, shown in the trigger and used for typeahead.
+
+## Examples
+
+### Controlled
+
+Pass `value` and `onValueChange`. An empty string means nothing is selected and shows the `placeholder`.
+
+<ComponentPreview code={selectControlledCode}>
+  <SelectControlled />
+</ComponentPreview>
+
+### Sizes and disabled
+
+<ComponentPreview code={selectSizesCode}>
+  <SelectSizes />
+</ComponentPreview>
+
+### In a form
+
+Set `name` (and optionally `required` and `form`) on Root. A hidden input carries the value on submit.
+
+```tsx
+<form>
+  <Select.Root name="region" required>
+    <Select.Trigger aria-label="Region" />
+    <Select.Content>…</Select.Content>
+  </Select.Root>
+</form>
+```
+
+## API reference
+
+### Root
+
+<PropsTable rows={[
+  { name: "value", type: "string", description: "Controlled selected value (\"\" means nothing selected)." },
+  { name: "defaultValue", type: "string", default: "\"\"", description: "Initial value when uncontrolled." },
+  { name: "onValueChange", type: "(value: string) => void", description: "Called with the newly selected value." },
+  { name: "open", type: "boolean", description: "Controlled open state." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Initial open state when uncontrolled." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Called when the open state should change." },
+  { name: "name", type: "string", description: "Form field name; renders a hidden input carrying the value." },
+  { name: "required", type: "boolean", description: "Marks the hidden input as required." },
+  { name: "disabled", type: "boolean", default: "false", description: "Disable the whole select." },
+  { name: "placeholder", type: "ReactNode", default: "\"Select…\"", description: "Shown in the trigger when no value is selected." },
+  { name: "form", type: "string", description: "Associates the hidden input with a form by id." },
+  { name: "children", type: "ReactNode", description: "Trigger and Content." },
+]} />
+
+### Trigger
+
+Accepts every `<button>` attribute except `value`. Children, when given, replace the displayed label.
+
+<PropsTable rows={[
+  { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Control size." },
+  { name: "invalid", type: "boolean", description: "Marks the field invalid (danger border, aria-invalid)." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the combobox button." },
+]} />
+
+### Content
+
+Accepts every `<div>` attribute. The listbox matches the trigger's width.
+
+<PropsTable rows={[
+  { name: "placement", type: "Placement", default: "\"bottom-start\"", description: "Preferred placement." },
+  { name: "sideOffset", type: "number", default: "6", description: "Distance from the trigger in px." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal target." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the listbox." },
+]} />
+
+### Item
+
+Accepts every `<div>` attribute except `children`.
+
+<PropsTable rows={[
+  { name: "value", type: "string", required: true, description: "Value submitted and reported by onValueChange." },
+  { name: "children", type: "string", required: true, description: "Visible label. Also used in the trigger and for typeahead." },
+  { name: "disabled", type: "boolean", default: "false", description: "Disable the option." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-select__trigger` | Trigger |
+| `.mrd-select__value`, `.mrd-select__icon` | Trigger label and chevron |
+| `.mrd-select__content` | Listbox |
+| `.mrd-select__item`, `.mrd-select__item-text`, `.mrd-select__check` | Option, its text, the selected check |
+
+| Attribute | On | Values |
+|---|---|---|
+| `data-state` | Trigger, Content | `open`, `closed` |
+| `data-size` | Trigger | `sm`, `md`, `lg` |
+| `data-placeholder` | Trigger | present when no value is selected |
+| `data-active` | Item | present on the keyboard/pointer-highlighted option |
+| `data-disabled` | Item | present when disabled |
+| `aria-selected="true"` | Item | the selected option |
+
+The trigger height comes from `--mrd-select-height`, set per `data-size`.
+
+## Accessibility
+
+Follows the WAI-ARIA [Select-Only Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/). Focus stays on the trigger; the highlighted option is exposed through `aria-activedescendant`. Give the trigger an accessible name with `aria-label` or `aria-labelledby`.
+
+<KeyboardTable rows={[
+  { keys: ["Enter"], action: "Open, or select the highlighted option and close." },
+  { keys: ["Space"], action: "Open, or select the highlighted option and close." },
+  { keys: ["ArrowDown"], action: "Open, or highlight the next option." },
+  { keys: ["ArrowUp"], action: "Open, or highlight the previous option." },
+  { keys: ["Home"], action: "Highlight the first option." },
+  { keys: ["End"], action: "Highlight the last option." },
+  { keys: ["A–Z"], action: "Typeahead. When closed, selects the match directly." },
+  { keys: ["Tab"], action: "Select the highlighted option, close and move focus on." },
+  { keys: ["Escape"], action: "Close without changing the value." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Use Select for 5–15 options where the list itself is familiar (countries, regions, plans).</p>}
+  dont={<p>Use Select for two or three options — show them as <a href="/docs/components/radio">Radio</a> or a <a href="/docs/components/segmented-control">SegmentedControl</a>.</p>}
+/>
+
+<DoDont
+  do={<p>Always pair the trigger with a visible label.</p>}
+  dont={<p>Rely on the placeholder as the only label; it disappears once a value is chosen.</p>}
+/>
+
+## Related
+
+- [NativeSelect](/docs/components/native-select) — the platform `<select>`, best on mobile and for long lists.
+- [DropdownMenu](/docs/components/dropdown-menu) — actions, not values.
+- [Field](/docs/components/field) — label, hint and error around a control.

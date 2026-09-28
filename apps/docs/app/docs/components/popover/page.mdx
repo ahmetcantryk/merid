@@ -1,0 +1,139 @@
+import { PopoverDemo, PopoverPlacementDemo, PopoverControlledDemo } from "@/examples/popover";
+
+export const metadata = {
+  title: "Popover",
+  description: "A non-modal floating panel anchored to a trigger.",
+};
+
+# Popover
+
+A non-modal floating panel anchored to its trigger. Escape or an outside press closes it.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" /> <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/popover">View source</a>
+</div>
+
+## Import
+
+```tsx
+import { Popover } from "@merid/react";
+```
+
+<ComponentPreview code={`<Popover.Root>
+  <Popover.Trigger className="mrd-button" data-variant="secondary" data-size="md">
+    Share
+  </Popover.Trigger>
+  <Popover.Content aria-label="Share">
+    <p>Anyone with the link can view this page.</p>
+    <Popover.Close className="mrd-button" data-variant="primary" data-size="sm">
+      Copy link
+    </Popover.Close>
+  </Popover.Content>
+</Popover.Root>`}>
+  <PopoverDemo />
+</ComponentPreview>
+
+## Anatomy
+
+```tsx
+<Popover.Root>
+  <Popover.Trigger />
+  <Popover.Content>
+    <Popover.Close />
+  </Popover.Content>
+</Popover.Root>
+```
+
+- **Root** holds the open state.
+- **Trigger** is the `<button>` the panel is anchored to.
+- **Content** is the floating panel, portalled and positioned with collision handling.
+- **Close** is an unstyled button that closes the popover and returns focus to the trigger.
+
+## Examples
+
+### Placement
+
+`placement` accepts any Floating UI placement (`top`, `bottom-start`, `left-end`…). It flips and shifts to stay on screen.
+
+<ComponentPreview code={`<Popover.Content placement="top">Placed top</Popover.Content>
+<Popover.Content placement="right">Placed right</Popover.Content>
+<Popover.Content placement="bottom">Placed bottom</Popover.Content>
+<Popover.Content placement="left">Placed left</Popover.Content>`}>
+  <PopoverPlacementDemo />
+</ComponentPreview>
+
+### Controlled
+
+<ComponentPreview code={`const [open, setOpen] = useState(false);
+
+<Popover.Root open={open} onOpenChange={setOpen}>
+  <Popover.Trigger className="mrd-button" data-variant="secondary" data-size="md">
+    Details
+  </Popover.Trigger>
+  <Popover.Content aria-label="Details">Open: {String(open)}</Popover.Content>
+</Popover.Root>
+<span>{open ? "Open" : "Closed"}</span>`}>
+  <PopoverControlledDemo />
+</ComponentPreview>
+
+## API reference
+
+### Popover.Root
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled open state." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Initial open state when uncontrolled." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Called when the open state should change." },
+  { name: "children", type: "ReactNode", description: "Trigger and Content." },
+]} />
+
+### Popover.Trigger
+
+Accepts every `<button>` attribute. `type` defaults to `"button"`.
+
+<PropsTable rows={[
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the button." },
+]} />
+
+### Popover.Content
+
+Accepts every `<div>` attribute.
+
+<PropsTable rows={[
+  { name: "placement", type: "Placement", default: "\"bottom-start\"", description: "Preferred placement relative to the trigger." },
+  { name: "sideOffset", type: "number", default: "8", description: "Distance from the trigger in px." },
+  { name: "aria-label", type: "string", description: "Accessible name when the content has no visible heading." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal target." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the content element." },
+]} />
+
+### Popover.Close
+
+Accepts every `<button>` attribute and has no additional props.
+
+## Styling
+
+`.mrd-popover` is the panel: `--mrd-surface`, 1px `--mrd-line` border, `--mrd-radius-xl`, `--mrd-shadow-lg`, max width `min(360px, 100vw - 16px)`. It carries `data-state="open"`; the trigger carries `data-state="open" | "closed"`. Trigger and Close are unstyled buttons.
+
+## Accessibility
+
+Content has `role="dialog"` (non-modal); the trigger has `aria-haspopup="dialog"`, `aria-expanded` and `aria-controls`. Focus moves into the panel on open but is not trapped. See the [WAI-ARIA Dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) for the modal counterpart. Give Content an `aria-label` or a visible heading with `aria-labelledby`.
+
+<KeyboardTable rows={[
+  { keys: ["Space", "Enter"], action: "On the trigger, toggles the popover." },
+  { keys: ["Tab"], action: "Moves through the popover's content, then out of it." },
+  { keys: ["Esc"], action: "Closes the popover and returns focus to the trigger." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do="Use a popover for small, optional content tied to one control: sharing, quick settings, details."
+  dont="Put a primary task or long form in a popover; use a Dialog."
+/>
+
+## Related
+
+- [Tooltip](/docs/components/tooltip) for short, non-interactive labels.
+- [DropdownMenu](/docs/components/dropdown-menu) for lists of actions.
+- [Dialog](/docs/components/dialog)

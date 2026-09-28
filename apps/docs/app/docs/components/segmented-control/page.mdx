@@ -1,0 +1,144 @@
+import {
+  SegmentedControlDemo,
+  SegmentedControlControlled,
+  SegmentedControlIcons,
+  SegmentedControlStates,
+} from "@/examples/segmented-control";
+
+export const metadata = {
+  title: "SegmentedControl",
+  description: "A pill-shaped single-select toggle for switching views or ranges.",
+};
+
+# SegmentedControl
+
+A pill-shaped single-select toggle for switching between a few views, ranges or modes. It behaves as a radio group: one tab stop, arrow keys to move.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/segmented-control">Source</a>
+</div>
+
+<ComponentPreview code={`<SegmentedControl
+  aria-label="Range"
+  defaultValue="week"
+  options={[
+    { value: "day", label: "Day" },
+    { value: "week", label: "Week" },
+    { value: "month", label: "Month" },
+  ]}
+/>`}>
+  <SegmentedControlDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { SegmentedControl, type SegmentedControlOption } from "@merid/react";
+```
+
+## Examples
+
+### Controlled
+
+Uncontrolled, the control starts on `defaultValue` or the first enabled option. For controlled use pass `value` and `onValueChange`.
+
+<ComponentPreview code={`const [value, setValue] = useState("month");
+
+<SegmentedControl aria-label="Range" options={range} value={value} onValueChange={setValue} />`}>
+  <SegmentedControlControlled />
+</ComponentPreview>
+
+### Icon segments
+
+When a segment's `label` is an icon, give the option an `ariaLabel`.
+
+<ComponentPreview code={`<SegmentedControl
+  aria-label="View"
+  options={[
+    { value: "list", label: <ListIcon />, ariaLabel: "List view" },
+    { value: "grid", label: <GridIcon />, ariaLabel: "Grid view" },
+  ]}
+/>`}>
+  <SegmentedControlIcons />
+</ComponentPreview>
+
+### Disabled options, disabled control, full width
+
+<ComponentPreview code={`<SegmentedControl
+  aria-label="Plan"
+  options={[
+    { value: "monthly", label: "Monthly" },
+    { value: "yearly", label: "Yearly" },
+    { value: "lifetime", label: "Lifetime", disabled: true },
+  ]}
+/>
+<SegmentedControl aria-label="Range" options={range} disabled />
+<SegmentedControl aria-label="Range" options={range} fullWidth />`}>
+  <SegmentedControlStates />
+</ComponentPreview>
+
+## API reference
+
+### SegmentedControl
+
+The ref and other div attributes go to the `role="radiogroup"` container.
+
+<PropsTable rows={[
+  { name: "options", type: "SegmentedControlOption[]", required: true, description: "The segments." },
+  { name: "value", type: "string", description: "Selected value (controlled)." },
+  { name: "defaultValue", type: "string", description: "Initially selected value (uncontrolled). Defaults to the first enabled option." },
+  { name: "onValueChange", type: "(value: string) => void", description: "Called with the new value when the selection changes." },
+  { name: "fullWidth", type: "boolean", default: "false", description: "Stretches segments to fill the container." },
+  { name: "disabled", type: "boolean", default: "false", description: "Disables the whole control." },
+]} />
+
+### SegmentedControlOption
+
+<PropsTable rows={[
+  { name: "value", type: "string", required: true, description: "Value reported on selection." },
+  { name: "label", type: "ReactNode", required: true, description: "Visible content of the segment." },
+  { name: "ariaLabel", type: "string", description: "Accessible name when label is not text (e.g. an icon)." },
+  { name: "disabled", type: "boolean", description: "Makes the segment unselectable and skipped by arrow keys." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-segmented</code></td><td>Pill track; <code>data-full-width</code> when stretched</td></tr>
+    <tr><td><code>.mrd-segmented__item</code></td><td>Each segment {"<button role=\"radio\">"}</td></tr>
+    <tr><td><code>data-state</code></td><td><code>on</code> · <code>off</code> on each item</td></tr>
+  </tbody>
+</table>
+
+On a tray section or tray card the track switches to `--mrd-tray-2` automatically. There are no component variables.
+
+## Accessibility
+
+- The container is `role="radiogroup"`, each segment `role="radio"` with `aria-checked`. Name the group with `aria-label` or `aria-labelledby`.
+- Only the selected segment is in the tab order. Arrow keys move and select at once (APG radio group), skipping disabled segments and wrapping at the ends.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Moves focus to the selected segment." },
+  { keys: ["→", "↓"], action: "Selects the next enabled segment." },
+  { keys: ["←", "↑"], action: "Selects the previous enabled segment." },
+  { keys: ["Home"], action: "Selects the first enabled segment." },
+  { keys: ["End"], action: "Selects the last enabled segment." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Use two to five short, parallel labels that switch a view in place: Day / Week / Month.</p>}
+  dont={<p>Use it for navigation between pages, or for panels with their own content — that is <a href="/docs/components/tabs">Tabs</a>.</p>}
+/>
+
+## Related
+
+- [Tabs](/docs/components/tabs) — switch between content panels.
+- [Radio](/docs/components/radio) — single choice with longer labels or descriptions.
+- [Switch](/docs/components/switch) — a single on/off setting.

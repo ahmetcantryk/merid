@@ -51,8 +51,8 @@ main { flex: 1; }
   transition: background-color var(--mrd-duration) var(--mrd-ease), border-color var(--mrd-duration) var(--mrd-ease), transform var(--mrd-duration-fast) var(--mrd-ease);
 }
 .btn:active { transform: scale(0.97); }
-.btn[data-variant="primary"] { background: var(--mrd-accent); color: var(--mrd-on-accent); box-shadow: var(--mrd-shadow-accent); }
-.btn[data-variant="primary"]:hover { background: var(--mrd-accent-hover); color: var(--mrd-on-accent); }
+.btn[data-variant="primary"] { background: var(--mrd-accent-solid); color: var(--mrd-on-accent); box-shadow: var(--mrd-shadow-accent); }
+.btn[data-variant="primary"]:hover { background: var(--mrd-accent-solid-hover); color: var(--mrd-on-accent); }
 .btn[data-variant="secondary"] { background: var(--mrd-surface); color: var(--mrd-ink); border-color: var(--mrd-line); }
 .btn[data-variant="secondary"]:hover { background: var(--mrd-tray); color: var(--mrd-ink); }
 .btn[data-size="lg"] { height: var(--mrd-control-lg); padding: 0 22px; font-size: var(--mrd-text-md); }

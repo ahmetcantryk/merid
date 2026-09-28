@@ -1,0 +1,146 @@
+import { RadioDemo, RadioControlled, RadioHorizontal, RadioStates } from "@/examples/radio";
+
+export const metadata = {
+  title: "Radio",
+  description: "Native radios in a RadioGroup for choosing exactly one option from a small set.",
+};
+
+# Radio
+
+Choose exactly one option from a small, visible set. `Radio` is a native radio input; `RadioGroup` supplies the shared `name`, the selected value and arrow-key navigation.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/radio">Source</a>
+</div>
+
+<ComponentPreview code={`<RadioGroup aria-label="Plan" defaultValue="team">
+  <Radio value="free">Free</Radio>
+  <Radio value="team">Team</Radio>
+  <Radio value="business">Business</Radio>
+</RadioGroup>`}>
+  <RadioDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Radio, RadioGroup } from "@merid/react";
+```
+
+## Examples
+
+### Controlled, with descriptions
+
+`defaultValue` makes the group uncontrolled. For controlled use pass `value` and `onValueChange`, which receives the new value as a string. `description` adds a linked second line.
+
+<ComponentPreview code={`const [value, setValue] = useState("standard");
+
+<RadioGroup aria-label="Shipping" value={value} onValueChange={setValue}>
+  <Radio value="standard" description="3–5 business days">Standard</Radio>
+  <Radio value="express" description="Next business day">Express</Radio>
+</RadioGroup>`}>
+  <RadioControlled />
+</ComponentPreview>
+
+### Horizontal
+
+<ComponentPreview code={`<RadioGroup aria-label="Billing period" orientation="horizontal" defaultValue="monthly">
+  <Radio value="monthly">Monthly</Radio>
+  <Radio value="yearly">Yearly</Radio>
+</RadioGroup>`}>
+  <RadioHorizontal />
+</ComponentPreview>
+
+### Disabled and invalid
+
+`disabled` on the group disables every radio; on a single `Radio` it disables just that option, which arrow keys then skip. `invalid` marks the group with `aria-invalid` and turns the circles red.
+
+<ComponentPreview code={`<RadioGroup aria-label="Disabled group" disabled defaultValue="a">…</RadioGroup>
+
+<RadioGroup aria-label="Size" defaultValue="m">
+  <Radio value="s">Small</Radio>
+  <Radio value="m">Medium</Radio>
+  <Radio value="l" disabled>Large (sold out)</Radio>
+</RadioGroup>
+
+<RadioGroup aria-label="Invalid group" invalid required>
+  <Radio value="yes">Yes</Radio>
+  <Radio value="no">No</Radio>
+</RadioGroup>`}>
+  <RadioStates />
+</ComponentPreview>
+
+## API reference
+
+### RadioGroup
+
+Renders a `div` with `role="radiogroup"`; the ref and other div attributes are forwarded.
+
+<PropsTable rows={[
+  { name: "value", type: "string", description: "Selected value (controlled)." },
+  { name: "defaultValue", type: "string", description: "Initially selected value (uncontrolled)." },
+  { name: "onValueChange", type: "(value: string) => void", description: "Called with the new value when the selection changes." },
+  { name: "name", type: "string", description: "Form field name shared by every radio. Generated when omitted." },
+  { name: "orientation", type: '"vertical" | "horizontal"', default: '"vertical"', description: "Layout direction." },
+  { name: "disabled", type: "boolean", default: "false", description: "Disables every radio in the group." },
+  { name: "required", type: "boolean", default: "false", description: "Marks the group required for form validation." },
+  { name: "invalid", type: "boolean", default: "false", description: "Marks the group invalid (aria-invalid)." },
+  { name: "children", type: "ReactNode", description: "Radio elements." },
+]} />
+
+### Radio
+
+The ref and native input attributes go to the `<input>`; `className` and `style` go to the outer wrapper.
+
+<PropsTable rows={[
+  { name: "value", type: "string", required: true, description: "Value submitted and reported to RadioGroup.onValueChange." },
+  { name: "children", type: "ReactNode", description: "Visible label next to the circle." },
+  { name: "description", type: "ReactNode", description: "Secondary line under the label, linked via aria-describedby." },
+  { name: "disabled", type: "boolean", description: "Disables this radio. Defaults to the group's disabled." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-radio-group</code></td><td>Group container; <code>data-orientation</code> = <code>vertical</code> · <code>horizontal</code></td></tr>
+    <tr><td><code>.mrd-radio</code></td><td>Radio wrapper; <code>data-disabled</code> when disabled</td></tr>
+    <tr><td><code>.mrd-radio__control</code>, <code>__input</code>, <code>__circle</code></td><td>Native input and its drawn circle</td></tr>
+    <tr><td><code>.mrd-radio__text</code>, <code>__label</code>, <code>__description</code></td><td>Label column</td></tr>
+    <tr><td><code>[aria-invalid="true"]</code></td><td>On the group; styles its circles as invalid</td></tr>
+  </tbody>
+</table>
+
+Radio has no component variables.
+
+## Accessibility
+
+- The group has `role="radiogroup"`. Name it with `aria-label` or `aria-labelledby` pointing at a visible heading.
+- The group is a single tab stop: Tab lands on the selected radio (or the first one when nothing is selected).
+- Arrow keys move focus and selection together and wrap at the ends; disabled radios are skipped. Left/Right are mirrored in right-to-left layouts.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Moves focus into the group, onto the selected radio." },
+  { keys: ["↓", "→"], action: "Selects the next enabled radio, wrapping to the first." },
+  { keys: ["↑", "←"], action: "Selects the previous enabled radio, wrapping to the last." },
+  { keys: ["Home"], action: "Selects the first enabled radio." },
+  { keys: ["End"], action: "Selects the last enabled radio." },
+  { keys: ["Space"], action: "Selects the focused radio if it is not already selected." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Use radios for two to six options that people should compare side by side, with a sensible default selected.</p>}
+  dont={<p>Use radios for long lists — use <a href="/docs/components/native-select">NativeSelect</a> — or for a single yes/no, which is a checkbox.</p>}
+/>
+
+## Related
+
+- [SegmentedControl](/docs/components/segmented-control) — compact single-select for view switches.
+- [Checkbox](/docs/components/checkbox) — independent choices.
+- [NativeSelect](/docs/components/native-select) — many options.

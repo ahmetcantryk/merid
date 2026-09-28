@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Fragment } from "react";
 import { componentCatalog } from "@/lib/components-catalog";
 import { slugify } from "@/lib/slug";
@@ -11,12 +12,11 @@ export function ComponentCatalog() {
           <h2 id={slugify(group.group)}>{group.group}</h2>
           <div className="component-group">
             {group.items.map((item) => (
-              // TODO(component-pages): link each row to /docs/components/<slug> when its page is generated.
-              <div key={item.name} className="component-row">
+              <Link key={item.name} href={`/docs/components/${item.slug}`} className="component-row">
                 <span className="component-row__name">{item.name}</span>
                 <span className="component-row__desc">{item.description}</span>
                 <StatusBadge status={item.status} />
-              </div>
+              </Link>
             ))}
           </div>
         </Fragment>

@@ -1,0 +1,86 @@
+import { LabelDemo, LabelRequired, LabelDisabled } from "@/examples/label";
+
+export const metadata = {
+  title: "Label",
+  description: "A form label with optional required marker and disabled styling.",
+};
+
+# Label
+
+A form label: 14px, weight 500, ink. Use it directly when you wire a control yourself; [Field](/docs/components/field) renders one for you.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/merid-ui/merid/tree/main/packages/react/src/components/label">Source</a>
+</div>
+
+<ComponentPreview code={`<Label htmlFor="email">Email</Label>
+<Input id="email" type="email" placeholder="you@company.com" />`}>
+  <LabelDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Label } from "@merid/react";
+```
+
+## Examples
+
+### Required
+
+`required` appends an `*` that is hidden from assistive tech. It is only a visual cue — set `required` on the control too so it is announced and validated.
+
+<ComponentPreview code={`<Label htmlFor="name" required>Full name</Label>
+<Input id="name" required />`}>
+  <LabelRequired />
+</ComponentPreview>
+
+### Disabled
+
+`disabled` dims the label to match a disabled control. It does not disable anything by itself.
+
+<ComponentPreview code={`<Label htmlFor="workspace" disabled>Workspace</Label>
+<Input id="workspace" defaultValue="acme" disabled />`}>
+  <LabelDisabled />
+</ComponentPreview>
+
+## API reference
+
+`Label` forwards its ref to the `<label>` and passes other label attributes (`htmlFor`, `id`, …) through.
+
+<PropsTable rows={[
+  { name: "required", type: "boolean", default: "false", description: "Appends a visual * marker, hidden from assistive tech." },
+  { name: "disabled", type: "boolean", default: "false", description: "Dims the label to match a disabled control." },
+  { name: "htmlFor", type: "string", description: "id of the control the label names." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-label</code></td><td>Root {"<label>"}</td></tr>
+    <tr><td><code>.mrd-label__required</code></td><td>The required marker</td></tr>
+    <tr><td><code>data-disabled</code></td><td>Present when <code>disabled</code></td></tr>
+  </tbody>
+</table>
+
+## Accessibility
+
+- Always connect the label with `htmlFor` matching the control's `id`; clicking the label then focuses the control and it becomes its accessible name.
+- The `*` is `aria-hidden`; “required” is announced from the control's own `required` attribute.
+
+## Guidelines
+
+<DoDont
+  do={<p>Keep labels short nouns — “Email”, “Company name” — and always visible.</p>}
+  dont={<p>Rely on the placeholder as the only label.</p>}
+/>
+
+## Related
+
+- [Field](/docs/components/field) — label, control, description and error wired together.
+- [Input](/docs/components/input), [Textarea](/docs/components/textarea), [NativeSelect](/docs/components/native-select).
