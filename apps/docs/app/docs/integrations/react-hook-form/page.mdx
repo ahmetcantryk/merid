@@ -1,0 +1,78 @@
+import { RhfInviteForm } from "@/examples/integrations/react-hook-form";
+
+export const metadata = {
+  title: "React Hook Form",
+  description: "Use Merid form controls with React Hook Form: register for native inputs, Controller for Select, RadioGroup and Switch.",
+};
+
+# React Hook Form
+
+Merid's form controls are thin wrappers over native elements, so most of them work with [React Hook Form](https://react-hook-form.com)'s `register` unchanged. The three controls that hold their own state — `Select`, `RadioGroup` and `Switch` — go through `Controller`.
+
+<ComponentPreview align="start" code={`const { register, control, handleSubmit, formState: { errors, isSubmitting } } =
+  useForm<InviteValues>({ defaultValues: DEFAULTS, mode: "onTouched" });
+
+<form onSubmit={handleSubmit(onSubmit)} noValidate>
+  <Field label="Email" required error={errors.email?.message}>
+    <Input type="email" {...register("email", { required: "Enter an email address." })} />
+  </Field>
+  <Controller control={control} name="region" rules={{ required: "Pick a data region." }}
+    render={({ field, fieldState }) => (
+      <Field id="rhf-region" label="Data region" required error={fieldState.error?.message}>
+        <Select.Root value={field.value} onValueChange={field.onChange} name={field.name}>
+          <Select.Trigger id="rhf-region" ref={field.ref} invalid={fieldState.invalid} />
+          <Select.Content>…</Select.Content>
+        </Select.Root>
+      </Field>
+    )} />
+  <Button type="submit" variant="primary" loading={isSubmitting}>Send invite</Button>
+</form>`}>
+  <RhfInviteForm />
+</ComponentPreview>
+
+## Which API for which control
+
+| Control | Use | Why |
+|---|---|---|
+| `Input`, `Textarea`, `NativeSelect` | `register` | They forward `ref`, `name`, `onChange` and `onBlur` to the native element. |
+| `Checkbox` | `register` | Renders a real `<input type="checkbox">`; the value is a boolean. |
+| `Select` | `Controller` | A custom listbox. It takes `value` / `onValueChange`, not a change event. |
+| `RadioGroup` + `Radio` | `Controller` | The group owns the selected value and roving focus. |
+| `Switch` | `Controller` | A `<button role="switch">`; takes `checked` / `onCheckedChange`. |
+| `SegmentedControl` | `Controller` | Same as `Select`: `value` / `onValueChange`. |
+
+## Errors
+
+Pass the message to `Field`'s `error` prop. Field then sets `aria-invalid="true"` on the control, adds the message to its `aria-describedby`, and shows the invalid style. When `error` is `undefined` the wiring is removed again, so no extra state is needed.
+
+```tsx
+<Field label="Email" required error={errors.email?.message}>
+  <Input type="email" {...register("email", { required: "Enter an email address." })} />
+</Field>
+```
+
+`Checkbox` has no Field wrapper of its own label, so pass `invalid` and render the message yourself (as in the example above).
+
+## Select inside Field
+
+`Select.Trigger` does not read Field's context yet, so give both the same `id`: the Field label then points at the trigger, and pass `invalid` from `fieldState`. Call `field.onBlur` when the listbox closes so `mode: "onTouched"` validates at the right time.
+
+```tsx
+<Field id="plan" label="Plan" error={fieldState.error?.message}>
+  <Select.Root value={field.value} onValueChange={field.onChange}
+    onOpenChange={(open) => { if (!open) field.onBlur(); }}>
+    <Select.Trigger id="plan" ref={field.ref} invalid={fieldState.invalid} />
+    <Select.Content>…</Select.Content>
+  </Select.Root>
+</Field>
+```
+
+Passing `ref={field.ref}` lets React Hook Form focus the trigger when validation fails on submit.
+
+## Submit state
+
+Use `formState.isSubmitting` for the button's `loading` prop. A loading Button keeps its width, shows a spinner, sets `aria-busy` and ignores clicks, so a second submit cannot be fired while the first is in flight.
+
+## Schema validation
+
+To validate with a schema instead of `rules`, see [Validation with Zod](/docs/integrations/zod).

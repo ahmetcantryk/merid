@@ -1,0 +1,96 @@
+import { ThemingBrandPreview } from "@/examples/integrations/theming";
+
+export const metadata = {
+  title: "Theming a brand",
+  description: "Give Merid your brand colour by overriding the accent tokens, in light and dark, for the whole app or one subtree.",
+};
+
+# Theming a brand
+
+Merid has one accent colour. If one of the built-in presets is close enough, use it — `data-accent="violet"`, `"green"` or `"graphite"` on any element ([Subtree attributes](/docs/integrations/subtree-attributes)). For your own brand colour, override the accent family in your CSS. Because Merid lives in cascade layers, a plain unlayered rule wins with no `!important`.
+
+<ComponentPreview align="start" code={`.brand-teal {
+  --mrd-accent: #0f766e;
+  --mrd-accent-hover: #0d6560;
+  --mrd-accent-solid: #0f766e;
+  --mrd-accent-solid-hover: #0d6560;
+  --mrd-accent-soft: #e7f5f3;
+  --mrd-accent-strong: #0b4f4a;
+  --mrd-focus-ring: 0 0 0 3px rgb(15 118 110 / 20%);
+}`}>
+  <ThemingBrandPreview />
+</ComponentPreview>
+
+## The accent family
+
+| Token | Used for | Rule of thumb |
+|---|---|---|
+| `--mrd-accent` | links, focus outline, selected tab underline, checked controls | ≥ 3:1 against `--mrd-bg` (non-text) and ≥ 4.5:1 if used for link text |
+| `--mrd-accent-hover` | hover of the above | about one step darker (light) or lighter (dark) |
+| `--mrd-accent-solid` / `-solid-hover` | primary button fill, solid badge | ≥ 4.5:1 against `--mrd-on-accent` |
+| `--mrd-on-accent` | text and icons on solid fills | usually `#fff`; set dark text for very light brands |
+| `--mrd-accent-soft` | selected row, accent badge, icon tile | a 5–10% tint of the accent |
+| `--mrd-accent-strong` | text on `accent-soft` | ≥ 4.5:1 against `accent-soft` |
+| `--mrd-focus-ring` | the soft halo around focused controls | the accent at 18–28% opacity |
+
+Override all of them together. Changing only `--mrd-accent` leaves the primary button and soft tints on the default blue.
+
+## Whole app, light and dark
+
+```css
+/* brand.css — load after @merid/react/styles.css */
+:root,
+[data-theme="light"] {
+  --mrd-accent: #0f766e;
+  --mrd-accent-hover: #0d6560;
+  --mrd-accent-solid: #0f766e;
+  --mrd-accent-solid-hover: #0d6560;
+  --mrd-accent-soft: #e7f5f3;
+  --mrd-accent-strong: #0b4f4a;
+  --mrd-focus-ring: 0 0 0 3px rgb(15 118 110 / 20%);
+}
+
+[data-theme="dark"] {
+  --mrd-accent: #2dd4bf;
+  --mrd-accent-hover: #5eead4;
+  --mrd-accent-solid: #0f766e;
+  --mrd-accent-solid-hover: #115e59;
+  --mrd-accent-soft: rgb(45 212 191 / 12%);
+  --mrd-accent-strong: #99f6e4;
+  --mrd-focus-ring: 0 0 0 3px rgb(45 212 191 / 28%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* same values as [data-theme="dark"] */
+  }
+}
+```
+
+In dark mode the text accent gets lighter, but the solid fill usually stays dark enough to carry white text — the same split Merid's own blue uses.
+
+## One subtree
+
+Everything is a custom property, so a class or attribute on any element themes just that part of the page — a partner's embedded widget, a marketing section, a per-workspace colour:
+
+```tsx
+<section className="brand-teal">
+  <Button variant="primary">Start trial</Button>
+</section>
+```
+
+For per-customer colours at runtime, set the properties inline: `style={{ "--mrd-accent": workspace.color, … } as React.CSSProperties}`. Validate contrast on the server before accepting a colour; a pale brand colour on white is not readable.
+
+## Beyond colour
+
+The same approach works for every token:
+
+```css
+:root {
+  --mrd-font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --mrd-radius-lg: 6px;   /* controls */
+  --mrd-radius-card: 10px;
+}
+```
+
+For size, use `data-density` rather than overriding control heights one by one. Keep the design contract in mind: one accent, hairline borders, soft ink-tinted shadows. A brand colour changes the accent, not the rules.

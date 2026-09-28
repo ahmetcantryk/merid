@@ -1,0 +1,60 @@
+import { IconsInControls } from "@/examples/integrations/icons";
+
+export const metadata = {
+  title: "Icons",
+  description: "Use lucide-react (or any SVG icon set) with Merid: sizes, stroke width and where icons go.",
+};
+
+# Icons
+
+Merid ships no icon set. Every slot that takes an icon accepts any React node, so [lucide-react](https://lucide.dev), Heroicons, Phosphor or your own SVGs all work. Lucide's 24px grid and round joins match Merid's geometry best.
+
+```bash
+npm i lucide-react
+```
+
+<ComponentPreview align="start" code={`import { Plus, Search, Settings } from "lucide-react";
+
+const ICON = { size: 16, strokeWidth: 1.75, "aria-hidden": true } as const;
+const ICON_SM = { size: 14, strokeWidth: 1.75, "aria-hidden": true } as const;
+
+<Button variant="primary" leadingIcon={<Plus {...ICON} />}>New project</Button>
+<IconButton label="Settings" icon={<Settings {...ICON} />} />
+<Input leading={<Search {...ICON_SM} />} placeholder="Search projects" aria-label="Search projects" />
+<SidebarNav.Item href="/inbox" icon={<Mail {...ICON} />}>Inbox</SidebarNav.Item>`}>
+  <IconsInControls />
+</ComponentPreview>
+
+## Sizes
+
+| Where | Size | Stroke |
+|---|---|---|
+| `Button` (`leadingIcon`, `trailingIcon`), `IconButton`, `SidebarNav.Item` | 16px | 1.75 |
+| `Input` `leading` / `trailing`, `Badge`, dense table cells | 14px | 1.75 |
+| `EmptyState` `icon`, `Alert` `icon` | 20px | 1.5 |
+
+Lucide's default stroke of 2 reads heavier than Merid's 1.5px text and hairlines at 16px; 1.75 matches the weight of `medium` labels. Keep one set of props in a constant so every icon stays consistent.
+
+## Accessibility
+
+- Icons next to text are decorative: pass `aria-hidden`. `Button` and `Input` already wrap their icon slots in `aria-hidden` spans, so this is belt and braces.
+- `IconButton` requires `label`, which becomes the accessible name (and tooltip text if you wrap it in `Tooltip`). The icon itself stays hidden.
+- Never use an icon alone to carry meaning in a `Badge` or table cell; add text or a `VisuallyHidden` label.
+
+## Colour
+
+Icons use `currentColor`, so they follow the text tone of their slot — muted in inputs, ink in ghost buttons, white on primary. Do not colour icons with the accent unless the whole control is accented.
+
+## Your own SVGs
+
+Draw on a 16 or 20 unit grid, stroke `currentColor`, no fill, round caps. Give the `<svg>` `aria-hidden="true"` and `focusable="false"` (for old Edge).
+
+```tsx
+export function ProjectIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false" {...props}>
+      <rect x="2.5" y="2.5" width="11" height="11" rx="3" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+```

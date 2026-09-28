@@ -1,0 +1,118 @@
+export const metadata = {
+  title: "Validation with Zod",
+  description: "Validate Merid forms with a Zod schema, through React Hook Form or with plain FormData and server actions.",
+};
+
+# Validation with Zod
+
+Merid does not validate anything itself. `Field` only renders the message you give it, so any validator works. This page shows [Zod](https://zod.dev) in the two common setups. The code is not previewed live because this site does not depend on Zod; the [React Hook Form](/docs/integrations/react-hook-form) page has a live form with the same wiring.
+
+## With React Hook Form
+
+```bash
+npm i zod @hookform/resolvers react-hook-form
+```
+
+```tsx
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button, Field, Input, Select, Stack, Switch } from "@merid/react";
+
+const schema = z.object({
+  name: z.string().trim().min(2, "Use at least 2 characters."),
+  email: z.email("Enter a valid email address."),
+  plan: z.enum(["starter", "team"], { error: "Pick a plan." }),
+  marketing: z.boolean(),
+});
+type Values = z.infer<typeof schema>;
+
+export function SignupForm() {
+  const { register, control, handleSubmit, formState: { errors, isSubmitting } } = useForm<Values>({
+    resolver: zodResolver(schema),
+    defaultValues: { name: "", email: "", marketing: false },
+  });
+
+  return (
+    <form onSubmit={handleSubmit(async (values) => { await save(values); })} noValidate>
+      <Stack gap={5}>
+        <Field label="Name" required error={errors.name?.message}>
+          <Input {...register("name")} autoComplete="name" />
+        </Field>
+        <Field label="Email" required error={errors.email?.message}>
+          <Input type="email" {...register("email")} autoComplete="email" />
+        </Field>
+        <Controller control={control} name="plan" render={({ field, fieldState }) => (
+          <Field id="plan" label="Plan" required error={fieldState.error?.message}>
+            <Select.Root value={field.value ?? ""} onValueChange={field.onChange} placeholder="Choose a plan">
+              <Select.Trigger id="plan" ref={field.ref} invalid={fieldState.invalid} />
+              <Select.Content>
+                <Select.Item value="starter">Starter</Select.Item>
+                <Select.Item value="team">Team</Select.Item>
+              </Select.Content>
+            </Select.Root>
+          </Field>
+        )} />
+        <Controller control={control} name="marketing" render={({ field }) => (
+          <Switch checked={field.value} onCheckedChange={field.onChange}>Product updates</Switch>
+        )} />
+        <Button type="submit" variant="primary" loading={isSubmitting}>Create account</Button>
+      </Stack>
+    </form>
+  );
+}
+```
+
+Zod messages go straight into `Field`'s `error`, which sets `aria-invalid` and `aria-describedby` on the control.
+
+## Without a form library
+
+For small forms, parse `FormData` with `safeParse` and keep the flattened errors in state.
+
+```tsx
+const [errors, setErrors] = useState<Partial<Record<keyof Values, string>>>({});
+
+function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  event.preventDefault();
+  const result = schema.safeParse(Object.fromEntries(new FormData(event.currentTarget)));
+  if (!result.success) {
+    const fieldErrors = z.flattenError(result.error).fieldErrors;
+    setErrors(Object.fromEntries(Object.entries(fieldErrors).map(([k, v]) => [k, v?.[0]])));
+    return;
+  }
+  setErrors({});
+  submit(result.data);
+}
+```
+
+## Next.js server actions
+
+Validate again on the server — client validation is a convenience, not a guarantee. Return the field errors from the action and render them with `useActionState`.
+
+```tsx
+// app/signup/actions.ts
+"use server";
+export async function signup(_prev: State, formData: FormData): Promise<State> {
+  const result = schema.safeParse(Object.fromEntries(formData));
+  if (!result.success) return { errors: z.flattenError(result.error).fieldErrors };
+  await createUser(result.data);
+  return { errors: {} };
+}
+```
+
+```tsx
+// app/signup/form.tsx
+"use client";
+const [state, action, pending] = useActionState(signup, { errors: {} });
+
+<form action={action}>
+  <Field label="Email" error={state.errors.email?.[0]}>
+    <Input name="email" type="email" />
+  </Field>
+  <Button type="submit" variant="primary" loading={pending}>Create account</Button>
+</form>
+```
+
+`Switch` submits through a hidden input only when it is on and has a `name`, like a native checkbox. Use `z.coerce.boolean()` or `formData.has("marketing")` on the server.

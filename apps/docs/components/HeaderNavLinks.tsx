@@ -7,10 +7,14 @@ const LINKS = [
   { title: "Docs", href: "/docs/introduction", match: (p: string) => p.startsWith("/docs") && !isSection(p) },
   { title: "Foundations", href: "/docs/foundations", match: (p: string) => p.startsWith("/docs/foundations") },
   { title: "Components", href: "/docs/components", match: (p: string) => p.startsWith("/docs/components") },
+  { title: "Integrations", href: "/docs/integrations/react-hook-form", match: (p: string) => p.startsWith("/docs/integrations") },
+  { title: "Patterns", href: "/docs/patterns/forms", match: (p: string) => p.startsWith("/docs/patterns") },
 ] as const;
 
+const SECTIONS = ["/docs/foundations", "/docs/components", "/docs/integrations", "/docs/patterns"] as const;
+
 function isSection(pathname: string): boolean {
-  return pathname.startsWith("/docs/foundations") || pathname.startsWith("/docs/components");
+  return SECTIONS.some((section) => pathname.startsWith(section));
 }
 
 export function HeaderNavLinks() {

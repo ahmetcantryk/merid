@@ -4,6 +4,24 @@
   "description": "Merid design tokens as W3C DTCG JSON, CSS and JS.",
   "license": "MIT",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./tokens.json": "./dist/tokens.json",
+    "./figma-tokens.json": "./dist/figma-tokens.json",
+    "./tokens.css": "./dist/tokens.css",
+    "./package.json": "./package.json"
+  },
   "files": ["dist"],
+  "sideEffects": ["**/*.css"],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/*.test.mjs",
+    "typecheck": "node scripts/build.mjs && tsc --noEmit --strict dist/index.d.ts"
+  },
   "publishConfig": { "access": "public" }
 }

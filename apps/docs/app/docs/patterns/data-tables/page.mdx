@@ -1,0 +1,63 @@
+import { DataTableExample } from "@/examples/patterns/data-table";
+
+export const metadata = {
+  title: "Data tables",
+  description: "Sorting, filtering, row selection with bulk actions, and pagination built from Table, Checkbox and Pagination.",
+};
+
+# Data tables
+
+Merid's `Table` is a styled semantic `<table>`, not a data grid. Sorting, selection and paging are a few lines of state around it, which keeps you in control of what runs on the server.
+
+<ComponentPreview align="start" code={`<Table hoverable scrollLabel="Invoices">
+  <TableHead>
+    <TableRow>
+      <TableHeader><Checkbox aria-label="Select all on this page" checked={allOnPage}
+        indeterminate={someOnPage && !allOnPage} onChange={togglePage} /></TableHeader>
+      <TableHeader>Invoice</TableHeader>
+      <TableHeader aria-sort={sort.key === "customer" ? sort.dir : "none"}>
+        <Button variant="ghost" size="sm" onClick={() => onSort("customer")}>Customer ↑</Button>
+      </TableHeader>
+      <TableHeader align="end">Amount</TableHeader>
+    </TableRow>
+  </TableHead>
+  <TableBody>
+    {visible.map((row) => (
+      <TableRow key={row.id} selected={selected.has(row.id)}>
+        <TableCell><Checkbox aria-label={\`Select \${row.id}\`} checked={selected.has(row.id)} onChange={() => toggle(row.id)} /></TableCell>
+        …
+      </TableRow>
+    ))}
+  </TableBody>
+</Table>
+<Pagination pageCount={pageCount} page={page} onPageChange={setPage} />`}>
+  <DataTableExample />
+</ComponentPreview>
+
+## Sorting
+
+- Make the header label a ghost `Button` and set `aria-sort` (`ascending`, `descending` or `none`) on the `TableHeader`. Screen readers announce the sort state when entering the column.
+- Show a direction arrow on the active column; a faint arrow on sortable inactive columns signals they can be sorted.
+- First click sorts ascending (A–Z, low–high); clicking again reverses.
+
+## Selection and bulk actions
+
+- A checkbox column, with a header checkbox that selects the **current page** and goes `indeterminate` when some rows are selected.
+- `TableRow selected` paints the accent-soft fill. The checkbox carries the state for assistive tech; `selected` is visual only.
+- Put bulk actions in the toolbar above the table, disabled until something is selected, and replace the row count with "3 selected" in an `aria-live` region.
+- Keep selection when paging; clear it when the filter changes the data set, or say how many selected rows are hidden.
+
+## Pagination and filtering
+
+- Reset to page 1 whenever the filter or sort changes.
+- Show "Page 2 of 4" or "21–30 of 230" next to `Pagination`.
+- For server data, keep `page`, `sort` and the filter in the URL so views can be shared — see [React Router and TanStack](/docs/integrations/routers).
+- Empty result: one full-width row (`colSpan`) that repeats the query. See [Empty and loading states](/docs/patterns/empty-and-loading).
+
+## Numbers and alignment
+
+Right-align numeric columns (`align="end"` on both header and cells) and use `Text numeric` for tabular figures so digits line up. Status goes in a `Badge`, never colour alone.
+
+## Wide tables
+
+`Table` wraps itself in a scroll frame. `scrollLabel` names that region so keyboard users can focus it and scroll horizontally. Use `density="sm"` for tables that users scan rather than read.

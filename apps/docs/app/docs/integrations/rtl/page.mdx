@@ -1,0 +1,68 @@
+import { RtlPreview } from "@/examples/integrations/rtl";
+
+export const metadata = {
+  title: "Internationalization and RTL",
+  description: "What Merid does and does not do for right-to-left languages, translated labels and locale formatting.",
+};
+
+# Internationalization and RTL
+
+Merid has no locale system of its own. Components render the strings you pass them, and layout follows the document direction. This page is honest about what that covers.
+
+<ComponentPreview align="start" code={`<div dir="rtl" lang="ar">
+  <Field label="البحث" description="ابحث بالاسم أو المعرّف.">
+    <Input leading={<Search size={14} aria-hidden />} placeholder="ابحث…" />
+  </Field>
+  <Switch defaultChecked>الإشعارات</Switch>
+  <Pagination pageCount={8} defaultPage={3} previousLabel="السابق" nextLabel="التالي" />
+</div>`}>
+  <RtlPreview />
+</ComponentPreview>
+
+## Right-to-left
+
+Set `dir="rtl"` (and `lang`) on `<html>`, or on any subtree.
+
+| Area | Status |
+|---|---|
+| Layout, spacing, borders, radii | Supported. Component CSS uses logical properties only (`padding-inline`, `inset-inline-end`, …); a test forbids physical `left` / `right`. |
+| Input leading / trailing addons, NativeSelect chevron | Supported — they swap sides. |
+| Switch thumb | Supported — travels right-to-left under `:dir(rtl)`. |
+| Pagination chevrons | Supported — mirror under `:dir(rtl)`. |
+| Arrow keys in RadioGroup and SegmentedControl | Supported — ArrowLeft moves to the visually left item. |
+| Arrow keys in Tabs | **Not yet.** ArrowRight / ArrowLeft follow DOM order, so in RTL they move the opposite way to what is on screen. Tracked as a library bug. |
+| Select / Accordion chevrons, breadcrumb separator | Vertical or direction-neutral; no flip needed. |
+| `Drawer side="left" \| "right"` | Physical by design. Pick the side from the direction yourself: `side={dir === "rtl" ? "left" : "right"}`. |
+| Your icons (arrows, "back" chevrons) | Not flipped automatically. Mirror directional icons with `:dir(rtl) .icon-arrow { transform: scaleX(-1) }`. |
+
+## Strings
+
+Every visible or announced string is a prop, so translate them like any other text:
+
+- `Pagination`: `previousLabel`, `nextLabel`, `pageLabel(page)`, `aria-label`.
+- `Spinner` (`label`) and icon-only close buttons have English default labels; pass translated `label` / `aria-label` props.
+- `IconButton`: `label` is required, so it is always yours.
+- `Avatar`: initials come from `getInitials(name)`, which takes the first letters of the first and last word. Pass `initials` for scripts where that is wrong (e.g. CJK names).
+
+## Numbers, dates and currency
+
+Format before rendering with `Intl`:
+
+```tsx
+const money = new Intl.NumberFormat(locale, { style: "currency", currency: "EUR" });
+<TableCell align="end"><Text as="span" numeric>{money.format(amount)}</Text></TableCell>
+```
+
+`align="end"` puts numbers on the correct side in both directions. `Text numeric` turns on tabular figures.
+
+## Fonts
+
+The bundled Geist is designed for Latin scripts. Arabic, Hebrew, CJK, Devanagari and others fall back through `--mrd-font-sans` to the system font. For a consistent look, put a font for your script first:
+
+```css
+:root:lang(ar) {
+  --mrd-font-sans: "IBM Plex Sans Arabic", "Geist", ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+Negative heading tracking is tuned for Latin; reset it for connected scripts: `:lang(ar) { --mrd-tracking-display: 0; --mrd-tracking-h2: 0; --mrd-tracking-h3: 0; }`.
