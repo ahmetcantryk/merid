@@ -60,4 +60,25 @@ describe("Pagination", () => {
     const { container } = render(<Pagination pageCount={20} defaultPage={8} />);
     expect(await axe(container)).toHaveNoViolations();
   });
+
+  it("renderLink renders router links with every link prop", () => {
+    const seen: number[] = [];
+    render(
+      <Pagination
+        pageCount={3}
+        page={2}
+        getHref={(p) => `/list/${p}`}
+        renderLink={({ page, ...props }) => {
+          seen.push(page);
+          return <a data-router="" {...props} />;
+        }}
+      />,
+    );
+    const next = screen.getByRole("link", { name: "Next page" });
+    expect(next).toHaveAttribute("href", "/list/3");
+    expect(next).toHaveAttribute("data-router", "");
+    expect(next).toHaveClass("mrd-pagination__control");
+    expect(screen.getByRole("link", { name: "Page 1" })).toHaveClass("mrd-pagination__page");
+    expect(seen).toEqual(expect.arrayContaining([1, 3]));
+  });
 });

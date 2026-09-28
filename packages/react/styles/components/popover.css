@@ -1,6 +1,6 @@
 @layer merid.components {
   .mrd-popover {
-    z-index: var(--mrd-z-overlay);
+    z-index: var(--mrd-z-popover);
     width: max-content;
     max-width: min(360px, calc(100vw - 16px));
     padding: var(--mrd-space-3);

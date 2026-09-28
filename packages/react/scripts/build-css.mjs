@@ -32,7 +32,9 @@ async function main() {
   await mkdir(distDir, { recursive: true });
   await writeFile(join(distDir, "tokens.css"), LAYER_ORDER + tokens);
   await writeFile(join(distDir, "styles.css"), [LAYER_ORDER, tokens, base, ...components].join("\n"));
-  console.log(`build-css: wrote dist/styles.css (${componentFiles.length} component files) and dist/tokens.css`);
+  // Same as styles.css without merid.base, for apps that bring their own document styles.
+  await writeFile(join(distDir, "components.css"), [LAYER_ORDER, tokens, ...components].join("\n"));
+  console.log(`build-css: wrote dist/styles.css, dist/components.css (${componentFiles.length} component files) and dist/tokens.css`);
 }
 
 main().catch((error) => {

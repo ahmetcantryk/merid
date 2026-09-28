@@ -32,7 +32,6 @@ import { Drawer } from "@merid/react";
         <Button variant="primary">Apply</Button>
       </Drawer.Close>
     </Drawer.Footer>
-    <Drawer.Close />
   </Drawer.Content>
 </Drawer.Root>`}>
   <DrawerDemo />
@@ -47,7 +46,6 @@ import { Drawer } from "@merid/react";
     <Drawer.Title />
     <Drawer.Description />
     <Drawer.Footer />
-    <Drawer.Close />
   </Drawer.Content>
 </Drawer.Root>
 ```
@@ -105,6 +103,8 @@ Accepts every `<div>` attribute except `role`.
   { name: "closeOnEscape", type: "boolean", default: "true", description: "Close on Escape." },
   { name: "initialFocus", type: "RefObject<HTMLElement | null>", description: "Element to focus when opened; defaults to [data-autofocus], then the first tabbable element." },
   { name: "container", type: "Element | null", default: "document.body", description: "Portal target. `undefined` uses `document.body`; `null` renders nothing until the target exists." },
+  { name: "showClose", type: "boolean", default: "true", description: "Render the standard top-right icon close button automatically. Skipped while you render your own icon `Close`." },
+  { name: "closeLabel", type: "string", default: '"Close"', description: "Accessible name of the automatic close button." },
   { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the drawer element." },
 ]} />
 

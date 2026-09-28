@@ -17,7 +17,6 @@ function SideDrawer({ side }: { readonly side: DrawerSide }) {
             <Button variant="primary">Apply</Button>
           </Drawer.Close>
         </Drawer.Footer>
-        <Drawer.Close />
       </Drawer.Content>
     </Drawer.Root>
   );
@@ -49,7 +48,6 @@ export function DrawerSizesDemo() {
           <Drawer.Content size={size}>
             <Drawer.Title>Size {size}</Drawer.Title>
             <Drawer.Description>The size prop sets the sheet width.</Drawer.Description>
-            <Drawer.Close />
           </Drawer.Content>
         </Drawer.Root>
       ))}

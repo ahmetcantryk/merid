@@ -38,7 +38,7 @@ export default function OpengraphImage() {
         {cross(1136, 566)}
         <div style={{ position: "absolute", left: 112, top: 112, display: "flex" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logoDataUri()} width={206} height={40} alt="" />
+          <img src={logoDataUri()} width={218} height={38} alt="" />
         </div>
         <div style={{ position: "absolute", left: 112, top: 250, display: "flex", flexDirection: "column", gap: 26 }}>
           <span style={{ fontSize: 72, fontWeight: 600, letterSpacing: "-0.045em", lineHeight: 1.05, maxWidth: 900 }}>

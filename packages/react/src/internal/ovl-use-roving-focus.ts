@@ -55,8 +55,13 @@ export function useRovingFocus(
       const index = items.indexOf(document.activeElement as HTMLElement);
       const horizontal = orientation !== "vertical";
       const vertical = orientation !== "horizontal";
-      const isNext = (vertical && event.key === "ArrowDown") || (horizontal && event.key === "ArrowRight");
-      const isPrev = (vertical && event.key === "ArrowUp") || (horizontal && event.key === "ArrowLeft");
+      // Horizontal arrows follow reading direction: in RTL, ArrowLeft moves forward.
+      const container = containerRef.current;
+      const rtl = horizontal && container !== null && getComputedStyle(container).direction === "rtl";
+      const forwardKey = rtl ? "ArrowLeft" : "ArrowRight";
+      const backKey = rtl ? "ArrowRight" : "ArrowLeft";
+      const isNext = (vertical && event.key === "ArrowDown") || (horizontal && event.key === forwardKey);
+      const isPrev = (vertical && event.key === "ArrowUp") || (horizontal && event.key === backKey);
       let target: HTMLElement | undefined;
 
       if (isNext) {

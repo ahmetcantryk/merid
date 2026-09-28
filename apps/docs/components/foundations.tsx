@@ -15,7 +15,7 @@ export function ColorTables() {
       {colorGroups.map((group) => (
         <section key={group.title} className="token-group">
           <h3 id={`color-${group.title.toLowerCase()}`}>{group.title}</h3>
-          <div className="table-wrap">
+          <div className="table-wrap" tabIndex={0} role="region" aria-label={`${group.title} tokens`}>
             <table className="doc-table">
               <thead>
                 <tr>
@@ -113,7 +113,7 @@ export function ShadowScale() {
 
 export function MotionTable() {
   return (
-    <div className="table-wrap">
+    <div className="table-wrap" tabIndex={0} role="region" aria-label="Motion tokens">
       <table className="doc-table">
         <thead>
           <tr>

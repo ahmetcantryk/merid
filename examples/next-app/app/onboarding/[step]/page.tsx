@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Card, Container, Heading, Section, Stack, Text } from "@merid/react";
-import { buttonLinkProps } from "@/lib/button-link";
-import { OnboardingStepper } from "@/components/OnboardingStepper";
+import { Button, Card, Container, Heading, Section, Stack, StepperRoot, StepperStep, Text } from "@merid/react";
 import { STEPS } from "@/lib/onboarding";
 
 interface Props { params: Promise<{ step: string }> }
@@ -23,6 +21,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 // Fully server-rendered wizard: each step is a URL, so Back/refresh/share all work.
+// Server component, so compound parts use their flat names (StepperRoot, not Stepper.Root). The horizontal
+// stepper goes compact by itself in narrow columns, so no client-side orientation switch is needed.
 export default async function OnboardingStep({ params }: Props) {
   const n = parseStep((await params).step);
   if (!n) notFound();
@@ -33,7 +33,11 @@ export default async function OnboardingStep({ params }: Props) {
     <Section spacing="compact">
       <Container size="prose">
         <Stack gap={8}>
-          <OnboardingStepper current={n - 1} />
+          <StepperRoot current={n - 1} aria-label="Onboarding progress">
+            {STEPS.map((s) => (
+              <StepperStep key={s.title} title={s.title} description={s.description} />
+            ))}
+          </StepperRoot>
           <Card padding="lg">
             <Stack gap={4}>
               <Text size="sm" tone="muted">Step {n} of {STEPS.length}</Text>
@@ -42,10 +46,16 @@ export default async function OnboardingStep({ params }: Props) {
             </Stack>
           </Card>
           <Stack direction="row" justify="between">
-            {n > 1 ? <Link href={`/onboarding/${n - 1}`} {...buttonLinkProps("secondary")}>Back</Link> : <span />}
-            <Link href={last ? "/settings" : `/onboarding/${n + 1}`} {...buttonLinkProps("primary")}>
-              {last ? "Finish" : "Continue"}
-            </Link>
+            {n > 1 ? (
+              <Button asChild variant="secondary">
+                <Link href={`/onboarding/${n - 1}`}>Back</Link>
+              </Button>
+            ) : (
+              <span />
+            )}
+            <Button asChild variant="primary">
+              <Link href={last ? "/settings" : `/onboarding/${n + 1}`}>{last ? "Finish" : "Continue"}</Link>
+            </Button>
           </Stack>
         </Stack>
       </Container>

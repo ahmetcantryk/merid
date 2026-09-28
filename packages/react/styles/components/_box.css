@@ -1,0 +1,12 @@
+/*
+ * Every Merid element sizes border-box on its own, so components render correctly
+ * even when merid.base (or any global reset) is not applied. Zero specificity:
+ * component rules and consumer CSS still win.
+ */
+@layer merid.components {
+  :where([class^="mrd-"], [class*=" mrd-"]),
+  :where([class^="mrd-"], [class*=" mrd-"])::before,
+  :where([class^="mrd-"], [class*=" mrd-"])::after {
+    box-sizing: border-box;
+  }
+}

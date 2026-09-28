@@ -8,7 +8,7 @@ export interface PropRow {
 
 export function PropsTable({ rows }: { readonly rows: readonly PropRow[] }) {
   return (
-    <div className="table-wrap">
+    <div className="table-wrap" tabIndex={0} role="region" aria-label="Props">
       <table className="doc-table">
         <thead>
           <tr>

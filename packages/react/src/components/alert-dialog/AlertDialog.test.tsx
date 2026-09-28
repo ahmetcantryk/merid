@@ -26,6 +26,7 @@ describe("AlertDialog", () => {
     await user.click(screen.getByRole("button", { name: "Delete" }));
     expect(screen.getByRole("alertdialog", { name: "Delete project?" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Cancel" })).toHaveFocus();
+    expect(screen.queryByRole("button", { name: "Close" })).not.toBeInTheDocument();
   });
 
   it("does not close on outside press but closes on Escape with focus return", async () => {

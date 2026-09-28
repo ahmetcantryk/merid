@@ -38,7 +38,7 @@ function runNode(code, type) {
 const EXPECTED = ["Button", "Dialog", "Select", "Tabs", "ToastProvider", "useToast", "cx"];
 
 await check("dist is built", () => {
-  for (const f of ["index.js", "index.cjs", "index.d.ts", "index.d.cts", "styles.css", "tokens.css"]) {
+  for (const f of ["index.js", "index.cjs", "index.d.ts", "index.d.cts", "styles.css", "components.css", "tokens.css"]) {
     assert(existsSync(join(pkgDir, "dist", f)), `missing dist/${f}; run npm run build -w @merid/react`);
   }
 });
@@ -68,7 +68,7 @@ await check("both builds start with the \"use client\" directive", () => {
 await check("attw --pack packages/react", () => {
   // CSS entry points carry no types by design; attw would report them as unresolvable modules.
   const args = ["--no-install", "attw", "--pack", "packages/react", "--format", "ascii"];
-  const out = run("npx", [...args, "--exclude-entrypoints", "./styles.css", "./tokens.css"]);
+  const out = run("npx", [...args, "--exclude-entrypoints", "./styles.css", "./components.css", "./tokens.css"]);
   assert(out.includes("No problems found"), out);
   return "No problems found";
 });
@@ -83,7 +83,7 @@ await check("publint packages/react", () => {
 const require = createRequire(join(repo, "package.json"));
 
 await check("CSS subpath exports resolve", () => {
-  const files = ["@merid/react/styles.css", "@merid/react/tokens.css", "@merid/react/package.json"].map((id) => {
+  const files = ["@merid/react/styles.css", "@merid/react/components.css", "@merid/react/tokens.css", "@merid/react/package.json"].map((id) => {
     const file = require.resolve(id);
     assert(existsSync(file), `${id} resolved to missing ${file}`);
     return id;
@@ -93,7 +93,7 @@ await check("CSS subpath exports resolve", () => {
 
 await check("font url()s in shipped CSS resolve to packaged files", () => {
   const found = [];
-  for (const css of ["styles.css", "tokens.css"]) {
+  for (const css of ["styles.css", "components.css", "tokens.css"]) {
     const file = require.resolve(`@merid/react/${css}`);
     const urls = [...readFileSync(file, "utf8").matchAll(/url\(["']?([^"')]+)["']?\)/g)].map((m) => m[1]);
     for (const url of urls.filter((u) => !u.startsWith("data:"))) {

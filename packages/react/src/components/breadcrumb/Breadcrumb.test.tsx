@@ -30,4 +30,21 @@ describe("Breadcrumb", () => {
     const { container } = render(trail);
     expect(await axe(container)).toHaveNoViolations();
   });
+
+  it("Link asChild styles the child element (RSC-safe router links)", () => {
+    render(
+      <Breadcrumb.Root>
+        <Breadcrumb.Item>
+          <Breadcrumb.Link asChild>
+            <a href="/" data-router="">
+              Home
+            </a>
+          </Breadcrumb.Link>
+        </Breadcrumb.Item>
+      </Breadcrumb.Root>,
+    );
+    const link = screen.getByRole("link", { name: "Home" });
+    expect(link).toHaveClass("mrd-breadcrumb__link");
+    expect(link).toHaveAttribute("data-router", "");
+  });
 });

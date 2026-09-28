@@ -24,6 +24,24 @@ test.describe("live preview interactions", () => {
     await expect(trigger).toBeFocused();
   });
 
+  test("Select inside an open Dialog: list layers above the backdrop and an option is clickable", async ({ page }) => {
+    await gotoThemed(page, "/docs/components/dialog", "light");
+    await preview(page).getByRole("button", { name: "Edit profile" }).click();
+    const dialog = page.getByRole("dialog", { name: "Edit profile" });
+    await expect(dialog).toBeVisible();
+    const trigger = dialog.getByRole("combobox", { name: "Role" });
+    await expect(trigger).toContainText("Editor");
+    await trigger.click();
+    const listbox = page.getByRole("listbox");
+    await expect(listbox).toBeVisible();
+    // A real pointer click: fails if the backdrop (or anything else) covers the option.
+    await page.getByRole("option", { name: "Admin" }).click();
+    await expect(listbox).toBeHidden();
+    await expect(trigger).toContainText("Admin");
+    await expect(dialog).toBeVisible();
+    await expect(trigger).toBeFocused();
+  });
+
   test("DropdownMenu: keyboard open, arrow navigation skips disabled, Enter selects", async ({ page }) => {
     await gotoThemed(page, "/docs/components/dropdown-menu", "light");
     const stage = preview(page);

@@ -95,11 +95,11 @@ Set `name` (and optionally `required` and `form`) on Root. A hidden input carrie
 
 ### Trigger
 
-Accepts every `<button>` attribute except `value`. Children, when given, replace the displayed label. An `id` you pass is kept (so `<label htmlFor>` works) and the listbox stays labelled by it.
+Accepts every `<button>` attribute except `value`. Children, when given, replace the displayed label. An `id` you pass is kept (so `<label htmlFor>` works) and the listbox stays labelled by it. Inside a [Field](/docs/components/field) the trigger picks up the wiring like every Merid control: the field's id and label (`aria-labelledby`), `aria-describedby` for the description and error, `aria-invalid` + `data-invalid`, `aria-required` and `disabled`. Explicit props win.
 
 <PropsTable rows={[
   { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Control size." },
-  { name: "invalid", type: "boolean", description: "Marks the field invalid: `aria-invalid` for semantics, `data-invalid` for the danger border." },
+  { name: "invalid", type: "boolean", description: "Marks the field invalid: `aria-invalid` for semantics, `data-invalid` for the danger border. Inside a Field, derived from its error." },
   { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the combobox button." },
 ]} />
 

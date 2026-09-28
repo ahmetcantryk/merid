@@ -171,7 +171,7 @@ function DropdownMenuContent({
 
   if (!ctx.open) return null;
   return (
-    <Portal container={container}>
+    <Portal container={container} scopeFrom={() => ctx.triggerRef.current}>
       <div
         ref={mergedRef}
         id={ctx.menuId}

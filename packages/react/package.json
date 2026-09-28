@@ -22,6 +22,7 @@
       }
     },
     "./styles.css": "./dist/styles.css",
+    "./components.css": "./dist/components.css",
     "./tokens.css": "./dist/tokens.css",
     "./fonts/*": "./fonts/*",
     "./package.json": "./package.json"

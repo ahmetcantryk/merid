@@ -109,4 +109,39 @@ describe("Dialog", () => {
     );
     expect(await axe(document.body)).toHaveNoViolations();
   });
+
+  it("renders an automatic icon close (showClose) unless an icon Close is present or disabled", async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Content>
+          <Dialog.Title>Auto</Dialog.Title>
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    expect(screen.getAllByRole("button", { name: "Close" })).toHaveLength(1);
+    await user.click(screen.getByRole("button", { name: "Close" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    unmount();
+
+    const second = render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Content>
+          <Dialog.Title>Own close</Dialog.Title>
+          <Dialog.Close />
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    expect(screen.getAllByRole("button", { name: "Close" })).toHaveLength(1);
+    second.unmount();
+
+    render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Content showClose={false}>
+          <Dialog.Title>None</Dialog.Title>
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    expect(screen.queryByRole("button", { name: "Close" })).not.toBeInTheDocument();
+  });
 });

@@ -1,39 +1,53 @@
-import { markAccent, markInk, markViewBox } from "@/lib/brand-paths";
+import { lockup, wave, waveShadows, waveViewBox, wordmark } from "@/lib/brand-paths";
 
 interface LogoMarkProps {
   readonly height?: number;
   readonly title?: string;
 }
 
-const [, , VB_W = 1, VB_H = 1] = markViewBox.split(" ").map(Number);
+const [, , VB_W = 1, VB_H = 1] = waveViewBox.split(" ").map(Number);
+
+function WaveBody() {
+  return (
+    <>
+      <path fill="var(--logo-wave)" d={wave} />
+      {waveShadows.map((d) => (
+        <path key={d.slice(0, 24)} fill="var(--logo-shadow)" d={d} />
+      ))}
+    </>
+  );
+}
 
 /**
- * The Merid mark: an M drawn as one continuous line whose last stroke carries the accent.
- * The body follows currentColor so it adapts to light, dark and mono contexts.
+ * The Merid mark: a wave whose two crests form an M, a signal riding the meridian.
+ * The wave takes the accent; the shadows where the line passes under itself are ink (light) or deep blue (dark).
  */
-export function LogoMark({ height = 13, title }: LogoMarkProps) {
+export function LogoMark({ height = 12, title }: LogoMarkProps) {
   const width = Math.round((height * VB_W) / VB_H);
   return (
     <svg
       width={width}
       height={height}
-      viewBox={markViewBox}
+      viewBox={waveViewBox}
       role={title ? "img" : undefined}
       aria-hidden={title ? undefined : true}
       aria-label={title}
       className="logo-mark"
     >
-      <path fill="currentColor" d={markInk} />
-      <path fill="var(--logo-accent)" d={markAccent} />
+      <WaveBody />
     </svg>
   );
 }
 
-export function Logo() {
+/** Mark + outlined wordmark as one drawing, so the wave sits on the wordmark's x-height at every size. */
+export function Logo({ height = 15 }: { readonly height?: number }) {
+  const width = Math.round((height * lockup.width) / lockup.height);
   return (
-    <span className="logo">
-      <LogoMark />
-      <span className="logo-word">merid</span>
-    </span>
+    <svg width={width} height={height} viewBox={lockup.viewBox} role="img" aria-label="Merid" className="logo">
+      <g transform={lockup.markTransform}>
+        <WaveBody />
+      </g>
+      <path fill="currentColor" transform={lockup.wordTransform} d={wordmark} />
+    </svg>
   );
 }

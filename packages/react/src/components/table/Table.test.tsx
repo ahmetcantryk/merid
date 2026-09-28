@@ -57,4 +57,37 @@ describe("Table", () => {
     const { container } = render(<Invoices scrollLabel="Invoices table" />);
     expect(await axe(container)).toHaveNoViolations();
   });
+
+  it("sortable headers expose aria-sort and a button", async () => {
+    const onSort = vi.fn();
+    const { container } = render(
+      <Table aria-label="Sorted">
+        <TableHead>
+          <TableRow>
+            <TableHeader sortDirection="ascending" onSort={onSort}>
+              Name
+            </TableHeader>
+            <TableHeader sortDirection="none" onSort={onSort}>
+              Amount
+            </TableHeader>
+            <TableHeader>Plain</TableHeader>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>a</TableCell>
+            <TableCell>1</TableCell>
+            <TableCell>x</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    const [name, amount, plain] = screen.getAllByRole("columnheader");
+    expect(name).toHaveAttribute("aria-sort", "ascending");
+    expect(amount).toHaveAttribute("aria-sort", "none");
+    expect(plain).not.toHaveAttribute("aria-sort");
+    await userEvent.click(within(amount!).getByRole("button", { name: "Amount" }));
+    expect(onSort).toHaveBeenCalledTimes(1);
+    expect(await axe(container)).toHaveNoViolations();
+  });
 });

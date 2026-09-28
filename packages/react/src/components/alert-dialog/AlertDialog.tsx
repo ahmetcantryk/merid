@@ -23,6 +23,7 @@ function AlertDialogContent(props: AlertDialogContentProps) {
       backdropClass="mrd-dialog__backdrop"
       dataAttributes={{ "data-kind": "alert" }}
       closeOnOutsidePress={false}
+      showClose={false}
       {...props}
     />
   );

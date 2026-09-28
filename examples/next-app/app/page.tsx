@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { Badge, Card, Container, Grid, Heading, Section, Stack, Text, Tooltip } from "@merid/react";
+import { Badge, Button, Card, Container, Grid, Heading, Section, Stack, Text, Tooltip } from "@merid/react";
 import { Activity, Globe2, Lock, Rocket } from "lucide-react";
-import { buttonLinkProps } from "@/lib/button-link";
 
 const FEATURES = [
   { icon: Rocket, title: "Deploy on push", body: "Every commit gets a preview URL. Merge to main and it ships to production in under a minute." },
@@ -23,8 +22,12 @@ export default function HomePage() {
               Northwind Cloud builds, deploys and scales your apps across three regions, with metrics and secrets built in.
             </Text>
             <Stack direction="row" gap={3} wrap>
-              <Link href="/signup" {...buttonLinkProps("primary", "lg")}>Start free</Link>
-              <Link href="/billing" {...buttonLinkProps("secondary", "lg")}>See pricing</Link>
+              <Button asChild variant="primary" size="lg">
+                <Link href="/signup">Start free</Link>
+              </Button>
+              <Button asChild variant="secondary" size="lg">
+                <Link href="/billing">See pricing</Link>
+              </Button>
             </Stack>
             <Text size="sm" tone="muted">
               Free for one project.{" "}

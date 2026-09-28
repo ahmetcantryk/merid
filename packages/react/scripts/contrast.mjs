@@ -1,4 +1,4 @@
-// Prints WCAG contrast ratios for the accent presets (see DESIGN.md "Accent presets").
+// Prints WCAG contrast ratios for the accent presets and the neutral / status pairs (see DESIGN.md).
 // Usage: node scripts/contrast.mjs  — exits 1 if any pair is below 4.5:1.
 const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255);
 const lin = (c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
@@ -28,5 +28,45 @@ for (const [name, modes] of Object.entries(PRESETS)) {
     rows.push(`| ${name} | ${mode} | ${Object.entries(cells).map(([k, v]) => `${k} ${v.toFixed(2)}`).join(" · ")} |`);
   }
 }
+// Neutral and status pairs. Translucent dark soft fills are composited over the surface they sit on.
+const hexRgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+const over = (rgb, alpha, bg) =>
+  "#" + rgb.map((c, i) => Math.round(c * alpha + hexRgb(bg)[i] * (1 - alpha)).toString(16).padStart(2, "0")).join("");
+export const NEUTRALS = {
+  light: {
+    bg: "#ffffff", surface: "#ffffff", tray: "#f5f6f8", subtle: "#fbfbfc",
+    muted: "#646b78", placeholder: "#6e7581", body: "#535a67",
+    dangerSolid: "#c92a30", dangerSolidHover: "#b42318",
+    danger: ["#b42318", "#fff0f0"], warning: ["#93580a", "#fff8eb"], success: ["#17744a", "#ecf8f1"],
+  },
+  dark: {
+    bg: "#0b0d12", surface: "#12151c", tray: "#161a22", subtle: "#10131a",
+    muted: "#858c98", placeholder: "#7c8390", body: "#a3a9b5",
+    dangerSolid: "#c92a30", dangerSolidHover: "#b42318",
+    danger: ["#ff8a8e", [[229, 72, 77], 0.12]], warning: ["#f5c46b", [[245, 166, 35], 0.12]], success: ["#7ee2b0", [[62, 207, 142], 0.12]],
+  },
+};
+const neutralRows = [];
+for (const mode of ["light", "dark"]) {
+  const n = NEUTRALS[mode];
+  const soft = (v, bg) => (typeof v === "string" ? v : over(v[0], v[1], bg));
+  const cells = {
+    "placeholder/surface": ratio(n.placeholder, n.surface),
+    "muted/bg": ratio(n.muted, n.bg),
+    "muted/surface": ratio(n.muted, n.surface),
+    "muted/tray": ratio(n.muted, n.tray),
+    "muted/subtle": ratio(n.muted, n.subtle),
+    "body/tray": ratio(n.body, n.tray),
+    "white/danger-solid": ratio("#ffffff", n.dangerSolid),
+    "white/danger-solid-hover": ratio("#ffffff", n.dangerSolidHover),
+  };
+  for (const tone of ["danger", "warning", "success"]) {
+    const [fg, softBg] = n[tone];
+    for (const base of ["surface", "tray"]) cells[`${tone}-strong/${tone}-soft on ${base}`] = ratio(fg, soft(softBg, n[base]));
+  }
+  for (const v of Object.values(cells)) if (v < 4.5) fail = true;
+  neutralRows.push(`| ${mode} | ${Object.entries(cells).map(([k, v]) => `${k} ${v.toFixed(2)}`).join(" · ")} |`);
+}
 console.log(rows.join("\n"));
+console.log(neutralRows.join("\n"));
 if (fail) { console.error("contrast: a pair is below 4.5:1"); process.exit(1); }

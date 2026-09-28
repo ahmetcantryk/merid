@@ -53,6 +53,10 @@ export { Tabs, type TabsRootProps, type TabsListProps, type TabsTriggerProps, ty
 export { Accordion, type AccordionRootProps, type AccordionSingleProps, type AccordionMultipleProps, type AccordionItemProps, type AccordionTriggerProps, type AccordionContentProps } from "./components/accordion";
 export { ToastProvider, useToast, type ToastProviderProps, type ToastOptions, type ToastTone, type ToastApi } from "./components/toast";
 export { Breadcrumb, type BreadcrumbRootProps, type BreadcrumbItemProps, type BreadcrumbLinkProps, type BreadcrumbPageProps } from "./components/breadcrumb";
-export { Pagination, getPageRange, type PaginationProps, type PageRangeItem } from "./components/pagination";
+export { Pagination, getPageRange, type PaginationProps, type PaginationLinkProps, type PageRangeItem } from "./components/pagination";
 export { Stepper, type StepperRootProps, type StepperStepProps, type StepState } from "./components/stepper";
 export { SidebarNav, SidebarNavItem, type SidebarNavProps, type SidebarNavGroupProps, type SidebarNavItemProps } from "./components/sidebar-nav";
+
+// Flat names for every compound part (required in React Server Component files).
+export * from "./flat";
+export type { Placement } from "./internal/ovl-floating";

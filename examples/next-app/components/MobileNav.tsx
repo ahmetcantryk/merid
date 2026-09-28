@@ -3,9 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Drawer, IconButton, SidebarNav, Stack } from "@merid/react";
+import { Button, Drawer, IconButton, SidebarNav, Stack } from "@merid/react";
 import { Menu } from "lucide-react";
-import { buttonLinkProps } from "@/lib/button-link";
 import { NAV_LINKS } from "./nav-links";
 
 export function MobileNav() {
@@ -18,9 +17,8 @@ export function MobileNav() {
       <Drawer.Trigger asChild>
         <IconButton className="show-sm" label="Open menu" icon={<Menu size={18} />} />
       </Drawer.Trigger>
-      <Drawer.Content side="right" size="sm">
+      <Drawer.Content side="right" size="sm" closeLabel="Close menu">
         <Drawer.Title>Northwind Cloud</Drawer.Title>
-        <Drawer.Close icon aria-label="Close menu" />
         <Stack gap={6} className="drawer-body">
           <SidebarNav aria-label="Mobile">
             {NAV_LINKS.map((l) => (
@@ -30,8 +28,12 @@ export function MobileNav() {
             ))}
           </SidebarNav>
           <Stack gap={2}>
-            <Link href="/signup" {...buttonLinkProps("primary")} data-full-width="" onClick={close}>Sign up</Link>
-            <Link href="/login" {...buttonLinkProps("secondary")} data-full-width="" onClick={close}>Log in</Link>
+            <Button asChild variant="primary" fullWidth>
+              <Link href="/signup" onClick={close}>Sign up</Link>
+            </Button>
+            <Button asChild variant="secondary" fullWidth>
+              <Link href="/login" onClick={close}>Log in</Link>
+            </Button>
           </Stack>
         </Stack>
       </Drawer.Content>

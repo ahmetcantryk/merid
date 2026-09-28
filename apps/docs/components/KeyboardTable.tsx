@@ -5,7 +5,7 @@ export interface KeyRow {
 
 export function KeyboardTable({ rows }: { readonly rows: readonly KeyRow[] }) {
   return (
-    <div className="table-wrap">
+    <div className="table-wrap" tabIndex={0} role="region" aria-label="Keyboard interactions">
       <table className="doc-table">
         <thead>
           <tr>

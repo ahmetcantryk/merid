@@ -36,4 +36,20 @@ describe("Link", () => {
     const { container } = render(<Link href="/">Home</Link>);
     expect(await axe(container)).toHaveNoViolations();
   });
+
+  it("asChild styles the child element and keeps its props", () => {
+    render(
+      <Link asChild tone="muted" underline="always" external>
+        <a href="https://example.com" data-router="">
+          Docs
+        </a>
+      </Link>,
+    );
+    const link = screen.getByRole("link", { name: /Docs/ });
+    expect(link).toHaveClass("mrd-link");
+    expect(link).toHaveAttribute("data-tone", "muted");
+    expect(link).toHaveAttribute("data-router", "");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveTextContent("(opens in a new tab)");
+  });
 });

@@ -1,12 +1,5 @@
 /* App-level layout only; components come styled from @merid/react. */
 
-/* Merid ships no global reset; its controls use width: 100% with padding. */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
   min-height: 100dvh;
@@ -14,10 +7,6 @@ body {
 
 main:focus {
   outline: none;
-}
-
-a.mrd-button {
-  text-decoration: none;
 }
 
 .skip-link {

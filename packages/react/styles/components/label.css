@@ -10,7 +10,7 @@
   }
 
   .mrd-label__required {
-    color: var(--mrd-danger);
+    color: var(--mrd-danger-strong);
   }
 
   .mrd-label[data-disabled] {

@@ -1,5 +1,6 @@
 import type { AnchorHTMLAttributes, ElementType, HTMLAttributes, LiHTMLAttributes, Ref } from "react";
 import { cx } from "../../internal/ovl-cx";
+import { Slot } from "../../internal/ovl-slot";
 import { withRef } from "../../internal/ovl-with-ref";
 
 export interface BreadcrumbRootProps extends HTMLAttributes<HTMLElement> {
@@ -26,13 +27,18 @@ function BreadcrumbItem({ className, ...rest }: BreadcrumbItemProps) {
 export interface BreadcrumbLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   /** Element or component to render instead of `<a>`, e.g. a router `Link`. */
   as?: ElementType;
+  /**
+   * Render the single child element (e.g. `<Link href="/">Home</Link>`) with crumb styling. Unlike `as`,
+   * this works from React Server Components, where a component cannot be passed as a prop.
+   */
+  asChild?: boolean;
   /** Forwarded ref to the anchor. */
   ref?: Ref<HTMLAnchorElement>;
 }
 
 /** A crumb link. Pass `as={Link}` plus router props (e.g. `to`) for client-side routing; extra props are forwarded. */
-function BreadcrumbLink({ as, className, ...rest }: BreadcrumbLinkProps & Record<string, unknown>) {
-  const Component: ElementType = as ?? "a";
+function BreadcrumbLink({ as, asChild = false, className, ...rest }: BreadcrumbLinkProps & Record<string, unknown>) {
+  const Component: ElementType = asChild ? Slot : (as ?? "a");
   return <Component className={cx("mrd-breadcrumb__link", className as string | undefined)} {...rest} />;
 }
 
