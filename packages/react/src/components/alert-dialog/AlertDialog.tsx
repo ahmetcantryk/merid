@@ -1,3 +1,5 @@
+"use client";
+
 import type { ButtonHTMLAttributes, Ref } from "react";
 import {
   CloseButton,
@@ -9,7 +11,7 @@ import {
 
 export interface AlertDialogRootProps extends DialogRootProps {}
 
-export interface AlertDialogContentProps extends Omit<DialogContentProps, "closeOnOutsidePress"> {}
+export interface AlertDialogContentProps extends Omit<DialogContentProps, "closeOnOutsidePress" | "size"> {}
 
 function AlertDialogContent(props: AlertDialogContentProps) {
   return (
@@ -25,21 +27,30 @@ function AlertDialogContent(props: AlertDialogContentProps) {
   );
 }
 
+export type AlertDialogActionTone = "primary" | "danger";
+
 export interface AlertDialogActionProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Button style of the confirming action. Defaults to `"primary"`; use `"danger"` for destructive actions. */
+  tone?: AlertDialogActionTone;
+  /** Render the single child element instead of a `<button>`, merging props, ref and handlers. */
+  asChild?: boolean;
   /** Forwarded ref to the button. */
   ref?: Ref<HTMLButtonElement>;
 }
 
-/** Confirms and closes. Call `event.preventDefault()` in `onClick` to keep the dialog open (e.g. while saving). */
-function AlertDialogAction(props: AlertDialogActionProps) {
-  return <CloseButton component="AlertDialog.Action" icon={false} {...props} />;
+/**
+ * Confirms and closes; styled as a primary (or `tone="danger"`) Button.
+ * Call `event.preventDefault()` in `onClick` to keep the dialog open (e.g. while saving).
+ */
+function AlertDialogAction({ tone = "primary", ...props }: AlertDialogActionProps) {
+  return <CloseButton component="AlertDialog.Action" icon={false} variant={tone} {...props} />;
 }
 
-export interface AlertDialogCancelProps extends AlertDialogActionProps {}
+export interface AlertDialogCancelProps extends Omit<AlertDialogActionProps, "tone"> {}
 
-/** Dismisses. Receives initial focus, as recommended for destructive confirmations. */
+/** Dismisses; styled as a secondary Button. Receives initial focus, as recommended for destructive confirmations. */
 function AlertDialogCancel(props: AlertDialogCancelProps) {
-  return <CloseButton component="AlertDialog.Cancel" icon={false} data-autofocus="" {...props} />;
+  return <CloseButton component="AlertDialog.Cancel" icon={false} variant="secondary" data-autofocus="" {...props} />;
 }
 
 /**

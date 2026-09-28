@@ -1,3 +1,5 @@
+"use client";
+
 import type { AnchorHTMLAttributes, ElementType, HTMLAttributes, ReactNode, Ref } from "react";
 import { cx } from "../../internal/ovl-cx";
 import { useId } from "../../internal/ovl-use-id";

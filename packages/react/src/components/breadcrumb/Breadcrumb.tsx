@@ -1,4 +1,4 @@
-import type { AnchorHTMLAttributes, HTMLAttributes, LiHTMLAttributes, Ref } from "react";
+import type { AnchorHTMLAttributes, ElementType, HTMLAttributes, LiHTMLAttributes, Ref } from "react";
 import { cx } from "../../internal/ovl-cx";
 
 export interface BreadcrumbRootProps extends HTMLAttributes<HTMLElement> {
@@ -23,12 +23,16 @@ function BreadcrumbItem({ className, ...rest }: BreadcrumbItemProps) {
 }
 
 export interface BreadcrumbLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+  /** Element or component to render instead of `<a>`, e.g. a router `Link`. */
+  as?: ElementType;
   /** Forwarded ref to the anchor. */
   ref?: Ref<HTMLAnchorElement>;
 }
 
-function BreadcrumbLink({ className, ...rest }: BreadcrumbLinkProps) {
-  return <a className={cx("mrd-breadcrumb__link", className)} {...rest} />;
+/** A crumb link. Pass `as={Link}` plus router props (e.g. `to`) for client-side routing; extra props are forwarded. */
+function BreadcrumbLink({ as, className, ...rest }: BreadcrumbLinkProps & Record<string, unknown>) {
+  const Component: ElementType = as ?? "a";
+  return <Component className={cx("mrd-breadcrumb__link", className as string | undefined)} {...rest} />;
 }
 
 export interface BreadcrumbPageProps extends HTMLAttributes<HTMLSpanElement> {}

@@ -43,7 +43,17 @@ describe("Pagination", () => {
   it("renders links when getHref is given", () => {
     render(<Pagination pageCount={3} page={2} getHref={(p) => `?page=${p}`} />);
     expect(screen.getByRole("link", { name: "Page 3" })).toHaveAttribute("href", "?page=3");
-    expect(screen.getByRole("link", { name: "Page 2" })).toHaveAttribute("aria-current", "page");
+    // the current page is plain text, not a link to itself
+    expect(screen.queryByRole("link", { name: "Page 2" })).not.toBeInTheDocument();
+    const current = document.querySelector("[aria-current='page']");
+    expect(current?.tagName).toBe("SPAN");
+    expect(current).toHaveTextContent("Page 2");
+    expect(current).toHaveClass("mrd-pagination__page");
+  });
+
+  it("has no axe violations in link mode", async () => {
+    const { container } = render(<Pagination pageCount={5} page={2} getHref={(p) => `?page=${p}`} />);
+    expect(await axe(container)).toHaveNoViolations();
   });
 
   it("has no axe violations", async () => {

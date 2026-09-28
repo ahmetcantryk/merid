@@ -78,7 +78,7 @@
     transform: scale(1);
   }
 
-  .mrd-radio-group[aria-invalid="true"] .mrd-radio__circle {
+  .mrd-radio__input[data-invalid] + .mrd-radio__circle {
     border-color: var(--mrd-danger);
   }
 

@@ -42,9 +42,9 @@ export { cx } from "./utils/cx";
 
 // overlay & navigation components (added separately)
 export { Portal, type PortalProps } from "./components/portal";
-export { Dialog, type DialogRootProps, type DialogTriggerProps, type DialogContentProps, type DialogTitleProps, type DialogDescriptionProps, type DialogCloseProps, type DialogFooterProps } from "./components/dialog";
-export { AlertDialog, type AlertDialogRootProps, type AlertDialogContentProps, type AlertDialogActionProps, type AlertDialogCancelProps } from "./components/alert-dialog";
-export { Drawer, type DrawerRootProps, type DrawerContentProps, type DrawerSide } from "./components/drawer";
+export { Dialog, type DialogRootProps, type DialogTriggerProps, type DialogContentProps, type DialogTitleProps, type DialogDescriptionProps, type DialogCloseProps, type DialogFooterProps, type DialogSize } from "./components/dialog";
+export { AlertDialog, type AlertDialogRootProps, type AlertDialogContentProps, type AlertDialogActionProps, type AlertDialogCancelProps, type AlertDialogActionTone } from "./components/alert-dialog";
+export { Drawer, type DrawerRootProps, type DrawerContentProps, type DrawerSide, type DrawerSize } from "./components/drawer";
 export { Popover, type PopoverRootProps, type PopoverTriggerProps, type PopoverContentProps, type PopoverCloseProps } from "./components/popover";
 export { Tooltip, type TooltipProps } from "./components/tooltip";
 export { DropdownMenu, type DropdownMenuRootProps, type DropdownMenuTriggerProps, type DropdownMenuContentProps, type DropdownMenuItemProps, type DropdownMenuCheckboxItemProps, type DropdownMenuGroupProps, type DropdownMenuLabelProps, type DropdownMenuSeparatorProps } from "./components/dropdown-menu";

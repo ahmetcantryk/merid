@@ -1,3 +1,5 @@
+"use client";
+
 import {
   cloneElement,
   type FocusEvent,
@@ -47,6 +49,8 @@ export interface TooltipProps {
   className?: string;
   /** Do not show the tooltip. */
   disabled?: boolean;
+  /** Portal target; defaults to `document.body` (`null` renders nothing until the target exists). */
+  container?: Element | null;
 }
 
 /**
@@ -64,6 +68,7 @@ export function Tooltip({
   sideOffset = 6,
   className,
   disabled = false,
+  container,
 }: TooltipProps) {
   const [openState, setOpen] = useControllableState({ value: openProp, defaultValue: defaultOpen, onChange: onOpenChange });
   const open = openState && !disabled;
@@ -125,7 +130,7 @@ export function Tooltip({
     <>
       {trigger}
       {open ? (
-        <Portal>
+        <Portal container={container}>
           <div
             ref={refs.setFloating}
             id={id}

@@ -56,8 +56,8 @@
     box-shadow: var(--mrd-focus-ring);
   }
 
-  .mrd-input[aria-invalid="true"],
-  .mrd-textarea[aria-invalid="true"] {
+  .mrd-input[data-invalid],
+  .mrd-textarea[data-invalid] {
     border-color: var(--mrd-danger);
   }
 

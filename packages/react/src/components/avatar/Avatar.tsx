@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, useState, type HTMLAttributes } from "react";
 import { cx } from "../../utils/cx";
 

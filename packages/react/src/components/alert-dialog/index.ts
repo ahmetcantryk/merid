@@ -4,4 +4,5 @@ export {
   type AlertDialogContentProps,
   type AlertDialogActionProps,
   type AlertDialogCancelProps,
+  type AlertDialogActionTone,
 } from "./AlertDialog";

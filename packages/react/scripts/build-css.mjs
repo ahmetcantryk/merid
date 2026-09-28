@@ -20,7 +20,9 @@ async function read(path) {
 
 async function main() {
   const componentDir = join(stylesDir, "components");
-  const componentFiles = (await readdir(componentDir)).filter((f) => f.endsWith(".css")).sort();
+  const componentFiles = (await readdir(componentDir)).filter((f) => f.endsWith(".css"))
+    // Shared partials (`_*.css`, e.g. _motion.css keyframes) come first, then components A-Z.
+    .sort((a, b) => Number(!a.startsWith("_")) - Number(!b.startsWith("_")) || a.localeCompare(b));
   const tokens = await read(join(stylesDir, "tokens.css"));
   const base = await read(join(stylesDir, "base.css"));
   const components = await Promise.all(

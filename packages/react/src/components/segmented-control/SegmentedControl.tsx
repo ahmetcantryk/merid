@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, useRef, type HTMLAttributes, type KeyboardEvent, type ReactNode } from "react";
 import { cx } from "../../utils/cx";
 import { nextRovingIndex } from "../../utils/roving";
@@ -43,6 +45,8 @@ export const SegmentedControl = forwardRef<HTMLDivElement, SegmentedControlProps
   const [current, setCurrent] = useControllableState(value, defaultValue ?? firstEnabled, onValueChange);
   const buttonRefs = useRef(new Map<string, HTMLButtonElement>());
   const enabled = disabled ? [] : options.filter((o) => !o.disabled);
+  // The selected segment is the tab stop; if the value matches no enabled option, fall back to the first enabled one.
+  const tabStop = enabled.some((o) => o.value === current) ? current : enabled[0]?.value;
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     onKeyDown?.(event);
@@ -81,7 +85,7 @@ export const SegmentedControl = forwardRef<HTMLDivElement, SegmentedControlProps
             role="radio"
             aria-checked={selected}
             aria-label={option.ariaLabel}
-            tabIndex={selected ? 0 : -1}
+            tabIndex={option.value === tabStop ? 0 : -1}
             disabled={disabled || option.disabled}
             className="mrd-segmented__item"
             data-state={selected ? "on" : "off"}

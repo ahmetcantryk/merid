@@ -45,7 +45,7 @@
     box-shadow: var(--mrd-focus-ring);
   }
 
-  .mrd-select__trigger[aria-invalid="true"] {
+  .mrd-select__trigger[data-invalid] {
     border-color: var(--mrd-danger);
   }
 

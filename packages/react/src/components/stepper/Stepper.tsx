@@ -1,3 +1,5 @@
+"use client";
+
 import { Children, createContext, type HTMLAttributes, isValidElement, type LiHTMLAttributes, type ReactNode, type Ref, useContext } from "react";
 import { cx } from "../../internal/ovl-cx";
 
@@ -82,7 +84,9 @@ function StepperStep({ title, description, statusLabels, className, ...rest }: S
         {state === "complete" ? <CheckIcon /> : index + 1}
       </span>
       <span className="mrd-stepper__text">
-        <span className="mrd-stepper__title">{title}</span>
+        <span className="mrd-stepper__title" title={typeof title === "string" ? title : undefined}>
+          {title}
+        </span>
         {description ? <span className="mrd-stepper__description">{description}</span> : null}
         <span className="mrd-sr-only">, {labels[state]}</span>
       </span>
@@ -90,7 +94,10 @@ function StepperStep({ title, description, statusLabels, className, ...rest }: S
   );
 }
 
-/** Read-only progress display. The current step has `aria-current="step"`. */
+/**
+ * Read-only progress display. The current step has `aria-current="step"`.
+ * Horizontal titles stay on one line and truncate with an ellipsis (string titles keep the full text in `title`).
+ */
 export const Stepper = {
   Root: StepperRoot,
   Step: StepperStep,

@@ -7,4 +7,5 @@ export {
   type DialogDescriptionProps,
   type DialogCloseProps,
   type DialogFooterProps,
+  type DialogSize,
 } from "./Dialog";

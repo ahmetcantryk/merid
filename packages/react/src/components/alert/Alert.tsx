@@ -51,7 +51,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
         </span>
       ) : null}
       <div className="mrd-alert__content">
-        {title ? <div className="mrd-alert__title">{title}</div> : null}
+        {title != null && title !== false ? <div className="mrd-alert__title">{title}</div> : null}
         {children ? <div className="mrd-alert__body">{children}</div> : null}
       </div>
       {action ? <div className="mrd-alert__action">{action}</div> : null}

@@ -60,7 +60,7 @@
     color: var(--mrd-on-accent);
   }
 
-  .mrd-checkbox__input[aria-invalid="true"] + .mrd-checkbox__icon {
+  .mrd-checkbox__input[data-invalid] + .mrd-checkbox__icon {
     border-color: var(--mrd-danger);
   }
 

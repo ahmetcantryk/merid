@@ -1,6 +1,9 @@
+"use client";
+
 import { forwardRef, useId, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { cx } from "../../utils/cx";
 import { useControllableState } from "../../utils/use-controllable";
+import { useFieldControlProps } from "../field/field-context";
 
 export interface SwitchProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onChange" | "value" | "defaultValue" | "children"> {
@@ -18,9 +21,15 @@ export interface SwitchProps
   name?: string;
   /** Submitted value when on. */
   value?: string;
+  /** Forces the invalid style and `aria-invalid`. Inside a `Field`, derived from its `error`. */
+  invalid?: boolean;
 }
 
-/** A 34×20 on/off toggle with `role="switch"`. Space and Enter toggle it. */
+/**
+ * A 34×20 on/off toggle with `role="switch"`. Space and Enter toggle it.
+ * Inside a `Field` it takes the Field id (so the Field label names it), `aria-describedby`,
+ * `aria-invalid` and `disabled`.
+ */
 export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch(
   {
     checked,
@@ -32,6 +41,7 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
     value = "on",
     className,
     disabled,
+    invalid,
     onClick,
     id,
     ...props
@@ -39,26 +49,41 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
   ref,
 ) {
   const [on, setOn] = useControllableState(checked, defaultChecked, onCheckedChange);
+  const {
+    invalid: isInvalid,
+    required: _required,
+    ...wiring
+  } = useFieldControlProps({
+    id,
+    disabled,
+    invalid,
+    "aria-describedby": props["aria-describedby"],
+    "aria-invalid": props["aria-invalid"],
+  });
   const autoId = useId();
-  const buttonId = id ?? `mrd-switch-${autoId}`;
+  const buttonId = wiring.id ?? `mrd-switch-${autoId}`;
+  const isDisabled = wiring.disabled ?? false;
   const labelId = `${buttonId}-label`;
 
   const control = (
     <button
       ref={ref}
-      id={buttonId}
       type="button"
       role="switch"
       aria-checked={on}
       aria-labelledby={children ? labelId : undefined}
       className="mrd-switch__track"
       data-state={on ? "on" : "off"}
-      disabled={disabled}
+      data-invalid={isInvalid || undefined}
       onClick={(event) => {
         onClick?.(event);
         if (!event.defaultPrevented) setOn(!on);
       }}
       {...props}
+      id={buttonId}
+      disabled={isDisabled}
+      aria-invalid={wiring["aria-invalid"]}
+      aria-describedby={wiring["aria-describedby"]}
     >
       <span className="mrd-switch__thumb" aria-hidden="true" />
     </button>
@@ -69,7 +94,7 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
       className={cx("mrd-switch", className)}
       data-state={on ? "on" : "off"}
       data-label-position={labelPosition}
-      data-disabled={disabled || undefined}
+      data-disabled={isDisabled || undefined}
     >
       {control}
       {children ? (

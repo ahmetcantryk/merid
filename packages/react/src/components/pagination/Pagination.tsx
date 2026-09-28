@@ -1,3 +1,5 @@
+"use client";
+
 import type { HTMLAttributes, ReactNode, Ref } from "react";
 import { cx } from "../../internal/ovl-cx";
 import { useControllableState } from "../../internal/ovl-use-controllable-state";
@@ -66,7 +68,10 @@ function Chevron({ direction }: { direction: "left" | "right" }) {
   );
 }
 
-/** Page navigation. The current page carries `aria-current="page"`. */
+/**
+ * Page navigation. The current page carries `aria-current="page"`; with `getHref` it renders as
+ * plain text (not a link) and other pages as links.
+ */
 export function Pagination({
   pageCount,
   page: pageProp,
@@ -88,6 +93,17 @@ export function Pagination({
 
   const control = (target: number, content: ReactNode, props: Record<string, unknown>) => {
     const disabled = target < 1 || target > total;
+    // Link mode: the current page is not a link to itself.
+    if (getHref && props["aria-current"] === "page") {
+      // aria-label is not allowed on a generic span, so the label is carried as visually hidden text.
+      const { "aria-label": spanLabel, ...spanProps } = props;
+      return (
+        <span {...spanProps}>
+          <span aria-hidden="true">{content}</span>
+          <span className="mrd-sr-only">{spanLabel as string}</span>
+        </span>
+      );
+    }
     if (getHref && !disabled) {
       return (
         <a

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   type ButtonHTMLAttributes,
   createContext,
@@ -196,6 +198,7 @@ function AccordionTrigger({ className, children, onClick, ...rest }: AccordionTr
         aria-controls={item.contentId}
         aria-disabled={item.disabled || undefined}
         data-state={item.open ? "open" : "closed"}
+        data-disabled={item.disabled ? "" : undefined}
         data-mrd-roving=""
         className={cx("mrd-accordion__trigger", className)}
         onClick={(event) => {
@@ -233,7 +236,10 @@ function AccordionContent({ className, children, ...rest }: AccordionContentProp
   );
 }
 
-/** Accordion (WAI-ARIA APG "Accordion"): heading-wrapped buttons, ArrowUp/Down/Home/End between headers. */
+/**
+ * Accordion (WAI-ARIA APG "Accordion"): heading-wrapped buttons, ArrowUp/Down/Home/End between headers.
+ * Disabled headers stay Tab-reachable (`aria-disabled`) but are skipped by arrow keys, like Tabs and menus.
+ */
 export const Accordion = {
   Root: AccordionRoot,
   Item: AccordionItem,

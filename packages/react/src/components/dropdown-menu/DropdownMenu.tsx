@@ -1,3 +1,5 @@
+"use client";
+
 import {
   type ButtonHTMLAttributes,
   createContext,
@@ -23,6 +25,7 @@ import { useControllableState } from "../../internal/ovl-use-controllable-state"
 import { useDismiss } from "../../internal/ovl-use-dismiss";
 import { useId } from "../../internal/ovl-use-id";
 import { getRovingItems, useRovingFocus } from "../../internal/ovl-use-roving-focus";
+import { Slot } from "../../internal/ovl-slot";
 
 type FocusTarget = "first" | "last";
 
@@ -84,17 +87,20 @@ function DropdownMenuRoot({ open: openProp, defaultOpen = false, onOpenChange, c
 }
 
 export interface DropdownMenuTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Render the single child element (e.g. your own `Button`) instead of a `<button>`, merging props, ref and handlers. */
+  asChild?: boolean;
   /** Forwarded ref to the button. */
   ref?: Ref<HTMLButtonElement>;
 }
 
-function DropdownMenuTrigger({ onClick, onKeyDown, type = "button", ref, ...rest }: DropdownMenuTriggerProps) {
+function DropdownMenuTrigger({ asChild = false, onClick, onKeyDown, type = "button", ref, ...rest }: DropdownMenuTriggerProps) {
   const ctx = useMenu("DropdownMenu.Trigger");
+  const Comp = (asChild ? Slot : "button") as "button";
   return (
-    <button
+    <Comp
       ref={composeRefs(ctx.triggerRef, ref)}
       id={ctx.triggerId}
-      type={type}
+      type={asChild ? undefined : type}
       aria-haspopup="menu"
       aria-expanded={ctx.open}
       aria-controls={ctx.open ? ctx.menuId : undefined}
@@ -203,9 +209,14 @@ interface ItemBaseProps extends Omit<HTMLAttributes<HTMLDivElement>, "onSelect">
   ref?: Ref<HTMLDivElement>;
 }
 
-function useItemActivation(disabled: boolean, activate: () => void) {
+type ItemHandlers = Pick<HTMLAttributes<HTMLDivElement>, "onClick" | "onKeyDown" | "onPointerMove">;
+
+/** Internal item behaviour composed after the consumer handlers; `preventDefault()` in a consumer handler skips it. */
+function useItemActivation(disabled: boolean, activate: () => void, user: ItemHandlers) {
   return {
     onClick: (event: MouseEvent<HTMLDivElement>) => {
+      user.onClick?.(event);
+      if (event.defaultPrevented) return;
       if (disabled) {
         event.preventDefault();
         return;
@@ -213,11 +224,15 @@ function useItemActivation(disabled: boolean, activate: () => void) {
       activate();
     },
     onKeyDown: (event: KeyboardEvent<HTMLDivElement>) => {
+      user.onKeyDown?.(event);
+      if (event.defaultPrevented) return;
       if (event.key !== "Enter" && event.key !== " ") return;
       event.preventDefault();
       if (!disabled) activate();
     },
     onPointerMove: (event: ReactPointerEvent<HTMLDivElement>) => {
+      user.onPointerMove?.(event);
+      if (event.defaultPrevented) return;
       if (!disabled && document.activeElement !== event.currentTarget) event.currentTarget.focus();
     },
   };
@@ -234,6 +249,9 @@ function DropdownMenuItem({
   leading,
   trailing,
   onSelect,
+  onClick,
+  onKeyDown,
+  onPointerMove,
   className,
   children,
   ...rest
@@ -243,7 +261,7 @@ function DropdownMenuItem({
     const event = new Event("mrd.select", { cancelable: true });
     onSelect?.(event);
     if (!event.defaultPrevented) ctx.close(true);
-  });
+  }, { onClick, onKeyDown, onPointerMove });
   return (
     <div
       role="menuitem"
@@ -253,8 +271,8 @@ function DropdownMenuItem({
       data-mrd-roving=""
       data-text-value={textValue}
       className={cx("mrd-menu__item", className)}
-      {...handlers}
       {...rest}
+      {...handlers}
     >
       {leading ? <span className="mrd-menu__leading" aria-hidden="true">{leading}</span> : null}
       <span className="mrd-menu__label-text">{children}</span>
@@ -287,6 +305,9 @@ function DropdownMenuCheckboxItem({
   disabled = false,
   textValue,
   trailing,
+  onClick,
+  onKeyDown,
+  onPointerMove,
   className,
   children,
   ...rest
@@ -296,7 +317,7 @@ function DropdownMenuCheckboxItem({
     defaultValue: defaultChecked,
     onChange: onCheckedChange,
   });
-  const handlers = useItemActivation(disabled, () => setChecked(!checked));
+  const handlers = useItemActivation(disabled, () => setChecked(!checked), { onClick, onKeyDown, onPointerMove });
   return (
     <div
       role="menuitemcheckbox"
@@ -308,8 +329,8 @@ function DropdownMenuCheckboxItem({
       data-mrd-roving=""
       data-text-value={textValue}
       className={cx("mrd-menu__item", className)}
-      {...handlers}
       {...rest}
+      {...handlers}
     >
       <span className="mrd-menu__check" aria-hidden="true">{checked ? <CheckIcon /> : null}</span>
       <span className="mrd-menu__label-text">{children}</span>

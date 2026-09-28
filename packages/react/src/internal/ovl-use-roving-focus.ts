@@ -1,3 +1,5 @@
+"use client";
+
 import { type KeyboardEvent as ReactKeyboardEvent, type RefObject, useCallback, useRef } from "react";
 
 export type Orientation = "horizontal" | "vertical";

@@ -41,7 +41,10 @@ describe("Table", () => {
     expect(table).toHaveAttribute("data-density", "sm");
     expect(table).toHaveClass("mrd-table", "c");
     expect(screen.getByRole("cell", { name: "80" })).toHaveAttribute("data-align", "end");
-    expect(screen.getAllByRole("row")[2]).toHaveAttribute("aria-selected", "true");
+    const selectedRow = screen.getAllByRole("row")[2];
+    expect(selectedRow).toHaveAttribute("data-selected");
+    // plain tables have no selection semantics: aria-selected is only valid in grid/treegrid
+    expect(selectedRow).not.toHaveAttribute("aria-selected");
   });
 
   it("makes the scroll frame a focusable region when labelled", async () => {

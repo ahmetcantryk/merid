@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, type SelectHTMLAttributes } from "react";
 import { cx } from "../../utils/cx";
 import { useFieldControlProps } from "../field/field-context";
@@ -14,9 +16,12 @@ export interface NativeSelectProps extends Omit<SelectHTMLAttributes<HTMLSelectE
 /**
  * The platform `<select>` with Merid styling: full native keyboard, mobile pickers
  * and form participation for free. Pass `<option>` children.
+ * `className` and `style` go on the outer wrapper; other props on the `<select>`.
+ * The placeholder is a disabled, hidden `value=""` option, so it shows whenever the value is `""`
+ * (uncontrolled start, or a controlled `value=""`).
  */
 export const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(function NativeSelect(
-  { size = "md", invalid, placeholder, className, id, required, disabled, children, ...props },
+  { size = "md", invalid, placeholder, className, style, id, required, disabled, children, ...props },
   ref,
 ) {
   const { invalid: isInvalid, ...wiring } = useFieldControlProps({
@@ -29,7 +34,7 @@ export const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(fun
   });
   const withPlaceholder = placeholder !== undefined && props.value === undefined && props.defaultValue === undefined;
   return (
-    <span className={cx("mrd-native-select", className)} data-size={size}>
+    <span className={cx("mrd-native-select", className)} style={style} data-size={size}>
       <select
         ref={ref}
         className="mrd-native-select__control"
@@ -39,7 +44,7 @@ export const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(fun
         {...wiring}
       >
         {placeholder !== undefined ? (
-          <option value="" disabled>
+          <option value="" disabled hidden>
             {placeholder}
           </option>
         ) : null}

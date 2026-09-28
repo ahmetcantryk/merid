@@ -1,3 +1,5 @@
+"use client";
+
 import {
   type ButtonHTMLAttributes,
   createContext,
@@ -40,6 +42,7 @@ interface SelectContextValue {
   register: (option: OptionRecord) => () => void;
   listboxId: string;
   triggerId: string;
+  setCustomTriggerId: (id: string | undefined) => void;
   optionId: (value: string) => string;
   triggerRef: RefObject<HTMLButtonElement | null>;
   listboxRef: RefObject<HTMLDivElement | null>;
@@ -100,6 +103,7 @@ function SelectRoot({
   const [open, setOpen] = useControllableState({ value: openProp, defaultValue: defaultOpen, onChange: onOpenChange });
   const [activeValue, setActiveValue] = useState<string | null>(null);
   const [options, setOptions] = useState<OptionRecord[]>([]);
+  const [customTriggerId, setCustomTriggerId] = useState<string | undefined>(undefined);
   const baseId = useId(undefined, "mrd-select");
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const listboxRef = useRef<HTMLDivElement | null>(null);
@@ -129,14 +133,15 @@ function SelectRoot({
       options,
       register,
       listboxId: `${baseId}-listbox`,
-      triggerId: `${baseId}-trigger`,
+      triggerId: customTriggerId ?? `${baseId}-trigger`,
+      setCustomTriggerId,
       optionId: (v) => `${baseId}-opt-${encodeURIComponent(v).replace(/%/g, "_")}`,
       triggerRef,
       listboxRef,
       disabled,
       placeholder,
     }),
-    [open, setOpen, value, select, activeValue, options, register, baseId, disabled, placeholder],
+    [open, setOpen, value, select, activeValue, options, register, baseId, customTriggerId, disabled, placeholder],
   );
 
   return (
@@ -174,8 +179,14 @@ function ChevronIcon() {
   );
 }
 
-function SelectTrigger({ size = "md", invalid, className, onKeyDown, onClick, children, ref, ...rest }: SelectTriggerProps) {
+function SelectTrigger({ size = "md", invalid, className, onKeyDown, onClick, children, id, ref, ...rest }: SelectTriggerProps) {
   const ctx = useSelect("Select.Trigger");
+  const { setCustomTriggerId } = ctx;
+  // A consumer id (e.g. for <label htmlFor>) replaces the generated one so the listbox stays labelled by it.
+  useLayoutEffect(() => {
+    setCustomTriggerId(id);
+    return () => setCustomTriggerId(undefined);
+  }, [id, setCustomTriggerId]);
   const buffer = useRef("");
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   useEffect(() => () => clearTimeout(timer.current), []);
@@ -260,6 +271,7 @@ function SelectTrigger({ size = "md", invalid, className, onKeyDown, onClick, ch
       aria-controls={ctx.listboxId}
       aria-activedescendant={ctx.open && ctx.activeValue !== null ? ctx.optionId(ctx.activeValue) : undefined}
       aria-invalid={invalid || undefined}
+      data-invalid={invalid || undefined}
       disabled={ctx.disabled}
       data-size={size}
       data-state={ctx.open ? "open" : "closed"}
@@ -339,7 +351,7 @@ export interface SelectItemProps extends Omit<HTMLAttributes<HTMLDivElement>, "c
   disabled?: boolean;
 }
 
-function SelectItem({ value, children, disabled = false, className, ...rest }: SelectItemProps) {
+function SelectItem({ value, children, disabled = false, className, onClick, onPointerMove, ...rest }: SelectItemProps) {
   const ctx = useSelect("Select.Item");
   const { register } = ctx;
   useLayoutEffect(() => register({ value, label: children, disabled }), [register, value, children, disabled]);
@@ -355,11 +367,13 @@ function SelectItem({ value, children, disabled = false, className, ...rest }: S
       data-active={active ? "" : undefined}
       data-disabled={disabled ? "" : undefined}
       className={cx("mrd-select__item", className)}
-      onClick={() => {
-        if (!disabled) ctx.select(value);
+      onClick={(event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented && !disabled) ctx.select(value);
       }}
-      onPointerMove={() => {
-        if (!disabled && !active) ctx.setActiveValue(value);
+      onPointerMove={(event) => {
+        onPointerMove?.(event);
+        if (!event.defaultPrevented && !disabled && !active) ctx.setActiveValue(value);
       }}
       {...rest}
     >

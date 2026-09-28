@@ -62,7 +62,11 @@ export const TableBody = forwardRef<HTMLTableSectionElement, TableBodyProps>(fun
 });
 
 export interface TableRowProps extends HTMLAttributes<HTMLTableRowElement> {
-  /** Selected row: accent-soft fill and `aria-selected`. Use with a selection mechanism (e.g. a checkbox cell). */
+  /**
+   * Selected row: accent-soft fill (`data-selected`). A plain table has no selection semantics, so
+   * convey it through the selection control (e.g. a checked checkbox cell); pass `aria-selected`
+   * yourself only when the table uses `role="grid"`/`"treegrid"`.
+   */
   selected?: boolean;
 }
 
@@ -76,7 +80,6 @@ export const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(function 
       ref={ref}
       className={cx("mrd-table__row", className)}
       data-selected={selected || undefined}
-      aria-selected={selected}
       {...props}
     />
   );

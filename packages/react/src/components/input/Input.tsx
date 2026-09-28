@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, type InputHTMLAttributes, type ReactNode } from "react";
 import { cx } from "../../utils/cx";
 import { useFieldControlProps } from "../field/field-context";
@@ -15,9 +17,13 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   trailing?: ReactNode;
 }
 
-/** Single-line text input. Picks up id / aria wiring from a surrounding `Field`. */
+/**
+ * Single-line text input. Picks up id / aria wiring from a surrounding `Field`.
+ * `className` and `style` always go on the root element: the `<input>` itself, or the
+ * `.mrd-input-group` wrapper when `leading`/`trailing` are given. Other props go on the `<input>`.
+ */
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { size = "md", invalid, leading, trailing, className, id, required, disabled, type = "text", ...props },
+  { size = "md", invalid, leading, trailing, className, style, id, required, disabled, type = "text", ...props },
   ref,
 ) {
   const { invalid: isInvalid, ...wiring } = useFieldControlProps({
@@ -29,11 +35,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     "aria-invalid": props["aria-invalid"],
   });
 
+  const grouped = Boolean(leading || trailing);
   const input = (
     <input
       ref={ref}
       type={type}
-      className={cx("mrd-input", !leading && !trailing && className)}
+      className={cx("mrd-input", !grouped && className)}
+      style={grouped ? undefined : style}
       data-size={size}
       data-invalid={isInvalid || undefined}
       {...props}
@@ -41,10 +49,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     />
   );
 
-  if (!leading && !trailing) return input;
+  if (!grouped) return input;
 
   return (
-    <span className={cx("mrd-input-group", className)} data-size={size}>
+    <span className={cx("mrd-input-group", className)} style={style} data-size={size}>
       {leading ? (
         <span className="mrd-input-group__addon" data-side="leading" aria-hidden="true">
           {leading}

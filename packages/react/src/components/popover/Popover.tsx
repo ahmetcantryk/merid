@@ -1,3 +1,5 @@
+"use client";
+
 import {
   type ButtonHTMLAttributes,
   createContext,
@@ -19,6 +21,7 @@ import { useControllableState } from "../../internal/ovl-use-controllable-state"
 import { useDismiss } from "../../internal/ovl-use-dismiss";
 import { useFocusTrap } from "../../internal/ovl-use-focus-trap";
 import { useId } from "../../internal/ovl-use-id";
+import { Slot } from "../../internal/ovl-slot";
 
 interface PopoverContextValue {
   open: boolean;
@@ -55,16 +58,19 @@ function PopoverRoot({ open: openProp, defaultOpen = false, onOpenChange, childr
 }
 
 export interface PopoverTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Render the single child element (e.g. your own `Button`) instead of a `<button>`, merging props, ref and handlers. */
+  asChild?: boolean;
   /** Forwarded ref to the button. */
   ref?: Ref<HTMLButtonElement>;
 }
 
-function PopoverTrigger({ onClick, type = "button", ref, ...rest }: PopoverTriggerProps) {
+function PopoverTrigger({ asChild = false, onClick, type = "button", ref, ...rest }: PopoverTriggerProps) {
   const ctx = usePopover("Popover.Trigger");
+  const Comp = (asChild ? Slot : "button") as "button";
   return (
-    <button
+    <Comp
       ref={composeRefs(ctx.triggerRef, ref)}
-      type={type}
+      type={asChild ? undefined : type}
       aria-haspopup="dialog"
       aria-expanded={ctx.open}
       aria-controls={ctx.open ? ctx.contentId : undefined}
@@ -132,13 +138,19 @@ function PopoverContent({
   );
 }
 
-export interface PopoverCloseProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
+export interface PopoverCloseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Render the single child element (e.g. your own `Button`) instead of a `<button>`, merging props, ref and handlers. */
+  asChild?: boolean;
+  /** Forwarded ref to the button. */
+  ref?: Ref<HTMLButtonElement>;
+}
 
-function PopoverClose({ onClick, type = "button", ...rest }: PopoverCloseProps) {
+function PopoverClose({ asChild = false, onClick, type = "button", ...rest }: PopoverCloseProps) {
   const ctx = usePopover("Popover.Close");
+  const Comp = (asChild ? Slot : "button") as "button";
   return (
-    <button
-      type={type}
+    <Comp
+      type={asChild ? undefined : type}
       onClick={(event) => {
         onClick?.(event);
         if (event.defaultPrevented) return;

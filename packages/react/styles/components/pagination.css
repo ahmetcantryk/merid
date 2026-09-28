@@ -33,13 +33,13 @@
       transform var(--mrd-duration-fast) var(--mrd-ease);
   }
 
-  .mrd-pagination__page:hover,
+  .mrd-pagination__page:hover:not([aria-current="page"]),
   .mrd-pagination__control:hover:not(:disabled) {
     background: var(--mrd-tray);
     color: var(--mrd-ink);
   }
 
-  .mrd-pagination__page:active,
+  .mrd-pagination__page:active:not([aria-current="page"]),
   .mrd-pagination__control:active:not(:disabled) {
     transform: scale(0.97);
   }
@@ -47,6 +47,7 @@
   .mrd-pagination__page[aria-current="page"] {
     background: var(--mrd-accent-soft);
     color: var(--mrd-accent-strong);
+    cursor: default;
   }
 
   .mrd-pagination__control:disabled {
@@ -82,7 +83,7 @@
       transition: none;
     }
 
-    .mrd-pagination__page:active,
+    .mrd-pagination__page:active:not([aria-current="page"]),
     .mrd-pagination__control:active:not(:disabled) {
       transform: none;
     }

@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, type TextareaHTMLAttributes } from "react";
 import { cx } from "../../utils/cx";
 import { useFieldControlProps } from "../field/field-context";

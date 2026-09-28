@@ -44,6 +44,10 @@
     background: var(--mrd-accent-solid);
   }
 
+  .mrd-switch__track[data-invalid] {
+    box-shadow: 0 0 0 1px var(--mrd-danger);
+  }
+
   .mrd-switch__thumb {
     position: absolute;
     top: 2px;

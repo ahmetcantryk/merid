@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useContext } from "react";
 import { joinIds } from "../../utils/cx";
 
@@ -33,10 +35,15 @@ interface ControlOwnProps {
 /**
  * Merges Field wiring (id, aria-describedby, aria-invalid, required, disabled)
  * into a control's own props. Explicit props always win.
+ *
+ * Convention for every form control: `aria-invalid` carries the semantics and
+ * `data-invalid` (set from the returned `invalid`) drives the styling.
  */
 export function useFieldControlProps(own: ControlOwnProps & { invalid?: boolean }) {
   const field = useFieldContext();
-  const invalid = own.invalid ?? field?.invalid ?? false;
+  const ownAria = own["aria-invalid"];
+  const invalid =
+    own.invalid ?? (ownAria === undefined ? undefined : ownAria !== false && ownAria !== "false") ?? field?.invalid ?? false;
   return {
     id: own.id ?? field?.controlId,
     "aria-describedby": joinIds(own["aria-describedby"], field?.descriptionId, invalid ? field?.errorId : undefined),

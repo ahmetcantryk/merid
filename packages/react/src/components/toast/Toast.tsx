@@ -1,3 +1,5 @@
+"use client";
+
 import {
   createContext,
   type ReactNode,
@@ -23,12 +25,14 @@ export interface ToastOptions {
   duration?: number;
   /** Optional action button. */
   action?: { label: string; onClick: () => void };
-  /** Reuse an id to replace an existing toast. */
+  /** Reuse an id to replace an existing toast (its timer restarts with the new `duration`). */
   id?: string;
 }
 
 interface ToastRecord extends ToastOptions {
   id: string;
+  /** Bumped on every `toast()` call so a replaced toast restarts its timer. */
+  stamp: number;
 }
 
 export interface ToastApi {
@@ -72,7 +76,7 @@ export function ToastProvider({ children, duration = 5000, limit = 3, label = "N
     (options: ToastOptions) => {
       counter += 1;
       const id = options.id ?? `mrd-toast-${counter}`;
-      setToasts((prev) => [...prev.filter((t) => t.id !== id), { ...options, id }].slice(-limit));
+      setToasts((prev) => [...prev.filter((t) => t.id !== id), { ...options, id, stamp: counter }].slice(-limit));
       return id;
     },
     [limit],
@@ -108,8 +112,13 @@ function ToastItem({
   const [paused, setPaused] = useState(false);
   const remaining = useRef(duration);
   const startedAt = useRef(0);
+  const stampRef = useRef(toast.stamp);
 
   useEffect(() => {
+    if (stampRef.current !== toast.stamp) {
+      stampRef.current = toast.stamp;
+      remaining.current = duration;
+    }
     if (paused || !Number.isFinite(duration)) return;
     startedAt.current = Date.now();
     const timer = setTimeout(() => onDismiss(toast.id), remaining.current);
@@ -117,7 +126,7 @@ function ToastItem({
       clearTimeout(timer);
       remaining.current -= Date.now() - startedAt.current;
     };
-  }, [paused, duration, onDismiss, toast.id]);
+  }, [paused, duration, onDismiss, toast.id, toast.stamp]);
 
   const tone = toast.tone ?? "neutral";
   return (

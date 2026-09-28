@@ -1,3 +1,5 @@
+"use client";
+
 import { useId as useReactId } from "react";
 
 /** Returns `provided` when given, otherwise a stable `mrd-` prefixed id. */

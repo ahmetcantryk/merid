@@ -5,7 +5,6 @@
     margin: 0;
     padding: 0;
     list-style: none;
-    counter-reset: none;
   }
 
   .mrd-stepper[data-orientation="vertical"] {
@@ -88,6 +87,13 @@
     font-size: var(--mrd-text-xs);
     line-height: var(--mrd-leading-xs);
     font-weight: var(--mrd-weight-medium);
+  }
+
+  /* horizontal: one line, truncated; the full text stays in the title attribute and the accessible name */
+  .mrd-stepper[data-orientation="horizontal"] .mrd-stepper__title,
+  .mrd-stepper[data-orientation="horizontal"] .mrd-stepper__description {
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
   }
 

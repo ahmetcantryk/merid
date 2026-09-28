@@ -29,6 +29,14 @@
     animation: mrd-drawer-in-right var(--mrd-duration-enter) var(--mrd-ease) both;
   }
 
+  .mrd-drawer[data-size="sm"] {
+    width: min(320px, calc(100vw - 48px));
+  }
+
+  .mrd-drawer[data-size="lg"] {
+    width: min(560px, calc(100vw - 48px));
+  }
+
   .mrd-drawer[data-side="right"] {
     border-radius: var(--mrd-radius-card) 0 0 var(--mrd-radius-card);
   }

@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from "react";
 import { cx } from "../../utils/cx";
 import { useRadioGroupContext } from "./RadioGroup";
@@ -29,6 +31,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
     ? {
         name: group.name,
         checked: group.value === value,
+        "data-invalid": group.invalid || undefined,
         required: group.required || undefined,
         // Single tab stop: only the selected radio is tabbable once a value exists.
         tabIndex: group.value !== undefined && group.value !== value ? -1 : undefined,

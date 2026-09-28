@@ -73,8 +73,11 @@ describe("Accordion", () => {
     await user.keyboard("{ArrowDown}");
     expect(screen.getByRole("button", { name: "Is it free?" })).toHaveFocus();
     await user.keyboard("{ArrowUp}{ArrowUp}");
-    // disabled headers stay focusable (aria-disabled), so Up wraps to "Locked"
-    expect(locked).toHaveFocus();
+    // disabled headers are skipped by arrows (consistent with Tabs/Menu), so Up wraps to "Is it free?"
+    expect(screen.getByRole("button", { name: "Is it free?" })).toHaveFocus();
+    expect(locked).toHaveAttribute("data-disabled");
+    await user.keyboard("{End}");
+    expect(screen.getByRole("button", { name: "Is it free?" })).toHaveFocus();
     await user.keyboard("{Home}");
     expect(screen.getByRole("button", { name: "What is it?" })).toHaveFocus();
   });

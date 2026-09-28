@@ -1,3 +1,5 @@
+"use client";
+
 import {
   createContext,
   forwardRef,
@@ -8,9 +10,10 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from "react";
-import { cx } from "../../utils/cx";
+import { cx, joinIds } from "../../utils/cx";
 import { nextRovingIndex } from "../../utils/roving";
 import { useControllableState } from "../../utils/use-controllable";
+import { useFieldContext } from "../field/field-context";
 
 interface RadioGroupContextValue {
   name: string;
@@ -52,7 +55,8 @@ export interface RadioGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, "o
 /**
  * `role="radiogroup"` wrapper. Tab enters the group on the selected radio;
  * Arrow keys (and Home/End) move and select, wrapping at the ends.
- * Name it with `aria-label` or `aria-labelledby`.
+ * Name it with `aria-label` or `aria-labelledby`; inside a `Field` it is named by the Field label and
+ * picks up its description, error (`aria-invalid`), required and disabled state.
  */
 export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(function RadioGroup(
   {
@@ -61,16 +65,23 @@ export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(function R
     onValueChange,
     name,
     orientation = "vertical",
-    disabled = false,
-    required = false,
-    invalid = false,
+    disabled: disabledProp,
+    required: requiredProp,
+    invalid: invalidProp,
     className,
     children,
     onKeyDown,
+    id,
     ...props
   },
   ref,
 ) {
+  const field = useFieldContext();
+  const disabled = disabledProp ?? field?.disabled ?? false;
+  const required = requiredProp ?? field?.required ?? false;
+  const invalid = invalidProp ?? field?.invalid ?? false;
+  const labelledBy = props["aria-labelledby"] ?? (field && !props["aria-label"] ? field.labelId : undefined);
+  const describedBy = joinIds(props["aria-describedby"], field?.descriptionId, invalid ? field?.errorId : undefined);
   const autoName = useId();
   const [current, setCurrent] = useControllableState<string | undefined>(value, defaultValue, (next) => {
     if (next !== undefined) onValueChange?.(next);
@@ -107,10 +118,14 @@ export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(function R
         aria-required={required || undefined}
         aria-invalid={invalid || undefined}
         aria-disabled={disabled || undefined}
+        data-invalid={invalid || undefined}
         className={cx("mrd-radio-group", className)}
         data-orientation={orientation}
         onKeyDown={handleKeyDown}
         {...props}
+        id={id ?? field?.controlId}
+        aria-labelledby={labelledBy}
+        aria-describedby={describedBy}
       >
         {children}
       </div>

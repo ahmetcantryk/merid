@@ -1,3 +1,5 @@
+"use client";
+
 import {
   type ButtonHTMLAttributes,
   createContext,
@@ -20,6 +22,7 @@ import { useDismiss } from "../../internal/ovl-use-dismiss";
 import { useFocusTrap } from "../../internal/ovl-use-focus-trap";
 import { useId } from "../../internal/ovl-use-id";
 import { useScrollLock } from "../../internal/ovl-use-scroll-lock";
+import { Slot } from "../../internal/ovl-slot";
 
 interface DialogContextValue {
   open: boolean;
@@ -71,15 +74,18 @@ function DialogRoot({ open: openProp, defaultOpen = false, onOpenChange, childre
 }
 
 export interface DialogTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Render the single child element (e.g. your own `Button`) instead of a `<button>`, merging props, ref and handlers. */
+  asChild?: boolean;
   /** Forwarded ref to the button. */
   ref?: Ref<HTMLButtonElement>;
 }
 
-function DialogTrigger({ onClick, type = "button", className, ...rest }: DialogTriggerProps) {
+function DialogTrigger({ asChild = false, onClick, type = "button", className, ...rest }: DialogTriggerProps) {
   const ctx = useDialogContext("Dialog.Trigger");
+  const Comp = (asChild ? Slot : "button") as "button";
   return (
-    <button
-      type={type}
+    <Comp
+      type={asChild ? undefined : type}
       aria-haspopup="dialog"
       aria-expanded={ctx.open}
       aria-controls={ctx.open ? ctx.contentId : undefined}
@@ -169,15 +175,21 @@ export function ModalSurface({
   );
 }
 
-export interface DialogContentProps extends ModalSurfaceProps {}
+export type DialogSize = "sm" | "md" | "lg" | "full";
 
-function DialogContent(props: DialogContentProps) {
+export interface DialogContentProps extends ModalSurfaceProps {
+  /** Max width: `sm` 440px, `md` 560px (default), `lg` 720px, `full` the viewport minus a 16px margin. */
+  size?: DialogSize;
+}
+
+function DialogContent({ size = "md", ...props }: DialogContentProps) {
   return (
     <ModalSurface
       role="dialog"
       component="Dialog.Content"
       baseClass="mrd-dialog"
       backdropClass="mrd-dialog__backdrop"
+      dataAttributes={{ "data-size": size }}
       {...props}
     />
   );
@@ -210,10 +222,12 @@ function DialogDescription({ className, ...rest }: DialogDescriptionProps) {
 
 export interface DialogCloseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /**
-   * Render the standard top-right icon button. When false (default if children are given)
-   * the button renders its children unstyled so you can use your own Button.
+   * Render the standard top-right icon button. Defaults to true without children; with children
+   * it renders as a secondary Button. Use `asChild` to supply your own element instead.
    */
   icon?: boolean;
+  /** Render the single child element instead of a `<button>`, merging props, ref and handlers. */
+  asChild?: boolean;
   /** Forwarded ref to the button. */
   ref?: Ref<HTMLButtonElement>;
 }
@@ -229,27 +243,40 @@ function CloseIcon() {
 /** @internal Close button shared by Dialog-like components. */
 export function CloseButton({
   icon,
+  asChild = false,
   onClick,
   className,
   children,
   type = "button",
   component,
+  variant = "secondary",
   ...rest
-}: DialogCloseProps & { component: string }) {
+}: DialogCloseProps & { component: string; variant?: "primary" | "secondary" | "danger" }) {
   const ctx = useDialogContext(component);
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    onClick?.(event);
+    if (!event.defaultPrevented) ctx.setOpen(false);
+  };
+  if (asChild) {
+    const SlotButton = Slot as unknown as "button";
+    return (
+      <SlotButton className={className} onClick={handleClick} {...rest}>
+        {children}
+      </SlotButton>
+    );
+  }
   const showIcon = icon ?? children === undefined;
   return (
     <button
       type={type}
       aria-label={showIcon && !rest["aria-label"] ? "Close" : rest["aria-label"]}
-      className={cx(showIcon && "mrd-dialog__close", className)}
-      onClick={(event: MouseEvent<HTMLButtonElement>) => {
-        onClick?.(event);
-        if (!event.defaultPrevented) ctx.setOpen(false);
-      }}
+      className={cx(showIcon ? "mrd-dialog__close" : "mrd-button", className)}
+      data-variant={showIcon ? undefined : variant}
+      data-size={showIcon ? undefined : "md"}
+      onClick={handleClick}
       {...rest}
     >
-      {showIcon ? <CloseIcon /> : children}
+      {showIcon ? <CloseIcon /> : <span className="mrd-button__content">{children}</span>}
     </button>
   );
 }

@@ -32,8 +32,17 @@
     outline: none;
   }
 
-  .mrd-dialog[data-kind="alert"] {
+  .mrd-dialog[data-kind="alert"],
+  .mrd-dialog[data-size="sm"] {
     max-width: 440px;
+  }
+
+  .mrd-dialog[data-size="lg"] {
+    max-width: 720px;
+  }
+
+  .mrd-dialog[data-size="full"] {
+    max-width: none;
   }
 
   .mrd-dialog__title {
@@ -112,47 +121,14 @@
       animation-name: mrd-sheet-up;
     }
 
-    .mrd-dialog[data-kind="alert"] {
+    .mrd-dialog[data-kind="alert"],
+    .mrd-dialog[data-size] {
       max-width: none;
     }
 
     .mrd-dialog__footer {
       flex-direction: column-reverse;
       align-items: stretch;
-    }
-  }
-
-  @keyframes mrd-overlay-fade {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes mrd-overlay-enter {
-    from {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  @keyframes mrd-sheet-up {
-    from {
-      transform: translateY(24px);
-      opacity: 0;
-    }
-
-    to {
-      transform: none;
-      opacity: 1;
     }
   }
 

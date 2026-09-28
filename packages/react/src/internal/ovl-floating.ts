@@ -1,3 +1,5 @@
+"use client";
+
 import { autoUpdate, flip, offset, type Placement, shift, size, useFloating } from "@floating-ui/react-dom";
 
 export type { Placement };

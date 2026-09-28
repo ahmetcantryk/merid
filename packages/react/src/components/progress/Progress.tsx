@@ -12,7 +12,10 @@ export interface ProgressProps extends HTMLAttributes<HTMLDivElement> {
   valueText?: string;
 }
 
-/** Linear progress bar with `role="progressbar"`. Name it with `aria-label` or `aria-labelledby`. */
+/**
+ * Linear progress bar with `role="progressbar"`. Name it with `aria-label` or `aria-labelledby`.
+ * When indeterminate, no `aria-value*` attributes are set.
+ */
 export const Progress = forwardRef<HTMLDivElement, ProgressProps>(function Progress(
   { value = null, max = 100, size = "md", valueText, className, style, ...props },
   ref,
@@ -26,8 +29,8 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(function Progr
     <div
       ref={ref}
       role="progressbar"
-      aria-valuemin={0}
-      aria-valuemax={safeMax}
+      aria-valuemin={indeterminate ? undefined : 0}
+      aria-valuemax={indeterminate ? undefined : safeMax}
       aria-valuenow={indeterminate ? undefined : clamped}
       aria-valuetext={indeterminate ? undefined : (valueText ?? `${Math.round(percent)}%`)}
       className={cx("mrd-progress", className)}
