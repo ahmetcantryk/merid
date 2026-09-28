@@ -3,6 +3,7 @@
 import type { AnchorHTMLAttributes, ElementType, HTMLAttributes, ReactNode, Ref } from "react";
 import { cx } from "../../internal/ovl-cx";
 import { useId } from "../../internal/ovl-use-id";
+import { withRef } from "../../internal/ovl-with-ref";
 
 export interface SidebarNavProps extends HTMLAttributes<HTMLElement> {
   /** Accessible name of the landmark (required when a page has several navs). */
@@ -55,7 +56,7 @@ export interface SidebarNavItemProps extends AnchorHTMLAttributes<HTMLAnchorElem
  * A link inside `SidebarNav`. Pass `as={Link}` plus router props (e.g. `to`) for client-side routing;
  * extra props are forwarded to the rendered element.
  */
-export function SidebarNavItem({
+function SidebarNavItemImpl({
   active = false,
   icon,
   trailing,
@@ -86,8 +87,10 @@ export function SidebarNavItem({
 }
 
 /** Vertical navigation for app sidebars. `SidebarNav` is the root; use `SidebarNav.Item` / `SidebarNav.Group`. */
-export const SidebarNav = Object.assign(SidebarNavRoot, {
-  Root: SidebarNavRoot,
-  Group: SidebarNavGroup,
+export const SidebarNavItem = withRef("SidebarNav.Item", SidebarNavItemImpl);
+
+export const SidebarNav = Object.assign(withRef("SidebarNav", SidebarNavRoot), {
+  Root: withRef("SidebarNav.Root", SidebarNavRoot),
+  Group: withRef("SidebarNav.Group", SidebarNavGroup),
   Item: SidebarNavItem,
 });

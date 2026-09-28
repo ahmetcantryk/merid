@@ -13,7 +13,13 @@
     "dev": "npm run dev -w merid-docs",
     "lint": "npm run lint --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present"
+    "test": "npm run test --workspaces --if-present",
+    "test:e2e": "playwright test -c e2e a11y interactions playground",
+    "test:visual": "playwright test -c e2e visual --project=chromium",
+    "test:ssr": "npm run test -w @merid/react -- test/ssr",
+    "test:compat": "npm run build -w @merid/react && npm ci --prefix tests/compat-react18 --no-audit --no-fund && npm test --prefix tests/compat-react18",
+    "test:consumers": "npm run build -w @merid/react && node tests/consumers/run.mjs",
+    "test:coverage": "npm run test -w @merid/react -- --coverage"
   },
   "engines": {
     "node": ">=20"

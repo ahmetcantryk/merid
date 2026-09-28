@@ -3,6 +3,7 @@
 import type { HTMLAttributes, ReactNode, Ref } from "react";
 import { cx } from "../../internal/ovl-cx";
 import { useControllableState } from "../../internal/ovl-use-controllable-state";
+import { withRef } from "../../internal/ovl-with-ref";
 
 export type PageRangeItem = number | "ellipsis-start" | "ellipsis-end";
 
@@ -72,7 +73,7 @@ function Chevron({ direction }: { direction: "left" | "right" }) {
  * Page navigation. The current page carries `aria-current="page"`; with `getHref` it renders as
  * plain text (not a link) and other pages as links.
  */
-export function Pagination({
+function PaginationImpl({
   pageCount,
   page: pageProp,
   defaultPage = 1,
@@ -159,3 +160,5 @@ export function Pagination({
     </nav>
   );
 }
+
+export const Pagination = withRef("Pagination", PaginationImpl);

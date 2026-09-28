@@ -22,6 +22,7 @@ import { useDismiss } from "../../internal/ovl-use-dismiss";
 import { useFocusTrap } from "../../internal/ovl-use-focus-trap";
 import { useId } from "../../internal/ovl-use-id";
 import { Slot } from "../../internal/ovl-slot";
+import { withRef } from "../../internal/ovl-with-ref";
 
 interface PopoverContextValue {
   open: boolean;
@@ -165,7 +166,7 @@ function PopoverClose({ asChild = false, onClick, type = "button", ...rest }: Po
 /** Non-modal anchored dialog. Escape or outside press closes it; Escape returns focus to the trigger. */
 export const Popover = {
   Root: PopoverRoot,
-  Trigger: PopoverTrigger,
-  Content: PopoverContent,
-  Close: PopoverClose,
+  Trigger: withRef("Popover.Trigger", PopoverTrigger),
+  Content: withRef("Popover.Content", PopoverContent),
+  Close: withRef("Popover.Close", PopoverClose),
 };

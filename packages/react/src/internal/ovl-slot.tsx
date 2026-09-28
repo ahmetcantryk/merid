@@ -11,6 +11,7 @@ import {
   type Ref,
 } from "react";
 import { composeRefs } from "./ovl-compose-refs";
+import { getElementRef, withRef } from "./ovl-with-ref";
 import { cx } from "./ovl-cx";
 
 type AnyProps = Record<string, unknown>;
@@ -48,14 +49,16 @@ export function mergeSlotProps(slotProps: AnyProps, childProps: AnyProps): AnyPr
  * Renders its single child element with the slot's props, ref, handlers and className merged in.
  * Powers `asChild` on triggers and close buttons.
  */
-export function Slot({ children, ref, ...slotProps }: SlotProps) {
+function SlotImpl({ children, ref, ...slotProps }: SlotProps) {
   const child = Children.only(children);
   if (!isValidElement(child)) {
     throw new Error("asChild expects a single React element child.");
   }
   const element = child as ReactElement<AnyProps>;
-  const childRef = element.props.ref as Ref<HTMLElement> | undefined;
+  const childRef = getElementRef<HTMLElement>(element);
   const props = mergeSlotProps(slotProps as AnyProps, element.props);
   props.ref = ref || childRef ? composeRefs(ref, childRef) : undefined;
   return cloneElement(element, props);
 }
+
+export const Slot = withRef("Slot", SlotImpl);

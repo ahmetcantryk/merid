@@ -1,5 +1,6 @@
 import type { AnchorHTMLAttributes, ElementType, HTMLAttributes, LiHTMLAttributes, Ref } from "react";
 import { cx } from "../../internal/ovl-cx";
+import { withRef } from "../../internal/ovl-with-ref";
 
 export interface BreadcrumbRootProps extends HTMLAttributes<HTMLElement> {
   /** Accessible name of the landmark. Defaults to `"Breadcrumb"`. */
@@ -44,8 +45,8 @@ function BreadcrumbPage({ className, ...rest }: BreadcrumbPageProps) {
 
 /** Breadcrumb trail (WAI-ARIA APG "Breadcrumb"). Separators are drawn in CSS and hidden from assistive tech. */
 export const Breadcrumb = {
-  Root: BreadcrumbRoot,
-  Item: BreadcrumbItem,
-  Link: BreadcrumbLink,
-  Page: BreadcrumbPage,
+  Root: withRef("Breadcrumb.Root", BreadcrumbRoot),
+  Item: withRef("Breadcrumb.Item", BreadcrumbItem),
+  Link: withRef("Breadcrumb.Link", BreadcrumbLink),
+  Page: withRef("Breadcrumb.Page", BreadcrumbPage),
 };

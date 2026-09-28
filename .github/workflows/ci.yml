@@ -28,3 +28,42 @@ jobs:
       - run: npm run build
       - name: publint
         run: npx publint packages/react
+
+  consumers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: CJS/ESM, attw, publint, CSS and font exports
+        run: npm run test:consumers
+      - name: React 18 compatibility
+        run: npm ci --prefix tests/compat-react18 --no-audit --no-fund && npm test --prefix tests/compat-react18
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build -w @merid/react
+      - name: a11y, interactions, playground (chromium desktop + mobile)
+        run: npm run test:e2e
+      - name: Visual regression (chromium)
+        # Baselines are per platform; linux ones are written on first run until committed.
+        run: npm run test:visual -- --update-snapshots=missing
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            e2e/playwright-report
+            e2e/test-results
+          retention-days: 7
