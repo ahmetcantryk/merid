@@ -13,10 +13,13 @@ All notable changes to `@merid/react`. The same notes are kept in `CHANGELOG.md`
 
 ### Added
 
-- Design tokens for colour, typography, spacing, radius, shadow, motion, layout and layers, with light and dark values.
+- 46 components: layout (Container, Section, Stack, Grid, Separator), typography (Heading, Text, Link, Code, Kbd, Label, VisuallyHidden), actions (Button, IconButton), forms (Field, Input, Textarea, NativeSelect, Select, Checkbox, RadioGroup, Switch, SegmentedControl), navigation (Tabs, Breadcrumb, Pagination, SidebarNav, Stepper), overlays (Dialog, AlertDialog, Drawer, Popover, Tooltip, DropdownMenu, Portal), feedback (Alert, Toast, Progress, Spinner, Skeleton, EmptyState) and data display (Card, Badge, Avatar, Table, Accordion).
+- Design tokens for colour, typography, spacing, radius, shadow, motion, layout and layers, with light and dark values. Text and fill pairs meet WCAG AA contrast; `--mrd-accent-solid` / `--mrd-accent-solid-hover` are the fills that carry on-accent text.
 - `tokens.css` and `styles.css` entry points, organised in the `merid.tokens`, `merid.base` and `merid.components` cascade layers.
 - Opt-in base styles through the `mrd-root` class.
-- Overlay components: Dialog, AlertDialog, Drawer, Popover and Tooltip, with focus trapping, scroll locking and dismiss handling.
-- Spinner.
+- `asChild` on Dialog, Drawer and Popover Trigger/Close, AlertDialog Trigger/Action/Cancel and DropdownMenu.Trigger, to render your own `Button`.
+- `Dialog.Content size` (`sm`, `md`, `lg`, `full`) and `Drawer.Content size` (`sm`, `md`, `lg`); `AlertDialog.Action tone` (`primary`, `danger`). Types `DialogSize`, `DrawerSize`, `AlertDialogActionTone`.
+- `Field` wiring for Input, Textarea, NativeSelect, Checkbox, Switch and RadioGroup, with `aria-invalid` for semantics and `data-invalid` for styling.
+- `"use client"` on every interactive module, so components import directly into React Server Components.
 - Bundled Inter Variable font under the SIL Open Font License 1.1.
 - Documentation site with foundations, accessibility statement and versioning policy.

@@ -94,12 +94,12 @@ Use `value` and `onChange` exactly as with a native select.
 
 ## API reference
 
-The ref and all native select attributes go to the `<select>`, except `className`, which is applied to the outer wrapper. The native `size` attribute is replaced by the `size` prop below.
+The ref and all native select attributes go to the `<select>`, except `className` and `style`, which are applied to the outer wrapper. The native `size` attribute is replaced by the `size` prop below.
 
 <PropsTable rows={[
   { name: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Height: sm 36px, md 46px, lg 50px." },
-  { name: "invalid", type: "boolean", description: "Forces the invalid style and aria-invalid. Inside a Field, derived from its error." },
-  { name: "placeholder", type: "string", description: "Adds a disabled, empty first option, selected when no value or defaultValue is given." },
+  { name: "invalid", type: "boolean", description: "Forces the invalid style (`data-invalid`) and `aria-invalid`. Inside a Field, derived from its error." },
+  { name: "placeholder", type: "string", description: "Adds a disabled, hidden `value=\"\"` first option, shown whenever the value is `\"\"` (uncontrolled start or a controlled `value=\"\"`)." },
   { name: "children", type: "ReactNode", description: "option and optgroup elements." },
 ]} />
 
@@ -110,11 +110,11 @@ The ref and all native select attributes go to the `<select>`, except `className
     <tr><th>Hook</th><th>Values</th></tr>
   </thead>
   <tbody>
-    <tr><td><code>.mrd-native-select</code></td><td>Wrapper {"<span>"}; receives <code>className</code></td></tr>
+    <tr><td><code>.mrd-native-select</code></td><td>Wrapper {"<span>"}; receives <code>className</code> and <code>style</code></td></tr>
     <tr><td><code>.mrd-native-select__control</code></td><td>The {"<select>"}</td></tr>
     <tr><td><code>.mrd-native-select__chevron</code></td><td>Decorative chevron icon</td></tr>
     <tr><td><code>data-size</code></td><td><code>sm</code> · <code>md</code> · <code>lg</code> (on the wrapper)</td></tr>
-    <tr><td><code>data-invalid</code> / <code>aria-invalid</code></td><td>On the control when invalid</td></tr>
+    <tr><td><code>data-invalid</code></td><td>On the control when invalid; drives the danger border (<code>aria-invalid</code> carries the semantics)</td></tr>
   </tbody>
 </table>
 

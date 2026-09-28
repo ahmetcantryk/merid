@@ -35,7 +35,9 @@ const PRINCIPLES = [
 
 const RELEASE_NOTES = [
   ["Foundations", "Colour, type, spacing, radius, elevation and motion tokens with light and dark values."],
-  ["Overlays", "Dialog, AlertDialog, Drawer, Popover and Tooltip with focus management and dismiss handling."],
+  ["Components", "46 accessible components, from layout primitives to Select, Tabs, Table and Toast."],
+  ["Overlays", "Dialog, Drawer, AlertDialog, Popover and DropdownMenu with asChild triggers, sizes and focus management."],
+  ["Accessibility", "AA-contrast tokens, including --mrd-accent-solid for filled accents, and WAI-ARIA keyboard patterns."],
   ["Styling", "One stylesheet, three cascade layers, no runtime CSS-in-JS and no build plugin."],
   ["Documentation", "This site: foundations, accessibility statement, versioning policy and search."],
 ] as const;

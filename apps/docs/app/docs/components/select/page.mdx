@@ -95,11 +95,11 @@ Set `name` (and optionally `required` and `form`) on Root. A hidden input carrie
 
 ### Trigger
 
-Accepts every `<button>` attribute except `value`. Children, when given, replace the displayed label.
+Accepts every `<button>` attribute except `value`. Children, when given, replace the displayed label. An `id` you pass is kept (so `<label htmlFor>` works) and the listbox stays labelled by it.
 
 <PropsTable rows={[
   { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Control size." },
-  { name: "invalid", type: "boolean", description: "Marks the field invalid (danger border, aria-invalid)." },
+  { name: "invalid", type: "boolean", description: "Marks the field invalid: `aria-invalid` for semantics, `data-invalid` for the danger border." },
   { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the combobox button." },
 ]} />
 
@@ -110,13 +110,13 @@ Accepts every `<div>` attribute. The listbox matches the trigger's width.
 <PropsTable rows={[
   { name: "placement", type: "Placement", default: "\"bottom-start\"", description: "Preferred placement." },
   { name: "sideOffset", type: "number", default: "6", description: "Distance from the trigger in px." },
-  { name: "container", type: "Element | null", default: "document.body", description: "Portal target." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal target. `undefined` uses `document.body`; `null` renders nothing until the target exists." },
   { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the listbox." },
 ]} />
 
 ### Item
 
-Accepts every `<div>` attribute except `children`.
+Accepts every `<div>` attribute except `children`. Your `onClick` and `onPointerMove` run first; call `event.preventDefault()` in them to skip selecting or highlighting the option.
 
 <PropsTable rows={[
   { name: "value", type: "string", required: true, description: "Value submitted and reported by onValueChange." },
@@ -138,6 +138,7 @@ Accepts every `<div>` attribute except `children`.
 | `data-state` | Trigger, Content | `open`, `closed` |
 | `data-size` | Trigger | `sm`, `md`, `lg` |
 | `data-placeholder` | Trigger | present when no value is selected |
+| `data-invalid` | Trigger | present when invalid (drives the danger border) |
 | `data-active` | Item | present on the keyboard/pointer-highlighted option |
 | `data-disabled` | Item | present when disabled |
 | `aria-selected="true"` | Item | the selected option |
@@ -146,7 +147,7 @@ The trigger height comes from `--mrd-select-height`, set per `data-size`.
 
 ## Accessibility
 
-Follows the WAI-ARIA [Select-Only Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/). Focus stays on the trigger; the highlighted option is exposed through `aria-activedescendant`. Give the trigger an accessible name with `aria-label` or `aria-labelledby`.
+Follows the WAI-ARIA [Select-Only Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/). Focus stays on the trigger; the highlighted option is exposed through `aria-activedescendant`. Give the trigger an accessible name with `aria-label`, `aria-labelledby`, or an `id` referenced by a `<label htmlFor>`.
 
 <KeyboardTable rows={[
   { keys: ["Enter"], action: "Open, or select the highlighted option and close." },

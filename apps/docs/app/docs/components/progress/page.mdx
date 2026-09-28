@@ -98,7 +98,7 @@ Component variables: `--mrd-progress-height` (set per size) and `--mrd-progress-
 
 ## Accessibility
 
-- `role="progressbar"` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow` and `aria-valuetext`. In the indeterminate state `aria-valuenow` and `aria-valuetext` are omitted.
+- `role="progressbar"` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow` and `aria-valuetext`. In the indeterminate state no `aria-value*` attribute is set.
 - Always name the bar with `aria-label` or `aria-labelledby` — the element has no text of its own.
 - Under `prefers-reduced-motion` the indeterminate animation is removed.
 

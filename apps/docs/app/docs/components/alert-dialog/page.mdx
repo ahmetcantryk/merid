@@ -20,8 +20,8 @@ import { AlertDialog } from "@merid/react";
 ```
 
 <ComponentPreview code={`<AlertDialog.Root>
-  <AlertDialog.Trigger className="mrd-button" data-variant="danger" data-size="md">
-    Delete project
+  <AlertDialog.Trigger asChild>
+    <Button variant="danger">Delete project</Button>
   </AlertDialog.Trigger>
   <AlertDialog.Content>
     <AlertDialog.Title>Delete “Northwind”?</AlertDialog.Title>
@@ -29,8 +29,8 @@ import { AlertDialog } from "@merid/react";
       The project and its 24 files are removed permanently. This cannot be undone.
     </AlertDialog.Description>
     <AlertDialog.Footer>
-      <AlertDialog.Cancel className="mrd-button" data-variant="secondary" data-size="md">Cancel</AlertDialog.Cancel>
-      <AlertDialog.Action className="mrd-button" data-variant="danger" data-size="md">Delete project</AlertDialog.Action>
+      <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+      <AlertDialog.Action tone="danger">Delete project</AlertDialog.Action>
     </AlertDialog.Footer>
   </AlertDialog.Content>
 </AlertDialog.Root>`}>
@@ -53,7 +53,7 @@ import { AlertDialog } from "@merid/react";
 </AlertDialog.Root>
 ```
 
-Root, Trigger, Title, Description and Footer are the same parts as [Dialog](/docs/components/dialog). **Cancel** dismisses and receives initial focus; **Action** confirms and closes. There is no icon close button.
+Root, Trigger, Title, Description and Footer are the same parts as [Dialog](/docs/components/dialog). **Cancel** is a secondary Button that dismisses and receives initial focus; **Action** is a primary (or `tone="danger"`) Button that confirms and closes. There is no icon close button.
 
 ## Examples
 
@@ -105,31 +105,34 @@ Accepts every `<div>` attribute except `role`. Outside press never closes it.
 <PropsTable rows={[
   { name: "closeOnEscape", type: "boolean", default: "true", description: "Close on Escape." },
   { name: "initialFocus", type: "RefObject<HTMLElement | null>", description: "Element to focus when opened; defaults to [data-autofocus] (the Cancel button), then the first tabbable element." },
-  { name: "container", type: "Element | null", default: "document.body", description: "Portal target." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal target. `undefined` uses `document.body`; `null` renders nothing until the target exists." },
   { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the dialog element." },
 ]} />
 
 ### AlertDialog.Action
 
-Accepts every `<button>` attribute. Closes on click unless the handler calls `event.preventDefault()`.
+Accepts every `<button>` attribute. Renders a Button styled by `tone`. Closes on click unless the handler calls `event.preventDefault()`.
 
 <PropsTable rows={[
+  { name: "tone", type: "AlertDialogActionTone", default: "\"primary\"", description: "Button style: `primary`, or `danger` for destructive actions. `AlertDialogActionTone` is `\"primary\" | \"danger\"`." },
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element (e.g. your own `Button`) instead of a `<button>`, merging props, ref and handlers." },
   { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the button." },
 ]} />
 
 ### AlertDialog.Cancel
 
-Accepts every `<button>` attribute. Carries `data-autofocus`, so it receives initial focus.
+Accepts every `<button>` attribute. Renders a secondary Button and carries `data-autofocus`, so it receives initial focus.
 
 <PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element (e.g. your own `Button`) instead of a `<button>`, merging props, ref and handlers." },
   { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the button." },
 ]} />
 
-Trigger, Title, Description and Footer take the same props as their [Dialog](/docs/components/dialog#api-reference) counterparts.
+Trigger (including `asChild`), Title, Description and Footer take the same props as their [Dialog](/docs/components/dialog#api-reference) counterparts.
 
 ## Styling
 
-AlertDialog reuses the dialog classes (`.mrd-dialog__backdrop`, `.mrd-dialog`, `.mrd-dialog__title`, `.mrd-dialog__description`, `.mrd-dialog__footer`). The surface carries `data-kind="alert"`, which narrows it to 440px, and `data-state="open"` while mounted. Cancel and Action are unstyled buttons; add `className="mrd-button"` with `data-variant` and `data-size`.
+AlertDialog reuses the dialog classes (`.mrd-dialog__backdrop`, `.mrd-dialog`, `.mrd-dialog__title`, `.mrd-dialog__description`, `.mrd-dialog__footer`). The surface carries `data-kind="alert"`, which narrows it to 440px, and `data-state="open"` while mounted. Cancel renders as `.mrd-button` with `data-variant="secondary"`; Action as `.mrd-button` with `data-variant` set from `tone`. AlertDialog.Content has no `size` prop.
 
 ## Accessibility
 

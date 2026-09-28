@@ -59,7 +59,7 @@ Pass `page` and `onPageChange` when the page lives in your state or the URL.
 
 ### As links
 
-With `getHref`, each page renders as an `<a>` so results are crawlable and open in a new tab. Disabled previous/next controls stay buttons.
+With `getHref`, each other page renders as an `<a>` so results are crawlable and open in a new tab. The current page renders as plain text (not a link to itself) with `aria-current="page"`. Disabled previous/next controls stay buttons.
 
 <ComponentPreview code={paginationLinksCode}>
   <PaginationLinks />
@@ -86,7 +86,7 @@ Renders `<nav>` and accepts its HTML attributes except `onChange`.
     { name: "defaultPage", type: "number", default: "1", description: "Initial page when uncontrolled." },
     { name: "onPageChange", type: "(page: number) => void", description: "Called with the requested page." },
     { name: "siblingCount", type: "number", default: "1", description: "Pages shown on each side of the current one." },
-    { name: "getHref", type: "(page: number) => string", description: "When given, pages render as links with this href." },
+    { name: "getHref", type: "(page: number) => string", description: "When given, pages render as links with this href; the current page renders as text." },
     { name: "aria-label", type: "string", default: '"Pagination"', description: "Accessible name of the landmark." },
     { name: "previousLabel", type: "string", default: '"Previous page"', description: "Label of the previous button." },
     { name: "nextLabel", type: "string", default: '"Next page"', description: "Label of the next button." },
@@ -110,7 +110,7 @@ Returns `PageRangeItem[]`, where `PageRangeItem = number | "ellipsis-start" | "e
 ## Styling
 
 - `.mrd-pagination` / `.mrd-pagination__list` — nav root and the flex list.
-- `.mrd-pagination__page` — a page button or link: `--mrd-icon-button-md` square, `--mrd-radius-md`.
+- `.mrd-pagination__page` — a page button, link, or (current page in link mode) text: `--mrd-icon-button-md` square, `--mrd-radius-md`.
 - `.mrd-pagination__page[aria-current="page"]` (also `data-state="active"`) — current page: `--mrd-accent-soft` fill, `--mrd-accent-strong` text.
 - `.mrd-pagination__control` with `data-direction="previous"` or `"next"` — chevron controls; `:disabled` uses `--mrd-placeholder`.
 - `.mrd-pagination__ellipsis` — the `…` gap, hidden from assistive tech.

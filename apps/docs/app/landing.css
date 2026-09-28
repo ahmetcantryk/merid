@@ -56,9 +56,11 @@
 }
 .showcase__stage > .mrd-card { width: min(100%, 380px); }
 .showcase__stage .mrd-field { align-self: stretch; }
-.window .shiki { font-size: 12.5px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.window .code-block__body { overflow-x: auto; max-width: 100%; }
+.window .shiki { font-size: 12.5px; white-space: pre; overflow-wrap: normal; word-break: normal; width: max-content; min-width: 100%; }
+.showcase > * { min-width: 0; }
 @media (max-width: 920px) {
-  .showcase { grid-template-columns: 1fr; }
+  .showcase { grid-template-columns: minmax(0, 1fr); }
   .showcase__stage { min-height: 280px; padding: 24px 16px; }
 }
 

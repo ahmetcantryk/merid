@@ -83,9 +83,9 @@ Renders a `div` with `role="radiogroup"`; the ref and other div attributes are f
   { name: "onValueChange", type: "(value: string) => void", description: "Called with the new value when the selection changes." },
   { name: "name", type: "string", description: "Form field name shared by every radio. Generated when omitted." },
   { name: "orientation", type: '"vertical" | "horizontal"', default: '"vertical"', description: "Layout direction." },
-  { name: "disabled", type: "boolean", default: "false", description: "Disables every radio in the group." },
-  { name: "required", type: "boolean", default: "false", description: "Marks the group required for form validation." },
-  { name: "invalid", type: "boolean", default: "false", description: "Marks the group invalid (aria-invalid)." },
+  { name: "disabled", type: "boolean", default: "false", description: "Disables every radio in the group. Inside a `Field`, inherited from it." },
+  { name: "required", type: "boolean", default: "false", description: "Marks the group required for form validation. Inside a `Field`, inherited from it." },
+  { name: "invalid", type: "boolean", default: "false", description: "Marks the group invalid (`aria-invalid`; `data-invalid` on the group and each input). Inside a `Field`, derived from its `error`." },
   { name: "children", type: "ReactNode", description: "Radio elements." },
 ]} />
 
@@ -111,7 +111,7 @@ The ref and native input attributes go to the `<input>`; `className` and `style`
     <tr><td><code>.mrd-radio</code></td><td>Radio wrapper; <code>data-disabled</code> when disabled</td></tr>
     <tr><td><code>.mrd-radio__control</code>, <code>__input</code>, <code>__circle</code></td><td>Native input and its drawn circle</td></tr>
     <tr><td><code>.mrd-radio__text</code>, <code>__label</code>, <code>__description</code></td><td>Label column</td></tr>
-    <tr><td><code>[aria-invalid="true"]</code></td><td>On the group; styles its circles as invalid</td></tr>
+    <tr><td><code>data-invalid</code></td><td>On the group and each input; styles the circles as invalid</td></tr>
   </tbody>
 </table>
 
@@ -119,7 +119,7 @@ Radio has no component variables.
 
 ## Accessibility
 
-- The group has `role="radiogroup"`. Name it with `aria-label` or `aria-labelledby` pointing at a visible heading.
+- The group has `role="radiogroup"`. Name it with `aria-label` or `aria-labelledby` pointing at a visible heading. Inside a `Field`, it is named by the Field label and picks up its description, error, required and disabled state.
 - The group is a single tab stop: Tab lands on the selected radio (or the first one when nothing is selected).
 - Arrow keys move focus and selection together and wrap at the ends; disabled radios are skipped. Left/Right are mirrored in right-to-left layouts.
 

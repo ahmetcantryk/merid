@@ -30,18 +30,22 @@ npm i @merid/react
 
 ```tsx
 import "@merid/react/styles.css";
-import { AlertDialog } from "@merid/react";
+import { AlertDialog, Button } from "@merid/react";
 
 export function DeleteProject({ onDelete }: { onDelete: () => void }) {
   return (
     <AlertDialog.Root>
-      <AlertDialog.Trigger>Delete project</AlertDialog.Trigger>
+      <AlertDialog.Trigger asChild>
+        <Button variant="danger">Delete project</Button>
+      </AlertDialog.Trigger>
       <AlertDialog.Content>
         <AlertDialog.Title>Delete this project?</AlertDialog.Title>
         <AlertDialog.Description>This removes all of its files. It cannot be undone.</AlertDialog.Description>
         <AlertDialog.Footer>
           <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-          <AlertDialog.Action onClick={onDelete}>Delete</AlertDialog.Action>
+          <AlertDialog.Action tone="danger" onClick={onDelete}>
+            Delete
+          </AlertDialog.Action>
         </AlertDialog.Footer>
       </AlertDialog.Content>
     </AlertDialog.Root>
@@ -57,7 +61,7 @@ export function DeleteProject({ onDelete }: { onDelete: () => void }) {
 - **Plain CSS** — one stylesheet in three cascade layers. Your CSS wins without `!important`. No runtime styling, no build plugin.
 - **Design tokens** — every value is a `--mrd-*` custom property with light and dark values.
 - **Dark mode** — follows the system or a `data-theme` attribute, on any subtree.
-- **Server-component friendly** — static components render on the server; interactive ones carry `"use client"`.
+- **Server-component friendly** — static components render on the server; interactive modules carry `"use client"`, so every component can be imported straight into a server component.
 - **Small surface** — a focused set of components held to one design contract.
 
 ## Browser support

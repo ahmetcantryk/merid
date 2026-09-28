@@ -87,7 +87,7 @@ Returns `ToastApi`. Throws when called outside `ToastProvider`.
   { name: "tone", type: "\"neutral\" | \"info\" | \"success\" | \"warning\" | \"danger\"", default: "\"neutral\"", description: "Status dot colour." },
   { name: "duration", type: "number", default: "provider duration", description: "Auto-dismiss after this many ms; Infinity keeps it until closed." },
   { name: "action", type: "{ label: string; onClick: () => void }", description: "Optional action button." },
-  { name: "id", type: "string", description: "Reuse an id to replace an existing toast." },
+  { name: "id", type: "string", description: "Reuse an id to replace an existing toast; its timer restarts with the new `duration`." },
 ]} />
 
 ## Styling

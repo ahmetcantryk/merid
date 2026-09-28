@@ -63,7 +63,7 @@ The handle defaults to `vertical`. Use `none` when the layout must not change, `
 
 <PropsTable rows={[
   { name: "resize", type: '"none" | "vertical" | "both"', default: '"vertical"', description: "User resize handle." },
-  { name: "invalid", type: "boolean", description: "Forces the invalid style and aria-invalid. Inside a Field, derived from its error." },
+  { name: "invalid", type: "boolean", description: "Forces the invalid style (`data-invalid`) and `aria-invalid`. Inside a Field, derived from its error." },
   { name: "rows", type: "number", default: "4", description: "Visible text lines (native)." },
 ]} />
 
@@ -76,7 +76,7 @@ The handle defaults to `vertical`. Use `none` when the layout must not change, `
   <tbody>
     <tr><td><code>.mrd-textarea</code></td><td>The {"<textarea>"}</td></tr>
     <tr><td><code>data-resize</code></td><td><code>none</code> · <code>vertical</code> · <code>both</code></td></tr>
-    <tr><td><code>data-invalid</code></td><td>Present when invalid; the style keys off <code>aria-invalid="true"</code></td></tr>
+    <tr><td><code>data-invalid</code></td><td>Present when invalid; drives the danger border (<code>aria-invalid</code> carries the semantics)</td></tr>
   </tbody>
 </table>
 

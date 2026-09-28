@@ -53,7 +53,7 @@ Pass `src` for a photo. When it is missing or fails to load, the avatar falls ba
 
 `max` limits the visible avatars; the rest collapse into a “+N” chip. Set the group's `size` to match its avatars so the chip lines up.
 
-<ComponentPreview code={`<AvatarGroup aria-label="Project members" max={3} size="sm">
+<ComponentPreview code={`<AvatarGroup label="Project members" max={3} size="sm">
   <Avatar name="Ada Lovelace" size="sm" />
   <Avatar name="Grace Hopper" size="sm" />
   <Avatar name="Alan Turing" size="sm" />
@@ -81,6 +81,7 @@ Renders a `span`; the ref and other span attributes are forwarded.
 Renders a `div` with `role="group"`.
 
 <PropsTable rows={[
+  { name: "label", type: "string", description: "Accessible name of the group, e.g. \"Project members\". Required unless you pass `aria-label` or `aria-labelledby`; a development warning is logged otherwise." },
   { name: "max", type: "number", description: "Maximum avatars shown; the rest collapse into a +N chip." },
   { name: "size", type: '"xs" | "sm" | "md" | "lg" | "xl"', default: '"md"', description: "Size of the overflow chip; match the avatars' size." },
   { name: "children", type: "ReactNode", description: "Avatar elements." },
@@ -112,7 +113,7 @@ Component variable: `--mrd-avatar-size`, set per size.
 
 - Each avatar is `role="img"` named by `name`; the inner image has `alt=""` and the initials are hidden, so the name is read once.
 - The overflow chip is announced as “N more”.
-- Name the group with `aria-label` (“Project members”) so the list has context.
+- The group has `role="group"`; name it with `label` (“Project members”) so the list has context.
 - When an avatar sits next to the person's visible name, the name is read twice; pass `aria-hidden` on the avatar in that case.
 
 ## Guidelines

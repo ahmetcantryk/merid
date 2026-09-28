@@ -79,7 +79,8 @@ The ref and remaining button attributes go to the track `<button>`; `className` 
   { name: "labelPosition", type: '"start" | "end"', default: '"end"', description: "Which side the label sits on." },
   { name: "name", type: "string", description: "When set, a hidden input with this name submits value while on." },
   { name: "value", type: "string", default: '"on"', description: "Submitted value when on." },
-  { name: "disabled", type: "boolean", description: "Disables the switch and dims the label." },
+  { name: "disabled", type: "boolean", description: "Disables the switch and dims the label. Inside a `Field`, inherited from it." },
+  { name: "invalid", type: "boolean", description: "Forces the invalid style (`data-invalid`) and `aria-invalid`. Inside a `Field`, derived from its `error`." },
 ]} />
 
 ## Styling
@@ -96,6 +97,7 @@ The ref and remaining button attributes go to the track `<button>`; `className` 
     <tr><td><code>data-state</code></td><td><code>on</code> · <code>off</code> (wrapper and track)</td></tr>
     <tr><td><code>data-label-position</code></td><td><code>start</code> · <code>end</code></td></tr>
     <tr><td><code>data-disabled</code></td><td>On the wrapper when disabled</td></tr>
+    <tr><td><code>data-invalid</code></td><td>On the track when invalid; draws the danger ring</td></tr>
   </tbody>
 </table>
 
@@ -105,6 +107,8 @@ Switch has no component variables; the off track uses `--mrd-control-off` and th
 
 - Exposed as `role="switch"` with `aria-checked`, so screen readers announce “on” / “off”.
 - The visible label is linked with `aria-labelledby`; clicking it also toggles the switch.
+- Inside a `Field`, the switch takes the Field id (so the Field label names it), plus its `aria-describedby`, `aria-invalid` and `disabled`.
+- `aria-invalid` carries the invalid semantics; `data-invalid` drives the styling.
 
 <KeyboardTable rows={[
   { keys: ["Tab"], action: "Moves focus to the switch." },

@@ -78,9 +78,11 @@ With `defaultValue` and `name`, the control keeps its own state and submits with
 
 [Input](/docs/components/input), [Textarea](/docs/components/textarea) and [NativeSelect](/docs/components/native-select) read the full wiring. Props set on the control itself always win over the Field's.
 
-<Callout tone="warning" title="Not every control reads Field">
-  [Checkbox](/docs/components/checkbox) takes the id, `aria-invalid`, `required` and `disabled` from Field but also renders its own label, so the Field label and the checkbox label would both name it. [RadioGroup](/docs/components/radio) and [Switch](/docs/components/switch) ignore Field context entirely — the Field label's `htmlFor` then points at no element. Label those controls themselves (RadioGroup with `aria-labelledby`, Switch with its children).
-</Callout>
+- [Checkbox](/docs/components/checkbox) is named by the Field label. Its own children still render as a clickable label but become its description (`aria-describedby`), so it is never double-labelled.
+- [Switch](/docs/components/switch) takes the Field id (so the Field label names it), `aria-describedby`, `aria-invalid` and `disabled`.
+- [RadioGroup](/docs/components/radio) is named by the Field label (`aria-labelledby`) and picks up its description, error, `required` and `disabled`.
+
+Every control follows the same convention: `aria-invalid` carries the semantics and `data-invalid` drives the styling.
 
 ## API reference
 
@@ -131,4 +133,4 @@ The label is a [Label](/docs/components/label) (`.mrd-label`).
 ## Related
 
 - [Label](/docs/components/label) — the label Field renders.
-- [Input](/docs/components/input), [Textarea](/docs/components/textarea), [NativeSelect](/docs/components/native-select) — controls that read Field.
+- [Input](/docs/components/input), [Textarea](/docs/components/textarea), [NativeSelect](/docs/components/native-select), [Checkbox](/docs/components/checkbox), [Switch](/docs/components/switch), [RadioGroup](/docs/components/radio) — controls that read Field.

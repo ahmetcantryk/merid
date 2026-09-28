@@ -10,7 +10,7 @@ Merid works in React Server Components environments such as the Next.js App Rout
 ## How the package is split
 
 - **Static components** — layout, typography helpers, badges, cards, skeletons — contain no state or effects. They render on the server and send no JavaScript to the browser.
-- **Interactive components** — dialogs, menus, tabs, form controls with internal state — begin with a `"use client"` directive. You can import them from a server component; React places the client boundary at the component for you.
+- **Interactive components** — dialogs, menus, tabs, form controls with internal state — every interactive module begins with a `"use client"` directive. Import them directly into a server component, no wrapper file needed; React places the client boundary at the component for you. Only your own event handlers need a client component.
 
 ## Passing props across the boundary
 
@@ -18,13 +18,24 @@ Props passed from a server component to a client component must be serialisable.
 
 ```tsx
 // app/settings/page.tsx — a server component
-import { Card } from "@merid/react";
-import { DeleteAccount } from "./delete-account"; // "use client" inside
+import { Button, Card, Dialog } from "@merid/react";
+import { DeleteAccount } from "./delete-account"; // "use client" inside: it passes onClick
 
 export default function Settings() {
   return (
     <Card>
       <h2>Danger zone</h2>
+      {/* Interactive Merid components work here directly */}
+      <Dialog.Root>
+        <Dialog.Trigger asChild>
+          <Button variant="secondary">What gets deleted?</Button>
+        </Dialog.Trigger>
+        <Dialog.Content>
+          <Dialog.Title>What gets deleted</Dialog.Title>
+          <Dialog.Description>Projects, files and billing history.</Dialog.Description>
+          <Dialog.Close />
+        </Dialog.Content>
+      </Dialog.Root>
       <DeleteAccount />
     </Card>
   );

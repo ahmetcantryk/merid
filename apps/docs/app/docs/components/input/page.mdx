@@ -73,11 +73,11 @@ Input is a plain `<input>`: use `value` + `onChange` to control it, or `defaultV
 
 ## API reference
 
-`Input` forwards its ref to the `<input>` and passes every other native input attribute through. `type` defaults to `"text"`.
+`Input` forwards its ref to the `<input>` and passes every other native input attribute through. `className` and `style` always go on the root element: the `<input>` itself, or the `.mrd-input-group` wrapper when `leading` or `trailing` is set. `type` defaults to `"text"`.
 
 <PropsTable rows={[
   { name: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Height: sm 36px, md 46px, lg 50px." },
-  { name: "invalid", type: "boolean", description: "Forces the invalid style and aria-invalid. Inside a Field, derived from its error." },
+  { name: "invalid", type: "boolean", description: "Forces the invalid style (`data-invalid`) and `aria-invalid`. Inside a Field, derived from its error." },
   { name: "leading", type: "ReactNode", description: "Decorative element before the text (icon, prefix)." },
   { name: "trailing", type: "ReactNode", description: "Decorative element after the text (icon, unit)." },
   { name: "type", type: "string", default: '"text"', description: "Native input type." },
@@ -94,7 +94,7 @@ Input is a plain `<input>`: use `value` + `onChange` to control it, or `defaultV
     <tr><td><code>.mrd-input-group</code></td><td>Wrapper, only when <code>leading</code> or <code>trailing</code> is set</td></tr>
     <tr><td><code>.mrd-input-group__addon</code></td><td>Addon slot, with <code>data-side</code> <code>leading</code> · <code>trailing</code></td></tr>
     <tr><td><code>data-size</code></td><td><code>sm</code> · <code>md</code> · <code>lg</code> (on input and group)</td></tr>
-    <tr><td><code>data-invalid</code></td><td>Present when invalid; the style keys off <code>aria-invalid="true"</code></td></tr>
+    <tr><td><code>data-invalid</code></td><td>Present when invalid; drives the danger border (<code>aria-invalid</code> carries the semantics)</td></tr>
   </tbody>
 </table>
 

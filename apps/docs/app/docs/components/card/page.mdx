@@ -75,7 +75,7 @@ Renders a `div` unless `as` is given; forwards its ref and passes all HTML attri
   { name: "variant", type: '"tray" | "elevated" | "outline"', default: '"tray"', description: "Surface. tray on the page, elevated on a tray section, outline is a hairline card." },
   { name: "padding", type: '"none" | "sm" | "md" | "lg"', default: '"md"', description: "Inner padding: 0, 20px, 28px, 32px." },
   { name: "interactive", type: "boolean", default: "false", description: "Adds hover lift (3px) and pointer cursor. Use when the whole card is a link or button." },
-  { name: "selected", type: "boolean", default: "false", description: "Draws the 1.5px accent selection ring." },
+  { name: "selected", type: "boolean", description: "Draws the 1.5px accent selection ring. On an `interactive` card rendered `as=\"button\"` it also sets `aria-pressed`; otherwise it is visual only." },
   { name: "as", type: "ElementType", default: '"div"', description: "Element or component to render instead of a div." },
 ]} />
 
@@ -106,7 +106,7 @@ Component variable: `--mrd-card-padding`, set per `data-padding`.
 
 - A card has no role of its own. Give a group of cards a heading, and start each card with a heading at the right level.
 - For a clickable card, render it as the interactive element (`as="a"` or `as="button"`) rather than wrapping a `div` in an `onClick`.
-- `selected` is visual only. Convey the state with `aria-current`, `aria-pressed` or a checked control.
+- `selected` sets `aria-pressed` only when the card is `interactive` and rendered `as="button"` (a toggle button). Otherwise it is visual only: convey the state with `aria-current` on a link, or a checked control.
 
 ## Guidelines
 

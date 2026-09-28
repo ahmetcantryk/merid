@@ -35,7 +35,7 @@ export function AvatarFallback() {
 
 export function AvatarGroupDemo() {
   return (
-    <AvatarGroup aria-label="Project members" max={3} size="sm">
+    <AvatarGroup label="Project members" max={3} size="sm">
       <Avatar name="Ada Lovelace" size="sm" />
       <Avatar name="Grace Hopper" size="sm" />
       <Avatar name="Alan Turing" size="sm" />

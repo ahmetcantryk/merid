@@ -1,12 +1,12 @@
 "use client";
 
-import { AlertDialog } from "@merid/react";
+import { AlertDialog, Button } from "@merid/react";
 
 export function AlertDialogDemo() {
   return (
     <AlertDialog.Root>
-      <AlertDialog.Trigger className="mrd-button" data-variant="danger" data-size="md">
-        Delete project
+      <AlertDialog.Trigger asChild>
+        <Button variant="danger">Delete project</Button>
       </AlertDialog.Trigger>
       <AlertDialog.Content>
         <AlertDialog.Title>Delete “Northwind”?</AlertDialog.Title>
@@ -14,12 +14,8 @@ export function AlertDialogDemo() {
           The project and its 24 files are removed permanently. This cannot be undone.
         </AlertDialog.Description>
         <AlertDialog.Footer>
-          <AlertDialog.Cancel className="mrd-button" data-variant="secondary" data-size="md">
-            Cancel
-          </AlertDialog.Cancel>
-          <AlertDialog.Action className="mrd-button" data-variant="danger" data-size="md">
-            Delete project
-          </AlertDialog.Action>
+          <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+          <AlertDialog.Action tone="danger">Delete project</AlertDialog.Action>
         </AlertDialog.Footer>
       </AlertDialog.Content>
     </AlertDialog.Root>

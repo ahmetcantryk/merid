@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Dialog, Field, Input } from "@merid/react";
+import { Button, Dialog, Field, Input, type DialogSize } from "@merid/react";
 
 export function DialogDemo() {
   return (
     <Dialog.Root>
-      <Dialog.Trigger className="mrd-button" data-variant="secondary" data-size="md">
-        Edit profile
+      <Dialog.Trigger asChild>
+        <Button variant="secondary">Edit profile</Button>
       </Dialog.Trigger>
       <Dialog.Content>
         <Dialog.Title>Edit profile</Dialog.Title>
@@ -18,11 +18,9 @@ export function DialogDemo() {
           </Field>
         </div>
         <Dialog.Footer>
-          <Dialog.Close className="mrd-button" data-variant="secondary" data-size="md">
-            Cancel
-          </Dialog.Close>
-          <Dialog.Close className="mrd-button" data-variant="primary" data-size="md">
-            Save
+          <Dialog.Close>Cancel</Dialog.Close>
+          <Dialog.Close asChild>
+            <Button variant="primary">Save</Button>
           </Dialog.Close>
         </Dialog.Footer>
         <Dialog.Close />
@@ -51,5 +49,29 @@ export function DialogControlledDemo() {
         </Dialog.Content>
       </Dialog.Root>
     </>
+  );
+}
+
+const DIALOG_SIZES: readonly DialogSize[] = ["sm", "md", "lg", "full"];
+
+export function DialogSizesDemo() {
+  return (
+    <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+      {DIALOG_SIZES.map((size) => (
+        <Dialog.Root key={size}>
+          <Dialog.Trigger asChild>
+            <Button variant="secondary">{size}</Button>
+          </Dialog.Trigger>
+          <Dialog.Content size={size}>
+            <Dialog.Title>Size {size}</Dialog.Title>
+            <Dialog.Description>The size prop sets the maximum width of the surface.</Dialog.Description>
+            <Dialog.Footer>
+              <Dialog.Close>Close</Dialog.Close>
+            </Dialog.Footer>
+            <Dialog.Close />
+          </Dialog.Content>
+        </Dialog.Root>
+      ))}
+    </div>
   );
 }

@@ -111,7 +111,7 @@ The frame `div` wraps the `<table>`; `className` and native props go on the `<ta
 ### TableRow
 
 <PropsTable rows={[
-  { name: "selected", type: "boolean", description: "Accent-soft fill and aria-selected." },
+  { name: "selected", type: "boolean", description: "Accent-soft fill via `data-selected`. Sets no ARIA: convey selection through the selection control (e.g. a checked checkbox cell), and pass `aria-selected` yourself only on a `role=\"grid\"` table." },
 ]} />
 
 ### TableHeader
@@ -148,6 +148,7 @@ Component variable: `--mrd-table-cell-padding`, set per density.
 
 - It is a native table, so screen readers get row and column navigation for free. `TableHeader` defaults to `scope="col"`; use `scope="row"` for row headers.
 - Add a `<caption>` (it can be visually hidden with [VisuallyHidden](/docs/components/visually-hidden)) or `aria-label` on the table to describe it.
+- `TableRow selected` is visual only (`data-selected`); a plain table has no selection semantics, so the selection control in the row must carry the state.
 - When the table can overflow, set `scrollLabel` so the frame is reachable with Tab and scrollable with the arrow keys.
 
 <KeyboardTable rows={[

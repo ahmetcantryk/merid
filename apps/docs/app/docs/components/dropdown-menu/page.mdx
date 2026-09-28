@@ -92,9 +92,10 @@ import { DropdownMenu } from "@merid/react";
 
 ### Trigger
 
-Accepts every `<button>` attribute. `type` defaults to `"button"`.
+Accepts every `<button>` attribute. `type` defaults to `"button"` (not set when `asChild` is used).
 
 <PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element (e.g. your own `Button`) instead of a `<button>`, merging props, ref and handlers." },
   { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the button." },
 ]} />
 
@@ -105,13 +106,13 @@ Accepts every `<div>` attribute.
 <PropsTable rows={[
   { name: "placement", type: "Placement", default: "\"bottom-start\"", description: "Preferred placement relative to the trigger." },
   { name: "sideOffset", type: "number", default: "6", description: "Distance from the trigger in px." },
-  { name: "container", type: "Element | null", default: "document.body", description: "Portal target." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal target. `undefined` uses `document.body`; `null` renders nothing until the target exists." },
   { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the menu element." },
 ]} />
 
 ### Item
 
-Accepts every `<div>` attribute except `onSelect`.
+Accepts every `<div>` attribute except `onSelect`. Your `onClick`, `onKeyDown` and `onPointerMove` run first; call `event.preventDefault()` in them to skip the built-in behaviour (activation, highlighting).
 
 <PropsTable rows={[
   { name: "onSelect", type: "(event: Event) => void", description: "Called when the item is chosen by click, Enter or Space. Call preventDefault to keep the menu open." },
@@ -124,7 +125,7 @@ Accepts every `<div>` attribute except `onSelect`.
 
 ### CheckboxItem
 
-Accepts every `<div>` attribute except `onSelect`. `leading` is not rendered; the check mark takes its place.
+Accepts every `<div>` attribute except `onSelect`, with the same handler composition as Item. `leading` is not rendered; the check mark takes its place.
 
 <PropsTable rows={[
   { name: "checked", type: "boolean", description: "Controlled checked state." },
@@ -154,7 +155,7 @@ All three accept every `<div>` attribute. `Group` renders `role="group"`; give i
 
 | Attribute | On | Values |
 |---|---|---|
-| `data-state` | Trigger | `open`, `closed` |
+| `data-state` | Trigger (or the `asChild` element) | `open`, `closed` |
 | `data-state` | Content | `open` |
 | `data-state` | CheckboxItem | `checked`, `unchecked` |
 | `data-disabled` | Item, CheckboxItem | present when disabled |

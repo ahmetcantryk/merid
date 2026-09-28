@@ -66,6 +66,7 @@ Tooltip is a single component. Its child must be one focusable element that forw
   { name: "sideOffset", type: "number", default: "6", description: "Distance from the trigger in px." },
   { name: "className", type: "string", description: "Class name for the tooltip bubble." },
   { name: "disabled", type: "boolean", default: "false", description: "Do not show the tooltip." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal target. `undefined` uses `document.body`; `null` renders nothing until the target exists." },
 ]} />
 
 ## Styling

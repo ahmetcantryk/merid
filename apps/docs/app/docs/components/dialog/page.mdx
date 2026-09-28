@@ -1,4 +1,4 @@
-import { DialogDemo, DialogControlledDemo } from "@/examples/dialog";
+import { DialogDemo, DialogControlledDemo, DialogSizesDemo } from "@/examples/dialog";
 
 export const metadata = {
   title: "Dialog",
@@ -20,8 +20,8 @@ import { Dialog } from "@merid/react";
 ```
 
 <ComponentPreview code={`<Dialog.Root>
-  <Dialog.Trigger className="mrd-button" data-variant="secondary" data-size="md">
-    Edit profile
+  <Dialog.Trigger asChild>
+    <Button variant="secondary">Edit profile</Button>
   </Dialog.Trigger>
   <Dialog.Content>
     <Dialog.Title>Edit profile</Dialog.Title>
@@ -30,8 +30,10 @@ import { Dialog } from "@merid/react";
       <Input defaultValue="Ada Lovelace" />
     </Field>
     <Dialog.Footer>
-      <Dialog.Close className="mrd-button" data-variant="secondary" data-size="md">Cancel</Dialog.Close>
-      <Dialog.Close className="mrd-button" data-variant="primary" data-size="md">Save</Dialog.Close>
+      <Dialog.Close>Cancel</Dialog.Close>
+      <Dialog.Close asChild>
+        <Button variant="primary">Save</Button>
+      </Dialog.Close>
     </Dialog.Footer>
     <Dialog.Close />
   </Dialog.Content>
@@ -56,14 +58,25 @@ import { Dialog } from "@merid/react";
 ```
 
 - **Root** holds the open state. It renders no element.
-- **Trigger** is a `<button>` that toggles the dialog.
-- **Content** is the modal surface, portalled to `document.body` with a backdrop.
+- **Trigger** is a `<button>` that toggles the dialog. Pass `asChild` to render your own element, such as a `Button`, instead.
+- **Content** is the modal surface, portalled to `document.body` with a backdrop. `size` sets its maximum width.
 - **Title** labels the dialog (`aria-labelledby`). Always include one.
 - **Description** is linked with `aria-describedby` when present.
 - **Footer** lays out actions, right-aligned.
-- **Close** with no children renders the top-right icon button; with children it renders an unstyled button around them.
+- **Close** with no children renders the top-right icon button; with text children it renders a secondary Button. Use `asChild` to supply a different element, such as a primary `Button`.
 
 ## Examples
+
+### Sizes
+
+`size` sets the maximum width: `sm` 440px, `md` 560px (default), `lg` 720px, `full` the viewport minus a 16px margin. At 640px and below every size becomes a bottom sheet.
+
+<ComponentPreview code={`<Dialog.Content size="sm">…</Dialog.Content>
+<Dialog.Content size="md">…</Dialog.Content>
+<Dialog.Content size="lg">…</Dialog.Content>
+<Dialog.Content size="full">…</Dialog.Content>`}>
+  <DialogSizesDemo />
+</ComponentPreview>
 
 ### Controlled
 
@@ -113,9 +126,10 @@ Set `closeOnOutsidePress={false}` or `closeOnEscape={false}` when losing unsaved
 
 ### Dialog.Trigger
 
-Accepts every `<button>` attribute. `type` defaults to `"button"`.
+Accepts every `<button>` attribute. `type` defaults to `"button"` (not set when `asChild` is used).
 
 <PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element (e.g. your own `Button`) instead of a `<button>`, merging props, ref and handlers." },
   { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the button." },
 ]} />
 
@@ -124,10 +138,11 @@ Accepts every `<button>` attribute. `type` defaults to `"button"`.
 Accepts every `<div>` attribute except `role`.
 
 <PropsTable rows={[
+  { name: "size", type: "DialogSize", default: "\"md\"", description: "Maximum width: `sm` 440px, `md` 560px, `lg` 720px, `full` the viewport minus a 16px margin. `DialogSize` is `\"sm\" | \"md\" | \"lg\" | \"full\"`." },
   { name: "closeOnOutsidePress", type: "boolean", default: "true", description: "Close when the backdrop is pressed." },
   { name: "closeOnEscape", type: "boolean", default: "true", description: "Close on Escape." },
   { name: "initialFocus", type: "RefObject<HTMLElement | null>", description: "Element to focus when opened; defaults to [data-autofocus], then the first tabbable element." },
-  { name: "container", type: "Element | null", default: "document.body", description: "Portal target." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal target. `undefined` uses `document.body`; `null` renders nothing until the target exists." },
   { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the dialog element." },
 ]} />
 
@@ -152,7 +167,8 @@ Renders a `<p>`. Accepts every paragraph attribute.
 Accepts every `<button>` attribute.
 
 <PropsTable rows={[
-  { name: "icon", type: "boolean", default: "true without children", description: "Render the standard top-right icon button. When false (default if children are given) the button renders its children unstyled." },
+  { name: "icon", type: "boolean", default: "true without children", description: "Render the standard top-right icon button. When false (default if children are given) it renders the children as a secondary Button." },
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element (e.g. your own `Button`) instead of a `<button>`, merging props, ref and handlers." },
   { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the button." },
 ]} />
 
@@ -165,13 +181,13 @@ Renders a `<div>` and accepts every `<div>` attribute; it has no additional prop
 | Class | Element |
 |---|---|
 | `.mrd-dialog__backdrop` | Fixed backdrop, `var(--mrd-backdrop)` |
-| `.mrd-dialog` | The surface: 560px max width, `--mrd-radius-card`, `--mrd-shadow-2xl` |
+| `.mrd-dialog` | The surface: max width from `data-size` (440 / 560 / 720px / full), `--mrd-radius-card`, `--mrd-shadow-2xl` |
 | `.mrd-dialog__title` | Heading |
 | `.mrd-dialog__description` | Supporting text |
 | `.mrd-dialog__footer` | Action row |
 | `.mrd-dialog__close` | Icon close button |
 
-Content and backdrop carry `data-state="open"` while mounted; the trigger carries `data-state="open" | "closed"`. At 640px and below the dialog becomes a bottom sheet and the footer stacks its actions. Tokens used: `--mrd-backdrop`, `--mrd-surface`, `--mrd-z-overlay`, `--mrd-duration-enter`. Trigger and text-child Close buttons are unstyled; add `className="mrd-button"` with `data-variant` and `data-size`, as in the examples.
+Content carries `data-size`; content and backdrop carry `data-state="open"` while mounted; the trigger carries `data-state="open" | "closed"`. At 640px and below the dialog becomes a bottom sheet and the footer stacks its actions. Tokens used: `--mrd-backdrop`, `--mrd-surface`, `--mrd-z-overlay`, `--mrd-duration-enter`. A Close with text children renders as `.mrd-button` with `data-variant="secondary"`. To style the Trigger, or a Close as another variant, pass `asChild` and a `Button`.
 
 ## Accessibility
 

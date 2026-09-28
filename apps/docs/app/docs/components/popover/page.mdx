@@ -20,13 +20,13 @@ import { Popover } from "@merid/react";
 ```
 
 <ComponentPreview code={`<Popover.Root>
-  <Popover.Trigger className="mrd-button" data-variant="secondary" data-size="md">
-    Share
+  <Popover.Trigger asChild>
+    <Button variant="secondary">Share</Button>
   </Popover.Trigger>
   <Popover.Content aria-label="Share">
     <p>Anyone with the link can view this page.</p>
-    <Popover.Close className="mrd-button" data-variant="primary" data-size="sm">
-      Copy link
+    <Popover.Close asChild>
+      <Button variant="primary" size="sm">Copy link</Button>
     </Popover.Close>
   </Popover.Content>
 </Popover.Root>`}>
@@ -45,9 +45,9 @@ import { Popover } from "@merid/react";
 ```
 
 - **Root** holds the open state.
-- **Trigger** is the `<button>` the panel is anchored to.
+- **Trigger** is the `<button>` the panel is anchored to. Pass `asChild` to anchor to your own element, such as a `Button`.
 - **Content** is the floating panel, portalled and positioned with collision handling.
-- **Close** is an unstyled button that closes the popover and returns focus to the trigger.
+- **Close** is an unstyled button that closes the popover and returns focus to the trigger. Pass `asChild` to render your own `Button`.
 
 ## Examples
 
@@ -67,8 +67,8 @@ import { Popover } from "@merid/react";
 <ComponentPreview code={`const [open, setOpen] = useState(false);
 
 <Popover.Root open={open} onOpenChange={setOpen}>
-  <Popover.Trigger className="mrd-button" data-variant="secondary" data-size="md">
-    Details
+  <Popover.Trigger asChild>
+    <Button variant="secondary">Details</Button>
   </Popover.Trigger>
   <Popover.Content aria-label="Details">Open: {String(open)}</Popover.Content>
 </Popover.Root>
@@ -89,9 +89,10 @@ import { Popover } from "@merid/react";
 
 ### Popover.Trigger
 
-Accepts every `<button>` attribute. `type` defaults to `"button"`.
+Accepts every `<button>` attribute. `type` defaults to `"button"` (not set when `asChild` is used).
 
 <PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element (e.g. your own `Button`) instead of a `<button>`, merging props, ref and handlers." },
   { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the button." },
 ]} />
 
@@ -103,17 +104,22 @@ Accepts every `<div>` attribute.
   { name: "placement", type: "Placement", default: "\"bottom-start\"", description: "Preferred placement relative to the trigger." },
   { name: "sideOffset", type: "number", default: "8", description: "Distance from the trigger in px." },
   { name: "aria-label", type: "string", description: "Accessible name when the content has no visible heading." },
-  { name: "container", type: "Element | null", default: "document.body", description: "Portal target." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal target. `undefined` uses `document.body`; `null` renders nothing until the target exists." },
   { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the content element." },
 ]} />
 
 ### Popover.Close
 
-Accepts every `<button>` attribute and has no additional props.
+Accepts every `<button>` attribute.
+
+<PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element (e.g. your own `Button`) instead of a `<button>`, merging props, ref and handlers." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the button." },
+]} />
 
 ## Styling
 
-`.mrd-popover` is the panel: `--mrd-surface`, 1px `--mrd-line` border, `--mrd-radius-xl`, `--mrd-shadow-lg`, max width `min(360px, 100vw - 16px)`. It carries `data-state="open"`; the trigger carries `data-state="open" | "closed"`. Trigger and Close are unstyled buttons.
+`.mrd-popover` is the panel: `--mrd-surface`, 1px `--mrd-line` border, `--mrd-radius-xl`, `--mrd-shadow-lg`, max width `min(360px, 100vw - 16px)`. It carries `data-state="open"`; the trigger carries `data-state="open" | "closed"`. Trigger and Close are unstyled buttons; pass `asChild` with a `Button` to style them.
 
 ## Accessibility
 

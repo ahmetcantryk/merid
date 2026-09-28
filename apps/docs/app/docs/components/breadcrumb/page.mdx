@@ -76,10 +76,11 @@ Renders `<li>` and accepts all its HTML attributes. No additional props.
 
 ### Breadcrumb.Link
 
-Renders `<a>` and accepts all anchor attributes.
+Renders `<a>` by default and accepts all anchor attributes. Pass `as` to render a router link instead; extra props such as `to` are forwarded.
 
 <PropsTable
   rows={[
+    { name: "as", type: "ElementType", default: "\"a\"", description: "Element or component to render, e.g. a router `Link`." },
     { name: "href", type: "string", description: "Destination of the ancestor page." },
     { name: "ref", type: "Ref<HTMLAnchorElement>", description: "Forwarded ref to the anchor." },
   ]}

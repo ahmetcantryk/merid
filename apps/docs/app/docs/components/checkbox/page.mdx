@@ -89,10 +89,10 @@ Omit children and pass `aria-label`, for example in a table's selection column.
 The ref and native input attributes (`checked`, `defaultChecked`, `onChange`, `name`, `value`, …) go to the `<input>`. `className` and `style` go to the outer wrapper.
 
 <PropsTable rows={[
-  { name: "children", type: "ReactNode", description: "Visible label next to the box. Omit and pass aria-label for a bare checkbox." },
+  { name: "children", type: "ReactNode", description: "Visible label next to the box. Omit and pass aria-label for a bare checkbox. Inside a `Field`, the Field label names the checkbox and children become its description." },
   { name: "description", type: "ReactNode", description: "Secondary line under the label, linked via aria-describedby." },
   { name: "indeterminate", type: "boolean", default: "false", description: "Shows the mixed state and sets the DOM indeterminate property." },
-  { name: "invalid", type: "boolean", description: "Forces the invalid style and aria-invalid." },
+  { name: "invalid", type: "boolean", description: "Forces the invalid style (`data-invalid`) and `aria-invalid`." },
   { name: "checked", type: "boolean", description: "Checked state (controlled)." },
   { name: "defaultChecked", type: "boolean", description: "Initial checked state (uncontrolled)." },
   { name: "disabled", type: "boolean", description: "Disables the input and dims the label." },
@@ -111,16 +111,18 @@ The ref and native input attributes (`checked`, `defaultChecked`, `onChange`, `n
     <tr><td><code>.mrd-checkbox__icon</code></td><td>Check / dash SVG</td></tr>
     <tr><td><code>.mrd-checkbox__text</code>, <code>__label</code>, <code>__description</code></td><td>Label column</td></tr>
     <tr><td><code>data-disabled</code>, <code>data-invalid</code></td><td>On the wrapper</td></tr>
+    <tr><td><code>data-invalid</code></td><td>On the input when invalid; draws the danger ring</td></tr>
     <tr><td><code>data-indeterminate</code></td><td>On the input while mixed</td></tr>
   </tbody>
 </table>
 
-The invalid ring is driven by `aria-invalid="true"` on the input. Checkbox has no component variables; it uses `--mrd-accent`, `--mrd-line-strong` and `--mrd-danger`.
+The invalid ring is driven by `data-invalid` on the input; `aria-invalid` carries the semantics. Checkbox has no component variables; it uses `--mrd-accent`, `--mrd-line-strong` and `--mrd-danger`.
 
 ## Accessibility
 
 - A native checkbox: checked state, disabled state and form submission come from the platform.
 - The label is a real `<label htmlFor>`, so clicking the text toggles the box.
+- Inside a `Field`, the Field label names the checkbox (`aria-labelledby`). Children still render as a clickable label but are linked as its description (`aria-describedby`), so the control is never double-labelled.
 - Group related checkboxes in a `fieldset` with a `legend`, or a container with `role="group"` and `aria-labelledby`.
 
 <KeyboardTable rows={[

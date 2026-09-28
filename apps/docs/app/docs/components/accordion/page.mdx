@@ -130,20 +130,20 @@ Accepts every `<div>` attribute.
 |---|---|---|
 | `data-state` | Item, Trigger, Content | `open`, `closed` |
 | `aria-expanded` | Trigger | `true`, `false` |
-| `aria-disabled="true"` | Trigger | when the item is disabled |
+| `aria-disabled="true"`, `data-disabled` | Trigger | when the item is disabled |
 
 ## Accessibility
 
-Follows the WAI-ARIA [Accordion pattern](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/). Each trigger sits in a heading, carries `aria-expanded` and `aria-controls`, and its region is labelled by the trigger. Disabled triggers stay focusable (with `aria-disabled`) so they are still announced.
+Follows the WAI-ARIA [Accordion pattern](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/). Each trigger sits in a heading, carries `aria-expanded` and `aria-controls`, and its region is labelled by the trigger. Disabled triggers stay reachable with Tab (with `aria-disabled`) so they are still announced, but arrow keys, Home and End skip them.
 
 <KeyboardTable rows={[
   { keys: ["Enter"], action: "Toggle the focused section." },
   { keys: ["Space"], action: "Toggle the focused section." },
   { keys: ["Tab"], action: "Move to the next focusable element, including inside open content." },
-  { keys: ["ArrowDown"], action: "Next trigger, wrapping." },
-  { keys: ["ArrowUp"], action: "Previous trigger, wrapping." },
-  { keys: ["Home"], action: "First trigger." },
-  { keys: ["End"], action: "Last trigger." },
+  { keys: ["ArrowDown"], action: "Next enabled trigger, wrapping." },
+  { keys: ["ArrowUp"], action: "Previous enabled trigger, wrapping." },
+  { keys: ["Home"], action: "First enabled trigger." },
+  { keys: ["End"], action: "Last enabled trigger." },
 ]} />
 
 ## Guidelines
