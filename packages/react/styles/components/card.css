@@ -1,6 +1,6 @@
 @layer merid.components {
   .mrd-card {
-    --mrd-card-padding: var(--mrd-space-7);
+    --mrd-card-padding: var(--mrd-space-5);
 
     display: block;
     position: relative;
@@ -20,11 +20,11 @@
   }
 
   .mrd-card[data-padding="sm"] {
-    --mrd-card-padding: var(--mrd-space-5);
+    --mrd-card-padding: var(--mrd-space-4);
   }
 
   .mrd-card[data-padding="lg"] {
-    --mrd-card-padding: var(--mrd-space-8);
+    --mrd-card-padding: var(--mrd-space-6);
   }
 
   .mrd-card[data-variant="elevated"] {
@@ -63,7 +63,7 @@
 
     .mrd-card:not([data-padding]),
     .mrd-card[data-padding="md"] {
-      --mrd-card-padding: var(--mrd-space-6);
+      --mrd-card-padding: var(--mrd-space-4);
     }
   }
 

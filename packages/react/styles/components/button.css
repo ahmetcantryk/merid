@@ -1,7 +1,7 @@
 @layer merid.components {
   .mrd-button {
     --mrd-button-height: var(--mrd-control-md);
-    --mrd-button-padding: 0 18px;
+    --mrd-button-padding: 0 12px;
     --mrd-button-font: var(--mrd-text-sm);
 
     position: relative;
@@ -30,13 +30,15 @@
 
   .mrd-button[data-size="sm"] {
     --mrd-button-height: var(--mrd-control-sm);
-    --mrd-button-padding: 0 14px;
+    --mrd-button-padding: 0 10px;
     --mrd-button-font: var(--mrd-text-xs);
+
+    border-radius: var(--mrd-radius-sm);
   }
 
   .mrd-button[data-size="lg"] {
     --mrd-button-height: var(--mrd-control-lg);
-    --mrd-button-padding: 0 22px;
+    --mrd-button-padding: 0 16px;
     --mrd-button-font: var(--mrd-text-md);
   }
 
@@ -100,7 +102,8 @@
     background: var(--mrd-accent-solid-hover);
   }
 
-  .mrd-button[data-variant="primary"]:disabled {
+  .mrd-button[data-variant="primary"]:disabled,
+  .mrd-button[data-variant="secondary"]:disabled {
     box-shadow: none;
   }
 
@@ -109,6 +112,7 @@
     background: var(--mrd-surface);
     border-color: var(--mrd-line);
     color: var(--mrd-ink);
+    box-shadow: var(--mrd-shadow-xs);
   }
 
   .mrd-button[data-variant="secondary"]:hover:not(:disabled) {

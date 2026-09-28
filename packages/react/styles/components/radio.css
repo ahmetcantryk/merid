@@ -13,7 +13,7 @@
   .mrd-radio {
     display: inline-flex;
     align-items: flex-start;
-    gap: 10px;
+    gap: 8px;
     color: var(--mrd-ink);
     font-size: var(--mrd-text-sm);
     line-height: var(--mrd-leading-sm);
@@ -27,14 +27,14 @@
     position: relative;
     display: inline-flex;
     flex: none;
-    width: 18px;
-    height: 18px;
-    margin-top: calc((1lh - 18px) / 2);
+    width: 16px;
+    height: 16px;
+    margin-top: calc((1lh - 16px) / 2);
   }
 
   .mrd-radio__input {
     position: absolute;
-    inset: -3px;
+    inset: -4px;
     width: 24px;
     height: 24px;
     margin: 0;
@@ -45,8 +45,8 @@
 
   .mrd-radio__circle {
     position: relative;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border: 1px solid var(--mrd-line-strong);
     border-radius: var(--mrd-radius-full);
     background: var(--mrd-surface);
@@ -57,8 +57,8 @@
     content: "";
     position: absolute;
     inset: 0;
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     margin: auto;
     border-radius: var(--mrd-radius-full);
     background: var(--mrd-accent-solid);

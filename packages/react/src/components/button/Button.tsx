@@ -10,7 +10,7 @@ export type ButtonSize = "sm" | "md" | "lg";
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Visual style. `primary` is the single accent action; defaults to `secondary`. */
   variant?: ButtonVariant;
-  /** Height and padding: `sm` 36px, `md` 44px, `lg` 50px. Defaults to `md`. */
+  /** Height and padding: `sm` 28px, `md` 32px, `lg` 40px. Defaults to `md`. */
   size?: ButtonSize;
   /** Shows a spinner, keeps the button's width and sets `aria-busy`. The button is not clickable while loading. */
   loading?: boolean;

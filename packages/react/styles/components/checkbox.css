@@ -2,7 +2,7 @@
   .mrd-checkbox {
     display: inline-flex;
     align-items: flex-start;
-    gap: 10px;
+    gap: 8px;
     color: var(--mrd-ink);
     font-size: var(--mrd-text-sm);
     line-height: var(--mrd-leading-sm);
@@ -16,17 +16,17 @@
     position: relative;
     display: inline-flex;
     flex: none;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
 
-    /* centre the 18px box on the first line of 15px/1.5 text */
-    margin-top: calc((1lh - 18px) / 2);
+    /* centre the 16px box on the first line of text */
+    margin-top: calc((1lh - 16px) / 2);
   }
 
   /* The real input sits on top (transparent) so it keeps native semantics and a 24px hit area. */
   .mrd-checkbox__input {
     position: absolute;
-    inset: -3px;
+    inset: -4px;
     width: 24px;
     height: 24px;
     margin: 0;
@@ -36,11 +36,11 @@
   }
 
   .mrd-checkbox__icon {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     padding: 1px;
     border: 1px solid var(--mrd-line-strong);
-    border-radius: 5px;
+    border-radius: 4px;
     background: var(--mrd-surface);
     color: transparent;
     transition:

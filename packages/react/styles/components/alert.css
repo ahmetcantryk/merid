@@ -6,11 +6,11 @@
     display: flex;
     align-items: flex-start;
     gap: var(--mrd-space-3);
-    padding: 14px var(--mrd-space-4);
+    padding: 12px 14px;
     border-radius: var(--mrd-radius-lg);
     background: var(--mrd-alert-bg);
     color: var(--mrd-alert-fg);
-    font-size: var(--mrd-text-xs);
+    font-size: 13.5px;
     line-height: var(--mrd-leading-xs);
   }
 
@@ -36,8 +36,8 @@
   }
 
   .mrd-alert__icon > svg {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
   }
 
   .mrd-alert__content {

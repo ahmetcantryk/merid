@@ -72,8 +72,8 @@
   @media (pointer: coarse) {
     .mrd-pagination__page,
     .mrd-pagination__control {
-      min-width: var(--mrd-icon-button-lg);
-      height: var(--mrd-icon-button-lg);
+      min-width: 40px;
+      height: 40px;
     }
   }
 

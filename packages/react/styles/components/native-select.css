@@ -20,7 +20,7 @@
     appearance: none;
     width: 100%;
     height: var(--mrd-input-height);
-    padding: 0 40px 0 14px;
+    padding: 0 32px 0 10px;
     border: 1px solid var(--mrd-line);
     border-radius: var(--mrd-radius-lg);
     background: var(--mrd-surface);

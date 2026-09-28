@@ -1,8 +1,8 @@
 /* Shared input surface lives in input.css (.mrd-textarea is styled there too). */
 @layer merid.components {
   .mrd-textarea {
-    min-height: calc(var(--mrd-input-md) * 2);
-    padding: 11px 14px;
+    min-height: calc(var(--mrd-input-md) * 2.5);
+    padding: 6px 10px;
     resize: vertical;
   }
 

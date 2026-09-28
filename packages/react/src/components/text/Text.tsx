@@ -7,7 +7,7 @@ export type TextTone = "ink" | "body" | "muted" | "accent" | "danger";
 export type TextWeight = "regular" | "medium" | "semibold";
 
 export interface TextProps extends AsProps {
-  /** Type scale step. `lg` is lead (18px), `md` body (16px, default), down to `3xs` caption (12px). */
+  /** Type scale step. `lg` is lead (17px), `md` body (15px, default), down to `3xs` caption (12px). */
   size?: TextSize;
   /** Text tone. Hierarchy comes from tone and weight, not colour. Defaults to `body`. */
   tone?: TextTone;

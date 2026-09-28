@@ -9,7 +9,6 @@
     font-family: var(--mrd-font-sans);
     font-size: var(--mrd-text-md);
     line-height: var(--mrd-leading-md);
-    font-feature-settings: var(--mrd-font-features);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

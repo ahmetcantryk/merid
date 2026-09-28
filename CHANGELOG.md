@@ -16,4 +16,4 @@ First public release.
 - `Dialog.Content size` (`sm`, `md`, `lg`, `full`) and `Drawer.Content size` (`sm`, `md`, `lg`); `AlertDialog.Action tone` (`primary`, `danger`). Types `DialogSize`, `DrawerSize`, `AlertDialogActionTone`.
 - `Field` wiring for Input, Textarea, NativeSelect, Checkbox, Switch and RadioGroup, with `aria-invalid` for semantics and `data-invalid` for styling.
 - `"use client"` on every interactive module, so components import directly into React Server Components.
-- Bundled Inter Variable font under the SIL Open Font License 1.1.
+- Bundled Geist and Geist Mono variable fonts under the SIL Open Font License 1.1.

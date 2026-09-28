@@ -21,7 +21,7 @@
 
   .mrd-input {
     height: var(--mrd-input-height);
-    padding: 0 14px;
+    padding: 0 10px;
   }
 
   .mrd-input[data-size="sm"],
@@ -103,11 +103,11 @@
   }
 
   .mrd-input-group:has([data-side="leading"]) .mrd-input {
-    padding-left: 42px;
+    padding-left: 32px;
   }
 
   .mrd-input-group:has([data-side="trailing"]) .mrd-input {
-    padding-right: 42px;
+    padding-right: 32px;
   }
 
   @media (prefers-reduced-motion: reduce) {
