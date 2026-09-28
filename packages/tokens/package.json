@@ -1,0 +1,9 @@
+{
+  "name": "@merid/tokens",
+  "version": "0.1.0",
+  "description": "Merid design tokens as W3C DTCG JSON, CSS and JS.",
+  "license": "MIT",
+  "type": "module",
+  "files": ["dist"],
+  "publishConfig": { "access": "public" }
+}
