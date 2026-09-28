@@ -1,5 +1,8 @@
+"use client";
+
 import {
   forwardRef,
+  type MouseEvent,
   type HTMLAttributes,
   type TableHTMLAttributes,
   type TdHTMLAttributes,
@@ -85,17 +88,60 @@ export const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(function 
   );
 });
 
+export type TableSortDirection = "ascending" | "descending" | "none";
+
 export interface TableHeaderProps extends Omit<ThHTMLAttributes<HTMLTableCellElement>, "align"> {
   /** Text alignment; use `end` for numeric columns. Defaults to `start`. */
   align?: "start" | "center" | "end";
+  /**
+   * Makes the column sortable: sets `aria-sort` and renders the header text inside a button
+   * with a direction icon. Use `"none"` for sortable columns that are not the active sort.
+   */
+  sortDirection?: TableSortDirection;
+  /** Called when the sort button is pressed; you compute the next direction and sort the rows. */
+  onSort?: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
-/** `<th>`: 12px / 500 / muted. Defaults `scope="col"`. */
+function SortIcon({ direction }: { direction: TableSortDirection }) {
+  return (
+    <svg className="mrd-table__sort-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" focusable="false">
+      {direction !== "descending" ? (
+        <path d="M3.5 5L6 2.5 8.5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" opacity={direction === "ascending" ? 1 : 0.5} />
+      ) : null}
+      {direction !== "ascending" ? (
+        <path d="M3.5 7L6 9.5 8.5 7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" opacity={direction === "descending" ? 1 : 0.5} />
+      ) : null}
+    </svg>
+  );
+}
+
+/** `<th>`: 12px / 500 / muted. Defaults `scope="col"`. With `sortDirection` / `onSort` it becomes a sortable column header. */
 export const TableHeader = forwardRef<HTMLTableCellElement, TableHeaderProps>(function TableHeader(
-  { align = "start", scope = "col", className, ...props },
+  { align = "start", scope = "col", sortDirection, onSort, className, children, ...props },
   ref,
 ) {
-  return <th ref={ref} scope={scope} className={cx("mrd-table__header", className)} data-align={align} {...props} />;
+  const sortable = sortDirection !== undefined || onSort !== undefined;
+  const direction = sortDirection ?? "none";
+  return (
+    <th
+      ref={ref}
+      scope={scope}
+      className={cx("mrd-table__header", className)}
+      data-align={align}
+      aria-sort={sortable ? direction : undefined}
+      data-sort={sortable ? direction : undefined}
+      {...props}
+    >
+      {sortable ? (
+        <button type="button" className="mrd-table__sort" onClick={onSort}>
+          {children}
+          <SortIcon direction={direction} />
+        </button>
+      ) : (
+        children
+      )}
+    </th>
+  );
 });
 
 export interface TableCellProps extends Omit<TdHTMLAttributes<HTMLTableCellElement>, "align"> {

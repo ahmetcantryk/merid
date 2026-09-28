@@ -29,6 +29,7 @@
     "@axe-core/playwright": "^4.13.0",
     "@changesets/cli": "^3.0.3",
     "@playwright/test": "^1.63.0",
+    "@vitest/coverage-v8": "^5.0.2",
     "eslint": "^10.11.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "react": "^19.3.0",

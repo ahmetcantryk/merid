@@ -17,7 +17,11 @@ describe("server rendering (node, no DOM)", () => {
 
   it("every exported component has an SSR case", async () => {
     const mod = await import("../../src");
-    const missing = Object.keys(mod).filter((name) => !nonComponentExports.has(name) && !caseNames.includes(name));
+    // Flat compound names (DialogRoot, …) are aliases of the namespace parts rendered by the cases.
+    const flat = await import("../../src/flat");
+    const missing = Object.keys(mod).filter(
+      (name) => !nonComponentExports.has(name) && !caseNames.includes(name) && !(name in flat),
+    );
     expect(missing).toEqual([]);
   });
 

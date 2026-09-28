@@ -25,6 +25,7 @@ import { useDismiss } from "../../internal/ovl-use-dismiss";
 import { useId } from "../../internal/ovl-use-id";
 import { findTypeaheadMatch } from "../../internal/ovl-use-roving-focus";
 import { withRef } from "../../internal/ovl-with-ref";
+import { useFieldContext, useFieldControlProps } from "../field/field-context";
 
 interface OptionRecord {
   value: string;
@@ -166,7 +167,7 @@ function orderedOptions(ctx: SelectContextValue): OptionRecord[] {
 export interface SelectTriggerProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "value"> {
   /** Control size. Defaults to `"md"`. */
   size?: "sm" | "md" | "lg";
-  /** Marks the field invalid (danger border). */
+  /** Marks the field invalid (danger border). Inside a `Field`, derived from its `error`. */
   invalid?: boolean;
   /** Forwarded ref to the combobox button. */
   ref?: Ref<HTMLButtonElement>;
@@ -180,8 +181,31 @@ function ChevronIcon() {
   );
 }
 
-function SelectTrigger({ size = "md", invalid, className, onKeyDown, onClick, children, id, ref, ...rest }: SelectTriggerProps) {
+function SelectTrigger({
+  size = "md",
+  invalid,
+  className,
+  onKeyDown,
+  onClick,
+  children,
+  id: idProp,
+  disabled: disabledProp,
+  ref,
+  ...rest
+}: SelectTriggerProps) {
   const ctx = useSelect("Select.Trigger");
+  const field = useFieldContext();
+  // Field wiring: id (for the label's htmlFor), aria-describedby, aria-invalid, required, disabled.
+  const { invalid: isInvalid, required: fieldRequired, disabled: fieldDisabled, id, ...wiring } = useFieldControlProps({
+    id: idProp,
+    disabled: disabledProp,
+    invalid,
+    "aria-describedby": rest["aria-describedby"],
+    "aria-invalid": rest["aria-invalid"],
+  });
+  const disabled = ctx.disabled || Boolean(fieldDisabled);
+  const labelledBy =
+    rest["aria-labelledby"] ?? (rest["aria-label"] === undefined && field ? field.labelId : undefined);
   const { setCustomTriggerId } = ctx;
   // A consumer id (e.g. for <label htmlFor>) replaces the generated one so the listbox stays labelled by it.
   useLayoutEffect(() => {
@@ -199,7 +223,7 @@ function SelectTrigger({ size = "md", invalid, className, onKeyDown, onClick, ch
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
     onKeyDown?.(event);
-    if (event.defaultPrevented || ctx.disabled) return;
+    if (event.defaultPrevented || disabled) return;
     const enabled = orderedOptions(ctx).filter((o) => !o.disabled);
     if (enabled.length === 0) return;
     const current = ctx.open ? ctx.activeValue : ctx.value;
@@ -271,9 +295,9 @@ function SelectTrigger({ size = "md", invalid, className, onKeyDown, onClick, ch
       aria-expanded={ctx.open}
       aria-controls={ctx.listboxId}
       aria-activedescendant={ctx.open && ctx.activeValue !== null ? ctx.optionId(ctx.activeValue) : undefined}
-      aria-invalid={invalid || undefined}
-      data-invalid={invalid || undefined}
-      disabled={ctx.disabled}
+      aria-required={fieldRequired || undefined}
+      data-invalid={isInvalid || undefined}
+      disabled={disabled}
       data-size={size}
       data-state={ctx.open ? "open" : "closed"}
       data-placeholder={selected ? undefined : ""}
@@ -286,6 +310,8 @@ function SelectTrigger({ size = "md", invalid, className, onKeyDown, onClick, ch
       }}
       onKeyDown={handleKeyDown}
       {...rest}
+      {...wiring}
+      aria-labelledby={labelledBy}
     >
       <span className="mrd-select__value">{children ?? (selected ? selected.label : ctx.placeholder)}</span>
       <span className="mrd-select__icon">
@@ -325,7 +351,7 @@ function SelectContent({ placement = "bottom-start", sideOffset = 6, container, 
 
   // The listbox stays mounted (hidden) so options can register their labels for the trigger.
   return (
-    <Portal container={container}>
+    <Portal container={container} scopeFrom={() => ctx.triggerRef.current}>
       <div
         ref={mergedRef}
         id={ctx.listboxId}

@@ -1,20 +1,15 @@
 /* App-level layout only. Components come styled from @merid/react; everything here uses Merid tokens. */
 
-/* Merid ships no global reset; controls use width: 100% with padding, so opt into border-box. */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
 }
 
+/* The tray column is painted by the grid itself, so it runs the full page height however long main gets. */
 .shell {
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
   min-height: 100dvh;
+  background: var(--mrd-tray);
 }
 
 .shell__sidebar {
@@ -25,15 +20,14 @@ body {
   flex-direction: column;
   gap: var(--mrd-space-6);
   padding: var(--mrd-space-5) var(--mrd-space-3);
-  border-right: 1px solid var(--mrd-line);
-  background: var(--mrd-tray);
-  box-sizing: border-box;
 }
 
 .shell__body {
   min-width: 0;
   display: flex;
   flex-direction: column;
+  border-left: 1px solid var(--mrd-line);
+  background: var(--mrd-bg);
 }
 
 .shell__main {
@@ -41,7 +35,6 @@ body {
   max-width: var(--mrd-container, 1160px);
   margin-inline: auto;
   padding: var(--mrd-space-8) var(--mrd-space-7) var(--mrd-space-16);
-  box-sizing: border-box;
   outline: none;
 }
 
@@ -166,32 +159,6 @@ body {
   width: 40px;
 }
 
-.sort-button {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--mrd-space-1);
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  border-radius: var(--mrd-radius-xs);
-}
-
-.sort-button:focus-visible {
-  outline: none;
-  box-shadow: var(--mrd-focus-ring);
-}
-
-.sort-button__icon {
-  color: var(--mrd-muted);
-}
-
-.sort-button__icon[data-active] {
-  color: var(--mrd-ink);
-}
-
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -210,7 +177,6 @@ body {
 
 .project-card {
   height: 100%;
-  box-sizing: border-box;
 }
 
 .truncate {
@@ -253,6 +219,10 @@ body {
     display: none;
   }
 
+  .shell__body {
+    border-left: 0;
+  }
+
   .header {
     padding-inline: var(--mrd-space-4);
   }
@@ -290,10 +260,4 @@ body {
 
 .nowrap {
   white-space: nowrap;
-}
-
-/* Workaround: Select keeps its listbox mounted in a portal created before any Dialog opens, and both
-   use --mrd-z-overlay, so inside a Dialog the backdrop covers the listbox. Lift the listbox one step. */
-.mrd-select__content {
-  z-index: calc(var(--mrd-z-overlay) + 1);
 }

@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "vitest-axe";
+import { Field } from "../field/Field";
 import { Select } from "./Select";
 
 function Fruit(props: { onValueChange?: (v: string) => void; defaultValue?: string }) {
@@ -94,5 +95,36 @@ describe("Select", () => {
     await user.click(screen.getByRole("combobox"));
     // "region" is a page-level landmark rule; a lone widget in a test body is not a page.
     expect(await axe(document.body, { rules: { region: { enabled: false } } })).toHaveNoViolations();
+  });
+
+  it("picks up Field wiring: label, description, error, required, disabled", () => {
+    const { rerender } = render(
+      <Field label="Plan" description="Billed monthly" error="Pick a plan" required>
+        <Select.Root>
+          <Select.Trigger />
+          <Select.Content>
+            <Select.Item value="pro">Pro</Select.Item>
+          </Select.Content>
+        </Select.Root>
+      </Field>,
+    );
+    const trigger = screen.getByRole("combobox", { name: "Plan" });
+    expect(trigger.id).toBe(screen.getByText("Plan").closest("label")!.getAttribute("for"));
+    expect(trigger).toHaveAttribute("aria-invalid", "true");
+    expect(trigger).toHaveAttribute("data-invalid");
+    expect(trigger).toHaveAttribute("aria-required", "true");
+    expect(trigger).toHaveAccessibleDescription(/Billed monthly/);
+    expect(trigger).toHaveAccessibleDescription(/Pick a plan/);
+    rerender(
+      <Field label="Plan" disabled>
+        <Select.Root>
+          <Select.Trigger />
+          <Select.Content>
+            <Select.Item value="pro">Pro</Select.Item>
+          </Select.Content>
+        </Select.Root>
+      </Field>,
+    );
+    expect(screen.getByRole("combobox", { name: "Plan" })).toBeDisabled();
   });
 });

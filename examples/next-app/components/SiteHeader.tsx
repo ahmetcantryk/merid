@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { Link as MeridLink, Stack } from "@merid/react";
-import { buttonLinkProps } from "@/lib/button-link";
+import { Button, Link as MeridLink, Stack } from "@merid/react";
 import { MobileNav } from "./MobileNav";
 import { NAV_LINKS } from "./nav-links";
 import { ThemeToggle } from "./ThemeToggle";
@@ -18,15 +17,21 @@ export function SiteHeader() {
           <Stack as="ul" direction="row" gap={5} className="plain-list">
             {NAV_LINKS.map((l) => (
               <li key={l.href}>
-                <MeridLink href={l.href} tone="muted" underline="none">{l.label}</MeridLink>
+                <MeridLink asChild tone="muted" underline="none">
+                  <Link href={l.href}>{l.label}</Link>
+                </MeridLink>
               </li>
             ))}
           </Stack>
         </nav>
         <div className="site-header__actions">
           <ThemeToggle />
-          <Link href="/login" {...buttonLinkProps("ghost", "sm")} className="mrd-button hide-sm">Log in</Link>
-          <Link href="/signup" {...buttonLinkProps("primary", "sm")} className="mrd-button hide-sm">Sign up</Link>
+          <Button asChild variant="ghost" size="sm" className="hide-sm">
+            <Link href="/login">Log in</Link>
+          </Button>
+          <Button asChild variant="primary" size="sm" className="hide-sm">
+            <Link href="/signup">Sign up</Link>
+          </Button>
           <MobileNav />
         </div>
       </div>

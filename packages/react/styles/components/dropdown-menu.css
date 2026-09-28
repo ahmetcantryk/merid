@@ -1,6 +1,6 @@
 @layer merid.components {
   .mrd-menu {
-    z-index: var(--mrd-z-overlay);
+    z-index: var(--mrd-z-popover);
     min-width: 200px;
     max-width: min(320px, calc(100vw - 16px));
     max-height: min(420px, calc(100dvh - 32px));

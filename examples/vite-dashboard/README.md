@@ -35,4 +35,4 @@ src/
   app.css     layout only, built from Merid tokens
 ```
 
-Note: Merid does not ship a global CSS reset, so `app.css` opts into `box-sizing: border-box` and puts `class="mrd-root"` on `<body>` for base font and colours.
+Note: no app-level reset is needed; Merid's base layer sets `box-sizing` and the document font and colours at zero specificity.

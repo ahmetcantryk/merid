@@ -7,6 +7,11 @@
     list-style: none;
   }
 
+  /* horizontal steppers measure themselves so they can go compact in narrow columns, not just narrow viewports */
+  .mrd-stepper[data-orientation="horizontal"] {
+    container: mrd-stepper / inline-size;
+  }
+
   .mrd-stepper[data-orientation="vertical"] {
     flex-direction: column;
     gap: 0;
@@ -107,9 +112,31 @@
     line-height: var(--mrd-leading-2xs);
   }
 
-  @media (width <= 640px) {
-    .mrd-stepper[data-orientation="horizontal"] .mrd-stepper__step:not([data-state="current"]) .mrd-stepper__text {
-      display: none;
+  /*
+   * Compact: under 560px of stepper width only the current step keeps its title; the others
+   * collapse to their numbered / checked markers joined by the hairline. Titles stay in the
+   * accessibility tree (visually hidden), so the list reads the same.
+   */
+  @container mrd-stepper (width < 560px) {
+    .mrd-stepper__step:not([data-state="current"]) {
+      flex: none;
+    }
+
+    .mrd-stepper__step:not([data-state="current"], :last-child) {
+      flex: 1 1 var(--mrd-space-6);
+    }
+
+    .mrd-stepper__step[data-state="current"] {
+      flex: 0 1 auto;
+    }
+
+    .mrd-stepper__step:not([data-state="current"]) .mrd-stepper__text {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
   }
 

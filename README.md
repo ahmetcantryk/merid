@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="apps/docs/public/brand/logo-dark.svg">
-    <img src="apps/docs/public/brand/logo-light.svg" alt="Merid" width="148" height="32">
+    <img src="apps/docs/public/brand/logo-light.svg" alt="Merid" width="172" height="30">
   </picture>
 </p>
 

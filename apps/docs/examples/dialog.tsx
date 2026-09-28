@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Dialog, Field, Input, type DialogSize } from "@merid/react";
+import { Button, Dialog, Field, Input, Select, Stack, type DialogSize } from "@merid/react";
 
 export function DialogDemo() {
   return (
@@ -12,18 +12,27 @@ export function DialogDemo() {
       <Dialog.Content>
         <Dialog.Title>Edit profile</Dialog.Title>
         <Dialog.Description>Changes are visible to everyone in your workspace.</Dialog.Description>
-        <div style={{ marginTop: 20 }}>
+        <Stack gap={4} style={{ marginTop: 20 }}>
           <Field label="Display name">
             <Input defaultValue="Ada Lovelace" />
           </Field>
-        </div>
+          <Field label="Role">
+            <Select.Root defaultValue="editor">
+              <Select.Trigger />
+              <Select.Content>
+                <Select.Item value="viewer">Viewer</Select.Item>
+                <Select.Item value="editor">Editor</Select.Item>
+                <Select.Item value="admin">Admin</Select.Item>
+              </Select.Content>
+            </Select.Root>
+          </Field>
+        </Stack>
         <Dialog.Footer>
           <Dialog.Close>Cancel</Dialog.Close>
           <Dialog.Close asChild>
             <Button variant="primary">Save</Button>
           </Dialog.Close>
         </Dialog.Footer>
-        <Dialog.Close />
       </Dialog.Content>
     </Dialog.Root>
   );
@@ -45,7 +54,6 @@ export function DialogControlledDemo() {
               Done
             </Button>
           </Dialog.Footer>
-          <Dialog.Close />
         </Dialog.Content>
       </Dialog.Root>
     </>
@@ -68,7 +76,6 @@ export function DialogSizesDemo() {
             <Dialog.Footer>
               <Dialog.Close>Close</Dialog.Close>
             </Dialog.Footer>
-            <Dialog.Close />
           </Dialog.Content>
         </Dialog.Root>
       ))}

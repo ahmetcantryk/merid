@@ -15,7 +15,12 @@ export async function CodeBlock({ code, lang = "tsx", title }: CodeBlockProps) {
         <span className="code-block__title">{title ?? lang}</span>
         <CopyButton value={code.replace(/\n$/, "")} />
       </div>
-      <div className="code-block__body" dangerouslySetInnerHTML={{ __html: html }} />
+      <div
+        className="code-block__body"
+        tabIndex={0}
+        role="region"
+        aria-label={`${title ?? lang} code`}
+        dangerouslySetInnerHTML={{ __html: html }} />
     </figure>
   );
 }

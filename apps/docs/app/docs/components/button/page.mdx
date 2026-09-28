@@ -103,6 +103,18 @@ import { Button } from "@merid/react";
   <ButtonFullWidth />
 </ComponentPreview>
 
+### As a router link
+
+Use `asChild` to render your router's link with button styling, so navigation stays a real link:
+
+```tsx
+import Link from "next/link";
+
+<Button asChild variant="primary">
+  <Link href="/signup">Start free</Link>
+</Button>
+```
+
 ## API reference
 
 `Button` forwards its ref to the `<button>` and passes every other native button attribute through. `type` defaults to `"button"`, so a button inside a form does not submit it unless you set `type="submit"`.
@@ -114,6 +126,7 @@ import { Button } from "@merid/react";
   { name: "leadingIcon", type: "ReactNode", description: "Icon before the label. Hidden from assistive tech." },
   { name: "trailingIcon", type: "ReactNode", description: "Icon after the label. Hidden from assistive tech." },
   { name: "fullWidth", type: "boolean", default: "false", description: "Stretches the button to the width of its container." },
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element (e.g. a router `<Link>`) styled as this button instead of a `<button>`. Props, ref, handlers and className merge onto the child; its children are wrapped in the button's content span. `disabled`/`loading` become `aria-disabled` and block clicks. Works from server components." },
   { name: "type", type: '"button" | "submit" | "reset"', default: '"button"', description: "Native button type." },
   { name: "disabled", type: "boolean", description: "Native disabled attribute." },
 ]} />

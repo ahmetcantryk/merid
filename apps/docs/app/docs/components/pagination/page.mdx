@@ -65,6 +65,19 @@ With `getHref`, each other page renders as an `<a>` so results are crawlable and
   <PaginationLinks />
 </ComponentPreview>
 
+For client-side routing, add `renderLink`. It receives every prop of the link (`href`, `className`, `aria-label`, `aria-current`, `onClick`, `children`, …) plus the target `page`:
+
+```tsx
+import NextLink from "next/link";
+
+<Pagination
+  pageCount={12}
+  page={page}
+  getHref={(p) => `/invoices?page=${p}`}
+  renderLink={({ page, ...props }) => <NextLink {...props} />}
+/>
+```
+
 ### Custom layouts with getPageRange
 
 `getPageRange(page, pageCount, siblings = 1)` returns the same range the component uses, as an array of page numbers and `"ellipsis-start"` / `"ellipsis-end"` markers.
@@ -87,6 +100,7 @@ Renders `<nav>` and accepts its HTML attributes except `onChange`.
     { name: "onPageChange", type: "(page: number) => void", description: "Called with the requested page." },
     { name: "siblingCount", type: "number", default: "1", description: "Pages shown on each side of the current one." },
     { name: "getHref", type: "(page: number) => string", description: "When given, pages render as links with this href; the current page renders as text." },
+    { name: "renderLink", type: "(props: PaginationLinkProps) => ReactNode", description: "With getHref, renders each link yourself (e.g. a router link). Spread every prop except `page` onto an element that renders an `<a>`." },
     { name: "aria-label", type: "string", default: '"Pagination"', description: "Accessible name of the landmark." },
     { name: "previousLabel", type: "string", default: '"Previous page"', description: "Label of the previous button." },
     { name: "nextLabel", type: "string", default: '"Next page"', description: "Label of the next button." },

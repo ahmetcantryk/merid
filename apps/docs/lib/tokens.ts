@@ -40,14 +40,16 @@ export const colorGroups: readonly { readonly title: string; readonly tokens: re
     tokens: [
       { name: "--mrd-ink", light: "#0f1219", dark: "#eef0f4", role: "Headings, strong text" },
       { name: "--mrd-body", light: "#535a67", dark: "#a3a9b5", role: "Body text" },
-      { name: "--mrd-muted", light: "#6b7280", dark: "#858c98", role: "Meta, icons" },
-      { name: "--mrd-placeholder", light: "#b0b5be", dark: "#565d69", role: "Input placeholder" },
+      { name: "--mrd-muted", light: "#646b78", dark: "#858c98", role: "Meta, icons" },
+      { name: "--mrd-placeholder", light: "#6e7581", dark: "#7c8390", role: "Input placeholder" },
     ],
   },
   {
     title: "Status",
     tokens: [
-      { name: "--mrd-danger", light: "#e5484d", dark: "#ff6369", role: "Invalid border, danger fill" },
+      { name: "--mrd-danger", light: "#e5484d", dark: "#ff6369", role: "Invalid border, status dot" },
+      { name: "--mrd-danger-solid", light: "#c92a30", dark: "#c92a30", role: "Danger button fill (white text, AA)" },
+      { name: "--mrd-danger-solid-hover", light: "#b42318", dark: "#b42318", role: "Danger button hover" },
       { name: "--mrd-danger-soft", light: "#fff0f0", dark: "rgba(229,72,77,.12)", role: "Error notice background" },
       { name: "--mrd-danger-strong", light: "#b42318", dark: "#ff8a8e", role: "Error notice text" },
       { name: "--mrd-warning-soft", light: "#fff8eb", dark: "rgba(245,166,35,.12)", role: "Warning notice background" },

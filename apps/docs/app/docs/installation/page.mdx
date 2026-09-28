@@ -36,9 +36,11 @@ import "@merid/react/styles.css";
 
 If you only want the design tokens — for example, to use the colours and spacing in your own components — import `@merid/react/tokens.css` instead. It contains the custom properties and the font face, and no component rules.
 
+`styles.css` includes a small base layer: `box-sizing: border-box`, the document font, colours, heading weight and focus ring, applied to `:root` at zero specificity (so any rule of yours wins). If your app brings its own document styles and you want none of it, import `@merid/react/components.css` (tokens + components, no base) instead. Components set `box-sizing` on their own elements, so they render the same either way.
+
 ## Next.js (App Router)
 
-Import the stylesheet in the root layout and add the `mrd-root` class to `html` so that the base typography and focus styles apply to the whole page.
+Import the stylesheet in the root layout. The base typography and focus styles apply to the whole page; no class is needed.
 
 ```tsx
 // app/layout.tsx
@@ -46,7 +48,7 @@ import "@merid/react/styles.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="mrd-root">
+    <html lang="en">
       <body>{children}</body>
     </html>
   );
@@ -66,7 +68,6 @@ import "./app.css";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
 
-document.documentElement.classList.add("mrd-root");
 createRoot(document.getElementById("root")!).render(<App />);
 ```
 

@@ -63,6 +63,7 @@ export function PreviewTabs({ preview, codeHtml, code, align }: PreviewTabsProps
         aria-labelledby={`${id}-tab-code`}
         hidden={tab !== "code"}
         className="preview__code"
+        tabIndex={0}
         dangerouslySetInnerHTML={{ __html: codeHtml }}
       />
     </div>

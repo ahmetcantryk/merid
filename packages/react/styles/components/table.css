@@ -92,4 +92,44 @@
       transition: none;
     }
   }
+
+  .mrd-table__sort {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mrd-space-1);
+    min-height: 24px;
+    margin: -4px -6px;
+    padding: 0 6px;
+    border: 0;
+    border-radius: var(--mrd-radius-sm);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    transition:
+      background-color var(--mrd-duration) var(--mrd-ease),
+      color var(--mrd-duration) var(--mrd-ease);
+  }
+
+  .mrd-table__sort:hover {
+    background: var(--mrd-tray);
+    color: var(--mrd-ink);
+  }
+
+  .mrd-table__sort:focus-visible {
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 1px;
+  }
+
+  .mrd-table__header:is([data-sort="ascending"], [data-sort="descending"]) .mrd-table__sort {
+    color: var(--mrd-ink);
+  }
+
+  .mrd-table__header[data-align="end"] .mrd-table__sort {
+    flex-direction: row-reverse;
+  }
+
+  .mrd-table__sort-icon {
+    flex: none;
+  }
 }

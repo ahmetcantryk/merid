@@ -1,6 +1,6 @@
 "use client";
 
-import type { HTMLAttributes, ReactNode, Ref } from "react";
+import type { AnchorHTMLAttributes, HTMLAttributes, MouseEventHandler, ReactNode, Ref } from "react";
 import { cx } from "../../internal/ovl-cx";
 import { useControllableState } from "../../internal/ovl-use-controllable-state";
 import { withRef } from "../../internal/ovl-with-ref";
@@ -30,6 +30,16 @@ export function getPageRange(page: number, pageCount: number, siblings = 1): Pag
   return [1, "ellipsis-start", ...seq(left, right), "ellipsis-end", total];
 }
 
+/** Props handed to `renderLink`: spread them onto your router link (it must render an `<a>`). */
+export interface PaginationLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+  href: string;
+  /** The page this link goes to. Not a DOM prop — do not spread it blindly onto a DOM element. */
+  page: number;
+  className: string;
+  onClick: MouseEventHandler<HTMLAnchorElement>;
+  children: ReactNode;
+}
+
 export interface PaginationProps extends Omit<HTMLAttributes<HTMLElement>, "onChange"> {
   /** Total number of pages (≥ 1). */
   pageCount: number;
@@ -43,6 +53,11 @@ export interface PaginationProps extends Omit<HTMLAttributes<HTMLElement>, "onCh
   siblingCount?: number;
   /** When given, pages render as links with this href (e.g. for SEO-friendly paging). */
   getHref?: (page: number) => string;
+  /**
+   * With `getHref`, renders each page link yourself — e.g. `(p) => <NextLink {...p} />` for
+   * client-side routing. Spread every prop except `page`. Defaults to a plain `<a>`.
+   */
+  renderLink?: (props: PaginationLinkProps) => ReactNode;
   /** Accessible name of the landmark. Defaults to `"Pagination"`. */
   "aria-label"?: string;
   /** Label of the previous button. Defaults to `"Previous page"`. */
@@ -80,6 +95,7 @@ function PaginationImpl({
   onPageChange,
   siblingCount = 1,
   getHref,
+  renderLink,
   "aria-label": label = "Pagination",
   previousLabel = "Previous page",
   nextLabel = "Next page",
@@ -106,15 +122,14 @@ function PaginationImpl({
       );
     }
     if (getHref && !disabled) {
-      return (
-        <a
-          href={getHref(target)}
-          onClick={() => setPage(target)}
-          {...props}
-        >
-          {content}
-        </a>
-      );
+      const linkProps = {
+        ...(props as Omit<PaginationLinkProps, "href" | "page" | "onClick" | "children">),
+        href: getHref(target),
+        onClick: () => setPage(target),
+        children: content,
+      };
+      if (renderLink) return renderLink({ ...linkProps, page: target });
+      return <a {...linkProps} />;
     }
     return (
       <button type="button" disabled={disabled} onClick={() => setPage(target)} {...props}>

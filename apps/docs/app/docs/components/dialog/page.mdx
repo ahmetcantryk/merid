@@ -29,13 +29,22 @@ import { Dialog } from "@merid/react";
     <Field label="Display name">
       <Input defaultValue="Ada Lovelace" />
     </Field>
+    <Field label="Role">
+      <Select.Root defaultValue="editor">
+        <Select.Trigger />
+        <Select.Content>
+          <Select.Item value="viewer">Viewer</Select.Item>
+          <Select.Item value="editor">Editor</Select.Item>
+          <Select.Item value="admin">Admin</Select.Item>
+        </Select.Content>
+      </Select.Root>
+    </Field>
     <Dialog.Footer>
       <Dialog.Close>Cancel</Dialog.Close>
       <Dialog.Close asChild>
         <Button variant="primary">Save</Button>
       </Dialog.Close>
     </Dialog.Footer>
-    <Dialog.Close />
   </Dialog.Content>
 </Dialog.Root>`}>
   <DialogDemo />
@@ -52,7 +61,6 @@ import { Dialog } from "@merid/react";
     <Dialog.Footer>
       <Dialog.Close>Cancel</Dialog.Close>
     </Dialog.Footer>
-    <Dialog.Close />
   </Dialog.Content>
 </Dialog.Root>
 ```
@@ -63,7 +71,8 @@ import { Dialog } from "@merid/react";
 - **Title** labels the dialog (`aria-labelledby`). Always include one.
 - **Description** is linked with `aria-describedby` when present.
 - **Footer** lays out actions, right-aligned.
-- **Close** with no children renders the top-right icon button; with text children it renders a secondary Button. Use `asChild` to supply a different element, such as a primary `Button`.
+- **Close** with text children renders a secondary Button; use `asChild` to supply a different element, such as a primary `Button`. Content renders the top-right icon close automatically (`showClose`, on by default); a `Close` with no children renders that icon button yourself instead, and the automatic one steps aside.
+- Popovers, menus, selects and tooltips opened inside Content layer above the dialog, so a `Select` in a dialog form just works.
 
 ## Examples
 
@@ -92,7 +101,6 @@ Pass `open` and `onOpenChange` to keep the state in your component, for example 
     <Dialog.Footer>
       <Button variant="primary" onClick={() => setOpen(false)}>Done</Button>
     </Dialog.Footer>
-    <Dialog.Close />
   </Dialog.Content>
 </Dialog.Root>`}>
   <DialogControlledDemo />
@@ -143,6 +151,8 @@ Accepts every `<div>` attribute except `role`.
   { name: "closeOnEscape", type: "boolean", default: "true", description: "Close on Escape." },
   { name: "initialFocus", type: "RefObject<HTMLElement | null>", description: "Element to focus when opened; defaults to [data-autofocus], then the first tabbable element." },
   { name: "container", type: "Element | null", default: "document.body", description: "Portal target. `undefined` uses `document.body`; `null` renders nothing until the target exists." },
+  { name: "showClose", type: "boolean", default: "true", description: "Render the standard top-right icon close button automatically. Skipped while you render your own icon `Close`." },
+  { name: "closeLabel", type: "string", default: '"Close"', description: "Accessible name of the automatic close button." },
   { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the dialog element." },
 ]} />
 
@@ -187,7 +197,7 @@ Renders a `<div>` and accepts every `<div>` attribute; it has no additional prop
 | `.mrd-dialog__footer` | Action row |
 | `.mrd-dialog__close` | Icon close button |
 
-Content carries `data-size`; content and backdrop carry `data-state="open"` while mounted; the trigger carries `data-state="open" | "closed"`. At 640px and below the dialog becomes a bottom sheet and the footer stacks its actions. Tokens used: `--mrd-backdrop`, `--mrd-surface`, `--mrd-z-overlay`, `--mrd-duration-enter`. A Close with text children renders as `.mrd-button` with `data-variant="secondary"`. To style the Trigger, or a Close as another variant, pass `asChild` and a `Button`.
+Content carries `data-size`; content and backdrop carry `data-state="open"` while mounted; the trigger carries `data-state="open" | "closed"`. At 640px and below the dialog becomes a bottom sheet and the footer stacks its actions. Tokens used: `--mrd-backdrop`, `--mrd-surface`, `--mrd-z-overlay`, `--mrd-duration-enter`. Popovers, menus, selects and tooltips opened inside the dialog layer above it (`--mrd-z-popover`, `--mrd-z-tooltip`). A Close with text children renders as `.mrd-button` with `data-variant="secondary"`. To style the Trigger, or a Close as another variant, pass `asChild` and a `Button`.
 
 ## Accessibility
 

@@ -14,7 +14,7 @@ Merid is plain CSS. Every rule lives inside a named cascade layer, which means a
 ```
 
 - **`merid.tokens`** declares the custom properties, their dark values and the font face.
-- **`merid.base`** is opt-in. It applies to elements inside `.mrd-root`: font, text colour, heading weight, focus ring and reduced-motion handling. Every selector is wrapped in `:where()`, so it has zero specificity.
+- **`merid.base`** applies to the document (`:root`) and to any subtree marked `.mrd-root`: `box-sizing: border-box`, font, text colour, heading weight and focus ring (reduced-motion handling stays opt-in under `.mrd-root`). Every selector is wrapped in `:where()`, so it has zero specificity and your rules win. To opt out, import `@merid/react/components.css`, which is `styles.css` without this layer.
 - **`merid.components`** holds the rules for each component, keyed on `.mrd-` classes and data attributes.
 
 Unlayered styles always beat layered ones. Your application CSS, CSS Modules and utility classes are unlayered unless you put them in a layer yourself, so they override Merid without `!important`.

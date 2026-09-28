@@ -8,7 +8,9 @@ import {
   type ReactNode,
   type Ref,
   type RefObject,
+  useCallback,
   useContext,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -33,6 +35,9 @@ interface DialogContextValue {
   descriptionId: string;
   hasDescription: boolean;
   setHasDescription: (value: boolean) => void;
+  /** Number of mounted icon-style Close buttons; the automatic one (`showClose`) steps aside when > 0. */
+  iconCloseCount: number;
+  registerIconClose: () => () => void;
 }
 
 const DialogContext = createContext<DialogContextValue | null>(null);
@@ -58,6 +63,11 @@ export interface DialogRootProps {
 function DialogRoot({ open: openProp, defaultOpen = false, onOpenChange, children }: DialogRootProps) {
   const [open, setOpen] = useControllableState({ value: openProp, defaultValue: defaultOpen, onChange: onOpenChange });
   const [hasDescription, setHasDescription] = useState(false);
+  const [iconCloseCount, setIconCloseCount] = useState(0);
+  const registerIconClose = useCallback(() => {
+    setIconCloseCount((n) => n + 1);
+    return () => setIconCloseCount((n) => n - 1);
+  }, []);
   const contentId = useId(undefined, "mrd-dialog");
   const value = useMemo<DialogContextValue>(
     () => ({
@@ -68,8 +78,10 @@ function DialogRoot({ open: openProp, defaultOpen = false, onOpenChange, childre
       descriptionId: `${contentId}-desc`,
       hasDescription,
       setHasDescription,
+      iconCloseCount,
+      registerIconClose,
     }),
-    [open, setOpen, contentId, hasDescription],
+    [open, setOpen, contentId, hasDescription, iconCloseCount, registerIconClose],
   );
   return <DialogContext.Provider value={value}>{children}</DialogContext.Provider>;
 }
@@ -110,6 +122,13 @@ export interface ModalSurfaceProps extends Omit<HTMLAttributes<HTMLDivElement>, 
   initialFocus?: RefObject<HTMLElement | null>;
   /** Portal target; defaults to `document.body`. */
   container?: Element | null;
+  /**
+   * Render the standard top-right icon close button automatically. Defaults to `true` for Dialog and
+   * Drawer, `false` for AlertDialog. Skipped while you render your own icon `Close`.
+   */
+  showClose?: boolean;
+  /** Accessible name of the automatic close button. Defaults to `"Close"`. */
+  closeLabel?: string;
   /** Forwarded ref to the dialog element. */
   ref?: Ref<HTMLDivElement>;
 }
@@ -133,6 +152,8 @@ function ModalSurfaceImpl({
   closeOnEscape = true,
   initialFocus,
   container,
+  showClose = true,
+  closeLabel = "Close",
   className,
   children,
   ref,
@@ -152,9 +173,20 @@ function ModalSurfaceImpl({
 
   const mergedRef = useComposedRefs(contentRef, setNode, ref);
 
+  // The element that had focus when the dialog opened (usually its trigger): the portal inherits
+  // its data-theme / data-accent / data-density / dir.
+  const openerRef = useRef<Element | null>(null);
+  useEffect(() => {
+    if (!ctx.open) openerRef.current = null;
+  }, [ctx.open]);
+  const scopeFrom = useCallback(() => {
+    if (!openerRef.current && typeof document !== "undefined") openerRef.current = document.activeElement;
+    return openerRef.current;
+  }, []);
+
   if (!ctx.open) return null;
   return (
-    <Portal container={container}>
+    <Portal container={container} scopeFrom={scopeFrom}>
       <div className={backdropClass} data-state="open" {...dataAttributes}>
         <div
           ref={mergedRef}
@@ -170,6 +202,9 @@ function ModalSurfaceImpl({
           {...rest}
         >
           {children}
+          {showClose && ctx.iconCloseCount === 0 ? (
+            <CloseButton component={component} icon aria-label={closeLabel} data-auto-close="" autoClose />
+          ) : null}
         </div>
       </div>
     </Portal>
@@ -251,9 +286,16 @@ function CloseButtonImpl({
   type = "button",
   component,
   variant = "secondary",
+  autoClose = false,
   ...rest
-}: DialogCloseProps & { component: string; variant?: "primary" | "secondary" | "danger" }) {
+}: DialogCloseProps & { component: string; variant?: "primary" | "secondary" | "danger"; autoClose?: boolean }) {
   const ctx = useDialogContext(component);
+  const iconStyle = !asChild && (icon ?? children === undefined);
+  const { registerIconClose } = ctx;
+  useLayoutEffect(() => {
+    if (!iconStyle || autoClose) return undefined;
+    return registerIconClose();
+  }, [iconStyle, autoClose, registerIconClose]);
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     onClick?.(event);
     if (!event.defaultPrevented) ctx.setOpen(false);

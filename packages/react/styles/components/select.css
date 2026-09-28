@@ -78,7 +78,7 @@
   }
 
   .mrd-select__content {
-    z-index: var(--mrd-z-overlay);
+    z-index: var(--mrd-z-popover);
     max-height: min(320px, calc(100dvh - 32px));
     overflow-y: auto;
     padding: var(--mrd-space-1);

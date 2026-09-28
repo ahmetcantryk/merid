@@ -43,6 +43,10 @@ Pass `container` to render into a specific element instead of `document.body`.
   `container={undefined}` (the default) renders into `document.body`. `container={null}` — for example before a callback ref has run — renders nothing until the element is set, so content never flashes into the wrong place.
 </Callout>
 
+### Theme, accent, density and direction
+
+Portalled content leaves its DOM subtree, so it would lose a `data-theme`, `data-accent`, `data-density` or `dir` set on an ancestor. Merid's overlays (Dialog, AlertDialog, Drawer, Popover, DropdownMenu, Select, Tooltip) copy the nearest ancestor values of those attributes from their trigger (for dialogs: the element that had focus when they opened) onto a `display: contents` `.mrd-portal` wrapper, so a dark card's menu opens dark and a violet section's select stays violet. Values on `<html>` or `<body>` are not copied; the portal inherits those directly. Toasts portal from the provider and follow `<html>`; the plain `Portal` component renders its children as they are.
+
 ### Server rendering
 
 `Portal` renders nothing on the server, during hydration and while `container` is `null`, then mounts on the client. Don't put content in a portal that must be in the initial HTML.

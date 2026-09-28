@@ -19,7 +19,7 @@
 .docs-sidebar__count { color: var(--mrd-muted); font-family: var(--mrd-font-mono); font-size: 11px; font-weight: var(--mrd-weight-regular); }
 .docs-sidebar ul { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--mrd-line); }
 .docs-sidebar li a {
-  display: block; margin-left: -1px; padding: 3px 0 3px 12px; border-left: 1px solid transparent;
+  display: flex; align-items: center; min-height: 24px; margin-left: -1px; padding: 3px 0 3px 12px; border-left: 1px solid transparent;
   color: var(--mrd-body); font-size: 13.5px; line-height: 1.45;
   transition: color var(--mrd-duration) var(--mrd-ease), border-color var(--mrd-duration) var(--mrd-ease);
 }
@@ -31,7 +31,7 @@
 .docs-toc__heading { margin-bottom: 8px; color: var(--mrd-muted); font-size: var(--mrd-text-3xs); font-weight: var(--mrd-weight-medium); }
 .docs-toc ul { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--mrd-line); }
 .docs-toc li a {
-  display: block; margin-left: -1px; padding: 3px 0 3px 12px; border-left: 1px solid transparent;
+  display: flex; align-items: center; min-height: 24px; margin-left: -1px; padding: 3px 0 3px 12px; border-left: 1px solid transparent;
   color: var(--mrd-muted); font-size: var(--mrd-text-2xs); line-height: var(--mrd-leading-2xs);
   transition: color var(--mrd-duration) var(--mrd-ease), border-color var(--mrd-duration) var(--mrd-ease);
 }

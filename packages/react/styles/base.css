@@ -1,9 +1,16 @@
 /*
- * Opt-in base. Add class="mrd-root" to <html>, <body> or any subtree.
- * Everything is wrapped in :where() so it has zero specificity.
+ * Base. Applies to the document (:root) out of the box and to any subtree marked
+ * class="mrd-root" (e.g. inside a host page with its own styles).
+ * Everything is wrapped in :where() inside @layer merid.base, so it has zero specificity and
+ * any of your own rules win. To opt out entirely, import "@merid/react/components.css"
+ * (tokens + components, no base) instead of "@merid/react/styles.css".
  */
 @layer merid.base {
-  :where(.mrd-root) {
+  :where(*, *::before, *::after) {
+    box-sizing: border-box;
+  }
+
+  :where(:root, .mrd-root) {
     background: var(--mrd-bg);
     color: var(--mrd-body);
     font-family: var(--mrd-font-sans);
@@ -13,23 +20,23 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  :where(.mrd-root) :where(h1, h2, h3, h4, h5, h6) {
+  :where(:root, .mrd-root) :where(h1, h2, h3, h4, h5, h6) {
     color: var(--mrd-ink);
     font-weight: var(--mrd-weight-semibold);
     text-wrap: balance;
   }
 
-  :where(.mrd-root) :where(button, input, select, textarea) {
+  :where(:root, .mrd-root) :where(button, input, select, textarea) {
     font: inherit;
   }
 
-  :where(.mrd-root) :where(:focus-visible) {
+  :where(:root, .mrd-root) :where(:focus-visible) {
     outline: 2px solid var(--mrd-accent);
     outline-offset: 3px;
     border-radius: var(--mrd-radius-xs);
   }
 
-  :where(.mrd-root) ::selection {
+  :where(:root, .mrd-root) ::selection {
     background: var(--mrd-accent-soft);
     color: var(--mrd-ink);
   }

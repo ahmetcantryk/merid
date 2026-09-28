@@ -131,7 +131,7 @@ export function Tooltip({
     <>
       {trigger}
       {open ? (
-        <Portal container={container}>
+        <Portal container={container} scopeFrom={() => triggerRef.current}>
           <div
             ref={refs.setFloating}
             id={id}

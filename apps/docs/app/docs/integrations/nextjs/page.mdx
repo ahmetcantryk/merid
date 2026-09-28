@@ -29,14 +29,14 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="mrd-root">
+    <html lang="en">
       <body>{children}</body>
     </html>
   );
 }
 ```
 
-`mrd-root` applies the base typography, background and focus styles. No `transpilePackages` entry is needed.
+The base layer applies typography, background and focus styles to the document at zero specificity; no class is needed. No `transpilePackages` entry is needed. In server component files use the flat part names (`DialogRoot`, `TabsList`, …) and `asChild` for router links; see [Server components](/docs/server-components).
 
 ## Server components
 
@@ -99,7 +99,7 @@ Merid bundles Geist and Geist Mono and loads them through `@font-face` in its st
 import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
-<html lang="en" className={`mrd-root ${inter.variable}`}>
+<html lang="en" className={inter.variable}>
 ```
 
 ```css

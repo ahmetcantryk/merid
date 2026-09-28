@@ -46,7 +46,7 @@ const components: MDXComponents = {
   a: Anchor,
   pre: Pre,
   table: (props) => (
-    <div className="table-wrap">
+    <div className="table-wrap" tabIndex={0} role="region" aria-label="Table">
       <table className="doc-table" {...props} />
     </div>
   ),

@@ -90,6 +90,20 @@ import { Table, TableHead, TableBody, TableRow, TableHeader, TableCell } from "@
   <TableSelectable />
 </ComponentPreview>
 
+### Sortable columns
+
+Give a header `sortDirection` and `onSort`: it sets `aria-sort` on the `<th>` and wraps the label in a real button with a direction icon. Sorting the rows stays yours; use `"none"` on sortable columns that are not the active sort.
+
+```tsx
+const [sort, setSort] = useState<{ key: "name" | "amount"; dir: "ascending" | "descending" }>({ key: "name", dir: "ascending" });
+const toggle = (key: "name" | "amount") =>
+  setSort((s) => ({ key, dir: s.key === key && s.dir === "ascending" ? "descending" : "ascending" }));
+
+<TableHeader sortDirection={sort.key === "name" ? sort.dir : "none"} onSort={() => toggle("name")}>
+  Name
+</TableHeader>
+```
+
 ## API reference
 
 Every part forwards its ref to the matching native element and passes native attributes through.
@@ -119,6 +133,8 @@ The frame `div` wraps the `<table>`; `className` and native props go on the `<ta
 <PropsTable rows={[
   { name: "align", type: '"start" | "center" | "end"', default: '"start"', description: "Text alignment; use end for numeric columns." },
   { name: "scope", type: '"col" | "row" | "colgroup" | "rowgroup"', default: '"col"', description: "Native header scope." },
+  { name: "sortDirection", type: '"ascending" | "descending" | "none"', description: "Makes the column sortable: sets aria-sort and renders the label inside a button with a direction icon." },
+  { name: "onSort", type: "(event) => void", description: "Called when the sort button is pressed. Compute the next direction and sort the rows yourself." },
 ]} />
 
 ### TableCell

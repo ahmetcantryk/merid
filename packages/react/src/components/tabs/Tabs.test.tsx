@@ -48,6 +48,20 @@ describe("Tabs", () => {
     expect(screen.getByRole("tab", { name: "Overview" })).toHaveAttribute("aria-selected", "true");
   });
 
+  it("reverses horizontal arrows in RTL", async () => {
+    const user = userEvent.setup();
+    render(
+      <div dir="rtl" style={{ direction: "rtl" }}>
+        <Basic />
+      </div>,
+    );
+    await user.tab();
+    await user.keyboard("{ArrowLeft}");
+    expect(screen.getByRole("tab", { name: "Team" })).toHaveFocus();
+    await user.keyboard("{ArrowRight}");
+    expect(screen.getByRole("tab", { name: "Overview" })).toHaveFocus();
+  });
+
   it("Tab moves from the tablist into the panel", async () => {
     const user = userEvent.setup();
     render(<Basic />);
