@@ -21,7 +21,7 @@
 
   .mrd-input {
     height: var(--mrd-input-height);
-    padding: 0 10px;
+    padding: 0 var(--mrd-input-pad);
   }
 
   .mrd-input[data-size="sm"],
@@ -95,19 +95,19 @@
   }
 
   .mrd-input-group__addon[data-side="leading"] {
-    left: 14px;
+    inset-inline-start: 14px;
   }
 
   .mrd-input-group__addon[data-side="trailing"] {
-    right: 14px;
+    inset-inline-end: 14px;
   }
 
   .mrd-input-group:has([data-side="leading"]) .mrd-input {
-    padding-left: 32px;
+    padding-inline-start: 32px;
   }
 
   .mrd-input-group:has([data-side="trailing"]) .mrd-input {
-    padding-right: 32px;
+    padding-inline-end: 32px;
   }
 
   @media (prefers-reduced-motion: reduce) {

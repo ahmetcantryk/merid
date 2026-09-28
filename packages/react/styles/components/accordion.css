@@ -22,7 +22,7 @@
     font-size: var(--mrd-text-md);
     line-height: var(--mrd-leading-sm);
     font-weight: var(--mrd-weight-medium);
-    text-align: left;
+    text-align: start;
     cursor: pointer;
   }
 

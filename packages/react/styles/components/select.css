@@ -8,14 +8,15 @@
     gap: var(--mrd-space-2);
     width: 100%;
     height: var(--mrd-select-height);
-    padding: 0 8px 0 10px;
+    padding-block: 0;
+    padding-inline: var(--mrd-input-pad) 8px;
     background: var(--mrd-surface);
     color: var(--mrd-ink);
     border: 1px solid var(--mrd-line);
     border-radius: var(--mrd-radius-lg);
     font: inherit;
     font-size: var(--mrd-text-sm);
-    text-align: left;
+    text-align: start;
     cursor: pointer;
     transition:
       border-color var(--mrd-duration) var(--mrd-ease),

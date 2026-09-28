@@ -51,7 +51,7 @@
   }
 
   .mrd-avatar-group > .mrd-avatar + .mrd-avatar {
-    margin-left: calc(var(--mrd-avatar-size) * -0.25);
+    margin-inline-start: calc(var(--mrd-avatar-size) * -0.25);
   }
 
   .mrd-avatar-group__overflow {

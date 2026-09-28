@@ -5,6 +5,11 @@
  * The @font-face rules resolve them relative to dist/ (`../fonts/...`).
  * The fonts are opt-out: set `--mrd-font-sans` / `--mrd-font-mono` to your own
  * stack and the bundled faces are never requested (browsers only fetch faces that are actually used).
+ *
+ * Subtree attributes (work on :root or any element, and nest):
+ *   data-theme="light" | "dark"                          (default: prefers-color-scheme)
+ *   data-accent="blue" | "violet" | "green" | "graphite"  (default: blue)
+ *   data-density="compact" | "default" | "comfortable"    (default: default)
  */
 @layer merid.tokens {
   @font-face {
@@ -24,37 +29,47 @@
   }
 
   :root {
-    /* colour */
-    --mrd-accent: #3f63f5;
-    --mrd-accent-solid: #3f63f5;
-    --mrd-accent-solid-hover: #3355e6;
-    --mrd-accent-hover: #3355e6;
-    --mrd-accent-soft: #eef1ff;
-    --mrd-accent-strong: #2c46b8;
-    --mrd-on-accent: #fff;
-    --mrd-bg: #fff;
-    --mrd-surface: #fff;
-    --mrd-tray: #f5f6f8;
-    --mrd-tray-2: #eceef2;
-    --mrd-subtle: #fbfbfc;
-    --mrd-line: #e6e8ec;
-    --mrd-line-strong: #cfd4dc;
-    --mrd-ink: #0f1219;
-    --mrd-body: #535a67;
-    --mrd-muted: #6b7280;
-    --mrd-placeholder: #b0b5be;
-    --mrd-control-off: #d7dbe2;
-    --mrd-danger: #e5484d;
-    --mrd-danger-soft: #fff0f0;
-    --mrd-danger-strong: #b42318;
-    --mrd-warning-soft: #fff8eb;
-    --mrd-warning-strong: #93580a;
-    --mrd-success: #1f9d63;
-    --mrd-success-soft: #ecf8f1;
-    --mrd-success-strong: #17744a;
-    --mrd-tooltip-bg: #0f1219;
-    --mrd-tooltip-fg: #fff;
-    --mrd-backdrop: rgb(15 18 25 / 40%);
+    /* primitive palettes (accent presets) */
+    --mrd-blue-50: #eef1ff;
+    --mrd-blue-100: #dfe5ff;
+    --mrd-blue-200: #c3cfff;
+    --mrd-blue-300: #a9bbff;
+    --mrd-blue-400: #8aa2ff;
+    --mrd-blue-500: #6b8aff;
+    --mrd-blue-600: #3f63f5;
+    --mrd-blue-700: #3355e6;
+    --mrd-blue-800: #2c46b8;
+    --mrd-blue-900: #1f3285;
+    --mrd-violet-50: #f3f0ff;
+    --mrd-violet-100: #e7e0ff;
+    --mrd-violet-200: #d2c6ff;
+    --mrd-violet-300: #c6b8ff;
+    --mrd-violet-400: #b09cff;
+    --mrd-violet-500: #9d85ff;
+    --mrd-violet-600: #6e4ef0;
+    --mrd-violet-700: #5f3fdc;
+    --mrd-violet-800: #4a2eb0;
+    --mrd-violet-900: #33207a;
+    --mrd-green-50: #e9f8f0;
+    --mrd-green-100: #d0f0df;
+    --mrd-green-200: #a4e2c2;
+    --mrd-green-300: #7ee2b0;
+    --mrd-green-400: #5ed89d;
+    --mrd-green-500: #3ecf8e;
+    --mrd-green-600: #13804d;
+    --mrd-green-700: #0f6e42;
+    --mrd-green-800: #0c5734;
+    --mrd-green-900: #083d25;
+    --mrd-graphite-50: #eef0f3;
+    --mrd-graphite-100: #e4e6ea;
+    --mrd-graphite-200: #d6d9df;
+    --mrd-graphite-300: #c9cdd4;
+    --mrd-graphite-400: #aeb3bd;
+    --mrd-graphite-500: #939aa6;
+    --mrd-graphite-600: #3d4350;
+    --mrd-graphite-700: #2e333d;
+    --mrd-graphite-800: #22262e;
+    --mrd-graphite-900: #15181e;
 
     /* radius */
     --mrd-radius-xs: 4px;
@@ -66,19 +81,6 @@
     --mrd-radius-card: 14px;
     --mrd-radius-3xl: 16px;
     --mrd-radius-full: 999px;
-
-    /* shadow (ink-tinted) */
-    --mrd-shadow-xs: 0 1px 3px rgb(15 18 25 / 10%);
-    --mrd-shadow-sm: 0 2px 6px rgb(15 18 25 / 5%);
-    --mrd-shadow-md: 0 12px 32px rgb(15 18 25 / 6%);
-    --mrd-shadow-lg: 0 10px 28px rgb(15 18 25 / 10%);
-    --mrd-shadow-xl: 0 16px 40px rgb(15 18 25 / 10%);
-    --mrd-shadow-2xl: 0 24px 64px rgb(15 18 25 / 18%);
-    --mrd-shadow-accent: inset 0 1px 0 rgb(255 255 255 / 12%), 0 1px 2px rgb(15 18 25 / 12%);
-    --mrd-focus-ring: 0 0 0 3px rgb(63 99 245 / 18%);
-
-    /* added to elevated surfaces; a 1px line ring in dark mode */
-    --mrd-elevated-ring: 0 0 0 0 transparent;
 
     /* typography */
     --mrd-font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -129,7 +131,7 @@
     --mrd-section: 112px;
     --mrd-prose: 720px;
 
-    /* control sizes */
+    /* control sizes (see density below) */
     --mrd-control-sm: 28px;
     --mrd-control-md: 32px;
     --mrd-control-lg: 40px;
@@ -140,6 +142,10 @@
     --mrd-icon-button-md: 28px;
     --mrd-icon-button-lg: 32px;
     --mrd-pill: 28px;
+    --mrd-control-pad-sm: 10px;
+    --mrd-control-pad-md: 12px;
+    --mrd-control-pad-lg: 16px;
+    --mrd-input-pad: 10px;
 
     /* motion */
     --mrd-duration-fast: 100ms;
@@ -153,8 +159,6 @@
     --mrd-z-overlay: 100;
     --mrd-z-toast: 110;
     --mrd-z-tooltip: 120;
-
-    color-scheme: light;
   }
 
   @media (width <= 920px) {
@@ -179,14 +183,53 @@
     }
   }
 
+  /*
+   * Theme. Light is the default and can be re-applied to any subtree with
+   * data-theme="light"; data-theme="dark" likewise. Without an attribute, :root follows
+   * prefers-color-scheme. Neutral tokens are set here; accent tokens are resolved further
+   * down from the nearest theme and the nearest [data-accent], so the two nest independently.
+   * --mrd-if-light / --mrd-if-dark are mode switches: empty when that mode is active,
+   * `initial` (guaranteed-invalid) otherwise.
+   */
+  :root,
+  [data-theme="light"] {
+    --mrd-bg: #fff;
+    --mrd-surface: #fff;
+    --mrd-tray: #f5f6f8;
+    --mrd-tray-2: #eceef2;
+    --mrd-subtle: #fbfbfc;
+    --mrd-line: #e6e8ec;
+    --mrd-line-strong: #cfd4dc;
+    --mrd-ink: #0f1219;
+    --mrd-body: #535a67;
+    --mrd-muted: #6b7280;
+    --mrd-placeholder: #b0b5be;
+    --mrd-control-off: #d7dbe2;
+    --mrd-danger: #e5484d;
+    --mrd-danger-soft: #fff0f0;
+    --mrd-danger-strong: #b42318;
+    --mrd-warning-soft: #fff8eb;
+    --mrd-warning-strong: #93580a;
+    --mrd-success: #1f9d63;
+    --mrd-success-soft: #ecf8f1;
+    --mrd-success-strong: #17744a;
+    --mrd-tooltip-bg: #0f1219;
+    --mrd-tooltip-fg: #fff;
+    --mrd-backdrop: rgb(15 18 25 / 40%);
+    --mrd-shadow-xs: 0 1px 3px rgb(15 18 25 / 10%);
+    --mrd-shadow-sm: 0 2px 6px rgb(15 18 25 / 5%);
+    --mrd-shadow-md: 0 12px 32px rgb(15 18 25 / 6%);
+    --mrd-shadow-lg: 0 10px 28px rgb(15 18 25 / 10%);
+    --mrd-shadow-xl: 0 16px 40px rgb(15 18 25 / 10%);
+    --mrd-shadow-2xl: 0 24px 64px rgb(15 18 25 / 18%);
+    --mrd-elevated-ring: 0 0 0 0 transparent;
+    --mrd-if-light: ;
+    --mrd-if-dark: initial;
+
+    color-scheme: light;
+  }
+
   [data-theme="dark"] {
-    --mrd-accent: #6b8aff;
-    --mrd-accent-solid: #4466f0;
-    --mrd-accent-solid-hover: #3a58dc;
-    --mrd-accent-hover: #8aa2ff;
-    --mrd-accent-soft: rgb(107 138 255 / 14%);
-    --mrd-accent-strong: #a9bbff;
-    --mrd-on-accent: #fff;
     --mrd-bg: #0b0d12;
     --mrd-surface: #12151c;
     --mrd-tray: #161a22;
@@ -216,22 +259,15 @@
     --mrd-shadow-lg: 0 10px 28px rgb(0 0 0 / 50%);
     --mrd-shadow-xl: 0 16px 40px rgb(0 0 0 / 50%);
     --mrd-shadow-2xl: 0 24px 64px rgb(0 0 0 / 60%);
-    --mrd-shadow-accent: inset 0 1px 0 rgb(255 255 255 / 12%), 0 1px 2px rgb(0 0 0 / 40%);
-    --mrd-focus-ring: 0 0 0 3px rgb(107 138 255 / 28%);
     --mrd-elevated-ring: 0 0 0 1px var(--mrd-line);
+    --mrd-if-light: initial;
+    --mrd-if-dark: ;
 
     color-scheme: dark;
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --mrd-accent: #6b8aff;
-    --mrd-accent-solid: #4466f0;
-    --mrd-accent-solid-hover: #3a58dc;
-      --mrd-accent-hover: #8aa2ff;
-      --mrd-accent-soft: rgb(107 138 255 / 14%);
-      --mrd-accent-strong: #a9bbff;
-      --mrd-on-accent: #fff;
       --mrd-bg: #0b0d12;
       --mrd-surface: #12151c;
       --mrd-tray: #161a22;
@@ -261,11 +297,146 @@
       --mrd-shadow-lg: 0 10px 28px rgb(0 0 0 / 50%);
       --mrd-shadow-xl: 0 16px 40px rgb(0 0 0 / 50%);
       --mrd-shadow-2xl: 0 24px 64px rgb(0 0 0 / 60%);
-      --mrd-shadow-accent: inset 0 1px 0 rgb(255 255 255 / 12%), 0 1px 2px rgb(0 0 0 / 40%);
-      --mrd-focus-ring: 0 0 0 3px rgb(107 138 255 / 28%);
       --mrd-elevated-ring: 0 0 0 1px var(--mrd-line);
+      --mrd-if-light: initial;
+      --mrd-if-dark: ;
 
       color-scheme: dark;
+    }
+  }
+
+  /* Accent presets: data-accent="blue" (default) | "violet" | "green" | "graphite". */
+  :root,
+  [data-accent="blue"] {
+    --mrd-accent-light: var(--mrd-blue-600);
+    --mrd-accent-light-hover: var(--mrd-blue-700);
+    --mrd-accent-light-strong: var(--mrd-blue-800);
+    --mrd-accent-light-soft: var(--mrd-blue-50);
+    --mrd-accent-dark: var(--mrd-blue-500);
+    --mrd-accent-dark-hover: var(--mrd-blue-400);
+    --mrd-accent-dark-strong: var(--mrd-blue-300);
+    --mrd-accent-dark-soft: rgb(107 138 255 / 14%);
+    --mrd-accent-fill: var(--mrd-blue-600);
+    --mrd-accent-fill-hover: var(--mrd-blue-700);
+  }
+
+  [data-accent="violet"] {
+    --mrd-accent-light: var(--mrd-violet-600);
+    --mrd-accent-light-hover: var(--mrd-violet-700);
+    --mrd-accent-light-strong: var(--mrd-violet-800);
+    --mrd-accent-light-soft: var(--mrd-violet-50);
+    --mrd-accent-dark: var(--mrd-violet-500);
+    --mrd-accent-dark-hover: var(--mrd-violet-400);
+    --mrd-accent-dark-strong: var(--mrd-violet-300);
+    --mrd-accent-dark-soft: rgb(157 133 255 / 14%);
+    --mrd-accent-fill: var(--mrd-violet-600);
+    --mrd-accent-fill-hover: var(--mrd-violet-700);
+  }
+
+  [data-accent="green"] {
+    --mrd-accent-light: var(--mrd-green-600);
+    --mrd-accent-light-hover: var(--mrd-green-700);
+    --mrd-accent-light-strong: var(--mrd-green-800);
+    --mrd-accent-light-soft: var(--mrd-green-50);
+    --mrd-accent-dark: var(--mrd-green-500);
+    --mrd-accent-dark-hover: var(--mrd-green-400);
+    --mrd-accent-dark-strong: var(--mrd-green-300);
+    --mrd-accent-dark-soft: rgb(62 207 142 / 12%);
+    --mrd-accent-fill: var(--mrd-green-600);
+    --mrd-accent-fill-hover: var(--mrd-green-700);
+  }
+
+  [data-accent="graphite"] {
+    --mrd-accent-light: var(--mrd-graphite-600);
+    --mrd-accent-light-hover: var(--mrd-graphite-700);
+    --mrd-accent-light-strong: var(--mrd-graphite-800);
+    --mrd-accent-light-soft: var(--mrd-graphite-50);
+    --mrd-accent-dark: var(--mrd-graphite-300);
+    --mrd-accent-dark-hover: var(--mrd-graphite-200);
+    --mrd-accent-dark-strong: var(--mrd-graphite-100);
+    --mrd-accent-dark-soft: rgb(201 205 212 / 12%);
+    --mrd-accent-fill: var(--mrd-graphite-600);
+    --mrd-accent-fill-hover: var(--mrd-graphite-700);
+  }
+
+  /*
+   * Resolve the public accent tokens for the active mode. Exactly one of each
+   * var(--mrd-if-*, …) pair survives. Re-evaluated on every element that changes
+   * theme or preset, so a light card in a dark page (or a green panel in a blue app) is correct.
+   */
+  :root,
+  [data-theme],
+  [data-accent] {
+    --mrd-accent: var(--mrd-if-light, var(--mrd-accent-dark)) var(--mrd-if-dark, var(--mrd-accent-light));
+    --mrd-accent-hover: var(--mrd-if-light, var(--mrd-accent-dark-hover)) var(--mrd-if-dark, var(--mrd-accent-light-hover));
+    --mrd-accent-strong: var(--mrd-if-light, var(--mrd-accent-dark-strong)) var(--mrd-if-dark, var(--mrd-accent-light-strong));
+    --mrd-accent-soft: var(--mrd-if-light, var(--mrd-accent-dark-soft)) var(--mrd-if-dark, var(--mrd-accent-light-soft));
+    --mrd-accent-solid: var(--mrd-accent-fill);
+    --mrd-accent-solid-hover: var(--mrd-accent-fill-hover);
+    --mrd-on-accent: #fff;
+    --mrd-focus-ring: 0 0 0 3px color-mix(in srgb, var(--mrd-accent) var(--mrd-if-light, 28%) var(--mrd-if-dark, 18%), transparent);
+    --mrd-shadow-accent:
+      inset 0 1px 0 rgb(255 255 255 / 12%),
+      0 1px 2px color-mix(in srgb, var(--mrd-accent-fill) 30%, rgb(var(--mrd-if-light, 0 0 0) var(--mrd-if-dark, 15 18 25) / 30%));
+  }
+
+  /* Density: data-density="compact" | "default" | "comfortable" on any subtree (fine pointers only). */
+  @media not (pointer: coarse) {
+    [data-density="compact"] {
+      --mrd-control-sm: 24px;
+      --mrd-control-md: 28px;
+      --mrd-control-lg: 32px;
+      --mrd-input-sm: 24px;
+      --mrd-input-md: 28px;
+      --mrd-input-lg: 32px;
+      --mrd-icon-button-sm: 20px;
+      --mrd-icon-button-md: 24px;
+      --mrd-icon-button-lg: 28px;
+      --mrd-pill: 24px;
+      --mrd-control-pad-sm: 8px;
+      --mrd-control-pad-md: 10px;
+      --mrd-control-pad-lg: 12px;
+      --mrd-input-pad: 8px;
+      --mrd-text-sm: 13px;
+      --mrd-text-xs: 12px;
+    }
+
+    [data-density="default"] {
+      --mrd-control-sm: 28px;
+      --mrd-control-md: 32px;
+      --mrd-control-lg: 40px;
+      --mrd-input-sm: 28px;
+      --mrd-input-md: 32px;
+      --mrd-input-lg: 40px;
+      --mrd-icon-button-sm: 24px;
+      --mrd-icon-button-md: 28px;
+      --mrd-icon-button-lg: 32px;
+      --mrd-pill: 28px;
+      --mrd-control-pad-sm: 10px;
+      --mrd-control-pad-md: 12px;
+      --mrd-control-pad-lg: 16px;
+      --mrd-input-pad: 10px;
+      --mrd-text-sm: 14px;
+      --mrd-text-xs: 13px;
+    }
+
+    [data-density="comfortable"] {
+      --mrd-control-sm: 32px;
+      --mrd-control-md: 36px;
+      --mrd-control-lg: 44px;
+      --mrd-input-sm: 32px;
+      --mrd-input-md: 36px;
+      --mrd-input-lg: 44px;
+      --mrd-icon-button-sm: 28px;
+      --mrd-icon-button-md: 32px;
+      --mrd-icon-button-lg: 36px;
+      --mrd-pill: 32px;
+      --mrd-control-pad-sm: 12px;
+      --mrd-control-pad-md: 14px;
+      --mrd-control-pad-lg: 18px;
+      --mrd-input-pad: 12px;
+      --mrd-text-sm: 14.5px;
+      --mrd-text-xs: 13.5px;
     }
   }
 }

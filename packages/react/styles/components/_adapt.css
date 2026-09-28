@@ -1,0 +1,106 @@
+/*
+ * Cross-cutting adaptations: right-to-left, forced colours (Windows High Contrast) and print.
+ * Kept in one partial so each component file stays about the component itself.
+ */
+@layer merid.components {
+  /* RTL: physical motion and directional icons flip; layout already uses logical properties. */
+  .mrd-switch__track:dir(rtl)[data-state="on"] .mrd-switch__thumb {
+    transform: translateX(-12px);
+  }
+
+  .mrd-pagination__control:dir(rtl) > svg {
+    transform: scaleX(-1);
+  }
+
+  /* Forced colours: shadows and fills vanish, so every control needs a real border and outline. */
+  @media (forced-colors: active) {
+    .mrd-button,
+    .mrd-icon-button,
+    .mrd-input,
+    .mrd-textarea,
+    .mrd-native-select__control,
+    .mrd-select__trigger,
+    .mrd-segmented__item,
+    .mrd-pagination__page,
+    .mrd-pagination__control {
+      border: 1px solid ButtonText;
+    }
+
+    .mrd-checkbox__icon,
+    .mrd-radio__circle,
+    .mrd-switch__track {
+      border: 1px solid ButtonText;
+      forced-color-adjust: none;
+      background: Canvas;
+      color: CanvasText;
+    }
+
+    .mrd-checkbox__input:checked + .mrd-checkbox__icon,
+    .mrd-switch__track[data-state="on"],
+    .mrd-switch__track[data-state="on"] .mrd-switch__thumb {
+      background: Highlight;
+      color: HighlightText;
+    }
+
+    .mrd-switch__thumb {
+      background: ButtonText;
+    }
+
+    .mrd-radio__input:checked + .mrd-radio__circle::after {
+      background: Highlight;
+    }
+
+    :where(.mrd-root) :focus-visible,
+    .mrd-input:focus-visible,
+    .mrd-textarea:focus-visible,
+    .mrd-select__trigger:focus-visible,
+    .mrd-native-select__control:focus-visible,
+    .mrd-switch__track:focus-visible,
+    .mrd-checkbox__input:focus-visible + .mrd-checkbox__icon,
+    .mrd-radio__input:focus-visible + .mrd-radio__circle {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
+
+    .mrd-card,
+    .mrd-dialog,
+    .mrd-drawer,
+    .mrd-popover,
+    .mrd-menu,
+    .mrd-select__content,
+    .mrd-toast,
+    .mrd-tooltip {
+      border: 1px solid CanvasText;
+    }
+
+    .mrd-pagination__page[aria-current="page"],
+    .mrd-tabs__trigger[aria-selected="true"],
+    .mrd-segmented__item[data-state="on"] {
+      outline: 2px solid Highlight;
+    }
+  }
+
+  /* Print: ink on paper, no elevation, no overlays. */
+  @media print {
+    .mrd-dialog__backdrop,
+    .mrd-drawer__backdrop,
+    .mrd-toast-region,
+    .mrd-tooltip,
+    .mrd-popover,
+    .mrd-menu,
+    .mrd-select__content {
+      display: none !important;
+    }
+
+    :where(.mrd-root),
+    :where(.mrd-root) * {
+      box-shadow: none !important;
+      text-shadow: none !important;
+    }
+
+    .mrd-card {
+      border: 1px solid var(--mrd-line);
+      break-inside: avoid;
+    }
+  }
+}

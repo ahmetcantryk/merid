@@ -47,7 +47,7 @@
 
   .mrd-dialog__title {
     margin: 0;
-    padding-right: var(--mrd-space-10);
+    padding-inline-end: var(--mrd-space-10);
     color: var(--mrd-ink);
     font-size: 16px;
     line-height: var(--mrd-leading-h3);
@@ -74,7 +74,7 @@
   .mrd-dialog__close {
     position: absolute;
     top: var(--mrd-space-4);
-    right: var(--mrd-space-4);
+    inset-inline-end: var(--mrd-space-4);
     display: inline-flex;
     align-items: center;
     justify-content: center;
