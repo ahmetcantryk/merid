@@ -1,7 +1,7 @@
 @layer merid.components {
   .mrd-toast-region {
     position: fixed;
-    right: var(--mrd-space-6);
+    inset-inline-end: var(--mrd-space-6);
     bottom: var(--mrd-space-6);
     z-index: var(--mrd-z-toast);
     width: min(380px, calc(100vw - 2 * var(--mrd-gutter)));
@@ -124,7 +124,7 @@
 
   @media (width <= 640px) {
     .mrd-toast-region {
-      right: var(--mrd-gutter);
+      inset-inline-end: var(--mrd-gutter);
       bottom: var(--mrd-gutter);
     }
   }

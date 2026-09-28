@@ -28,7 +28,7 @@
     align-self: center;
     height: 1px;
     min-width: var(--mrd-space-4);
-    margin-left: var(--mrd-space-1);
+    margin-inline-start: var(--mrd-space-1);
     background: var(--mrd-line);
   }
 
@@ -41,7 +41,7 @@
     position: absolute;
     top: 32px;
     bottom: 4px;
-    left: 13px;
+    inset-inline-start: 13px;
     width: 1px;
     background: var(--mrd-line);
   }

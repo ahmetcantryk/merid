@@ -20,7 +20,8 @@
     appearance: none;
     width: 100%;
     height: var(--mrd-input-height);
-    padding: 0 32px 0 10px;
+    padding-block: 0;
+    padding-inline: var(--mrd-input-pad) 32px;
     border: 1px solid var(--mrd-line);
     border-radius: var(--mrd-radius-lg);
     background: var(--mrd-surface);
@@ -64,7 +65,7 @@
   .mrd-native-select__chevron {
     position: absolute;
     top: 50%;
-    right: 14px;
+    inset-inline-end: 14px;
     width: 16px;
     height: 16px;
     color: var(--mrd-muted);

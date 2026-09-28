@@ -1,7 +1,7 @@
 @layer merid.components {
   .mrd-button {
     --mrd-button-height: var(--mrd-control-md);
-    --mrd-button-padding: 0 12px;
+    --mrd-button-padding: 0 var(--mrd-control-pad-md);
     --mrd-button-font: var(--mrd-text-sm);
 
     position: relative;
@@ -30,7 +30,7 @@
 
   .mrd-button[data-size="sm"] {
     --mrd-button-height: var(--mrd-control-sm);
-    --mrd-button-padding: 0 10px;
+    --mrd-button-padding: 0 var(--mrd-control-pad-sm);
     --mrd-button-font: var(--mrd-text-xs);
 
     border-radius: var(--mrd-radius-sm);
@@ -38,7 +38,7 @@
 
   .mrd-button[data-size="lg"] {
     --mrd-button-height: var(--mrd-control-lg);
-    --mrd-button-padding: 0 16px;
+    --mrd-button-padding: 0 var(--mrd-control-pad-lg);
     --mrd-button-font: var(--mrd-text-md);
   }
 

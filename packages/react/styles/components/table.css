@@ -45,11 +45,11 @@
   }
 
   .mrd-table__head .mrd-table__row:first-child .mrd-table__header:first-child {
-    border-top-left-radius: var(--mrd-radius-lg);
+    border-start-start-radius: var(--mrd-radius-lg);
   }
 
   .mrd-table__head .mrd-table__row:first-child .mrd-table__header:last-child {
-    border-top-right-radius: var(--mrd-radius-lg);
+    border-start-end-radius: var(--mrd-radius-lg);
   }
 
   .mrd-table__header[data-align="center"],

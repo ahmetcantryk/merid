@@ -14,9 +14,27 @@ If a value is not here, derive it from an existing one — do not invent a new c
 | CSS variables | `--mrd-` + tier | primitive `--mrd-blue-500`, semantic `--mrd-accent`, component `--mrd-button-height` |
 | Cascade | every rule inside `@layer merid.tokens, merid.base, merid.components` | user CSS wins without `!important` |
 
+## Brand
+
+- **Logo**: the mark is a single continuous line drawing an **M** (one stroke, no lifts), set in ink; the wordmark sits to its right. Sources in `apps/docs/public/brand/` — `logo-light.svg` / `logo-dark.svg` (lockup), `mark-light.svg` / `mark-dark.svg` / `mark-mono.svg` (mark only), `logo-mono*.svg` (single colour). Never recolour the mark with the accent, never add effects; keep clear space ≥ the stroke's cap height.
+- **Type**: Geist and Geist Mono (see Typography).
+- **Docs motif — the drawing board**: the landing page is a drawing board. The content column has hairline rails, every band ends on a full-width hairline, registration crosses (11px) mark where rails and hairlines meet, and a single accent segment (the *meridian*) rides the hero's bottom hairline from the left rail. No cards and no fills on the landing except the playground stage.
+
+## Subtree attributes (public API)
+
+All three work on `<html>` or any element and nest freely; each resolves against the nearest ancestor that sets it.
+
+| Attribute | Values | Default |
+|---|---|---|
+| `data-theme` | `"light"` · `"dark"` | `prefers-color-scheme` on `:root`; also sets `color-scheme` |
+| `data-accent` | `"blue"` · `"violet"` · `"green"` · `"graphite"` | `blue` |
+| `data-density` | `"compact"` · `"default"` · `"comfortable"` | `default` (fine pointers only; coarse pointers keep touch sizes) |
+
+`dir="rtl"` is honoured by all component CSS (logical properties; directional icons flip via `:dir(rtl)`).
+
 ## Principles
 
-1. **One accent, used sparingly.** A single cool blue carries interactivity and selection. Everything else is ink-tinted neutrals.
+1. **One accent, used sparingly.** A single accent (cool blue by default; violet, green or graphite presets) carries interactivity and selection. Everything else is ink-tinted neutrals.
 2. **Separate by surface before border.** Cards sit on `--mrd-tray` over the page; on a tray section they flip to surface + soft shadow. Borders are the last resort.
 3. **Hairlines only.** Every border is 1px `--mrd-line`. Selection is a 1.5px accent ring. Never 2px, never dark borders.
 4. **Soft, long, faint shadows**, always tinted with ink `rgba(15,18,25,…)`, never black. Buttons are crisp, not glowing: a 1px top highlight plus a 1–2px contact shadow.
@@ -29,7 +47,9 @@ If a value is not here, derive it from an existing one — do not invent a new c
 
 ## Tokens
 
-### Colour — light (default) / dark (`[data-theme="dark"]` and `prefers-color-scheme: dark` unless `[data-theme="light"]`)
+### Colour — light (`:root`, `[data-theme="light"]`) / dark (`[data-theme="dark"]`, and `:root` under `prefers-color-scheme: dark` unless `[data-theme="light"]`)
+
+Both themes are fully scoped: a `data-theme="light"` card inside a dark page gets every light token and `color-scheme: light`, and vice versa. Accent rows below show the default `blue` preset.
 
 | Token | Light | Dark | Role |
 |---|---|---|---|
@@ -37,7 +57,7 @@ If a value is not here, derive it from an existing one — do not invent a new c
 | `--mrd-accent-hover` | `#3355e6` | `#8aa2ff` | hover of accent and links |
 | `--mrd-accent-soft` | `#eef1ff` | `rgba(107,138,255,.14)` | tint: selected row, icon tile, info |
 | `--mrd-accent-strong` | `#2c46b8` | `#a9bbff` | text on accent-soft |
-| `--mrd-accent-solid` / `-hover` | `#3f63f5` / `#3355e6` | `#4466f0` / `#3a58dc` | fills that carry on-accent text (AA ≥ 4.5:1) |
+| `--mrd-accent-solid` / `-hover` | `#3f63f5` / `#3355e6` | `#3f63f5` / `#3355e6` | fills that carry on-accent text (AA ≥ 4.5:1) |
 | `--mrd-on-accent` | `#ffffff` | `#ffffff` | text on accent fill |
 | `--mrd-bg` | `#ffffff` | `#0b0d12` | page |
 | `--mrd-surface` | `#ffffff` | `#12151c` | cards on tray, dialogs, inputs, menus |
@@ -57,6 +77,32 @@ If a value is not here, derive it from an existing one — do not invent a new c
 | `--mrd-success` | `#1f9d63` | `#3ecf8e` | success icon/dot only |
 | `--mrd-success-soft` / `-strong` | `#ecf8f1` / `#17744a` | `rgba(62,207,142,.12)` / `#7ee2b0` | success notice |
 | `--mrd-tooltip-bg` / `-fg` | `#0f1219` / `#ffffff` | `#eef0f4` / `#0f1219` | tooltip |
+
+### Accent presets
+
+Primitive palettes `--mrd-{blue,violet,green,graphite}-{50,100,…,900}` live on `:root`. `data-accent` picks one; the public tokens (`--mrd-accent`, `-hover`, `-soft`, `-strong`, `-solid`, `-solid-hover`, `--mrd-focus-ring`, `--mrd-shadow-accent`) are resolved on every element that sets `data-theme` or `data-accent`, so presets and themes nest independently. Consumers only ever read the public tokens.
+
+| Preset | Light: accent / hover / strong / soft | Dark: accent / hover / strong / soft | Solid / hover (both modes) |
+|---|---|---|---|
+| `blue` | 600 `#3f63f5` / 700 / 800 / 50 | 500 `#6b8aff` / 400 / 300 / 500 @ 14% | 600 `#3f63f5` / 700 `#3355e6` |
+| `violet` | 600 `#6e4ef0` / 700 / 800 / 50 | 500 `#9d85ff` / 400 / 300 / 500 @ 14% | 600 `#6e4ef0` / 700 `#5f3fdc` |
+| `green` | 600 `#13804d` / 700 / 800 / 50 | 500 `#3ecf8e` / 400 / 300 / 500 @ 12% | 600 `#13804d` / 700 `#0f6e42` |
+| `graphite` | 600 `#3d4350` / 700 / 800 / 50 | 300 `#c9cdd4` / 200 / 100 / 300 @ 12% | 600 `#3d4350` / 700 `#2e333d` |
+
+Focus ring = `0 0 0 3px` accent at 18% (light) / 28% (dark). `--mrd-shadow-accent` = inset white highlight + a 1×2px contact shadow tinted 30% with the preset's solid. `--mrd-on-accent` is always `#fff`.
+
+Contrast (WCAG 2.x, computed by `packages/react/scripts/contrast.mjs`, which exits non-zero below 4.5:1):
+
+| Preset | Mode | white / solid | white / solid-hover | accent / bg | accent / surface | accent / tray | strong / soft (light) or surface (dark) |
+|---|---|---|---|---|---|---|---|
+| blue | light | 4.87 | 5.86 | 4.87 | 4.87 | 4.50 | 6.98 |
+| blue | dark | 4.87 | 5.86 | 6.20 | 5.83 | 5.56 | 9.78 |
+| violet | light | 5.24 | 6.50 | 5.24 | 5.24 | 4.84 | 8.11 |
+| violet | dark | 5.24 | 6.50 | 6.69 | 6.29 | 6.00 | 10.18 |
+| green | light | 4.97 | 6.31 | 4.97 | 4.97 | 4.60 | 7.89 |
+| green | dark | 4.97 | 6.31 | 9.74 | 9.15 | 8.73 | 11.65 |
+| graphite | light | 9.92 | 12.67 | 9.92 | 9.92 | 9.17 | 13.28 |
+| graphite | dark | 9.92 | 12.67 | 12.19 | 11.45 | 10.93 | 14.62 |
 
 ### Radius
 `--mrd-radius-xs 4px` (focus ring, skeleton, inline code) · `--mrd-radius-sm 6px` (small button, tooltip, toast action) · `--mrd-radius-md 6px` (icon button, menu item, nav link) · `--mrd-radius-lg 8px` (button, input, select, alert, table, toast) · `--mrd-radius-xl 10px` (popover) · `--mrd-radius-2xl 12px` (menu, select list, mobile card) · `--mrd-radius-card 14px` (card, panel, drawer, empty state) · `--mrd-radius-3xl 16px` (dialog, CTA block) · `--mrd-radius-full 999px` (pill, badge, switch, avatar).
@@ -113,6 +159,20 @@ Layout: `--mrd-container 1160px`, `--mrd-gutter 24px` (20px ≤ 640px), `--mrd-s
 | Badge (12px text) | — | 20 | — |
 On coarse pointers (`@media (pointer: coarse)`) md button → 40, input / select trigger → 44, md icon button → 40, pill → 36, menu / nav items → 44.
 
+Horizontal padding is tokenised: `--mrd-control-pad-sm/md/lg` (10/12/16, buttons) and `--mrd-input-pad` (10, input / select / native select).
+
+### Density
+`data-density` rescales the control tokens for a subtree (fine pointers only — coarse pointers keep the touch sizes above):
+
+| | compact | default | comfortable |
+|---|---|---|---|
+| `--mrd-control-sm / md / lg` (button) | 24 / **28** / 32 | 28 / **32** / 40 | 32 / **36** / 44 |
+| `--mrd-input-sm / md / lg` | 24 / 28 / 32 | 28 / 32 / 40 | 32 / 36 / 44 |
+| `--mrd-icon-button-sm / md / lg` | 20 / 24 / 28 | 24 / 28 / 32 | 28 / 32 / 36 |
+| `--mrd-pill` | 24 | 28 | 32 |
+| `--mrd-control-pad-sm / md / lg` · `--mrd-input-pad` | 8 / 10 / 12 · 8 | 10 / 12 / 16 · 10 | 12 / 14 / 18 · 12 |
+| `--mrd-text-sm` / `--mrd-text-xs` | 13 / 12 | 14 / 13 | 14.5 / 13.5 |
+
 ### Motion
 `--mrd-duration-fast 100ms` (press) · `--mrd-duration 150ms` (colour/border/shadow) · `--mrd-duration-slow 200ms` (lift, rotate, overlay) · `--mrd-ease cubic-bezier(.2,0,0,1)`. Enter animation `fade`: opacity 0 → 1, `translateY(4px)` → 0, 220ms.
 
@@ -139,5 +199,12 @@ Breakpoints (used in CSS only): 640 (mobile pass), 920 (layout collapse). Z-inde
 - **Alert**: radius lg, padding 12px 14px, 13.5px text, 16px icon.
 - **Accordion**: rows split by 1px line, plus icon rotates 45° and turns accent when open.
 
+## Direction, forced colours and print
+Shared rules live in `packages/react/styles/components/_adapt.css`.
+
+- **RTL**: component CSS uses logical properties only (`margin-inline`, `padding-inline`, `inset-inline-*`, `border-start-*-radius`, `text-align: start/end`); a test forbids physical `left`/`right`. Under `:dir(rtl)` the pagination chevrons mirror and the switch thumb travels the other way. Select/accordion chevrons are vertical and do not flip; the breadcrumb `/` is direction-neutral. `Drawer side="left|right"` stays physical by design.
+- **Forced colours** (`@media (forced-colors: active)`): buttons, icon buttons, inputs, selects, segmented items and pagination get a 1px `ButtonText` border; checkbox / radio / switch draw with `Canvas` / `ButtonText` and fill `Highlight` when on; focus is a 2px `Highlight` outline; selected tab / page / segment get a `Highlight` outline; floating surfaces (card, dialog, drawer, popover, menu, select list, toast, tooltip) get a `CanvasText` border.
+- **Print**: backdrops, toasts, tooltips, popovers and menus are hidden; all shadows are removed; cards get a hairline and avoid page breaks.
+
 ## Accessibility baseline
-WCAG 2.2 AA. Every interactive component: correct role/ARIA per WAI-ARIA APG, full keyboard support, visible focus, 24×24 minimum target, works at 200% zoom, respects reduced motion. Text contrast ≥ 4.5:1 (muted on bg is for meta ≥ 13px only).
+WCAG 2.2 AA. Every interactive component: correct role/ARIA per WAI-ARIA APG, full keyboard support, visible focus, 24×24 minimum target, works at 200% zoom, respects reduced motion, usable in forced colours and RTL. Text contrast ≥ 4.5:1 (muted on bg is for meta ≥ 13px only); every accent preset is verified by `scripts/contrast.mjs`.
