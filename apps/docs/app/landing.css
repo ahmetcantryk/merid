@@ -122,67 +122,10 @@
 .pg__tokens pre { margin: 0; overflow-x: auto; color: var(--mrd-ink); font-size: 12.5px; line-height: 1.7; }
 .pg__tokens-note { margin-top: auto; color: var(--mrd-muted); font-size: var(--mrd-text-2xs); line-height: var(--mrd-leading-2xs); }
 
-/* Accent presets: the only colours this file defines, scoped to the playground. */
-.pg[data-accent] { --swatch: var(--mrd-accent); }
-.pg__swatch[data-swatch="blue"] { --swatch: #3f63f5; }
-.pg__swatch[data-swatch="violet"] { --swatch: #6e56cf; }
-.pg__swatch[data-swatch="green"] { --swatch: #14805e; }
-.pg__swatch[data-swatch="graphite"] { --swatch: #0f1219; }
-.pg[data-accent="violet"] {
-  --mrd-accent: #6e56cf; --mrd-accent-hover: #5f47c2; --mrd-accent-solid: #6e56cf; --mrd-accent-solid-hover: #5f47c2;
-  --mrd-accent-soft: #f3f0ff; --mrd-accent-strong: #4c3aa3;
-}
-.pg[data-accent="green"] {
-  --mrd-accent: #14805e; --mrd-accent-hover: #0f6f51; --mrd-accent-solid: #14805e; --mrd-accent-solid-hover: #0f6f51;
-  --mrd-accent-soft: #eaf6f0; --mrd-accent-strong: #0d5c43;
-}
-.pg[data-accent="graphite"] {
-  --mrd-accent: #0f1219; --mrd-accent-hover: #2a2f3a; --mrd-accent-solid: #0f1219; --mrd-accent-solid-hover: #2a2f3a;
-  --mrd-accent-soft: #eceef2; --mrd-accent-strong: #0f1219; --mrd-on-accent: #ffffff;
-}
-[data-theme="dark"] .pg__swatch[data-swatch="blue"] { --swatch: #6b8aff; }
-[data-theme="dark"] .pg__swatch[data-swatch="violet"] { --swatch: #9d8cf2; }
-[data-theme="dark"] .pg__swatch[data-swatch="green"] { --swatch: #3ecf8e; }
-[data-theme="dark"] .pg__swatch[data-swatch="graphite"] { --swatch: #eef0f4; }
-[data-theme="dark"] .pg[data-accent="violet"] {
-  --mrd-accent: #9d8cf2; --mrd-accent-hover: #b4a7f6; --mrd-accent-solid: #6e56cf; --mrd-accent-solid-hover: #5f47c2;
-  --mrd-accent-soft: rgb(157 140 242 / 14%); --mrd-accent-strong: #c4baf8;
-}
-[data-theme="dark"] .pg[data-accent="green"] {
-  --mrd-accent: #3ecf8e; --mrd-accent-hover: #6adca8; --mrd-accent-solid: #17744a; --mrd-accent-solid-hover: #135f3d;
-  --mrd-accent-soft: rgb(62 207 142 / 12%); --mrd-accent-strong: #7ee2b0;
-}
-[data-theme="dark"] .pg[data-accent="graphite"] {
-  --mrd-accent: #eef0f4; --mrd-accent-hover: #ffffff; --mrd-accent-solid: #eef0f4; --mrd-accent-solid-hover: #ffffff;
-  --mrd-accent-soft: rgb(238 240 244 / 10%); --mrd-accent-strong: #eef0f4; --mrd-on-accent: #0f1219;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .pg__swatch[data-swatch="blue"] { --swatch: #6b8aff; }
-  :root:not([data-theme="light"]) .pg__swatch[data-swatch="violet"] { --swatch: #9d8cf2; }
-  :root:not([data-theme="light"]) .pg__swatch[data-swatch="green"] { --swatch: #3ecf8e; }
-  :root:not([data-theme="light"]) .pg__swatch[data-swatch="graphite"] { --swatch: #eef0f4; }
-  :root:not([data-theme="light"]) .pg[data-accent="violet"] {
-    --mrd-accent: #9d8cf2; --mrd-accent-hover: #b4a7f6; --mrd-accent-solid: #6e56cf; --mrd-accent-solid-hover: #5f47c2;
-    --mrd-accent-soft: rgb(157 140 242 / 14%); --mrd-accent-strong: #c4baf8;
-  }
-  :root:not([data-theme="light"]) .pg[data-accent="green"] {
-    --mrd-accent: #3ecf8e; --mrd-accent-hover: #6adca8; --mrd-accent-solid: #17744a; --mrd-accent-solid-hover: #135f3d;
-    --mrd-accent-soft: rgb(62 207 142 / 12%); --mrd-accent-strong: #7ee2b0;
-  }
-  :root:not([data-theme="light"]) .pg[data-accent="graphite"] {
-    --mrd-accent: #eef0f4; --mrd-accent-hover: #ffffff; --mrd-accent-solid: #eef0f4; --mrd-accent-solid-hover: #ffffff;
-    --mrd-accent-soft: rgb(238 240 244 / 10%); --mrd-accent-strong: #eef0f4; --mrd-on-accent: #0f1219;
-  }
-}
-.pg { --mrd-focus-ring: 0 0 0 3px color-mix(in srgb, var(--mrd-accent) 16%, transparent); }
-.pg[data-density="compact"] .pg__stage {
-  --mrd-control-md: 28px; --mrd-input-md: 28px; --mrd-icon-button-md: 24px; --mrd-pill: 24px; --mrd-text-sm: 13px;
-}
-.pg[data-density="comfortable"] .pg__stage {
-  --mrd-control-md: 36px; --mrd-input-md: 36px; --mrd-icon-button-md: 32px; --mrd-pill: 32px; --mrd-text-sm: 14.5px;
-}
-.pg[data-density="compact"] .pg__panel { gap: 10px; }
-.pg[data-density="comfortable"] .pg__panel { gap: 18px; }
+/* Swatches read their colour from the preset itself: each carries data-accent. */
+.pg__swatch { --swatch: var(--mrd-accent-solid); }
+.pg__stage[data-density="compact"] .pg__panel { gap: 10px; }
+.pg__stage[data-density="comfortable"] .pg__panel { gap: 18px; }
 
 /* Component index: dense typographic columns */
 .cindex { columns: 4 200px; column-gap: 32px; }

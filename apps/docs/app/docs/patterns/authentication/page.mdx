@@ -1,0 +1,66 @@
+import { SignInExample, OneTimeCodeExample } from "@/examples/patterns/authentication";
+
+export const metadata = {
+  title: "Authentication screens",
+  description: "Sign-in and verification-code screens with correct autocomplete, error handling and loading states.",
+};
+
+# Authentication screens
+
+A centred `Card variant="elevated"` on the page background, a heading, the form and one primary action. Submit the form below to see the error state.
+
+<ComponentPreview code={`<Card variant="elevated" padding="lg">
+  <Heading level={1} size="h3">Sign in to Merid</Heading>
+  <Button fullWidth>Continue with SSO</Button>
+  <form onSubmit={onSubmit} noValidate>
+    {failed ? <Alert tone="danger" live="assertive">That email and password do not match.</Alert> : null}
+    <Field label="Email" error={emailError}>
+      <Input name="email" type="email" autoComplete="username" />
+    </Field>
+    <Field label="Password">
+      <Input name="password" type={show ? "text" : "password"} autoComplete="current-password" />
+    </Field>
+    <Checkbox checked={show} onChange={(e) => setShow(e.target.checked)}>Show password</Checkbox>
+    <Button type="submit" variant="primary" fullWidth loading={submitting}>Sign in</Button>
+  </form>
+</Card>`}>
+  <SignInExample />
+</ComponentPreview>
+
+## Autocomplete
+
+Password managers depend on these attributes. Get them right and most users never type a password.
+
+| Field | Attributes |
+|---|---|
+| Email / username on sign-in | `type="email" autoComplete="username"` |
+| Current password | `type="password" autoComplete="current-password"` |
+| New password (sign-up, reset) | `type="password" autoComplete="new-password"` |
+| One-time code | `inputMode="numeric" autoComplete="one-time-code"` |
+
+## Errors
+
+- Do not reveal which part was wrong: "That email and password do not match", not "No account with that email". It prevents account enumeration.
+- Show the error in an `Alert` above the fields with `live="assertive"`, keep the email, clear nothing else automatically.
+- Client-side, validate only format (an `@` in the email). Everything else is the server's job.
+- After repeated failures, say what happens next ("Try again in 5 minutes") rather than silently rate-limiting.
+
+## Show password
+
+A "Show password" `Checkbox` (or an `IconButton` in the input's trailing slot) switches `type` between `password` and `text`. It helps on mobile and is safer than a confirm-password field.
+
+## Verification code
+
+<ComponentPreview code={`<Field label="Verification code">
+  <Input inputMode="numeric" autoComplete="one-time-code" maxLength={6}
+    value={code} onChange={(e) => setCode(e.target.value.replace(/\\D/g, ""))} />
+</Field>
+<Button variant="primary" fullWidth disabled={!/^\\d{6}$/.test(code)}>Verify</Button>`}>
+  <OneTimeCodeExample />
+</ComponentPreview>
+
+Use a single input rather than six boxes: it pastes, autofills from SMS and email, and works with screen readers. Say where the code was sent and when it expires.
+
+## Page layout
+
+Centre the card with a grid: `place-items: center` and `min-height: 100dvh`. Keep the page quiet: logo, card, and a single footer link to help or terms.

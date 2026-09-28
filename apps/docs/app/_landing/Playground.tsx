@@ -16,7 +16,7 @@ import {
   Switch,
   Tabs,
 } from "@merid/react";
-import { THEME_EVENT, applyTheme, readTheme, type Theme } from "@/components/ThemeToggle";
+import { readTheme, type Theme } from "@/components/ThemeToggle";
 import { ACCENTS, DENSITIES, type AccentId, type DensityId } from "./playground-presets";
 
 const THEME_OPTIONS = [
@@ -35,36 +35,27 @@ function isTypingTarget(target: EventTarget | null): boolean {
   return target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName);
 }
 
-function tokenDiff(theme: Theme, accent: AccentId, density: DensityId): string {
-  const preset = ACCENTS.find((a) => a.id === accent);
-  const dens = DENSITIES.find((d) => d.id === density);
-  const lines: string[] = [];
-  if (preset && preset.id !== "blue") {
-    lines.push(`  --mrd-accent: ${theme === "dark" ? preset.dark : preset.light};`);
-  }
-  if (dens && dens.id !== "default") {
-    lines.push(`  --mrd-control-md: ${dens.control}px;`, `  --mrd-input-md: ${dens.control}px;`);
-  }
-  const selector = theme === "dark" ? `[data-theme="dark"]` : ":root";
-  return lines.length === 0 ? `${selector} {\n  /* defaults, nothing to override */\n}` : `${selector} {\n${lines.join("\n")}\n}`;
+function stageMarkup(theme: Theme, accent: AccentId, density: DensityId): string {
+  return `<div\n  data-theme="${theme}"\n  data-accent="${accent}"\n  data-density="${density}"\n>\n  …\n</div>`;
 }
 
 export function Playground() {
   const rootRef = useRef<HTMLDivElement>(null);
+  // Themes only the stage (nested data-theme); starts from the site theme.
   const [theme, setTheme] = useState<Theme>("light");
   const [accent, setAccent] = useState<AccentId>("blue");
   const [density, setDensity] = useState<DensityId>("default");
   const visible = useRef(false);
+  const themeRef = useRef<Theme>("light");
 
   useEffect(() => {
-    setTheme(readTheme());
-    const sync = () => setTheme(readTheme());
-    window.addEventListener(THEME_EVENT, sync);
-    return () => window.removeEventListener(THEME_EVENT, sync);
+    const initial = readTheme();
+    themeRef.current = initial;
+    setTheme(initial);
   }, []);
 
   const changeTheme = useCallback((next: Theme) => {
-    applyTheme(next);
+    themeRef.current = next;
     setTheme(next);
   }, []);
 
@@ -81,7 +72,7 @@ export function Playground() {
       const key = event.key.toLowerCase();
       const byKey = ACCENTS.find((a) => a.key === key);
       if (byKey) setAccent(byKey.id);
-      else if (key === "t") changeTheme(readTheme() === "dark" ? "light" : "dark");
+      else if (key === "t") changeTheme(themeRef.current === "dark" ? "light" : "dark");
       else if (key === "d") {
         setDensity((current) => {
           const index = DENSITIES.findIndex((d) => d.id === current);
@@ -98,7 +89,7 @@ export function Playground() {
   }, [changeTheme]);
 
   return (
-    <div ref={rootRef} className="pg" data-accent={accent} data-density={density}>
+    <div ref={rootRef} className="pg">
       <div className="pg__toolbar" role="group" aria-label="Playground settings">
         <div className="pg__control">
           <span className="pg__label">
@@ -125,7 +116,7 @@ export function Playground() {
                 aria-label={a.label}
                 title={a.label}
                 className="pg__swatch"
-                data-swatch={a.id}
+                data-accent={a.id}
                 onClick={() => setAccent(a.id)}
               />
             ))}
@@ -145,7 +136,7 @@ export function Playground() {
       </div>
 
       <div className="pg__body">
-        <div className="pg__stage">
+        <div className="pg__stage" data-theme={theme} data-accent={accent} data-density={density}>
           <Card variant="elevated" padding="none" className="pg__card">
             <div className="pg__card-head">
               <div>
@@ -201,12 +192,12 @@ export function Playground() {
           </Card>
         </div>
         <div className="pg__tokens">
-          <p className="pg__tokens-title">tokens.css</p>
+          <p className="pg__tokens-title">stage.html</p>
           <pre aria-live="polite">
-            <code>{tokenDiff(theme, accent, density)}</code>
+            <code>{stageMarkup(theme, accent, density)}</code>
           </pre>
           <p className="pg__tokens-note">
-            Every change is a custom property on a subtree. No rebuild, no provider, no runtime styles.
+            Three attributes on any element. They nest, need no provider and add no runtime styles.
           </p>
         </div>
       </div>

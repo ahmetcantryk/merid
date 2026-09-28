@@ -1,0 +1,64 @@
+import { EmptyLoadingStates, InlineLoading } from "@/examples/patterns/empty-and-loading";
+
+export const metadata = {
+  title: "Empty and loading states",
+  description: "Skeletons, spinners, empty states and error states for lists and panels.",
+};
+
+# Empty and loading states
+
+Every view that loads data has four states: loading, empty, error and ready. Design all four; switch between them below.
+
+<ComponentPreview align="start" code={`<Card variant="outline" aria-busy={loading} aria-live="polite">
+  {loading ? (<><VisuallyHidden>Loading members…</VisuallyHidden><ListSkeleton /></>) : null}
+  {empty ? (
+    <EmptyState variant="plain" icon={<PeopleIcon />} title="No members yet"
+      description="Invite teammates to share projects and review changes together."
+      action={<Button variant="primary">Invite people</Button>} />
+  ) : null}
+  {error ? (
+    <Alert tone="danger" title="Members could not be loaded" action={<Button size="sm" onClick={retry}>Retry</Button>}>
+      The server took too long to respond.
+    </Alert>
+  ) : null}
+  {ready ? <MemberList /> : null}
+</Card>`}>
+  <EmptyLoadingStates />
+</ComponentPreview>
+
+## Loading
+
+| Situation | Use |
+|---|---|
+| Content with a known shape (lists, cards, tables) | `Skeleton` blocks that match the final layout |
+| An action the user just triggered | `Button loading` on that button |
+| Background work with no layout to hold | `Spinner size="sm"` with a short label |
+| Long, measurable work (uploads, imports) | `Progress` with a value |
+
+- Match the skeleton to the real content: same row height, avatar size and line count. The page should not jump when data arrives.
+- Skeletons are decorative. Hide them with `aria-hidden` and announce loading once with `VisuallyHidden` text inside an `aria-live` region, or `aria-busy` on the container.
+- Wait about 300ms before showing a loader for fast requests, so it does not flash.
+
+<ComponentPreview code={`<Button variant="primary" loading={saving} onClick={save}>Save changes</Button>
+<Stack direction="row" gap={2} align="center">
+  <Spinner size="sm" label={null} />
+  <Text size="sm" tone="muted">Syncing 3 files…</Text>
+</Stack>`}>
+  <InlineLoading />
+</ComponentPreview>
+
+`Spinner` has a built-in accessible label; pass `label={null}` when visible text next to it already says what is happening.
+
+## Empty
+
+An empty state explains what will be here and offers the one action that fills it.
+
+- **First use:** icon, a title that names the thing ("No members yet"), one sentence of value, one primary action.
+- **No results:** no icon or action needed. Repeat the query and offer to clear filters: "No invoices match “fabrikam”."
+- **Cleared / done:** "You're all caught up" — no action.
+
+Use `variant="plain"` inside a card or panel that already has a surface, and the default `tray` variant when the empty state fills a page region by itself.
+
+## Error
+
+Use an `Alert tone="danger"` in place of the content, with a Retry `action`. Say what failed in plain words; do not show stack traces or status codes to end users. If part of the page loaded, keep it and show the error only where data is missing.
