@@ -1,31 +1,30 @@
+import { markAccent, markInk, markViewBox } from "@/lib/brand-paths";
+
 interface LogoMarkProps {
-  readonly size?: number;
+  readonly height?: number;
   readonly title?: string;
 }
 
+const [, , VB_W = 1, VB_H = 1] = markViewBox.split(" ").map(Number);
+
 /**
- * The Merid mark: a hairline circle crossed by one accent meridian.
- * The circle follows currentColor, so it adapts to light, dark and mono contexts.
+ * The Merid mark: an M drawn as one continuous line whose last stroke carries the accent.
+ * The body follows currentColor so it adapts to light, dark and mono contexts.
  */
-export function LogoMark({ size = 22, title }: LogoMarkProps) {
+export function LogoMark({ height = 13, title }: LogoMarkProps) {
+  const width = Math.round((height * VB_W) / VB_H);
   return (
     <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
+      width={width}
+      height={height}
+      viewBox={markViewBox}
       role={title ? "img" : undefined}
       aria-hidden={title ? undefined : true}
       aria-label={title}
       className="logo-mark"
     >
-      <circle cx="12" cy="12" r="9.25" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        d="M12 1.5C15.6 5 17 8.4 17 12s-1.4 7-5 10.5"
-        stroke="var(--logo-accent)"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
+      <path fill="currentColor" d={markInk} />
+      <path fill="var(--logo-accent)" d={markAccent} />
     </svg>
   );
 }

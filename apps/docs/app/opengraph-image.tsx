@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { site } from "@/lib/site";
 
@@ -5,38 +7,46 @@ export const alt = `${site.name} — ${site.tagline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+const INK = "#0f1219";
+const BODY = "#535a67";
+const LINE = "#e6e8ec";
+const ACCENT = "#3f63f5";
+
+function logoDataUri(): string {
+  const svg = readFileSync(join(process.cwd(), "public/brand/logo-light.svg"), "utf8");
+  return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
+}
+
+/** Hairline frame with registration crosses at the corners: the same drawing-board motif as the landing hero. */
 export default function OpengraphImage() {
+  const cross = (left: number, top: number) => (
+    <div key={`${left}-${top}`} style={{ position: "absolute", left: left - 8, top: top - 8, width: 17, height: 17, display: "flex" }}>
+      <div style={{ position: "absolute", left: 8, top: 0, width: 1, height: 17, background: INK }} />
+      <div style={{ position: "absolute", left: 0, top: 8, width: 17, height: 1, background: INK }} />
+    </div>
+  );
   return new ImageResponse(
     (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          padding: "80px 88px",
-          background: "#ffffff",
-          color: "#0f1219",
-          fontFamily: "sans-serif",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-          <svg width="56" height="56" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="9.25" stroke="#0f1219" strokeWidth="1.25" />
-            <path d="M12 1.5C15.6 5 17 8.4 17 12s-1.4 7-5 10.5" stroke="#3f63f5" strokeWidth="1.25" strokeLinecap="round" />
-          </svg>
-          <span style={{ fontSize: 44, fontWeight: 600, letterSpacing: "-0.035em" }}>merid</span>
+      <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", background: "#ffffff", color: INK }}>
+        <div style={{ position: "absolute", left: 64, top: 0, width: 1, height: 630, background: LINE }} />
+        <div style={{ position: "absolute", left: 1136, top: 0, width: 1, height: 630, background: LINE }} />
+        <div style={{ position: "absolute", left: 0, top: 64, width: 1200, height: 1, background: LINE }} />
+        <div style={{ position: "absolute", left: 0, top: 566, width: 1200, height: 1, background: LINE }} />
+        {cross(64, 64)}
+        {cross(1136, 64)}
+        {cross(64, 566)}
+        {cross(1136, 566)}
+        <div style={{ position: "absolute", left: 112, top: 112, display: "flex" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={logoDataUri()} width={206} height={40} alt="" />
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          <span style={{ fontSize: 76, fontWeight: 600, letterSpacing: "-0.04em", lineHeight: 1.05, maxWidth: 900 }}>
+        <div style={{ position: "absolute", left: 112, top: 250, display: "flex", flexDirection: "column", gap: 26 }}>
+          <span style={{ fontSize: 72, fontWeight: 600, letterSpacing: "-0.045em", lineHeight: 1.05, maxWidth: 900 }}>
             Quiet, precise components for React.
           </span>
-          <span style={{ fontSize: 28, color: "#535a67" }}>Plain CSS · design tokens · WCAG 2.2 AA · MIT</span>
+          <span style={{ fontSize: 26, color: BODY }}>Plain CSS · design tokens · WCAG 2.2 AA · MIT</span>
         </div>
-        <div style={{ display: "flex", height: 1, background: "#e6e8ec", position: "relative" }}>
-          <div style={{ width: 160, height: 1, background: "#3f63f5" }} />
-        </div>
+        <div style={{ position: "absolute", left: 112, top: 566, width: 180, height: 1, background: ACCENT }} />
       </div>
     ),
     size,
