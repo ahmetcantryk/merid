@@ -26,6 +26,7 @@ import { useDismiss } from "../../internal/ovl-use-dismiss";
 import { useId } from "../../internal/ovl-use-id";
 import { getRovingItems, useRovingFocus } from "../../internal/ovl-use-roving-focus";
 import { Slot } from "../../internal/ovl-slot";
+import { withRef } from "../../internal/ovl-with-ref";
 
 type FocusTarget = "first" | "last";
 
@@ -366,11 +367,11 @@ function DropdownMenuSeparator({ className, ...rest }: DropdownMenuSeparatorProp
  */
 export const DropdownMenu = {
   Root: DropdownMenuRoot,
-  Trigger: DropdownMenuTrigger,
-  Content: DropdownMenuContent,
-  Item: DropdownMenuItem,
-  CheckboxItem: DropdownMenuCheckboxItem,
-  Group: DropdownMenuGroup,
-  Label: DropdownMenuLabel,
-  Separator: DropdownMenuSeparator,
+  Trigger: withRef("DropdownMenu.Trigger", DropdownMenuTrigger),
+  Content: withRef("DropdownMenu.Content", DropdownMenuContent),
+  Item: withRef("DropdownMenu.Item", DropdownMenuItem),
+  CheckboxItem: withRef("DropdownMenu.CheckboxItem", DropdownMenuCheckboxItem),
+  Group: withRef("DropdownMenu.Group", DropdownMenuGroup),
+  Label: withRef("DropdownMenu.Label", DropdownMenuLabel),
+  Separator: withRef("DropdownMenu.Separator", DropdownMenuSeparator),
 };

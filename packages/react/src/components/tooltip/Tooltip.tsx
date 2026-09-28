@@ -18,6 +18,7 @@ import { type Placement, useAnchored } from "../../internal/ovl-floating";
 import { Portal } from "../../internal/ovl-portal";
 import { useControllableState } from "../../internal/ovl-use-controllable-state";
 import { useId } from "../../internal/ovl-use-id";
+import { getElementRef } from "../../internal/ovl-with-ref";
 
 type TriggerProps = {
   ref?: Ref<HTMLElement>;
@@ -106,7 +107,7 @@ export function Tooltip({
   };
 
   const trigger = cloneElement(children, {
-    ref: composeRefs(triggerRef, childProps.ref),
+    ref: composeRefs(triggerRef, getElementRef<HTMLElement>(children)),
     "aria-describedby": cx(childProps["aria-describedby"], open && id) || undefined,
     onPointerEnter: (event: PointerEvent<HTMLElement>) => {
       childProps.onPointerEnter?.(event);

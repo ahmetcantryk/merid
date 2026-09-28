@@ -1,6 +1,7 @@
 "use client";
 
 import { Dialog, type DialogContentProps, type DialogRootProps, ModalSurface } from "../dialog/Dialog";
+import { withRef } from "../../internal/ovl-with-ref";
 
 export interface DrawerRootProps extends DialogRootProps {}
 
@@ -32,7 +33,7 @@ function DrawerContent({ side = "right", size = "md", ...props }: DrawerContentP
 export const Drawer = {
   Root: Dialog.Root,
   Trigger: Dialog.Trigger,
-  Content: DrawerContent,
+  Content: withRef("Drawer.Content", DrawerContent),
   Title: Dialog.Title,
   Description: Dialog.Description,
   Close: Dialog.Close,

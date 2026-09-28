@@ -24,6 +24,7 @@ import { useControllableState } from "../../internal/ovl-use-controllable-state"
 import { useDismiss } from "../../internal/ovl-use-dismiss";
 import { useId } from "../../internal/ovl-use-id";
 import { findTypeaheadMatch } from "../../internal/ovl-use-roving-focus";
+import { withRef } from "../../internal/ovl-with-ref";
 
 interface OptionRecord {
   value: string;
@@ -394,7 +395,7 @@ function SelectItem({ value, children, disabled = false, className, onClick, onP
  */
 export const Select = {
   Root: SelectRoot,
-  Trigger: SelectTrigger,
-  Content: SelectContent,
-  Item: SelectItem,
+  Trigger: withRef("Select.Trigger", SelectTrigger),
+  Content: withRef("Select.Content", SelectContent),
+  Item: withRef("Select.Item", SelectItem),
 };

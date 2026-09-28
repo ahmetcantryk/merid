@@ -5,6 +5,13 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./test/setup.ts"],
-    include: ["src/**/*.test.tsx"],
+    include: ["src/**/*.test.tsx", "test/**/*.test.tsx"],
+    // Used by `vitest run --coverage`; needs the @vitest/coverage-v8 dev dependency.
+    coverage: {
+      provider: "v8",
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: ["src/**/*.test.tsx", "src/**/index.ts"],
+      reporter: ["text-summary", "html", "lcov"],
+    },
   },
 });

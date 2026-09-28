@@ -16,6 +16,7 @@ import { cx } from "../../internal/ovl-cx";
 import { useControllableState } from "../../internal/ovl-use-controllable-state";
 import { useId } from "../../internal/ovl-use-id";
 import { useRovingFocus } from "../../internal/ovl-use-roving-focus";
+import { withRef } from "../../internal/ovl-with-ref";
 
 interface AccordionContextValue {
   isOpen: (value: string) => boolean;
@@ -241,8 +242,8 @@ function AccordionContent({ className, children, ...rest }: AccordionContentProp
  * Disabled headers stay Tab-reachable (`aria-disabled`) but are skipped by arrow keys, like Tabs and menus.
  */
 export const Accordion = {
-  Root: AccordionRoot,
-  Item: AccordionItem,
-  Trigger: AccordionTrigger,
-  Content: AccordionContent,
+  Root: withRef("Accordion.Root", AccordionRoot),
+  Item: withRef("Accordion.Item", AccordionItem),
+  Trigger: withRef("Accordion.Trigger", AccordionTrigger),
+  Content: withRef("Accordion.Content", AccordionContent),
 };

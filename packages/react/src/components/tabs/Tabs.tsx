@@ -15,6 +15,7 @@ import { cx } from "../../internal/ovl-cx";
 import { useControllableState } from "../../internal/ovl-use-controllable-state";
 import { useId } from "../../internal/ovl-use-id";
 import { type Orientation, useRovingFocus } from "../../internal/ovl-use-roving-focus";
+import { withRef } from "../../internal/ovl-with-ref";
 
 interface TabsContextValue {
   value: string;
@@ -172,8 +173,8 @@ function TabsPanel({ value, forceMount = false, className, children, ...rest }: 
 
 /** Tabs (WAI-ARIA APG "Tabs, automatic activation"): arrow keys move and select, Home/End jump. */
 export const Tabs = {
-  Root: TabsRoot,
-  List: TabsList,
-  Trigger: TabsTrigger,
-  Panel: TabsPanel,
+  Root: withRef("Tabs.Root", TabsRoot),
+  List: withRef("Tabs.List", TabsList),
+  Trigger: withRef("Tabs.Trigger", TabsTrigger),
+  Panel: withRef("Tabs.Panel", TabsPanel),
 };

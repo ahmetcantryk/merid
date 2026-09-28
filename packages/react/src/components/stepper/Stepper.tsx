@@ -2,6 +2,7 @@
 
 import { Children, createContext, type HTMLAttributes, isValidElement, type LiHTMLAttributes, type ReactNode, type Ref, useContext } from "react";
 import { cx } from "../../internal/ovl-cx";
+import { withRef } from "../../internal/ovl-with-ref";
 
 export type StepState = "complete" | "current" | "upcoming";
 
@@ -99,6 +100,6 @@ function StepperStep({ title, description, statusLabels, className, ...rest }: S
  * Horizontal titles stay on one line and truncate with an ellipsis (string titles keep the full text in `title`).
  */
 export const Stepper = {
-  Root: StepperRoot,
-  Step: StepperStep,
+  Root: withRef("Stepper.Root", StepperRoot),
+  Step: withRef("Stepper.Step", StepperStep),
 };

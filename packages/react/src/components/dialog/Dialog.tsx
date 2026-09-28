@@ -23,6 +23,7 @@ import { useFocusTrap } from "../../internal/ovl-use-focus-trap";
 import { useId } from "../../internal/ovl-use-id";
 import { useScrollLock } from "../../internal/ovl-use-scroll-lock";
 import { Slot } from "../../internal/ovl-slot";
+import { withRef } from "../../internal/ovl-with-ref";
 
 interface DialogContextValue {
   open: boolean;
@@ -122,7 +123,7 @@ interface ModalSurfaceInternalProps extends ModalSurfaceProps {
 }
 
 /** @internal Modal surface: portal, backdrop, focus trap, scroll lock and dismiss. */
-export function ModalSurface({
+function ModalSurfaceImpl({
   role,
   component,
   baseClass,
@@ -241,7 +242,7 @@ function CloseIcon() {
 }
 
 /** @internal Close button shared by Dialog-like components. */
-export function CloseButton({
+function CloseButtonImpl({
   icon,
   asChild = false,
   onClick,
@@ -296,12 +297,15 @@ function DialogFooter({ className, ...rest }: DialogFooterProps) {
  * Focus is trapped while open and returned to the previously focused element on close.
  * Becomes a bottom sheet at ≤ 640px.
  */
+export const ModalSurface = withRef("ModalSurface", ModalSurfaceImpl);
+export const CloseButton = withRef("CloseButton", CloseButtonImpl);
+
 export const Dialog = {
   Root: DialogRoot,
-  Trigger: DialogTrigger,
-  Content: DialogContent,
-  Title: DialogTitle,
-  Description: DialogDescription,
-  Close: DialogClose,
-  Footer: DialogFooter,
+  Trigger: withRef("Dialog.Trigger", DialogTrigger),
+  Content: withRef("Dialog.Content", DialogContent),
+  Title: withRef("Dialog.Title", DialogTitle),
+  Description: withRef("Dialog.Description", DialogDescription),
+  Close: withRef("Dialog.Close", DialogClose),
+  Footer: withRef("Dialog.Footer", DialogFooter),
 };

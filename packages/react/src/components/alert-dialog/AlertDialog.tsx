@@ -8,6 +8,7 @@ import {
   type DialogRootProps,
   ModalSurface,
 } from "../dialog/Dialog";
+import { withRef } from "../../internal/ovl-with-ref";
 
 export interface AlertDialogRootProps extends DialogRootProps {}
 
@@ -60,10 +61,10 @@ function AlertDialogCancel(props: AlertDialogCancelProps) {
 export const AlertDialog = {
   Root: Dialog.Root,
   Trigger: Dialog.Trigger,
-  Content: AlertDialogContent,
+  Content: withRef("AlertDialog.Content", AlertDialogContent),
   Title: Dialog.Title,
   Description: Dialog.Description,
   Footer: Dialog.Footer,
-  Action: AlertDialogAction,
-  Cancel: AlertDialogCancel,
+  Action: withRef("AlertDialog.Action", AlertDialogAction),
+  Cancel: withRef("AlertDialog.Cancel", AlertDialogCancel),
 };
