@@ -32,7 +32,7 @@ export function LinkUnderlines() {
 
 export function LinkExternal() {
   return (
-    <Link href="https://github.com/merid-ui/merid" external>
+    <Link href="https://github.com/ahmetcantryk/merid" external>
       GitHub repository
     </Link>
   );
