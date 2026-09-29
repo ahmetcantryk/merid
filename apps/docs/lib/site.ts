@@ -3,7 +3,7 @@ export const site = {
   tagline: "Quiet, precise React components.",
   description:
     "Merid is an accessible React component library built on plain CSS and a small set of design tokens: 1px hairlines, one cool accent, soft grey trays and calm motion.",
-  url: "https://merid.dev",
+  url: "https://meridui.dev",
   repo: "https://github.com/ahmetcantryk/merid",
   docsSourcePath: "apps/docs/app",
   version: "0.1.0",

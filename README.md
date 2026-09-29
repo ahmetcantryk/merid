@@ -24,7 +24,7 @@
   <a href="#gallery"><b>Gallery</b></a> &nbsp;·&nbsp;
   <a href="#components"><b>Components</b></a> &nbsp;·&nbsp;
   <a href="#theming"><b>Theming</b></a> &nbsp;·&nbsp;
-  <a href="https://merid.dev"><b>Docs</b></a>
+  <a href="https://meridui.dev"><b>Docs</b></a>
 </p>
 
 <br>
@@ -181,7 +181,7 @@ One stylesheet import. No theme provider — only toasts need a <code>ToastProvi
 | **Layout** | Container · Section · Stack · Grid · Separator |
 | **Typography** | Heading · Text · VisuallyHidden |
 
-Every component has a page with live examples, props and keyboard notes at **[merid.dev](https://merid.dev)**.
+Every component has a page with live examples, props and keyboard notes at **[meridui.dev](https://meridui.dev)**.
 
 <br>
 

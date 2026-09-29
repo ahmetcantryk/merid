@@ -25,7 +25,7 @@ const TONE = { Paid: "success", Due: "neutral", Overdue: "danger" } as const;
 export function TableDemo() {
   return (
     <div style={wrap}>
-      <Table>
+      <Table scrollLabel="Invoices">
         <TableHead>
           <TableRow>
             <TableHeader>Invoice</TableHeader>
@@ -54,7 +54,7 @@ export function TableDemo() {
 export function TableDense() {
   return (
     <div style={wrap}>
-      <Table density="sm" hoverable={false}>
+      <Table density="sm" hoverable={false} scrollLabel="API keys">
         <TableHead>
           <TableRow>
             <TableHeader>Key</TableHeader>
