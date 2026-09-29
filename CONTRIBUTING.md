@@ -21,7 +21,7 @@ apps/docs        documentation site (Next.js + MDX), port 3210
 Requires Node.js 20 (see `.nvmrc`).
 
 ```bash
-git clone https://github.com/merid-ui/merid.git
+git clone https://github.com/ahmetcantryk/merid.git
 cd merid
 npm install
 npm run dev

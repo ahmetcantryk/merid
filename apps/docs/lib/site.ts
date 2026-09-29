@@ -4,7 +4,7 @@ export const site = {
   description:
     "Merid is an accessible React component library built on plain CSS and a small set of design tokens: 1px hairlines, one cool accent, soft grey trays and calm motion.",
   url: "https://merid.dev",
-  repo: "https://github.com/merid-ui/merid",
+  repo: "https://github.com/ahmetcantryk/merid",
   docsSourcePath: "apps/docs/app",
   version: "0.1.0",
   releaseDate: "2026-09-28",

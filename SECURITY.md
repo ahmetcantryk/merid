@@ -12,7 +12,7 @@
 
 Please **do not** open a public issue, discussion or pull request for a security problem.
 
-Report it privately through GitHub's private vulnerability reporting: open the repository's **Security** tab and choose **Report a vulnerability**, or go directly to <https://github.com/merid-ui/merid/security/advisories/new>.
+Report it privately through GitHub's private vulnerability reporting: open the repository's **Security** tab and choose **Report a vulnerability**, or go directly to <https://github.com/ahmetcantryk/merid/security/advisories/new>.
 
 Include what you found, how to reproduce it, the affected versions and the impact you expect.
 
