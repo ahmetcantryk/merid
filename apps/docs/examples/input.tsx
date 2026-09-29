@@ -54,7 +54,7 @@ export function InputControlled() {
         placeholder="acme"
       />
       <Text size="xs" tone="muted">
-        merid.dev/{value || "…"}
+        meridui.dev/{value || "…"}
       </Text>
     </div>
   );

@@ -14,7 +14,7 @@ Styled primitives for tabular data: a real `<table>` in a hairline-ringed frame 
   <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/table">Source</a>
 </div>
 
-<ComponentPreview align="start" code={`<Table>
+<ComponentPreview align="start" code={`<Table scrollLabel="Invoices">
   <TableHead>
     <TableRow>
       <TableHeader>Invoice</TableHeader>
@@ -48,7 +48,7 @@ import { Table, TableHead, TableBody, TableRow, TableHeader, TableCell } from "@
 
 `density="sm"` tightens cells to 10px × 12px; `hoverable={false}` turns off the row hover tint for read-only tables.
 
-<ComponentPreview align="start" code={`<Table density="sm" hoverable={false}>
+<ComponentPreview align="start" code={`<Table density="sm" hoverable={false} scrollLabel="API keys">
   <TableHead>
     <TableRow>
       <TableHeader>Key</TableHeader>
