@@ -1,0 +1,74 @@
+# Gizlilik
+
+Son güncelleme: 30 Eylül 2026
+
+Kısaca: meridui.dev çerez kullanmaz, reklam göstermez, hesap açtırmaz ve seni başka sitelerde takip etmez. Hangi dokümanların işe yaradığını anlamak için ziyaretleri ve birkaç tıklamayı sayıyoruz. Bu sayfa bunun tam olarak neleri kapsadığını anlatıyor.
+
+Bu metin sitenin nasıl kurulduğunu sade bir dille anlatır. Hukuki görüş değildir ve her ülkenin mevzuatındaki her ayrıntıyı kapsadığını iddia etmez. Belirsiz ya da yanlış görünen bir şey varsa bize yaz, düzeltelim.
+
+## Neyi ölçüyoruz
+
+### Ziyaretler ve birkaç olay (Umami)
+
+Çerez kullanmadan çalışan açık kaynaklı bir analiz aracı olan [Umami](https://umami.is/docs)'yi kullanıyoruz. Her sayfa görüntülemesi için şunları kaydeder:
+
+- sayfa adresi ve tarayıcın gönderiyorsa geldiğin sayfa,
+- tarayıcı, işletim sistemi, cihaz türü ve ekran boyutu,
+- dil ayarın ve IP adresinden çıkarılan ülke.
+
+Umami çerez bırakmaz ve IP adresini saklamaz; ziyaretler seni siteden siteye izleyen bir tanımlayıcı olmadan sayılır. Tarayıcın "Do Not Track" sinyali gönderiyorsa script hiçbir şey kaydetmez.
+
+Ayrıca adı belli beş olay gönderiyoruz. Her birinde az miktarda bağlam var; senin yazdığın hiçbir şey yok:
+
+| Olay | Ne zaman | Ek veri |
+|---|---|---|
+| `copy_install` | `npm i @meridui/react` gibi bir kurulum komutunu kopyaladığında | Komut, kopyalandığı yer (hero, doküman, blog) ve sayfa yolu |
+| `github_click` | GitHub deposuna giden bir bağlantıya tıkladığında | Bağlantının yeri (header, footer, hero, blog) |
+| `locale_switch` | Türkçe ile İngilizce arasında geçtiğinde | Kaynak ve hedef dil, sayfa yolu |
+| `playground_change` | Ana sayfadaki token düzenleyicide bir kontrolü değiştirdiğinde | Hangi kontrol, yeni değer, fare ya da klavye |
+| `blog_cta_click` | Bir yazının sonundaki çağrıyı kullandığında | Doküman ya da GitHub, sayfa yolu |
+
+Analiz script'i yalnızca canlı sitede ve yapılandırıldığında yüklenir. Reklam ve takip engelleyiciler genellikle onu engeller; site her iki durumda da aynı çalışır.
+
+### Sayfa hızı (Vercel Speed Insights)
+
+Site [Vercel](https://vercel.com/docs/speed-insights/privacy-policy) üzerinde barındırılıyor. Speed Insights sayfaların ne kadar hızlı yüklendiğini ve tepki verdiğini (LCP, INP ve CLS gibi Core Web Vitals) rota, cihaz türü, tarayıcı ve ülke bilgisiyle birlikte ölçer. Vercel'in açıklamasına göre çerez ya da ölçümleri bir kişiye bağlayan bir tanımlayıcı kullanmaz.
+
+### Sunucu kayıtları (Vercel)
+
+Her barındırma hizmeti gibi Vercel de sayfaları sunmak ve hizmeti kötüye kullanıma karşı korumak için IP adresini ve istek ayrıntılarını (zaman, adres, tarayıcı bilgisi) işler. Bu kayıtları analiz için kullanmıyoruz.
+
+## Tarayıcında ne saklıyoruz
+
+Tek bir `localStorage` kaydı, `merid-theme`, açık ya da koyu temayı seçtiysen bunu hatırlar. Tarayıcından dışarı çıkmaz. Çerez olmadığı için çerez uyarısı da yok.
+
+## Neleri yapmıyoruz
+
+- Reklam, reklam pikseli ya da sosyal medya takipçisi yok.
+- Pazarlama amacıyla veri satmıyor ya da paylaşmıyoruz.
+- Parmak izi (fingerprinting) ya da başka sitelerde takip yok.
+- Bu sitede hesap, form ya da bülten yok.
+
+## KVKK aydınlatma metni
+
+6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında bilgilendirme amacıyla hazırlanmıştır.
+
+**Veri sorumlusu.** Merid açık kaynak projesinin sahibi Ahmet Can Tiryaki.
+
+**İşlenen veriler.** Yukarıda sayılan kullanım verileri (sayfa adresi, yönlendiren sayfa, tarayıcı, işletim sistemi, cihaz türü, ekran boyutu, dil, IP adresinden çıkarılan ülke), sayfa hızı ölçümleri ve barındırma hizmetinin sunucu kayıtlarındaki IP adresi ve istek bilgileri. Ad, e-posta ya da hesap bilgisi toplamıyoruz.
+
+**Amaç.** Sitenin güvenli ve hızlı çalışmasını sağlamak, hangi dokümanların kullanıldığını toplu olarak görmek ve dokümantasyonu buna göre geliştirmek.
+
+**Toplama yöntemi ve hukuki sebep.** Veriler siteyi ziyaret ettiğinde otomatik yollarla toplanır. Bu işlemenin, KVKK madde 5/2-f'deki "veri sorumlusunun meşru menfaati" sebebine dayandığını değerlendiriyoruz; sunucu kayıtları için ayrıca hizmetin sunulması ve güvenliği gereklidir. Bu değerlendirme bir hukuki görüş değildir.
+
+**Aktarım.** Barındırma ve Speed Insights hizmetini sağlayan Vercel Inc. verileri Amerika Birleşik Devletleri başta olmak üzere yurt dışında işler. Umami verileri bu site için yapılandırılmış analiz hizmetinde tutulur. Verileri pazarlama ya da reklam amacıyla kimseyle paylaşmıyoruz.
+
+**Haklar.** KVKK madde 11 uyarınca verilerinin işlenip işlenmediğini öğrenme, bilgi talep etme, düzeltilmesini ya da silinmesini isteme, itiraz etme ve diğer haklara sahipsin. Ad ya da tanımlayıcı toplamadığımız için saklanan kayıtları çoğu zaman sana bağlayamayız; yine de her başvuruyu yanıtlarız.
+
+**Başvuru.** Başvurularını [GitHub](https://github.com/ahmetcantryk/merid/issues) üzerinden ya da depodaki profil bağlantısı aracılığıyla proje sahibine iletebilirsin.
+
+## Saklama süresi
+
+Toplu istatistikleri dokümantasyon çalışmasını planlamaya yaradığı sürece tutarız; tek tek kişilere ait ham veri tutmayız. Sunucu kayıtlarının saklama süresini Vercel belirler.
+
+Bu sayfanın İngilizcesi: [Privacy](/privacy). Kurulum değiştiğinde bu sayfayı ve en üstteki tarihi güncelleriz.

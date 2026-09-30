@@ -1,0 +1,66 @@
+---
+title: "Mantine ve Merid: Tam Paket mi, Küçük Bir Sözleşme mi?"
+description: "Mantine ve Merid: form, tarih ve grafikle 100+ component mi, provider ve build eklentisi istemeyen küçük bir sade CSS kütüphanesi mi? Dürüst karşılaştırma."
+slug: mantine-vs-merid
+lang: tr
+canonical: /tr/compare/mantine-vs-merid
+keywords:
+  - mantine vs merid
+  - mantine alternatifi
+  - provider olmadan react kütüphanesi
+  - postcss olmadan mantine
+date: 2026-09-30
+updated: 2026-09-30
+lastReviewed: 2026-09-30
+author: Ahmet Can Tiryaki
+---
+
+# Mantine ve Merid
+
+Mantine bugün kurabileceğin en kapsamlı React kütüphanelerinden biri: component'ler, hook'lar, formlar, tarihler, grafikler, bildirimler ve zengin metin editörü; hepsi MIT. Merid bilerek çok daha küçük. Mantine'in ek paketlerine bağlıysan bu fark büyük ihtimalle kararı verir; bu sayfa diğer durumları anlatıyor.
+
+Merid'i biz geliştiriyoruz; buna göre değerlendir.
+
+## Bir bakışta
+
+| | Mantine | Merid |
+|---|---|---|
+| Paketler | `@mantine/core`, `@mantine/hooks`; ayrıca form, tarih, grafik, bildirim ve daha fazlası | `@meridui/react` |
+| Stil | `postcss-preset-mantine` ile CSS modules | Üç cascade layer'da tek sade CSS dosyası; build eklentisi yok |
+| Kök gereksinimi | `MantineProvider` | Yok (yalnızca toast'lar `ToastProvider` ister) |
+| Tema | JavaScript tema nesnesi | `--mrd-*` değişkenleri; tema, accent, yoğunluk ve yön için alt ağaç attribute'ları |
+| Form, tarih, grafik | Var, birinci taraf | Yok; React Hook Form ve Zod rehberleri var |
+| Hook kütüphanesi | Var, `@mantine/hooks` | Yok |
+| AI araçları | `llms.txt`, sayfa başına Markdown, LLM rehberi | Repoda yazılı tasarım sözleşmesi |
+| Component sayısı | 100+ | 46 |
+| Olgunluk | Yüksek; sık sürüm, bağışla finanse | 0.1, bağımsız geliştiriliyor |
+| Lisans | MIT | MIT |
+
+Kaynaklar: [Mantine başlangıç](https://mantine.dev/getting-started/), [Mantine LLM rehberi](https://mantine.dev/guides/llms/), [Merid README](https://github.com/ahmetcantryk/merid).
+
+## Mantine'in önde olduğu yerler
+
+- **Kapsam.** Tarih seçiciler, grafikler, formlar, spotlight arama ve zengin metin editörü, butonlarınla aynı üreticiden.
+- **Hook'lar.** `@mantine/hooks` component'ler olmadan da işe yarar.
+- **AI araçları için dokümanlar.** Her sayfa için `llms.txt` ve Markdown yayımlar.
+- **Olgunluk.** Yıllarca süren sürümler ve geniş bir kullanıcı kitlesi.
+
+## Merid'in farklı olduğu yerler
+
+**Provider yok, build adımı yok.** Mantine kökte `MantineProvider` ve build'inde `postcss-preset-mantine` ister. Merid tek bir stil dosyası import'udur; layout'unu hiçbir şey sarmaz.
+
+**Alt ağaç başına tema.** Tema, accent, yoğunluk ve yön herhangi bir elemanda çalışan HTML attribute'larıdır; server component'lerden de: `<aside data-theme="dark" data-density="compact">`.
+
+**Daha küçük, daha sıkı bir yüzey.** Geniş bir API dokümanı okuyan insanlar için harikadır; yapay zeka ajanları ise var olan ama tasarımına uymayan bir prop'a uzanır. Merid birkaç varyant sunar ve her değeri token'dan okur.
+
+## Merid'de olmayanlar
+
+100+ değil 46 component. Combobox, date picker, grafik (planlanmıyor) ya da zengin metin editörü yok; hook paketi ve form kütüphanesi yok. Bugün `@mantine/dates`, `@mantine/charts` ya da `@mantine/form` kullanıyorsan Merid bunların yerini tutamaz.
+
+## Hangisini seçmeli?
+
+**Mantine'i seç**: tarih, grafik ve form dahil arayüzünün çoğunu tek üreticiden almak istiyorsan ya da hook'larına bağlıysan.
+
+**Merid'i seç**: provider, runtime ve build eklentisi istemiyorsan, attribute'larla kapsamlı tema ve çok katkıcılı bir ekip için sıkı bir API istiyorsan; 46 component da ürününe yetiyorsa.
+
+**İlgili:** [Chakra UI ve Merid](/tr/compare/chakra-ui-vs-merid) · [shadcn/ui ve Merid](/tr/compare/shadcn-ui-vs-merid)

@@ -1,0 +1,172 @@
+---
+title: "Cursor UI Consistency: A Rules File for Your UI Library"
+description: "Keep Cursor-generated React UI consistent: what to put in a rules file, a complete example for a component library, and how to verify the output."
+slug: cursor-ui-consistency
+canonical: /blog/cursor-ui-consistency
+keywords:
+  - cursor ui consistency
+  - cursor rules react ui
+  - claude code design system rules
+  - ai coding design system
+date: 2026-10-23
+updated: 2026-10-23
+lastReviewed: 2026-10-23
+tags:
+  - ai-coding
+author: Ahmet Can Tiryaki
+---
+
+# Cursor UI consistency: a rules file for your UI library
+
+The first screen Cursor builds for you usually looks fine. The tenth one is where the trouble starts. The buttons on the billing page are slightly taller than the buttons on the settings page. One dialog closes on Escape, another does not. There are now three shades of "muted" text.
+
+Nothing went wrong in any single session. The agent simply does not remember what it decided last week, and nothing in your repo told it. A rules file is how you tell it.
+
+This post covers what belongs in a rules file for UI work, gives a full example for a project using Merid (the component library we build) and a shorter one for shadcn/ui, and ends with how to check that the agent actually followed it.
+
+## Where rules live
+
+Cursor reads project rules from `.cursor/rules/`, one Markdown file per rule with a small frontmatter block that controls when it applies (always, by file glob, or when the agent decides it is relevant). Older projects use a single `.cursorrules` file at the root. Check [Cursor's rules documentation](https://docs.cursor.com/context/rules) for the current format, because it has changed more than once.
+
+Other agents have their own equivalent: Claude Code reads `CLAUDE.md`, many tools read `AGENTS.md`. The content below works in any of them. Keep one source and reference it from the others rather than maintaining three copies.
+
+## What to put in a UI rules file
+
+A good rules file is short, concrete and checkable. Five sections cover most of it.
+
+**1. Imports: which library owns the UI.** Name the package and ban the alternatives. "Use `@meridui/react` for all controls. Do not add another component library. Do not write a custom button, dialog, menu or select."
+
+**2. Tokens: where values come from.** List the token prefix and the rule. "Colours, spacing, radii and shadows come from `--mrd-*` custom properties. Never write hex, rgb or raw px values for these."
+
+**3. Banned patterns.** The things you keep deleting in review. Gradients, 2px borders, a second accent colour, `!important`, inline `style` for colours, emoji in headings.
+
+**4. Component-first.** Tell it to search before building. "Before creating a component, check whether the library has one. Compose existing components before writing CSS."
+
+**5. Pointer to the source of truth.** Link the design contract instead of pasting it. Rules files that grow to 400 lines get skimmed by agents the same way long READMEs get skimmed by people.
+
+What not to put in: aspirational adjectives ("modern, clean, delightful"). They carry no information the model can act on.
+
+## Example: a rules file for a Merid project
+
+Merid keeps its design decisions in `DESIGN.md` at the root of its repository: the colour roles, the rounding scale, what hover and press do. It does not ship a Cursor rules file, and there is no MCP server or `llms.txt` yet, so the file below is one you write yourself. Save it as `.cursor/rules/ui.mdc`:
+
+```md
+---
+description: UI rules for React components and styles
+globs: ["src/**/*.tsx", "src/**/*.css"]
+alwaysApply: false
+---
+
+# UI rules
+
+## Library
+- All UI controls come from `@meridui/react`. Import styles once:
+  `import "@meridui/react/styles.css"` in the root layout.
+- Do not install or import another component library.
+- Do not hand-write buttons, dialogs, menus, selects, tabs or tooltips.
+  Merid has Button, IconButton, Dialog, AlertDialog, Drawer, DropdownMenu,
+  Popover, Select, NativeSelect, Tabs, Tooltip, Toast and more.
+- Merid has no Combobox, DatePicker or charts. If a screen needs one,
+  stop and ask which library to use.
+
+## Variants, not styles
+- Button variants: primary, secondary, ghost, danger, link. Sizes: sm, md, lg.
+- One primary button per view. Destructive actions use AlertDialog
+  with an Action of tone="danger".
+- Never pass className to change colour, radius or padding of a
+  Merid component.
+
+## Tokens
+- Custom CSS uses only `var(--mrd-*)` tokens for colour, spacing,
+  radius, shadow and font. No hex, rgb, hsl or raw px for these.
+- Text tones: --mrd-ink (headings), --mrd-body (text), --mrd-muted (meta).
+- Borders are `1px solid var(--mrd-line)`. Never 2px.
+
+## Theming
+- Dark mode, accent and density are attributes, not props:
+  data-theme="dark", data-accent="violet", data-density="compact"
+  on any wrapping element. Do not add a theme provider.
+
+## Server components
+- In files without "use client", use flat part names
+  (DialogRoot, TabsList), not Dialog.Root.
+- For router links use asChild: <Button asChild><Link href="/x">…</Link></Button>
+
+## Banned
+- Gradients, glow shadows, emoji in headings, !important,
+  inline style for colours, a second accent colour.
+
+## Source of truth
+- Read DESIGN.md before creating or changing UI.
+  If a value is not there, derive it from an existing token.
+```
+
+Every line in that file maps to something the library really does. The flat part names exist because property access on a client reference fails inside a server component; the [server components guide](/docs/server-components) explains why. The attribute theming works on any subtree, which is covered in [subtree attributes](/docs/integrations/subtree-attributes).
+
+Note the line about missing components. Agents that are told "only use library X" will otherwise build a combobox from scratch when they need one, and that hand-rolled combobox is usually the least accessible thing in the app. Naming the gaps is better than pretending they are not there.
+
+## Example: a rules file for shadcn/ui
+
+With shadcn/ui the components live in your repo, which changes the emphasis. The danger is not a missing import but an edited component. A shorter file:
+
+```md
+---
+description: UI rules (shadcn/ui)
+globs: ["src/**/*.tsx"]
+---
+
+- UI primitives live in src/components/ui. Do not edit these files
+  to fit a single screen. Add a variant with cva, or compose.
+- Add new primitives with the shadcn CLI, not by hand.
+- Colours use the theme CSS variables (bg-primary, text-muted-foreground).
+  No arbitrary values like text-[#666] or p-[18px].
+- Spacing uses the Tailwind scale in steps of 2 (2, 4, 6, 8, 12).
+- One primary button per view.
+```
+
+shadcn/ui also offers a registry and an MCP server that lets agents look components up directly ([docs](https://ui.shadcn.com/docs/mcp)). If you use it, keep the rules file anyway: the MCP server tells the agent what exists, the rules file tells it what you allow. For a broader comparison of the two models see [Merid vs shadcn/ui](/compare/shadcn-ui-vs-merid).
+
+## Verifying the output
+
+Rules reduce drift. They do not eliminate it. Agents skip rules, especially late in long sessions. Put the important ones in checks that fail.
+
+**Lint for raw values.** A grep in CI catches most colour drift:
+
+```bash
+# fail if any hex colour appears outside token files
+if rg -n '#[0-9a-fA-F]{3,8}\b' src --glob '!**/tokens*.css'; then
+  echo "Use --mrd-* tokens instead of raw colours"; exit 1
+fi
+```
+
+For Tailwind projects, flag arbitrary-value classes the same way (`rg '\w-\[[^\]]+\]' src`).
+
+**Ban competing imports.** ESLint's `no-restricted-imports` stops a second library sneaking in:
+
+```js
+// eslint.config.js
+{
+  rules: {
+    "no-restricted-imports": ["error", {
+      patterns: ["@mui/*", "@chakra-ui/*", "antd", "@mantine/*"],
+    }],
+  },
+}
+```
+
+**Run axe.** A Playwright test with `@axe-core/playwright` on your main routes catches missing labels, broken ARIA and contrast failures, which are the accessibility bugs agents introduce most often. Merid runs axe against its own components in CI and targets WCAG 2.2 AA ([accessibility](/docs/accessibility)), but your page-level composition still needs its own check.
+
+**Look at it.** Keep a visual regression snapshot of two or three key screens, or at least open them side by side after a large agent session. Consistency problems are visual; a screenshot diff finds them faster than a code review.
+
+## Keeping the rules file alive
+
+- **Update it when you correct the agent twice.** If you fix the same thing in review two times, it belongs in the rules.
+- **Delete rules that never fire.** A rule about a component you removed is noise that dilutes the rest.
+- **Version it with the code.** When you upgrade the component library, read the changelog and update the rules in the same pull request. Merid is pre-1.0, so prop names can still change between minor versions; a stale rules file will confidently tell the agent to use an API that no longer exists.
+- **Keep it under a screen or two.** If it grows, move detail into `DESIGN.md` and link it.
+
+## Summary
+
+Cursor UI consistency comes from the repo, not the prompt. Choose one library, express values as tokens, write down the few decisions that matter and the patterns you ban, point the agent at the design contract, and back the important rules with checks that fail in CI.
+
+If you want a library whose decisions are already written down, `npm i @meridui/react` and read `DESIGN.md` in the [Merid repository](https://github.com/ahmetcantryk/merid). Then write the rules file above and adjust it to your app.

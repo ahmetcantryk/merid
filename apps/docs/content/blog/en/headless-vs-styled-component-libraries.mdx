@@ -1,0 +1,134 @@
+---
+title: "Headless vs Styled Component Libraries in React"
+description: "Headless vs styled component library: what each gives you, what it costs, where copy-in libraries like shadcn/ui fit, and how to choose for your team."
+slug: headless-vs-styled-component-libraries
+canonical: /blog/headless-vs-styled-component-libraries
+keywords:
+  - headless vs styled component library
+  - headless ui library react
+  - styled component library react
+  - radix vs mui
+date: 2026-11-18
+updated: 2026-11-18
+lastReviewed: 2026-11-18
+tags:
+  - comparisons
+author: Ahmet Can Tiryaki
+---
+
+# Headless vs styled component libraries in React
+
+Every React team eventually picks between two kinds of component library. Headless libraries give you behaviour: keyboard handling, focus management, ARIA, positioning. You bring every pixel. Styled libraries give you behaviour and a finished look, and you adjust the look.
+
+Between them sits a third model that did not exist a few years ago: copy-in libraries such as shadcn/ui, which ship styled source code into your repo on top of headless primitives.
+
+This post explains what each model gives you, what it costs, and how to choose. We build Merid, a styled library, so weigh our view accordingly. We have tried to make the case for headless as strongly as we can, because for many teams it is the right answer.
+
+## Definitions
+
+**Headless (unstyled).** Components or hooks with behaviour and accessibility but no visual styles. Examples: [React Aria](https://react-spectrum.adobe.com/react-aria/) (Adobe), [Radix Primitives](https://www.radix-ui.com/primitives), [Base UI](https://base-ui.com/), [Headless UI](https://headlessui.com/) (Tailwind Labs), [Ark UI](https://ark-ui.com/) (Chakra team).
+
+**Styled.** Components with behaviour and a complete visual design, themeable to some degree. Examples: MUI, Mantine, Chakra UI, Ant Design, Radix Themes, HeroUI, Merid.
+
+**Copy-in (styled source you own).** A CLI adds component files to your project, usually headless primitives plus Tailwind classes. The best known is [shadcn/ui](https://ui.shadcn.com/docs). The source is yours to edit; there is no upstream package for the styled layer.
+
+## What headless gives you
+
+**Total visual control.** There is no existing design to fight. If you have a brand with strong opinions, or a design team shipping a custom system, headless lets you implement it exactly.
+
+**Best-in-class behaviour.** The hard parts of UI components are not the colours. They are focus trapping, typeahead in listboxes, roving tabindex, collision-aware positioning, screen reader announcements, internationalised date handling. Mature headless libraries have spent years on these. React Aria in particular has unusually deep internationalisation and accessibility coverage.
+
+**Styling freedom.** Use Tailwind, CSS Modules, vanilla-extract or plain CSS. The library has no opinion.
+
+**Smaller conceptual surface for the visual layer.** You are not learning a theming API; you are writing CSS you already know.
+
+## What headless costs
+
+**You are building a design system.** Every component needs styles for default, hover, focus, active, disabled, invalid, open, and every size and variant. Then dark mode. Then density. For a set of 30 to 40 components that is weeks of work before your first product screen, plus ongoing maintenance.
+
+**Accessibility is shared, not handed over.** Headless libraries get the ARIA and keyboard parts right, but visual accessibility is yours: contrast ratios, visible focus indicators, target sizes, reduced motion, forced-colours mode. These are easy to miss when styling from scratch.
+
+**Consistency depends on discipline.** With no built-in design, consistency comes from your own tokens and review. That is fine for a team with a designer and a system owner. It is harder for a small team, and harder still when agents write much of the UI, because each generated component styles primitives slightly differently.
+
+## What styled gives you
+
+**Speed to a coherent product.** Install, import a stylesheet, and every component already agrees with every other on spacing, rounding, colour and states.
+
+**Visual accessibility included.** A good styled library has already measured contrast, designed focus rings, sized targets and handled reduced motion. Merid, for example, targets WCAG 2.2 AA, documents measured contrast for its text tones, supports Windows forced colours, and runs axe against every component in CI ([accessibility](/docs/accessibility)).
+
+**Fewer decisions in call sites.** `<Button variant="danger">` is one decision. A headless button styled at each call site is several. This matters more as more of your code is generated.
+
+## What styled costs
+
+**You inherit a look.** Material Design, Ant's enterprise style, Merid's hairlines-and-one-accent. You can theme it, but you start from someone else's taste, and some libraries resist deep changes.
+
+**Runtime and setup overhead, in some libraries.** Libraries built on runtime CSS-in-JS inject styles in the browser and typically need a provider at the root, which interacts awkwardly with React Server Components. Check each library's current docs: MUI and Chakra UI use Emotion by default; Mantine uses CSS Modules with a PostCSS preset and a provider; Radix Themes uses plain CSS with a `<Theme>` wrapper.
+
+**Specificity fights.** Overriding a styled library's CSS has historically meant matching its selectors or reaching for `!important`. CSS cascade layers fix this where libraries adopt them.
+
+**Upgrade exposure.** When the library redesigns, your app changes. Major versions can require migration work.
+
+## Where copy-in fits
+
+Copy-in libraries try to take the best of both: a styled starting point (so you are not building a design system from zero) with full ownership (so you are never fighting upstream).
+
+That trade works well for many teams, and shadcn/ui is the default output of several AI app builders for that reason. The costs are the mirror image of the benefits. Every component file is a fork, so updates mean re-running the CLI and merging diffs. And because the files are editable, they drift: a quick fix for one screen changes the button for every screen, or a second slightly different button appears. With agents editing code, that drift can be fast. Tailwind is required.
+
+We compared the copy-in and package models directly in [Merid vs shadcn/ui](/compare/shadcn-ui-vs-merid).
+
+## A closer look: styled without the classic costs
+
+Some of the traditional costs of styled libraries are implementation choices, not inherent. Here is how Merid addresses them, as one example of what to look for in any styled library.
+
+**Plain CSS in cascade layers.** Merid ships one stylesheet with every rule inside `@layer merid.tokens, merid.base, merid.components`. Unlayered app CSS always wins, so overrides need no `!important` and no selector matching:
+
+```css
+/* your app.css: beats Merid's component layer automatically */
+.checkout .mrd-button {
+  min-inline-size: 12rem;
+}
+```
+
+**Tokens for the whole look.** Every value is a `--mrd-*` custom property with light and dark values. Rebranding is a token change, not a fork:
+
+```css
+:root {
+  --mrd-accent: #0f766e;
+}
+```
+
+**No provider.** Theme, accent and density are attributes on any element, and they nest. A dark sidebar in a light app is `<aside data-theme="dark">`. See [subtree attributes](/docs/integrations/subtree-attributes).
+
+**Server components.** No runtime styling means static parts render on the server with no JavaScript; interactive modules carry `"use client"`.
+
+**Works alongside Tailwind.** Because Tailwind v4 also uses cascade layers, you can order the two so Tailwind utilities override Merid components ([Tailwind guide](/docs/integrations/tailwind)).
+
+Merid's limits are real: version 0.1, 46 components, no combobox, date picker or charts, no Figma library, independently maintained. Other styled libraries cover far more ground today.
+
+## How to choose
+
+Pick **headless** if:
+
+- You have a designer and a distinctive brand system to implement exactly.
+- You have capacity to build and maintain styles for every state, theme and density.
+- You need a component the styled libraries lack and want best-in-class behaviour (React Aria's date and combobox components are a common reason).
+
+Pick **copy-in** if:
+
+- You already use Tailwind and want to own every line.
+- You are comfortable reviewing and merging component updates yourself.
+- You have rules or review in place to stop component files drifting.
+
+Pick **styled** if:
+
+- You want a coherent product quickly and are happy starting from an existing look.
+- Much of your UI is written by agents and you want fewer decisions at call sites.
+- You want visual accessibility (contrast, focus, forced colours) handled for you.
+
+Then, within styled, look at how it is styled: runtime CSS-in-JS or static CSS, provider or not, cascade layers or specificity, tokens or theme objects. Those choices decide how much of the classic styled-library cost you pay.
+
+## Mixing is normal
+
+Few real apps use one model exclusively. A common setup is a styled library for the bulk of the UI and a headless library for the one component it lacks. If you use Merid and need a combobox, React Aria's `ComboBox` styled with Merid tokens (`var(--mrd-line)`, `var(--mrd-radius-lg)`, `var(--mrd-accent)`) will sit alongside Merid components without looking foreign. Write that decision into your design contract so agents know which library owns which component.
+
+To try the styled side: `npm i @meridui/react`, then import `@meridui/react/styles.css` once. The [repository](https://github.com/ahmetcantryk/merid) has the full component list and the design contract.

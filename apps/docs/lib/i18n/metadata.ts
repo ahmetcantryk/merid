@@ -37,8 +37,20 @@ export function docMetadata(locale: Locale, path: string, meta: PageMeta): Metad
       title: `${meta.title} — ${site.name}`,
       description,
       url: localizePath(path, locale),
+      images: [{ url: localizePath("/og.png", locale), width: 1200, height: 630, alt: meta.title }],
     },
   };
+}
+
+/**
+ * Search Console and Bing Webmaster verification tags, read from env so tokens stay out of the
+ * repo. Unset variables emit nothing.
+ */
+function verification(): Metadata["verification"] {
+  const google = process.env.NEXT_PUBLIC_GSC_VERIFICATION;
+  const bing = process.env.NEXT_PUBLIC_BING_VERIFICATION;
+  if (!google && !bing) return undefined;
+  return { ...(google && { google }), ...(bing && { other: { "msvalidate.01": bing } }) };
 }
 
 /** Root-layout metadata shared by every page of a locale. */
@@ -61,5 +73,6 @@ export function rootMetadata(locale: Locale): Metadata {
       url: localizePath("/", locale),
     },
     twitter: { card: "summary_large_image" },
+    verification: verification(),
   };
 }

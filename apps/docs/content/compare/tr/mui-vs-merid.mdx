@@ -1,0 +1,65 @@
+---
+title: "MUI ve Merid: Material UI mı, Sade CSS Token'ları mı?"
+description: "MUI ve Merid: MUI X ile olgun bir Material Design paketi mi, sıkı token'lı küçük bir sade CSS kütüphanesi mi? Stil, tema, kapsam ve hangisi ne zaman."
+slug: mui-vs-merid
+lang: tr
+canonical: /tr/compare/mui-vs-merid
+keywords:
+  - mui vs merid
+  - material ui alternatifi
+  - emotion olmadan mui
+  - sade css react kütüphanesi
+date: 2026-09-30
+updated: 2026-09-30
+lastReviewed: 2026-09-30
+author: Ahmet Can Tiryaki
+---
+
+# MUI ve Merid
+
+MUI, React dünyasının en başarılı açık kaynak projelerinden biri: çok geniş bir component seti, arkasında bir şirket, MUI X data grid ve date picker'lar, on yılı aşkın production kullanımı. Merid ise 46 component'li, sabit bir tasarım sözleşmesi olan 0.1 sürümünde bir kütüphane. Aynı büyüklükte araçlar değiller; bu sayfa bunun nerede önemli olduğunu açıkça söylemeye çalışıyor.
+
+Merid'i biz geliştiriyoruz; buna göre değerlendir.
+
+## Bir bakışta
+
+| | MUI (Material UI) | Merid |
+|---|---|---|
+| Paket | `@mui/material`; grid, picker ve grafik için `@mui/x-*` | `@meridui/react` |
+| Stil | Varsayılan olarak Emotion (runtime CSS-in-JS) | Üç cascade layer'da tek sade CSS dosyası |
+| Varsayılan görünüm | Material Design | Sade: ince çizgiler, tek accent, gri yüzeyler |
+| Tema | `createTheme` + `ThemeProvider` | `--mrd-*` değişkenleri; herhangi bir alt ağaçta `data-theme`, `data-accent`, `data-density` |
+| Stil verme yolları | `sx`, `styled()`, tema override'ları, `className`, props | CSS (senin kuralın kütüphane layer'larını ezer), token'lar, varyantlar |
+| Data grid, date picker | Var, MUI X ile (ücretsiz ve ücretli katmanlar) | Yok; yalnızca gösterim için `Table` |
+| Server component'ler | Stilli component'ler client sınırı ister | Statik parçalar sunucuda render olur; etkileşimli modüller `"use client"` ile gelir |
+| Olgunluk ve destek | Çok yüksek; şirket destekli, ücretli destek var | 0.1, bağımsız geliştiriliyor |
+| Lisans | Çekirdek MIT; MUI X Pro/Premium ticari | MIT |
+
+Kaynaklar: [MUI kurulum](https://mui.com/material-ui/getting-started/installation/), [MUI X](https://mui.com/x/), [Merid README](https://github.com/ahmetcantryk/merid).
+
+## MUI'ın açıkça önde olduğu yerler
+
+- **Ağır component'ler.** MUI X data grid, tarih ve saat seçiciler, grafikler ve tree view'in yerini doldurmak zor.
+- **Kapsam.** İhtiyacın olan hemen her widget zaten var.
+- **Destek.** Şirket, ücretli katmanlar ve öngörülebilir sürüm takvimi.
+- **Bilinirlik.** Çok sayıda geliştirici ve yapay zeka aracı MUI'ı iyi tanıyor.
+
+## Merid'in farklı olduğu yerler
+
+**Runtime stil yok.** MUI'ın varsayılan kurulumu Emotion'ı getirir; stiller runtime'da üretilir ve React Server Components'te client sınırı gerekir. Merid statik CSS'tir: `@meridui/react/styles.css`'i bir kez import edersin.
+
+**Tek stil yolu.** Kütüphane kuralları `@layer merid.*` içinde durur; kendi CSS'in `!important` olmadan kazanır, değerler de tek seferlik sayılardan değil adlandırılmış token'lardan gelir.
+
+**Provider olmadan tema.** Açık bir uygulamada koyu bir sidebar tek bir attribute'tur: `<aside data-theme="dark">`.
+
+## Merid'de olmayanlar
+
+Data grid, tarih/saat seçici, grafik ve combobox yok. 0.1 sürümünde; API 1.0'dan önce değişebilir ve tek bir geliştiricisi var. Bu component'lere ihtiyacın varsa Merid'i TanStack Table gibi ayrı bir grid ile eşleştir ya da MUI'da kal.
+
+## Hangisini seçmeli?
+
+**MUI'ı seç**: MUI X'e, kurumsal desteğe ya da en geniş component setine ihtiyacın varsa.
+
+**Merid'i seç**: runtime'sız sade CSS, insanların ve yapay zeka ajanlarının kolayca sapamayacağı küçük bir API ve HTML attribute'larıyla kapsamlı tema istiyorsan; 46 component da yetiyorsa.
+
+**İlgili:** [Material UI mı Ant Design mı?](/tr/blog/material-ui-mi-ant-design-mi) · [shadcn/ui ve Merid](/tr/compare/shadcn-ui-vs-merid)

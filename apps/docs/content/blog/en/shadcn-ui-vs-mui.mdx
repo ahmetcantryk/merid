@@ -1,0 +1,144 @@
+---
+title: "shadcn/ui vs MUI: Which React UI Approach Fits You?"
+description: "shadcn/ui vs MUI compared: owned Tailwind source vs a versioned Emotion package, coverage, theming, RSC and AI tooling. Who should pick which."
+slug: shadcn-ui-vs-mui
+canonical: /blog/shadcn-ui-vs-mui
+keywords:
+  - shadcn vs mui
+  - shadcn/ui vs material ui
+  - mui or shadcn
+  - react component library comparison
+date: 2026-11-25
+updated: 2026-11-25
+lastReviewed: 2026-11-25
+tags:
+  - comparisons
+author: Ahmet Can Tiryaki
+---
+
+# shadcn/ui vs MUI: which React UI approach fits you?
+
+shadcn/ui and MUI are the two names that come up first when someone asks "which React UI library should I use?" They are also close to opposites. One hands you source files and gets out of the way. The other is a large, versioned package with its own design language, styling engine and a commercial tier on top.
+
+That makes this less a "which is better" question and more a "which model do you want to live with" question. This post walks through the differences that matter in practice, then gives a plain recommendation for each type of team.
+
+A note on bias: we build Merid, a third React library. It gets one short section at the end. The rest is about shadcn/ui and MUI, with links to their own docs so you can check every claim.
+
+## At a glance
+
+| | shadcn/ui | MUI (Material UI) |
+|---|---|---|
+| Distribution | CLI copies component source into your repo | npm package `@mui/material` |
+| Current line | CLI + registry (no single version number) | v9.x |
+| Styling | Tailwind CSS utility classes | Emotion by default (`@emotion/react`, `@emotion/styled`); styled-components optional |
+| Primitives | Radix UI or Base UI | In-house (Base UI team is part of MUI) |
+| Design language | Neutral, minimal | Material Design, heavily themeable |
+| Theming | CSS variables + Tailwind theme; edit files | `createTheme` + `ThemeProvider` |
+| Updates | Re-run CLI, review diffs | `npm update`, follow migration guides |
+| Coverage | Base set + large community registry, blocks, charts | Very large core set; MUI X for data grid, date pickers, charts |
+| Paid tier | None | MUI X Pro / Premium / Enterprise |
+| AI tooling | Registry, MCP server, `llms.txt` | Official MCP server (`@mui/mcp`), `llms.txt` under `/material-ui/` |
+| Licence | MIT | MIT (core); commercial for MUI X Pro and above |
+
+Sources: [shadcn/ui installation](https://ui.shadcn.com/docs/installation), [shadcn/ui MCP](https://ui.shadcn.com/docs/mcp), [MUI installation](https://mui.com/material-ui/getting-started/installation/), [MUI MCP](https://mui.com/material-ui/getting-started/mcp/), [MUI pricing](https://mui.com/pricing/).
+
+## Two opposite distribution models
+
+### shadcn/ui: you own the code
+
+You run `shadcn init`, pick a preset, and then `shadcn add button`. The CLI writes `components/ui/button.tsx` into your project. From then on it is your file. There is no `@shadcn/ui` runtime package to upgrade, and nobody upstream can change your button without you merging it.
+
+This is why shadcn/ui spread so fast. It feels like starting a design system rather than adopting one. Want a new variant? Add it. Hate the focus ring? Change it.
+
+The cost is that you now maintain those files. When upstream fixes a bug in a component you copied six months ago, you find out by reading the changelog and re-running the CLI, then resolving the diff by hand if you edited the file. On a small team with good review habits that is fine. On a large codebase with many contributors (human or AI) the copies tend to drift.
+
+### MUI: you depend on a package
+
+MUI is the classic model: `npm install @mui/material @emotion/react @emotion/styled`, import `Button`, done. Bug fixes and accessibility improvements arrive with `npm update`. Breaking changes arrive with major versions and migration guides, and MUI has moved quickly in recent years (v7 to v9 inside about eighteen months).
+
+You do not edit MUI's source. You customise through the theme, the `sx` prop, `styled()`, and component slot props. That is more constrained than owning the file, but it also means a hundred developers get the same `Button`.
+
+## Styling
+
+This is where most teams actually decide.
+
+**shadcn/ui is Tailwind.** Components are styled with utility classes and read their colours from CSS variables that the Tailwind theme maps. If your team already writes Tailwind, this feels native. If you don't use Tailwind, shadcn/ui is not really an option; the classes are the styling.
+
+**MUI is CSS-in-JS.** The default engine is Emotion, which generates styles at runtime. MUI's docs recommend Emotion for server-rendered projects and note that the styled-components engine is not compatible with SSR. In the Next.js App Router this means MUI components render as client components and you add MUI's App Router integration for style extraction. It works, and many large apps run it, but it is more moving parts than a static stylesheet.
+
+A practical consequence: overriding styles. In shadcn/ui you change a class in the file. In MUI you learn the theme's `components.MuiButton.styleOverrides` shape, or `sx`, or slot classes like `.MuiButton-root`. Both are learnable; they are very different skills.
+
+## Component coverage
+
+MUI wins on breadth, especially once you include MUI X. If you need a serious data grid with virtualisation, column pinning and Excel export, or production-ready date and time pickers, MUI X is one of the most complete options in React. The advanced grid features sit in the paid Pro and Premium plans; the community grid and pickers are MIT.
+
+shadcn/ui's own set covers the common product UI: buttons, forms, dialogs, menus, tables (built on TanStack Table as a recipe), charts (built on Recharts), a calendar and date picker composed from other libraries, plus "blocks" such as dashboards and login pages. The community registry directory adds far more. The trade-off is quality control: registry components vary, and each one is more code you own.
+
+## Theming
+
+shadcn/ui themes are CSS variables. You pick a base colour, the CLI writes the variables, and dark mode is a class or attribute on the root. Deeper changes mean editing components. This keeps things simple and transparent.
+
+MUI theming is a JavaScript object passed to `ThemeProvider`: palette, typography, spacing, breakpoints, shape, and per-component defaults and overrides. MUI also supports CSS theme variables, which help with dark mode without flicker. It is powerful and very well documented, and it is also where Material Design shows through: moving MUI far away from its Material look takes real effort.
+
+## Accessibility
+
+Both are solid starting points, with different sources.
+
+shadcn/ui inherits keyboard and ARIA behaviour from Radix UI or Base UI, both of which follow the WAI-ARIA Authoring Practices. Because you own the files, you can also break that behaviour by editing them, so review matters.
+
+MUI has invested in accessibility for years and documents it per component. Its behaviour is fixed in the package, so it can't drift in your repo.
+
+Neither library makes your product compliant on its own. Labels, link text, colour choices and page structure are still yours. Run axe in CI either way.
+
+## Server components and Next.js
+
+shadcn/ui components are plain React plus Tailwind classes. Interactive ones include `"use client"`; static ones don't need it. There is no provider, so server components can use them freely.
+
+MUI components depend on Emotion's runtime and theme context, so they are client components. MUI provides an App Router integration package to handle the style cache. You can still render the page shell on the server and use MUI inside client components; you just can't have MUI render purely on the server with zero client JavaScript.
+
+## AI coding tools
+
+Both have invested here, which says something about where UI work is going.
+
+shadcn/ui is the default output of many AI UI generators, has an official MCP server, a registry that agents can pull from, and an `llms.txt`. Models know it extremely well.
+
+MUI ships an official MCP server (`@mui/mcp`) so agents can look up current component APIs, and publishes an `llms.txt` under `/material-ui/`. Models also know MUI very well, though they sometimes mix APIs from older major versions, so pinning the MCP or docs in your agent's context helps.
+
+The difference in practice: with shadcn/ui, an agent can edit your component files directly, which makes it fast and also makes drift easy. With MUI, an agent can only compose and override, which limits how far it can wander.
+
+## Who should pick which
+
+**Pick shadcn/ui if:**
+- Your team writes Tailwind already.
+- You want to own and shape the design system over time.
+- You're building a product with a custom look, not an internal admin tool.
+- You're fine reviewing diffs when upstream changes.
+
+**Pick MUI if:**
+- You need breadth now, especially a data grid or date pickers.
+- You're building internal or enterprise tools where Material conventions are fine or welcome.
+- You want one versioned dependency that many teams share without forking.
+- You're willing to pay for MUI X features if you need them.
+
+**Be careful with either if:**
+- You want no Tailwind and no runtime CSS-in-JS at the same time. Neither fits that constraint.
+
+## A third option
+
+If the last bullet describes you, look at libraries that ship plain CSS. Radix Themes (a `<Theme>` wrapper, plain CSS) and Mantine (CSS modules, `MantineProvider`) are the established ones.
+
+Merid, which we build, is a newer one: a versioned npm package like MUI, styled with one plain-CSS stylesheet in cascade layers, every value a `--mrd-*` token, no provider (only toasts need `ToastProvider`), and static components that render on the server. It is honest to say what it lacks next to both libraries here: it is at 0.1 with 46 components, and it has no combobox, date picker, charts, data grid, registry or MCP server. If you need those today, choose shadcn/ui or MUI. If you want a fixed design contract without Tailwind or runtime styling, [Merid vs shadcn/ui, side by side](https://meridui.dev/compare/shadcn-ui-vs-merid) covers the details, and the [server components guide](https://meridui.dev/docs/server-components) and [Tailwind guide](https://meridui.dev/docs/integrations/tailwind) show how it fits a Next.js app.
+
+## FAQ
+
+**Is shadcn/ui a component library?**
+Not in the package sense. It's a set of component recipes plus a CLI and registry that copy source into your project.
+
+**Can I use MUI with Tailwind?**
+Yes. MUI documents Tailwind interoperability, mainly around CSS layer order so utilities can override MUI styles. You will be running two styling systems.
+
+**Which is faster?**
+It depends more on your app than the library. shadcn/ui has no styling runtime; MUI's Emotion runtime adds client work. For most product apps, data fetching and bundle discipline matter more.
+
+**Can I migrate from MUI to shadcn/ui gradually?**
+Yes, page by page, since both can coexist. Expect visual mismatch during the transition and plan the order around shared components like buttons and inputs.

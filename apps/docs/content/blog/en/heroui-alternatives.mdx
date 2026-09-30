@@ -1,0 +1,125 @@
+---
+title: "HeroUI Alternatives (formerly NextUI) in 2026"
+description: "HeroUI alternatives after the v3 rewrite: shadcn/ui, React Aria Components, Radix Themes, Mantine and Merid. Tailwind, migration cost and accessibility."
+slug: heroui-alternatives
+canonical: /blog/heroui-alternatives
+keywords:
+  - heroui alternative
+  - nextui alternative
+  - heroui v3
+  - react aria styled components
+date: 2026-12-11
+updated: 2026-12-11
+lastReviewed: 2026-12-11
+tags:
+  - comparisons
+author: Ahmet Can Tiryaki
+---
+
+# HeroUI alternatives (formerly NextUI) in 2026
+
+HeroUI, the library once called NextUI, released v3 as a ground-up rewrite. According to its [getting started docs](https://www.heroui.com/docs/react/getting-started), v3 is built on React Aria Components, targets React 19 and uses Tailwind CSS v4 as its styling foundation. InfoQ [covered the rewrite](https://www.infoq.com/news/2026/07/heroui-v3-rewrite/) in July 2026.
+
+A rewrite is a natural moment to ask whether to follow along or move. If you are on HeroUI v2 (or NextUI), the migration to v3 is real work either way. This post compares the options for that work.
+
+We build Merid, one of the options. It gets one section and a list of what it lacks.
+
+## What HeroUI does well
+
+- **Accessibility foundation.** Building on [React Aria Components](https://react-spectrum.adobe.com/react-aria/components.html) means focus management, keyboard handling and screen reader behaviour come from Adobe's well-tested hooks.
+- **A polished default look.** Rounded, animated, colourful. For marketing-heavy products and dashboards that want personality, it is a fast start.
+- **Tailwind v4 native.** If your project is Tailwind-first, HeroUI speaks the same language.
+- **Backing.** HeroUI is a company (YC S24) with a paid Pro offering, so there is a commercial incentive to keep the open-source core healthy.
+
+## Why people look for an alternative
+
+- **The v2 to v3 migration.** A rewrite means changed APIs. Teams with large v2 codebases compare the cost of migrating to v3 against migrating to something else.
+- **Tailwind as a requirement.** v3 is built on Tailwind v4. Teams that use CSS modules, vanilla CSS or another styling approach do not want Tailwind only for their component library.
+- **The look.** HeroUI's visual style is expressive. Some products want a quieter, more neutral base.
+- **Motion.** Rich animation is a feature, but some teams prefer less motion by default, or fewer dependencies for it.
+
+## The alternatives
+
+### 1. shadcn/ui
+
+[shadcn/ui](https://ui.shadcn.com/docs) copies components into your repo, styled with Tailwind, on Radix or Base UI primitives. No package to upgrade, no provider.
+
+**Pick it if:** Tailwind is fine, and what you want is to never face a vendor rewrite again. You own the code, so nobody can rewrite it under you.
+
+**Trade-off:** you also own the maintenance. Upstream fixes arrive as diffs you merge by hand.
+
+### 2. React Aria Components, styled yourself
+
+HeroUI v3's own foundation is available directly. [React Aria Components](https://react-spectrum.adobe.com/react-aria/components.html) are unstyled, with render props and data attributes for styling in any CSS approach. Adobe maintains it.
+
+**Pick it if:** you liked HeroUI's accessibility and want the same behaviour with your own visual design and any styling tool.
+
+**Trade-off:** you are building a design system, not installing one. Budget weeks, not days.
+
+### 3. Radix Themes
+
+[Radix Themes](https://www.radix-ui.com/themes/docs/overview/getting-started) is a styled package in plain CSS on Radix Primitives, with a `<Theme>` wrapper. Maintained by WorkOS.
+
+**Pick it if:** you want a styled package without Tailwind and a more restrained look than HeroUI.
+
+**Trade-off:** fewer components than HeroUI, and a different primitive layer, so behaviour differs in small ways.
+
+### 4. Mantine
+
+[Mantine](https://mantine.dev/getting-started/) v9 offers 100+ components plus forms, dates and charts packages. CSS modules with a PostCSS preset and a `MantineProvider`.
+
+**Pick it if:** you need breadth: date pickers, charts and form helpers in one family.
+
+**Trade-off:** provider at the root, a build-time PostCSS preset, and its own recognisable look.
+
+### 5. Merid
+
+[Merid](https://meridui.dev) is a React library with 46 components in plain CSS. One stylesheet in three cascade layers, so your CSS wins without `!important`. Every value is a `--mrd-*` custom property with light and dark values. No theme provider (only toasts need `ToastProvider`), no runtime styling, no Tailwind requirement. It works alongside Tailwind v4 if you have it: the [Tailwind guide](https://meridui.dev/docs/integrations/tailwind) shows the layer order and how to map tokens into `@theme`.
+
+The look is deliberately quiet: 1px hairlines, one accent (blue, violet, green or graphite presets), soft grey trays, calm motion that disappears under `prefers-reduced-motion`. Components are built in-house and target WCAG 2.2 AA, with an axe suite in CI.
+
+**What Merid does not offer:**
+
+- Far fewer components than HeroUI. No combobox or autocomplete, no date picker, no charts (not planned), no calendar.
+- No React Native.
+- Version 0.1, one maintainer. HeroUI has a funded team.
+- Behaviour is written in-house rather than on React Aria. React Aria has years of screen reader testing behind it; Merid is newer.
+- No Figma library, no MCP server yet.
+
+**Pick it if:** you are leaving HeroUI because of Tailwind or the expressive style, and your app needs standard product components rather than a large catalogue.
+
+## Comparison table
+
+| | HeroUI v3 | shadcn/ui | React Aria Components | Radix Themes | Mantine | Merid |
+|---|---|---|---|---|---|---|
+| Styled | Yes | Yes (your copy) | No | Yes | Yes | Yes |
+| Tailwind required | Yes (v4) | Yes | No | No | No | No (works with v4) |
+| Behaviour layer | React Aria | Radix / Base UI | React Aria | Radix | In-house | In-house |
+| Root wrapper | Check docs | None | None | `<Theme>` | `MantineProvider` | None (toasts only) |
+| Date picker | Yes | Community | Yes (unstyled) | No | Yes | No |
+| Look | Expressive, animated | Neutral | None | Restrained | Mantine default | Quiet, hairline |
+| React Native | Yes | No | No | No | No | No |
+| Licence | MIT core | MIT | Apache 2.0 | MIT | MIT | MIT |
+
+Sources: official docs of each project, linked above. Verify licences and wrappers before quoting; they change.
+
+## Migration notes
+
+Coming from HeroUI v2 or NextUI, a few things decide effort more than the target library:
+
+1. **Count `className` overrides.** Tailwind classes passed into HeroUI components carry over to shadcn/ui almost directly. To any non-Tailwind library they have to be rewritten as tokens or CSS.
+2. **Map colour names to roles.** HeroUI uses semantic colours like `primary` and `danger`. Write down which role each is used for. Merid's `variant` and `tone` props, Radix Themes' `color` prop and shadcn's CSS variables all map from roles, not from hex values.
+3. **Check the components you cannot replace.** Date pickers and autocompletes are usually the blockers. If you need them and choose Merid, pair it with a dedicated date library and style it with Merid tokens.
+4. **Retest keyboard flows.** Switching behaviour layers (React Aria to Radix or in-house) changes small details such as typeahead in menus and focus return from dialogs. Test with a keyboard and a screen reader, not only with axe.
+
+See also: [shadcn/ui alternatives](/blog/shadcn-ui-alternatives), [accessible React component libraries](/blog/accessible-react-component-libraries), and [Merid vs shadcn/ui](https://meridui.dev/compare/shadcn-ui-vs-merid).
+
+## FAQ
+
+**Is NextUI the same as HeroUI?** Yes. NextUI was renamed HeroUI; the old packages are no longer where development happens.
+
+**Is there a HeroUI alternative without Tailwind?** Radix Themes, Mantine and Merid are all styled without Tailwind. React Aria Components can be styled with anything.
+
+**Is there a HeroUI alternative built on React Aria?** React Aria Components itself, if you style it. Among styled libraries, check each project's docs; this changes quickly.
+
+**Should I upgrade to HeroUI v3 or switch?** If you like the look and use Tailwind, upgrading is usually less work than switching. Switch when the look or Tailwind is the reason you are unhappy.

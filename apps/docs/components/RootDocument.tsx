@@ -1,5 +1,6 @@
 import type { Viewport } from "next";
 import type { ReactNode } from "react";
+import { Analytics } from "@/components/Analytics";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { themeInitScript } from "@/components/ThemeToggle";
@@ -8,6 +9,8 @@ import "../app/site.css";
 import "@meridui/react/styles.css";
 import "../app/landing.css";
 import "../app/docs.css";
+import "../app/studio.css";
+import "../app/blog.css";
 
 export const rootViewport: Viewport = {
   themeColor: [
@@ -34,6 +37,7 @@ export function RootDocument({ locale, children }: { readonly locale: Locale; re
         <SiteHeader locale={locale} />
         <main id="content">{children}</main>
         <SiteFooter locale={locale} />
+        <Analytics />
       </body>
     </html>
   );

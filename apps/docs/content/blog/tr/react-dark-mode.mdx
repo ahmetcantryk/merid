@@ -1,0 +1,214 @@
+---
+title: "React'te Dark Mode Nasıl Yapılır? Flash'sız Rehber"
+description: "React'te dark mode: CSS değişkenleri, data-theme, prefers-color-scheme, localStorage ve sayfa yüklenirken beyaz flash'ı önleyen küçük script."
+slug: react-dark-mode
+lang: tr
+canonical: /tr/blog/react-dark-mode
+alternate:
+  en: /blog/scoped-theming-react
+keywords:
+  - react dark mode nasıl yapılır
+  - react dark mode
+  - next.js dark mode
+  - css değişkenleri dark mode
+  - prefers-color-scheme
+date: 2026-12-15
+updated: 2026-12-15
+tags:
+  - theming
+author: Ahmet Can Tiryaki
+---
+
+# React'te dark mode nasıl yapılır?
+
+"React dark mode" diye aradığında karşına çıkan örneklerin çoğu aynı şeyi yapar: bir `useState`, bir Context, bir buton, `className` ile `dark` sınıfı. Çalışır, ama iki sorun bırakır. Birincisi, sayfa yüklenirken bir an beyaz ekran görürsün (flash). İkincisi, tema bilgisi React state'ine bağlı olduğu için server'da render edilen HTML hangi temada olduğunu bilmez.
+
+Bu yazıda daha sağlam bir yol anlatıyorum: renkler CSS değişkenlerinde, tema bir HTML attribute'unda, seçim `localStorage`'da, ve sayfa render olmadan önce çalışan küçük bir script. React bu işin küçük bir parçası.
+
+## 1. Renkleri CSS değişkenlerine taşı
+
+Component'lerde renk yazma, değişken yaz. Dark mode aslında değişkenlerin değerini değiştirmekten ibaret.
+
+```css
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --ink: #0f1219;
+  --body: #535a67;
+  --line: #e6e8ec;
+  --accent: #3f63f5;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #0b0d12;
+  --surface: #12151c;
+  --ink: #eef0f4;
+  --body: #a3a9b5;
+  --line: #262b35;
+  --accent: #6b8aff;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--body);
+}
+```
+
+`color-scheme` önemli: tarayıcının kendi çizdiği şeyleri (scrollbar, form kontrolleri, autofill) da temaya uydurur.
+
+Dark mode'da renkleri "tersine çevirme". Koyu temada saf siyah arka plan ve saf beyaz metin göz yorar; hafif mavi-gri bir koyu arka plan ve biraz kısılmış metin daha rahat okunur. Accent rengini de koyu zeminde kontrast için biraz açman gerekir. Her iki tema için kontrastı ayrı ayrı ölç (normal metin için en az 4.5:1).
+
+## 2. Sistem tercihini varsayılan yap
+
+Kullanıcı hiçbir şey seçmediyse işletim sisteminin tercihini kullan. Bunu tamamen CSS ile yapabilirsin:
+
+```css
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b0d12;
+    --surface: #12151c;
+    --ink: #eef0f4;
+    --body: #a3a9b5;
+    --line: #262b35;
+    --accent: #6b8aff;
+    color-scheme: dark;
+  }
+}
+```
+
+`:not([data-theme="light"])` sayesinde kullanıcı açıkça açık temayı seçtiyse sistem tercihi ezilmez. Bu şekilde üç durum oluyor: `light`, `dark` ve attribute yoksa "sistem".
+
+## 3. Flash'ı önleyen script
+
+Flash, React hydrate olup temayı okuyana kadar sayfanın varsayılan temayla boyanmasından kaynaklanır. Çözüm: temayı React'ten önce, `<head>` içinde, render'ı bloklayan küçük bir inline script ile uygulamak.
+
+```ts
+// theme-script.ts
+export const themeInitScript = `
+(function () {
+  try {
+    var t = localStorage.getItem("theme");
+    if (t === "light" || t === "dark") {
+      document.documentElement.setAttribute("data-theme", t);
+    }
+  } catch (e) {}
+})();
+`;
+```
+
+Next.js App Router'da root layout'a ekle:
+
+```tsx
+// app/layout.tsx
+import { themeInitScript } from "./theme-script";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="tr" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+`suppressHydrationWarning` gerekli, çünkü script `html` elemanının attribute'unu React'ten önce değiştiriyor ve React bu farkı uyarı olarak görür. Bu uyarıyı yalnızca `html` elemanında bastırıyorsun, alt ağaçtaki gerçek hatalar yine görünür.
+
+`try/catch` da gerekli: bazı gizli sekmelerde ya da engellenmiş depolamada `localStorage` hata fırlatabilir. Hata olursa sistem teması devreye girer, sayfa bozulmaz.
+
+Vite ile düz bir React uygulamasında aynı script'i `index.html` içindeki `<head>`'e koyman yeterli.
+
+## 4. Tema değiştirme hook'u
+
+Artık React tarafı sadece attribute'u ve `localStorage`'ı güncelliyor:
+
+```tsx
+"use client";
+import { useCallback, useEffect, useState } from "react";
+
+type Theme = "light" | "dark" | "system";
+
+function apply(theme: Theme) {
+  const root = document.documentElement;
+  if (theme === "system") root.removeAttribute("data-theme");
+  else root.setAttribute("data-theme", theme);
+}
+
+export function useTheme() {
+  const [theme, setTheme] = useState<Theme>("system");
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("theme");
+      if (saved === "light" || saved === "dark") setTheme(saved);
+    } catch {}
+  }, []);
+
+  const change = useCallback((next: Theme) => {
+    setTheme(next);
+    apply(next);
+    try {
+      if (next === "system") localStorage.removeItem("theme");
+      else localStorage.setItem("theme", next);
+    } catch {}
+  }, []);
+
+  return { theme, setTheme: change };
+}
+```
+
+Başlangıç state'i `"system"`; gerçek değer effect içinde okunuyor. Bu sayede server ile client'ın ilk render'ı aynı oluyor ve hydration hatası çıkmıyor. Renkler zaten script sayesinde doğru olduğu için kullanıcı bir fark görmüyor; sadece toggle butonunun ikonu bir frame sonra güncelleniyor.
+
+Tema butonu için erişilebilirlik notu: ikon butona `aria-label` ver ve seçili durumu belirt. Üç seçenek (açık, koyu, sistem) varsa segmented control ya da radio group, iki durum varsa `aria-pressed` kullanan bir buton uygundur.
+
+## 5. Tailwind kullanıyorsan
+
+Tailwind v4'te `dark:` variant'ı varsayılan olarak `prefers-color-scheme`'e bakar. Manuel toggle istiyorsan variant'ı attribute'a bağla:
+
+```css
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+```
+
+Bu durumda sistem tercihi otomatik uygulanmaz; yukarıdaki script'te sistem tercihini de attribute olarak yazman gerekir. Seçim sana kalmış: ya "attribute yoksa sistem" modelini CSS değişkenleriyle kurarsın, ya da her zaman attribute yazarsın.
+
+## 6. Sadece bir bölümü koyu yapmak
+
+Bazen tüm sayfa değil, bir bölüm koyu olmalı: açık temalı uygulamada koyu bir sidebar ya da kod önizlemesi. `data-theme` attribute'unu `html` yerine herhangi bir elemana koyabildiğin için bu yaklaşım bunu da destekler:
+
+```html
+<aside data-theme="dark">...</aside>
+```
+
+Değişkenler o alt ağaçta koyu değerlerini alır. Dikkat etmen gereken tek yer portal'lar: o bölümden açılan bir dropdown ya da modal `document.body`'ye render edilirse temayı kaybeder. Portal içeriğine aynı attribute'u taşıman gerekir.
+
+## Merid ile
+
+Merid bu modeli hazır getiriyor, o yüzden kısaca bahsedeyim (kendi projem). Tüm renkler `--mrd-*` token'ları olarak açık ve koyu değerleriyle tanımlı; `data-theme="light" | "dark"` `html`'e ya da herhangi bir elemana konabiliyor, attribute yoksa `prefers-color-scheme` kullanılıyor. `data-accent` (blue, violet, green, graphite) ve `data-density` de aynı şekilde çalışıyor. Portal ile açılan overlay'ler geldikleri alt ağacın temasını koruyor. Provider gerekmiyor.
+
+```tsx
+import "@meridui/react/styles.css";
+import { Card, Button } from "@meridui/react";
+
+<Card data-theme="dark" data-accent="violet">
+  <Button variant="primary">Koyu kart içinde</Button>
+</Card>
+```
+
+Flash'ı önleyen script ve toggle yine senin uygulamanın işi; Merid sadece attribute'a tepki veriyor. Detaylar [dark mode](https://meridui.dev/docs/integrations/dark-mode) ve [subtree attributes](https://meridui.dev/docs/integrations/subtree-attributes) sayfalarında. Merid 0.1 sürümünde ve 46 component içeriyor; date picker, combobox ve grafik henüz yok.
+
+## Kontrol listesi
+
+- [ ] Tüm renkler CSS değişkeni
+- [ ] `color-scheme` her tema için ayarlı
+- [ ] Attribute yoksa sistem tercihi uygulanıyor
+- [ ] Inline script `<head>`'de, `try/catch` ile
+- [ ] `html` üzerinde `suppressHydrationWarning`
+- [ ] İlk render'da state `"system"`, gerçek değer effect'te
+- [ ] İki temada kontrast ölçüldü
+- [ ] Portal içerikleri doğru temada
+
+Bu yapıyla dark mode bir React state'i olmaktan çıkıp bir CSS kararı oluyor. Server render'da doğru görünür, flash olmaz ve component'lerin temayı bilmek zorunda kalmaz.

@@ -1,0 +1,182 @@
+---
+title: "Component Libraries for React Server Components"
+description: "Which React component libraries work well with Server Components and the Next.js App Router, why providers force client boundaries, and what to check."
+slug: component-libraries-react-server-components
+canonical: /blog/component-libraries-react-server-components
+keywords:
+  - rsc component library
+  - react server components ui library
+  - next.js app router component library
+  - use client component library
+  - server components css-in-js
+date: 2026-11-11
+updated: 2026-11-11
+lastReviewed: 2026-11-11
+tags:
+  - server-components
+author: Ahmet Can Tiryaki
+---
+
+# Component libraries for React Server Components
+
+The Next.js App Router made React Server Components (RSC) the default. Every file is a server component unless it says `"use client"`. That quietly changed what "works with Next.js" means for a UI library.
+
+A library can render correctly in the App Router and still push most of your tree to the client. This post explains why that happens, what to look for, and how a few popular libraries handle it.
+
+Disclosure: we build Merid. Competitor details below come from their docs; check them before deciding, since this area is changing quickly.
+
+## The short explanation
+
+Server components cannot use state, effects or context. Anything that needs those must be a client component, marked with `"use client"`. Three library design choices collide with that:
+
+1. **Runtime CSS-in-JS.** Libraries that generate styles while rendering (Emotion, styled-components) need React context and a style registry. Those components must run on the client, and the App Router needs an extra setup to collect styles during streaming.
+2. **Providers.** A `<ThemeProvider>` or `<LibraryProvider>` at the root is a context provider, so it is a client component. Children passed through it can still be server components, but every library component that reads the context is a client component.
+3. **Compound components through namespaces.** `Dialog.Root` is a property on an object. In a server file, an import from a `"use client"` module is a client reference, and property access on it does not work the way you expect.
+
+None of this makes a library unusable. It changes how much JavaScript ships and how many `"use client"` wrapper files you write.
+
+## What to check in a library
+
+- Does it need a provider? For everything, or only for specific features?
+- Is styling static CSS, or generated at runtime?
+- Do interactive components carry `"use client"` themselves, so you can import them straight into a server file?
+- Do static components (text, layout, cards, badges) ship zero JavaScript?
+- Is there a documented answer for compound components in server files?
+- Can you pass a Next.js `Link` into a button from a server component?
+
+## How libraries approach it
+
+These summaries are hedged on purpose. Read the linked docs.
+
+**MUI.** Styles use Emotion by default. MUI documents App Router integration through `@mui/material-nextjs` for style collection, and a `ThemeProvider` for custom themes. Components that use the theme are client components. It works; expect more client code. [MUI Next.js guide](https://mui.com/material-ui/integrations/nextjs/).
+
+**Chakra UI v3.** Emotion at runtime plus a provider; the docs describe the setup for the App Router with a client-side provider component. [Chakra Next.js guide](https://chakra-ui.com/docs/get-started/frameworks/next-app).
+
+**Mantine.** Styles are CSS Modules (static), but `MantineProvider` is required, and Mantine's docs note that its components use hooks and are client components. [Mantine Next.js guide](https://mantine.dev/guides/next/).
+
+**shadcn/ui.** The copied components are yours; interactive ones include `"use client"` where needed, and there is no provider. Styling is Tailwind, which is static. Good RSC story; the cost is the Tailwind requirement and owning the source. [shadcn/ui docs](https://ui.shadcn.com/docs).
+
+**Radix Themes.** Plain CSS and a `<Theme>` wrapper component. Check the docs for which components need the client. [Radix Themes docs](https://www.radix-ui.com/themes/docs).
+
+**React Aria Components.** Unstyled, no provider needed for basics; the components use hooks and are client components. You add CSS. [React Aria docs](https://react-spectrum.adobe.com/react-aria/).
+
+## How Merid handles it
+
+Merid was built with the App Router as the main target. The relevant facts, from the [server components docs](https://meridui.dev/docs/server-components):
+
+- **No theme provider.** One stylesheet import. Only toasts need a `ToastProvider`.
+- **Static CSS.** The stylesheet is collected at build time. No style injection at runtime, no flash of unstyled content while streaming.
+- **Static components stay on the server.** Layout, typography helpers, badges, cards and skeletons have no state or effects and send no JavaScript.
+- **Interactive modules carry `"use client"`.** Dialogs, menus, tabs and stateful form controls declare it themselves. You import them into a server component directly; React puts the boundary at the component.
+- **Flat exports for compound parts.** Every namespaced part (`Dialog.Root`) also exists as a flat export (`DialogRoot`). In files without `"use client"`, use the flat names.
+- **`asChild` for router links.** You cannot pass a component as a prop across the boundary, so `as={Link}` fails in a server file. `Button`, `Link` and `BreadcrumbLink` accept `asChild` instead.
+
+### Example
+
+```tsx
+// app/settings/page.tsx: a server component, no "use client"
+import Link from "next/link";
+import {
+  Button,
+  Card,
+  DialogRoot,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@meridui/react";
+import { DeleteAccount } from "./delete-account"; // client component, owns onClick
+
+export default async function Settings() {
+  const plan = await getPlan(); // server data, no API route
+
+  return (
+    <Card>
+      <h2>Plan: {plan.name}</h2>
+
+      <Button asChild variant="secondary">
+        <Link href="/billing">Manage billing</Link>
+      </Button>
+
+      <DialogRoot>
+        <DialogTrigger asChild>
+          <Button variant="secondary">What gets deleted?</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogTitle>What gets deleted</DialogTitle>
+          <DialogDescription>Projects, files and billing history.</DialogDescription>
+        </DialogContent>
+      </DialogRoot>
+
+      <DeleteAccount />
+    </Card>
+  );
+}
+```
+
+The only file you write with `"use client"` is the one that owns an event handler:
+
+```tsx
+// app/settings/delete-account.tsx
+"use client";
+import { Button } from "@meridui/react";
+
+export function DeleteAccount() {
+  return (
+    <Button variant="danger" onClick={() => fetch("/api/account", { method: "DELETE" })}>
+      Delete account
+    </Button>
+  );
+}
+```
+
+### The namespace gotcha, spelled out
+
+This fails in a server file:
+
+```tsx
+import { Dialog } from "@meridui/react";
+<Dialog.Root>...</Dialog.Root> // "Element type is invalid"
+```
+
+`Dialog` is a client reference; `Dialog.Root` is undefined on the server. Use `DialogRoot`. Inside client components, either form works. This applies to any library that exposes compound components as namespace objects, so it is worth checking in whatever you choose.
+
+### Portals
+
+Overlays render into `document.body` after hydration. On the server they render nothing, which keeps the initial HTML free of closed dialogs and menus. Portalled content keeps the theme, accent, density and direction of the subtree it came from.
+
+## Comparison
+
+| | Provider | Styling | Interactive parts ship `"use client"` | Static parts ship JS |
+|---|---|---|---|---|
+| MUI | For custom themes | Emotion (runtime) | Check docs | Generally yes |
+| Chakra UI v3 | Yes | Emotion (runtime) | Via client provider | Generally yes |
+| Mantine | Yes | CSS Modules | Components are client | Yes |
+| shadcn/ui | No | Tailwind | Yes, in your copy | No |
+| Radix Themes | `<Theme>` | Plain CSS | Check docs | Check docs |
+| Merid | No (toasts only) | Plain CSS | Yes | No |
+
+## Limits to be honest about
+
+Merid is 0.1 and independently maintained. It has 46 components. It does not have a Combobox, a date picker, charts, or a Figma library. If your App Router project needs a data grid or date range picker today, MUI or Mantine will get you there, and the extra client code may be a fair price.
+
+## Picking one
+
+- If you already use Tailwind and want the smallest client footprint, shadcn/ui is a strong fit.
+- If you want no Tailwind, no provider and static CSS, compare Merid and Radix Themes. [Merid vs shadcn/ui, side by side](https://meridui.dev/compare/shadcn-ui-vs-merid) covers the Tailwind question.
+- If breadth matters more than bundle size, MUI and Mantine are the safe choices.
+
+Whatever you choose, test one real page: build it as a server component, count the `"use client"` files you had to add, and look at the JavaScript sent for a page with no interactivity. That tells you more than any comparison table.
+
+Setup notes for Merid in the App Router are in the [Next.js guide](https://meridui.dev/docs/integrations/nextjs).
+
+## FAQ
+
+**Do I need `"use client"` at the top of my layout to use a component library?**
+Not with libraries that mark their own interactive modules. You need it only in files that define event handlers or hooks.
+
+**Why does my library work in dev but throw in a server component?**
+Most often it is the namespace issue above, or a component reading context from a provider that is not in the tree.
+
+**Does runtime CSS-in-JS work with streaming?**
+Yes, with the registry setup each library documents. It is extra configuration and extra client work compared to static CSS.

@@ -1,0 +1,181 @@
+---
+title: "Design System Nasıl Kurulur? Developer Tarafı"
+description: "Design system'i kodda kurmak: token katmanları, CSS değişkenleri, cascade layer'lar, component API'si ve AI araçlarının da uyacağı bir kural dosyası."
+slug: design-system-nasil-kurulur
+lang: tr
+canonical: /tr/blog/design-system-nasil-kurulur
+alternate:
+  en: /blog/design-tokens-css-layers
+keywords:
+  - design system nasıl kurulur
+  - tasarım sistemi nasıl kurulur
+  - design token nedir
+  - css değişkenleri tema
+  - react design system
+date: 2026-12-01
+updated: 2026-12-01
+tags:
+  - design-tokens
+author: Ahmet Can Tiryaki
+---
+
+# Design system nasıl kurulur? Developer tarafı
+
+"Design system nasıl kurulur" diye aradığında çıkan Türkçe yazıların neredeyse hepsi tasarımcı gözünden yazılmış: Figma'da renk stilleri, atomic design, component varyantları. Bunlar doğru ve gerekli. Ama Figma dosyası hazır olduktan sonra şu soru kalır: bu kararlar koda nasıl girecek ve orada nasıl korunacak?
+
+Bu yazı o ikinci kısım için. Adım adım token'ları, CSS mimarisini, component API'sini ve kuralları yazılı hale getirmeyi anlatıyorum. Örnekleri geliştirdiğim açık kaynak kütüphane Merid'den alıyorum, çünkü kararlarını gerçekten bir dosyada yazdık ve gösterebiliyorum.
+
+## 1. Önce kararları yaz, sonra kodu
+
+Design system'in çekirdeği component'ler değil, kararlardır: kaç renk, hangi köşe yuvarlaklıkları, kenarlıklar kaç piksel, gölgeler nasıl, metin kaç tonda. Bu kararlar bir yerde yazılı değilse her yeni ekran küçük bir sapma üretir.
+
+Repo'nun köküne bir dosya koy. Adı önemli değil; Merid'de `DESIGN.md` ve ilk satırı şu: "Bu dosya her component, doküman sayfası ve landing için bağlayıcıdır. Bir değer burada yoksa mevcut bir değerden türet; yeni renk, radius ya da gölge icat etme."
+
+İçine şunları yaz:
+
+- **İlkeler:** kısa ve test edilebilir cümleler. Örnek: "Tüm kenarlıklar 1px. Asla 2px, asla koyu kenarlık." ya da "Tek accent rengi, az kullanılır."
+- **Ölçekler:** spacing, radius, yazı boyutları. Örnek: köşe yuvarlaklığı iç içe geçtikçe küçülür: 16 (dialog), 14 (card), 12 (menu), 8 (control), 6 (item).
+- **İsimlendirme:** class prefix'i, CSS değişken isimleri, varyantların nasıl ifade edileceği.
+- **Yasaklar:** gradient yok, 700 font weight yok gibi.
+
+Bu dosya AI ile kod yazıyorsan ayrıca önemli. Cursor ya da Claude Code gibi araçlar repo'daki bu tür dosyaları okuyabiliyor; kuralı yazmadığın yerde model ortalama bir şey üretir.
+
+## 2. Token'ları katmanlara ayır
+
+Design token, bir tasarım kararının isimlendirilmiş hali. `#3f63f5` bir değer; `--mrd-accent` bir karar. Token'ları üç katmanda düşünmek işi kolaylaştırır:
+
+| Katman | Ne anlatır | Örnek |
+|---|---|---|
+| Primitive | Ham palet | `--mrd-blue-500` |
+| Semantic | Rol | `--mrd-accent`, `--mrd-line`, `--mrd-ink` |
+| Component | Tek bir component'in ayarı | `--mrd-button-height` |
+
+Kural şu: component'ler primitive'e değil semantic token'a bakar. Böylece dark mode ya da başka bir marka rengi sadece semantic katmanı değiştirerek gelir.
+
+```css
+:root {
+  /* primitive */
+  --mrd-blue-500: #3f63f5;
+
+  /* semantic */
+  --mrd-accent: var(--mrd-blue-500);
+  --mrd-line: #e6e8ec;
+  --mrd-ink: #0f1219;
+  --mrd-body: #535a67;
+  --mrd-muted: #646b78;
+}
+
+[data-theme="dark"] {
+  --mrd-accent: #6b8aff;
+  --mrd-line: #262b35;
+  --mrd-ink: #eef0f4;
+  --mrd-body: #a3a9b5;
+  --mrd-muted: #858c98;
+}
+
+.mrd-button {
+  height: var(--mrd-button-height, 32px);
+  border: 1px solid var(--mrd-line);
+  color: var(--mrd-ink);
+}
+```
+
+Metin tonlarını sınırla. Merid'de sadece üç tane var: `ink`, `body`, `muted`. Hiyerarşiyi yeni renkle değil ton ve weight ile kuruyorsun. Beşinci gri tonu eklemek istediğinde çoğu zaman aslında bir karar eksik demektir.
+
+Token'ların JavaScript'te de lazım olacak (grafik kütüphanesi, canvas, e-posta şablonu). Tek kaynaktan üret. Merid'de `@meridui/tokens` paketi aynı token'ları W3C DTCG formatında JSON, CSS ve JS olarak veriyor.
+
+## 3. CSS mimarisi: cascade layer'lar
+
+Bir design system'in en sık yaşadığı sorun specificity savaşları. Kullanıcı bir component'in padding'ini değiştirmek istiyor, kütüphanenin selector'ı daha güçlü, sonunda `!important` yazılıyor.
+
+CSS cascade layer'lar (`@layer`) bunu çözüyor. Layer içindeki kurallar, layer dışındaki (unlayered) kurallara specificity'den bağımsız olarak kaybeder.
+
+```css
+@layer merid.tokens, merid.base, merid.components;
+
+@layer merid.components {
+  .mrd-card { padding: 24px; border-radius: 14px; }
+}
+```
+
+Artık uygulamandaki sıradan bir class kazanır:
+
+```css
+/* layer dışında: her zaman kazanır */
+.billing-card { padding: 16px; }
+```
+
+Tailwind v4 de layer kullandığı için ikisini birlikte kullanmak mümkün; sıralamayı bir kere yazıyorsun. Merid'in [Tailwind entegrasyonu](https://meridui.dev/docs/integrations/tailwind) sayfası bunu anlatıyor.
+
+## 4. Varyantları data attribute ile ifade et
+
+Modifier class'lar (`.button--primary--small`) zamanla karışır. Durum ve varyantı data attribute ile vermek hem CSS'i hem test'i sadeleştirir:
+
+```css
+.mrd-button[data-variant="primary"] { background: var(--mrd-accent-solid); }
+.mrd-button[data-size="sm"] { height: 28px; }
+.mrd-dialog[data-state="open"] { /* ... */ }
+```
+
+Aynı yaklaşım tema için de işe yarar. Merid'de `data-theme`, `data-accent` ve `data-density` herhangi bir elemana konabiliyor ve iç içe geçebiliyor: açık temalı bir sayfada koyu bir sidebar, sıkışık yoğunlukta bir tablo gibi. Detaylar [Subtree attributes](https://meridui.dev/docs/integrations/subtree-attributes) sayfasında.
+
+## 5. Component API'sini küçük tut
+
+Design system'in bozulduğu yer genelde component API'sidir. `color`, `padding`, `borderRadius`, `shadow` gibi serbest prop'lar veren bir Button, aslında design system değil, style yazmanın başka bir yolu.
+
+Bunun yerine sınırlı varyantlar ver:
+
+```tsx
+type ButtonProps = {
+  variant?: "primary" | "secondary" | "ghost" | "danger";
+  size?: "sm" | "md" | "lg";
+  asChild?: boolean;
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
+```
+
+Bir ihtiyaç bu varyantlara sığmıyorsa bu bir tasarım konuşmasıdır, prop ekleme değil. Kaçış yolu ise vardır: `className` ile kendi CSS'in, layer sayesinde her zaman kazanır.
+
+`asChild` deseni de işine yarar: Button'ın görünümünü koruyup render edilen elemanı router link'i yapmak için.
+
+```tsx
+import Link from "next/link";
+import { Button } from "@meridui/react";
+
+<Button asChild variant="primary">
+  <Link href="/signup">Kayıt ol</Link>
+</Button>
+```
+
+## 6. Erişilebilirliği tanımın içine koy
+
+Erişilebilirlik bir component'in "bitti" tanımının parçası olmalı: klavye davranışı, görünür focus, kontrast, reduced motion. Her component için bir axe testi ve bir klavye testi yaz, CI'da çalıştır. Detaylı liste için [erişilebilir React component'leri](/tr/blog/erisilebilir-react-bilesenleri) yazısına bakabilirsin.
+
+## 7. Dokümantasyon: her component için aynı iskelet
+
+Her component sayfası aynı sırayı izlesin: ne zaman kullanılır, örnek, varyantlar, props tablosu, klavye tablosu, erişilebilirlik notları. Tutarlı iskelet hem insanın hem AI aracının doğru bilgiyi bulmasını kolaylaştırır.
+
+## 8. Sürümleme
+
+Design system paket olarak dağıtılıyorsa semver kullan ve bir CHANGELOG tut. Token isimlerini değiştirmek breaking change'dir; ilk günden isimleri dikkatle seç.
+
+## Sıfırdan mı, hazırdan mı?
+
+Dürüst olmak gerekirse çoğu ekibin sıfırdan design system kurmasına gerek yok. Kurmak kolay, bakımı zor. Üç yol var:
+
+1. **Headless primitive + kendi stilin** (React Aria, Radix, Base UI): davranış hazır, görünüm tamamen senin. En çok emek isteyen ama en özgür yol.
+2. **Kopyala-yapıştır** (shadcn/ui): kaynak senin repo'nda, Tailwind ile. Hızlı başlarsın; tutarlılığı korumak senin disiplinine kalır.
+3. **Hazır stilli kütüphane + token override** (MUI, Mantine, Radix Themes, Merid): kararların çoğu hazır, sen token'larla markana uydurursun.
+
+Merid üçüncü gruptan; 46 component, düz CSS, `--mrd-*` token'ları ve yazılı bir design contract ile geliyor. Sürüm 0.1, combobox, date picker ve Figma kütüphanesi yok. Bu eksikler senin için sorunsa diğer seçeneklere bakmalısın. Kararların nasıl yazıldığını görmek istersen [design tokens](https://meridui.dev/docs/integrations/design-tokens) sayfası ve repo'daki `DESIGN.md` iyi bir başlangıç örneği.
+
+## Özet
+
+1. Kararları bir dosyaya yaz, bağlayıcı olsun.
+2. Token'ları primitive, semantic, component olarak ayır.
+3. CSS'i cascade layer'lara koy, `!important` ihtiyacını ortadan kaldır.
+4. Varyant ve durumları data attribute ile ifade et.
+5. Component API'sini varyantlarla sınırla.
+6. Erişilebilirliği ve testleri "bitti" tanımına ekle.
+7. Dokümanı standart bir iskelete oturt, sürümle.
+
+Figma tarafı kararları görünür kılar; kod tarafı onları korur. İkisi birlikte olunca design system gerçekten çalışır.
