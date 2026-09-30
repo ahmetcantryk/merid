@@ -1,0 +1,120 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ToolbarBasic } from "@/examples/toolbar";
+import { toolbarBasicCode } from "@/examples/toolbar.code";
+
+export const metadata = docMetadata("en", "/docs/components/toolbar", {
+  title: "Toolbar",
+  description: "A row of related controls that is a single Tab stop.",
+});
+
+# Toolbar
+
+A row of related controls (formatting buttons, view options, a menu) that is a single Tab stop; the arrow keys move between its controls.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/toolbar">Source</a>
+</div>
+
+<ComponentPreview code={toolbarBasicCode}>
+  <ToolbarBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Toolbar } from "@meridui/react";
+```
+
+## Anatomy
+
+```tsx
+<Toolbar.Root aria-label="…">
+  <Toolbar.Group aria-label="…">
+    <Toolbar.Button />
+  </Toolbar.Group>
+  <Toolbar.Separator />
+  <Toolbar.Link />
+</Toolbar.Root>
+```
+
+- **Root** is the `role="toolbar"` element. Give it an `aria-label`.
+- **Button** and **Link** are the items the arrow keys move between. With `asChild` any element joins, e.g. a `DropdownMenu.Trigger`.
+- **Group** (`role="group"`) and **Separator** organise the items.
+
+## Examples
+
+### Toggle buttons
+
+A formatting toggle is a Toolbar.Button with `aria-pressed`; the pressed state gets the accent-soft fill. For a set where only one can be on, keep the state in your component.
+
+### Menus in a toolbar
+
+Wrap a Toolbar.Button in `DropdownMenu.Trigger asChild`, as in the example above. The menu opens with Enter, Space or ArrowDown; closing it returns focus to the toolbar.
+
+## API reference
+
+### Root
+
+Accepts every `<div>` attribute.
+
+<PropsTable rows={[
+  { name: "aria-label", type: "string", description: "Accessible name; required unless you pass aria-labelledby." },
+  { name: "orientation", type: "\"horizontal\" | \"vertical\"", default: "\"horizontal\"", description: "Layout and arrow-key axis." },
+  { name: "loop", type: "boolean", default: "true", description: "Wrap from the last item to the first." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref." },
+]} />
+
+### Button
+
+Accepts every `<button>` attribute.
+
+<PropsTable rows={[
+  { name: "disabled", type: "boolean", default: "false", description: "Sets aria-disabled and blocks clicks; skipped by the arrow keys." },
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element instead of a <button>." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref." },
+]} />
+
+### Link, Group, Separator
+
+Link accepts every `<a>` attribute and `asChild`. Group and Separator accept every `<div>` attribute; the separator's `aria-orientation` is set perpendicular to the toolbar.
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-toolbar` | Root |
+| `.mrd-toolbar__group` | Group |
+| `.mrd-toolbar__button`, `.mrd-toolbar__link` | Button and Link (unless `asChild`) |
+| `.mrd-toolbar__separator` | Separator |
+
+| Attribute | On | Values |
+|---|---|---|
+| `data-orientation` | Root | `horizontal`, `vertical` |
+| `aria-pressed` | Button | `true` gets the pressed style |
+| `data-disabled` | Button | present when disabled |
+
+## Accessibility
+
+Follows the WAI-ARIA [Toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) with a roving tabindex: only one item is in the Tab sequence, and the toolbar remembers the last focused item. Right and Left follow reading direction in RTL.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Move into the toolbar (to the last focused item) or out of it." },
+  { keys: ["ArrowRight"], action: "Next item, wrapping (ArrowDown when vertical)." },
+  { keys: ["ArrowLeft"], action: "Previous item, wrapping (ArrowUp when vertical)." },
+  { keys: ["Home"], action: "First item." },
+  { keys: ["End"], action: "Last item." },
+  { keys: ["Enter", "Space"], action: "Activate the focused button." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Group three or more related controls that act on the same thing, like the text in an editor.</p>}
+  dont={<p>Wrap a page's unrelated buttons in a toolbar just for the look; each would lose its own Tab stop.</p>}
+/>
+
+## Related
+
+- [DropdownMenu](/docs/components/dropdown-menu): menus inside a toolbar.
+- [SegmentedControl](/docs/components/segmented-control): switch between a few views.

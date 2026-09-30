@@ -1,0 +1,184 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { DataTableBasic, DataTableFilters } from "@/examples/tr/data-table";
+import { dataTableBasicCode, dataTableFiltersCode } from "@/examples/tr/data-table.code";
+
+export const metadata = docMetadata("tr", "/docs/components/data-table", {
+  title: "DataTable",
+  description: "Table üzerinde sıralama, filtreleme, sayfalama, satır seçimi ve kolon görünürlüğü.",
+});
+
+# DataTable
+
+[Table](/tr/docs/components/table) üzerinde sıralama, arama ve kolon filtreleri, sayfalama, checkbox ile satır seçimi ve kolon görünürlüğü. State'i `useDataTable` tutar; `DataTable` render'lar. Bağımlılık yok.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/data-table">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={dataTableBasicCode}>
+  <DataTableBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { DataTable, useDataTable, type DataTableColumn } from "@meridui/react";
+```
+
+## Anatomi
+
+```tsx
+const table = useDataTable({ data, columns });
+
+<DataTable table={table} caption="…" />
+```
+
+- **Kolonlar** her alanı tanımlar: `accessor` (bir anahtar ya da fonksiyon) sıralamayı, aramayı ve varsayılan hücreyi besler; `cell` başka her şeyi render'lar.
+- **useDataTable** headless'tır: geçerli sayfanın satırlarını ve her setter'ı döndürür. Her state parçası controlled ya da uncontrolled çalışır.
+- **DataTable** bir araç satırı (arama, Kolonlar menüsü, senin `toolbar`'ın), sıralanabilir başlıkları ve isteğe bağlı checkbox'larıyla Table'ı, ve durum satırı, sayfa başına satır seçimi ile [Pagination](/tr/docs/components/pagination)'dan oluşan bir alt bilgi render'lar.
+
+## Örnekler
+
+### Kolon filtreleri, varsayılan sıralama ve gizli kolonlar
+
+Kendi filtre kontrollerini `toolbar`'a koy ve onları `setColumnFilter` ile yönet. Bir kolonun `filterFn`'i varsayılan "içerir" eşleşmesinin yerini alır.
+
+<ComponentPreview code={dataTableFiltersCode}>
+  <DataTableFilters />
+</ComponentPreview>
+
+### Metinleri çevirmek
+
+Görünen ve ekran okuyucuya giden her metin `labels` ile değişir; varsayılanlar İngilizcedir. Bu sayfadaki örnekler şu nesneyi kullanıyor:
+
+```tsx
+const labelsTr: Partial<DataTableLabels> = {
+  search: "Ara",
+  searchPlaceholder: "Ara…",
+  columns: "Kolonlar",
+  selectPage: "Bu sayfadaki tüm satırları seç",
+  selectRow: (label) => `${label} satırını seç`,
+  selected: (count, total) => `${total} satırdan ${count} tanesi seçili`,
+  results: (count) => `${count} sonuç`,
+  empty: "Sonuç yok.",
+  rowsPerPage: "Sayfa başına satır",
+  pagination: "Sayfalama",
+  previousPage: "Önceki sayfa",
+  nextPage: "Sonraki sayfa",
+  page: (page) => `Sayfa ${page}`,
+};
+```
+
+### Headless
+
+DataTable'ın düzeni uymadığında (örneğin mobilde kart listesi) aynı state'ten kendi markup'ını render'la.
+
+```tsx
+const table = useDataTable({ data, columns });
+
+// DataTable'ın render'ladığı her şey kendi markup'ın için de hazır:
+table.rows;              // geçerli sayfa, filtrelenmiş ve sıralanmış
+table.toggleSort("name");
+table.setGlobalFilter("ada");
+table.setPage(2);
+table.toggleRow(table.getRowId(row));
+table.selectedRows;      // tüm sayfalarda
+table.toggleColumn("email", false);
+```
+
+Hook, verdiğin satırlar üzerinde çalışır. Sunucu tarafında sıralama ya da sayfalama için kendi state'inle veri çek ve doğrudan [Table](/tr/docs/components/table) render'la.
+
+## API referansı
+
+### DataTableColumn
+
+<PropsTable rows={[
+  { name: "id", type: "string", description: "Benzersiz kolon id'si." },
+  { name: "header", type: "ReactNode", description: "Başlık içeriği." },
+  { name: "label", type: "string", description: "Kolonlar menüsü için düz metin ad. header string ise varsayılanı odur." },
+  { name: "accessor", type: "keyof Row | (row) => unknown", description: "Sıralama, arama ve varsayılan hücre için değer." },
+  { name: "cell", type: "(row) => ReactNode", description: "Hücre içeriği. Varsayılanı accessor değerinin metni." },
+  { name: "sortable", type: "boolean", default: "false", description: "Bu kolona göre sıralamaya izin verir." },
+  { name: "sortFn", type: "(a, b) => number", description: "Özel artan sıralama karşılaştırması. Varsayılanı sayı, tarih ve doğal metin sırası; boş değerler en sonda." },
+  { name: "searchable", type: "boolean", default: "accessor varsa true", description: "Kolonu genel aramaya dahil eder." },
+  { name: "filterFn", type: "(row, filter: string) => boolean", description: "Kolona özel filtre." },
+  { name: "hideable", type: "boolean", default: "true", description: "Kolonu Kolonlar menüsünde listeler." },
+  { name: "align", type: "\"start\" | \"center\" | \"end\"", default: "\"start\"", description: "Metin hizası; sayılar için end." },
+]} />
+
+### useDataTable
+
+Her state'in bir controlled prop'u, bir `default…` prop'u ve bir `on…Change` callback'i vardır.
+
+<PropsTable rows={[
+  { name: "data", type: "Row[]", description: "Tüm satırlar. Memoize et." },
+  { name: "columns", type: "DataTableColumn<Row>[]", description: "Kolon tanımları." },
+  { name: "getRowId", type: "(row, index) => string", default: "row.id ?? index", description: "Seçim için kararlı id." },
+  { name: "sort / defaultSort / onSortChange", type: "{ columnId, direction } | null", description: "Aynı anda tek sıralı kolon." },
+  { name: "globalFilter / defaultGlobalFilter / onGlobalFilterChange", type: "string", description: "Arama metni; her kelime aranabilir bir kolonda geçmeli." },
+  { name: "columnFilters / defaultColumnFilters / onColumnFiltersChange", type: "Record<string, string>", description: "Kolon filtreleri." },
+  { name: "page / defaultPage / onPageChange", type: "number", default: "1", description: "Geçerli sayfa, 1'den başlar." },
+  { name: "pageSize / defaultPageSize / onPageSizeChange", type: "number", default: "10", description: "Sayfa başına satır." },
+  { name: "selection / defaultSelection / onSelectionChange", type: "string[]", description: "Seçili satır id'leri." },
+  { name: "hiddenColumns / defaultHiddenColumns / onHiddenColumnsChange", type: "string[]", description: "Gizli kolon id'leri." },
+]} />
+
+`rows`, `filteredRows`, `visibleColumns`, `page`, `pageCount`, `pageSelection` (`"all" | "some" | "none"`), `selectedRows` ile `toggleSort`, `setGlobalFilter`, `setColumnFilter`, `setPage`, `setPageSize`, `toggleRow`, `togglePage`, `clearSelection` ve `toggleColumn` setter'larını döndürür. Bir filtreyi ya da sayfa boyutunu değiştirmek 1. sayfaya döner.
+
+### DataTable
+
+Tüm [Table](/tr/docs/components/table#api-referansi) prop'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "table", type: "DataTableInstance<Row>", description: "useDataTable'dan gelen state." },
+  { name: "caption", type: "ReactNode", description: "Tabloyu adlandırır; showCaption verilmedikçe görsel olarak gizlidir." },
+  { name: "showCaption", type: "boolean", default: "false", description: "Caption'ı tablonun üstünde gösterir." },
+  { name: "selectable", type: "boolean", default: "false", description: "Bir checkbox kolonu ekler." },
+  { name: "getRowLabel", type: "(row) => string", description: "Satırı checkbox etiketinde adlandırır. Varsayılanı ilk görünür kolon." },
+  { name: "searchable", type: "boolean", default: "true", description: "Arama kutusunu gösterir." },
+  { name: "columnToggle", type: "boolean", default: "gizlenebilir kolon varsa true", description: "Kolonlar menüsünü gösterir." },
+  { name: "paginated", type: "boolean", default: "birden çok sayfa varsa true", description: "Sayfalamayı gösterir." },
+  { name: "pageSizeOptions", type: "number[]", description: "Sayfa başına satır seçimi sunar." },
+  { name: "toolbar", type: "ReactNode", description: "Araç satırındaki ek kontroller." },
+  { name: "emptyState", type: "ReactNode", default: "labels.empty", description: "Hiçbir satır eşleşmediğinde gösterilir." },
+  { name: "labels", type: "Partial<DataTableLabels>", description: "Görünen ve ekran okuyucuya giden her metin; varsayılanlar İngilizce." },
+  { name: "rootClassName", type: "string", description: "Dış sarmalayıcının sınıfı." },
+]} />
+
+`DataTableLabels`: `search`, `searchPlaceholder`, `columns`, `selectPage`, `selectRow(rowLabel)`, `selected(count, total)`, `results(count)`, `empty`, `rowsPerPage`, `pagination`, `previousPage`, `nextPage`, `page(n)`.
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-data-table` | Sarmalayıcı |
+| `.mrd-data-table__toolbar`, `.mrd-data-table__search`, `.mrd-data-table__columns` | Araç satırı parçaları |
+| `.mrd-data-table__select` | Checkbox hücreleri |
+| `.mrd-data-table__empty` | Boş satır hücresi |
+| `.mrd-data-table__footer`, `.mrd-data-table__status`, `.mrd-data-table__page-size` | Alt bilgi parçaları |
+
+Satırlar, başlıklar ve hücreler Table'ın kendi sınıflarıdır (`.mrd-table__*`); seçili satırlar `data-selected` alır.
+
+## Erişilebilirlik
+
+Tablo, bir `<caption>` ile native tablo semantiğini korur. Sıralanabilir başlıklar `<th aria-sort>` içindeki butonlardır; her checkbox'ın bir adı vardır ("Ada Lovelace satırını seç", "Bu sayfadaki tüm satırları seç") ve başlık checkbox'ı karışık state'i gösterir. Durum satırı, aramadan sonra sonuç sayısını ve seçim sayısını okuyan polite bir live region'dır; arama kutusu onunla açıklanır.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Arama, Kolonlar, sıralama butonları, checkbox'lar ve sayfalama arasında ilerler." },
+  { keys: ["Enter", "Space"], action: "Sıralama butonunda: artan, azalan, sırasız arasında döner." },
+  { keys: ["Space"], action: "Checkbox'ta: satırı (ya da sayfayı) seçer veya seçimi kaldırır." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Sayıları sağa hizala (`align: "end"`) ve ad kolonunu hep görünür tut (`hideable: false`).</p>}
+  dont={<p>Hook'a binlerce satır yüklemek. Sayfalamayı ve sıralamayı sunucuda yap, onun yerine Table render'la.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Table](/tr/docs/components/table): DataTable'ın üzerine kurulduğu markup.
+- [Veri tabloları deseni](/tr/docs/patterns/data-tables): yerleşim ve toplu aksiyonlar.
+- [Pagination](/tr/docs/components/pagination): alt bilgideki kontrol.

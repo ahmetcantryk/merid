@@ -1,0 +1,37 @@
+@layer merid.components {
+  .mrd-collapsible__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mrd-space-2);
+    min-height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--mrd-ink);
+    font: inherit;
+    font-size: var(--mrd-text-sm);
+    font-weight: var(--mrd-weight-medium);
+    cursor: pointer;
+  }
+
+  .mrd-collapsible__trigger:focus-visible {
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 3px;
+    border-radius: var(--mrd-radius-xs);
+  }
+
+  .mrd-collapsible__trigger[data-disabled] {
+    color: var(--mrd-muted);
+    cursor: not-allowed;
+  }
+
+  .mrd-collapsible__content[data-state="open"] {
+    animation: mrd-overlay-fade var(--mrd-duration) var(--mrd-ease) both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-collapsible__content[data-state="open"] {
+      animation: none;
+    }
+  }
+}

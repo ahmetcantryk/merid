@@ -18,6 +18,7 @@ import {
 } from "react";
 import { composeRefs, useComposedRefs } from "../../internal/ovl-compose-refs";
 import { cx } from "../../internal/ovl-cx";
+import type { VirtualElement } from "@floating-ui/react-dom";
 import { type Placement, useAnchored } from "../../internal/ovl-floating";
 import { focusElement } from "../../internal/ovl-focusable";
 import { Portal } from "../../internal/ovl-portal";
@@ -28,24 +29,34 @@ import { getRovingItems, useRovingFocus } from "../../internal/ovl-use-roving-fo
 import { Slot } from "../../internal/ovl-slot";
 import { withRef } from "../../internal/ovl-with-ref";
 
-type FocusTarget = "first" | "last";
+/** @internal */
+export type FocusTarget = "first" | "last";
 
-interface MenuContextValue {
+/** @internal Shared by DropdownMenu and ContextMenu. */
+export interface MenuContextValue {
   open: boolean;
   setOpen: (open: boolean) => void;
   openWith: (target: FocusTarget) => void;
   close: (returnFocus: boolean) => void;
   menuId: string;
-  triggerId: string;
-  triggerRef: RefObject<HTMLButtonElement | null>;
+  /** Id of the element naming the menu; `undefined` when the menu names itself (ContextMenu). */
+  triggerId: string | undefined;
+  triggerRef: RefObject<HTMLElement | null>;
   focusTarget: RefObject<FocusTarget>;
+  /** What the menu is positioned against: the trigger, or a point (ContextMenu). */
+  getAnchor: () => Element | VirtualElement | null;
+  /** Presses on the trigger count as inside the menu (DropdownMenu) or outside it (ContextMenu). */
+  triggerIsInside: boolean;
+  /** Accessible name used when no trigger labels the menu. */
+  defaultLabel?: string;
 }
 
-const MenuContext = createContext<MenuContextValue | null>(null);
+/** @internal */
+export const MenuContext = createContext<MenuContextValue | null>(null);
 
 function useMenu(component: string) {
   const ctx = useContext(MenuContext);
-  if (!ctx) throw new Error(`<${component}> must be used inside <DropdownMenu.Root>.`);
+  if (!ctx) throw new Error(`<${component}> must be used inside <DropdownMenu.Root> or <ContextMenu.Root>.`);
   return ctx;
 }
 
@@ -81,6 +92,8 @@ function DropdownMenuRoot({ open: openProp, defaultOpen = false, onOpenChange, c
       triggerId: `${menuId}-trigger`,
       triggerRef,
       focusTarget,
+      getAnchor: () => triggerRef.current,
+      triggerIsInside: true,
     }),
     [open, setOpen, menuId],
   );
@@ -99,7 +112,7 @@ function DropdownMenuTrigger({ asChild = false, onClick, onKeyDown, type = "butt
   const Comp = (asChild ? Slot : "button") as "button";
   return (
     <Comp
-      ref={composeRefs(ctx.triggerRef, ref)}
+      ref={composeRefs(ctx.triggerRef as RefObject<HTMLButtonElement | null>, ref)}
       id={ctx.triggerId}
       type={asChild ? undefined : type}
       aria-haspopup="menu"
@@ -139,7 +152,8 @@ export interface DropdownMenuContentProps extends HTMLAttributes<HTMLDivElement>
   ref?: Ref<HTMLDivElement>;
 }
 
-function DropdownMenuContent({
+/** @internal Menu panel shared by DropdownMenu.Content and ContextMenu.Content. */
+export function MenuContentImpl({
   placement = "bottom-start",
   sideOffset = 6,
   container,
@@ -149,14 +163,15 @@ function DropdownMenuContent({
   ref,
   ...rest
 }: DropdownMenuContentProps) {
-  const ctx = useMenu("DropdownMenu.Content");
+  const ctx = useMenu("Menu content");
   const menuRef = useRef<HTMLDivElement | null>(null);
   const { refs, floatingStyles } = useAnchored({ open: ctx.open, placement, sideOffset });
   const roving = useRovingFocus(menuRef, { orientation: "vertical", loop: true, typeahead: true });
 
+  const { getAnchor } = ctx;
   useLayoutEffect(() => {
-    refs.setReference(ctx.triggerRef.current);
-  }, [refs, ctx.triggerRef, ctx.open]);
+    refs.setReference(getAnchor());
+  }, [refs, getAnchor, ctx.open]);
 
   useEffect(() => {
     if (!ctx.open) return;
@@ -165,7 +180,7 @@ function DropdownMenuContent({
     focusElement(target ?? menuRef.current);
   }, [ctx.open, ctx.focusTarget]);
 
-  useDismiss([menuRef, ctx.triggerRef], ctx.open, (reason) => ctx.close(reason === "escape"));
+  useDismiss(ctx.triggerIsInside ? [menuRef, ctx.triggerRef] : [menuRef], ctx.open, (reason) => ctx.close(reason === "escape"));
 
   const mergedRef = useComposedRefs(menuRef, refs.setFloating, ref);
 
@@ -178,6 +193,7 @@ function DropdownMenuContent({
         role="menu"
         aria-orientation="vertical"
         aria-labelledby={ctx.triggerId}
+        aria-label={ctx.triggerId ? undefined : ctx.defaultLabel}
         tabIndex={-1}
         data-state="open"
         className={cx("mrd-menu", className)}
@@ -244,7 +260,8 @@ export interface DropdownMenuItemProps extends ItemBaseProps {
   onSelect?: (event: Event) => void;
 }
 
-function DropdownMenuItem({
+/** @internal */
+export function DropdownMenuItem({
   disabled = false,
   textValue,
   leading,
@@ -257,7 +274,7 @@ function DropdownMenuItem({
   children,
   ...rest
 }: DropdownMenuItemProps) {
-  const ctx = useMenu("DropdownMenu.Item");
+  const ctx = useMenu("Menu item");
   const handlers = useItemActivation(disabled, () => {
     const event = new Event("mrd.select", { cancelable: true });
     onSelect?.(event);
@@ -299,7 +316,8 @@ function CheckIcon() {
   );
 }
 
-function DropdownMenuCheckboxItem({
+/** @internal */
+export function DropdownMenuCheckboxItem({
   checked: checkedProp,
   defaultChecked = false,
   onCheckedChange,
@@ -345,19 +363,22 @@ export interface DropdownMenuGroupProps extends HTMLAttributes<HTMLDivElement> {
   "aria-label"?: string;
 }
 
-function DropdownMenuGroup(props: DropdownMenuGroupProps) {
+/** @internal */
+export function DropdownMenuGroup(props: DropdownMenuGroupProps) {
   return <div role="group" {...props} />;
 }
 
 export interface DropdownMenuLabelProps extends HTMLAttributes<HTMLDivElement> {}
 
-function DropdownMenuLabel({ className, ...rest }: DropdownMenuLabelProps) {
+/** @internal */
+export function DropdownMenuLabel({ className, ...rest }: DropdownMenuLabelProps) {
   return <div role="presentation" className={cx("mrd-menu__label", className)} {...rest} />;
 }
 
 export interface DropdownMenuSeparatorProps extends HTMLAttributes<HTMLDivElement> {}
 
-function DropdownMenuSeparator({ className, ...rest }: DropdownMenuSeparatorProps) {
+/** @internal */
+export function DropdownMenuSeparator({ className, ...rest }: DropdownMenuSeparatorProps) {
   return <div role="separator" className={cx("mrd-menu__separator", className)} {...rest} />;
 }
 
@@ -368,7 +389,7 @@ function DropdownMenuSeparator({ className, ...rest }: DropdownMenuSeparatorProp
 export const DropdownMenu = {
   Root: DropdownMenuRoot,
   Trigger: withRef("DropdownMenu.Trigger", DropdownMenuTrigger),
-  Content: withRef("DropdownMenu.Content", DropdownMenuContent),
+  Content: withRef("DropdownMenu.Content", MenuContentImpl),
   Item: withRef("DropdownMenu.Item", DropdownMenuItem),
   CheckboxItem: withRef("DropdownMenu.CheckboxItem", DropdownMenuCheckboxItem),
   Group: withRef("DropdownMenu.Group", DropdownMenuGroup),

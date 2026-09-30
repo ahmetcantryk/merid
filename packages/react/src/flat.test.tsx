@@ -4,14 +4,20 @@ const NAMESPACES = [
   "Accordion",
   "AlertDialog",
   "Breadcrumb",
+  "Collapsible",
+  "Command",
+  "ContextMenu",
   "Dialog",
   "Drawer",
   "DropdownMenu",
+  "HoverCard",
+  "NavigationMenu",
   "Popover",
   "Select",
   "SidebarNav",
   "Stepper",
   "Tabs",
+  "Toolbar",
 ] as const;
 
 describe("flat compound exports (RSC-safe)", () => {

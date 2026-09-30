@@ -1,0 +1,172 @@
+@layer merid.components {
+  .mrd-navmenu {
+    position: relative;
+    font-size: var(--mrd-text-sm);
+    line-height: var(--mrd-leading-sm);
+  }
+
+  .mrd-navmenu__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .mrd-navmenu__item {
+    position: relative;
+  }
+
+  /* A full-width panel positions against the whole bar instead of its item. */
+  .mrd-navmenu__item:has(> .mrd-navmenu__content[data-full]) {
+    position: static;
+  }
+
+  .mrd-navmenu__trigger,
+  .mrd-navmenu__list > .mrd-navmenu__item > .mrd-navmenu__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mrd-space-1);
+    height: var(--mrd-control-md);
+    padding: 0 var(--mrd-space-3);
+    border: 0;
+    border-radius: var(--mrd-radius-md);
+    background: transparent;
+    color: var(--mrd-body);
+    font: inherit;
+    font-weight: var(--mrd-weight-medium);
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color var(--mrd-duration) var(--mrd-ease),
+      color var(--mrd-duration) var(--mrd-ease);
+  }
+
+  .mrd-navmenu__trigger:hover,
+  .mrd-navmenu__trigger[data-state="open"],
+  .mrd-navmenu__list > .mrd-navmenu__item > .mrd-navmenu__link:hover {
+    background: var(--mrd-tray);
+    color: var(--mrd-ink);
+  }
+
+  .mrd-navmenu__list > .mrd-navmenu__item > .mrd-navmenu__link[aria-current="page"] {
+    color: var(--mrd-ink);
+  }
+
+  .mrd-navmenu__chevron {
+    color: var(--mrd-muted);
+    transition: transform var(--mrd-duration-slow) var(--mrd-ease);
+  }
+
+  .mrd-navmenu__trigger[data-state="open"] .mrd-navmenu__chevron {
+    transform: rotate(180deg);
+  }
+
+  .mrd-navmenu__trigger:focus-visible,
+  .mrd-navmenu__link:focus-visible {
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 1px;
+  }
+
+  .mrd-navmenu__content {
+    position: absolute;
+    inset-block-start: calc(100% + 6px);
+    inset-inline-start: 0;
+    z-index: var(--mrd-z-popover);
+    display: grid;
+    gap: 2px;
+    min-width: 220px;
+    max-width: min(560px, calc(100vw - 16px));
+    padding: var(--mrd-space-1);
+    background: var(--mrd-surface);
+    border: 1px solid var(--mrd-line);
+    border-radius: var(--mrd-radius-2xl);
+    box-shadow: var(--mrd-shadow-xl);
+    animation: mrd-floating-in var(--mrd-duration) var(--mrd-ease) both;
+  }
+
+  .mrd-navmenu__content[hidden] {
+    display: none;
+  }
+
+  .mrd-navmenu__content[data-full] {
+    inset-inline-end: 0;
+    max-width: none;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    padding: var(--mrd-space-2);
+  }
+
+  .mrd-navmenu__content .mrd-navmenu__link {
+    display: grid;
+    gap: 2px;
+    padding: 8px 10px;
+    border-radius: var(--mrd-radius-md);
+    color: var(--mrd-ink);
+    font-weight: var(--mrd-weight-medium);
+    text-decoration: none;
+    transition: background-color var(--mrd-duration) var(--mrd-ease);
+  }
+
+  .mrd-navmenu__content .mrd-navmenu__link:hover,
+  .mrd-navmenu__content .mrd-navmenu__link[aria-current="page"] {
+    background: var(--mrd-tray);
+  }
+
+  .mrd-navmenu__link-description {
+    color: var(--mrd-muted);
+    font-size: var(--mrd-text-2xs);
+    font-weight: var(--mrd-weight-regular);
+    line-height: var(--mrd-leading-2xs);
+  }
+
+  @media (pointer: coarse) {
+    .mrd-navmenu__trigger,
+    .mrd-navmenu__list > .mrd-navmenu__item > .mrd-navmenu__link,
+    .mrd-navmenu__content .mrd-navmenu__link {
+      min-height: 44px;
+    }
+  }
+
+  /* Narrow screens: every panel spans the bar. */
+  @media (width <= 640px) {
+    .mrd-navmenu__item {
+      position: static;
+    }
+
+    .mrd-navmenu__content,
+    .mrd-navmenu__content[data-full] {
+      inset-inline: 0;
+      min-width: 0;
+      max-width: none;
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .mrd-navmenu__content {
+      border: 1px solid CanvasText;
+    }
+
+    .mrd-navmenu__link[aria-current="page"] {
+      outline: 2px solid Highlight;
+    }
+  }
+
+  @media print {
+    .mrd-navmenu__content {
+      display: none !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-navmenu__content,
+    .mrd-navmenu__chevron,
+    .mrd-navmenu__trigger,
+    .mrd-navmenu__link {
+      animation: none;
+      transition: none;
+    }
+  }
+}

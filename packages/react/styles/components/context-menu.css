@@ -1,0 +1,6 @@
+@layer merid.components {
+  /* The panel and items reuse .mrd-menu (dropdown-menu.css). */
+  .mrd-context-menu__trigger {
+    -webkit-touch-callout: none;
+  }
+}

@@ -1,0 +1,79 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ScrollAreaBasic, ScrollAreaHorizontal } from "@/examples/tr/scroll-area";
+import { scrollAreaBasicCode, scrollAreaHorizontalCode } from "@/examples/tr/scroll-area.code";
+
+export const metadata = docMetadata("tr", "/docs/components/scroll-area", {
+  title: "ScrollArea",
+  description: "İnce, temaya uyan scrollbar'lı native kaydırma alanı.",
+});
+
+# ScrollArea
+
+İnce, token renkli scrollbar'ları olan bir kaydırma alanı. Kaydırma native kalır: tekerlek, dokunma, klavye, sayfa içi arama ve scroll anchoring çalışır; JavaScript'te hiçbir şey yeniden yazılmaz.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/scroll-area">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={scrollAreaBasicCode}>
+  <ScrollAreaBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { ScrollArea } from "@meridui/react";
+```
+
+## Örnekler
+
+### Yatay, hover'da scrollbar
+
+`orientation` ekseni seçer (`"vertical"`, `"horizontal"` ya da `"both"`). `autoHide`, hassas imleçli cihazlarda scrollbar'ı yalnızca alan hover'dayken ya da focus'tayken gösterir.
+
+<ComponentPreview code={scrollAreaHorizontalCode}>
+  <ScrollAreaHorizontal />
+</ComponentPreview>
+
+## API referansı
+
+Tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "orientation", type: "\"vertical\" | \"horizontal\" | \"both\"", default: "\"vertical\"", description: "Hangi eksenlerin kaydığı." },
+  { name: "maxHeight", type: "CSSProperties[\"maxHeight\"]", description: "Kaydırmaya başlamadan önceki en büyük yükseklik, örneğin 240 ya da \"50vh\"." },
+  { name: "autoHide", type: "boolean", default: "false", description: "Scrollbar'ı yalnızca hover ya da focus'ta gösterir (hassas imleçler)." },
+  { name: "label", type: "string", default: "\"Scrollable content\"", description: "Alan focus alabilen bir bölgeye dönüştüğünde kullanılan erişilebilir ad." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Kayan elemana iletilen ref." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-scroll-area` | Kayan eleman |
+
+| Attribute / değişken | Değerler |
+|---|---|
+| `data-orientation` | `vertical`, `horizontal`, `both` |
+| `data-autohide` | `autoHide` verildiğinde bulunur |
+| `--mrd-scroll-thumb` | tutamaç rengi; varsayılanı `--mrd-line-strong` |
+
+Scrollbar `scrollbar-width: thin` ve `scrollbar-color` kullanır (eski Safari için `::-webkit-scrollbar` da var). Zorunlu renkler (forced colors) modunda sistem scrollbar'ı kullanılır.
+
+## Erişilebilirlik
+
+İçerik taştığında ve içinde focus alabilen hiçbir şey olmadığında alan `role="region"`, `tabIndex={0}` ve adı olarak `label` alır; böylece klavye kullanıcıları ona ulaşıp ok tuşlarıyla kaydırabilir (WCAG 2.1.1). İçinde link ya da buton varsa Tab sırasına girmez: onlara focus vermek alanı kaydırır.
+
+<KeyboardTable rows={[
+  { keys: ["ArrowUp", "ArrowDown"], action: "Dikey kaydırır (alan focus'tayken tarayıcı davranışı)." },
+  { keys: ["ArrowLeft", "ArrowRight"], action: "Yatay kaydırır." },
+  { keys: ["PageUp", "PageDown"], action: "Bir sayfa kaydırır." },
+  { keys: ["Home", "End"], action: "Başa ya da sona kaydırır." },
+]} />
+
+## İlgili sayfalar
+
+- [Table](/tr/docs/components/table): kendi yatay kaydırma çerçevesi var (`scrollLabel`).
+- [Command](/tr/docs/components/command): listesi aynı şekilde native kayar.
