@@ -23,6 +23,8 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm run build -w @merid/react
+      - name: Build the AI packages (data compiled from the docs)
+        run: npm run build -w packages/mcp -w packages/cli
       - name: Create release pull request or publish
         uses: changesets/action@v1
         with:

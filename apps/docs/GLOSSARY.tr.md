@@ -50,6 +50,8 @@ Yeni bir sayfa çevirirken veya mevcut bir çeviriyi düzeltirken önce buraya b
 | gutter, container | "container genişliği" | Layout terimi, token adlarında geçiyor. |
 | primitive | "layout primitive'leri" | Component kütüphanelerinde yerleşik. |
 | overlay | "overlay component'leri" | Kategori adı olarak yerleşik. |
+| agent, AI agent | "agent'ın yazdığı kod" | Claude Code, Cursor gibi araçların kendi dili; "ajan" dokümanlarda tuhaf duruyor. Başlıkta "AI ile kullanım". |
+| MCP server, MCP client, config | "MCP server'ı ekle", "MCP config'i" | Protokol terimi; araçların arayüzünde İngilizce geçiyor. |
 
 ## Çevrilen terimler
 

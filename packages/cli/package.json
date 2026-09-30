@@ -1,0 +1,54 @@
+{
+  "name": "@meridui/cli",
+  "version": "0.0.0",
+  "description": "Set up Merid in a Next.js, Vite or React Router project: install, stylesheet, AI rules, MCP config and page patterns.",
+  "license": "MIT",
+  "type": "module",
+  "homepage": "https://meridui.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahmetcantryk/merid.git",
+    "directory": "packages/cli"
+  },
+  "bugs": "https://github.com/ahmetcantryk/merid/issues",
+  "bin": {
+    "merid": "dist/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/cli.d.ts",
+      "default": "./dist/cli.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node scripts/build-data.mjs && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && vitest run",
+    "lint": "eslint src test",
+    "publint": "publint"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "publint": "^0.3.24",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.2"
+  },
+  "keywords": [
+    "merid",
+    "react",
+    "cli",
+    "design-system",
+    "mcp",
+    "ai"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -14,6 +14,8 @@ export const navGroupTitlesTr: Readonly<Record<string, string>> = {
 export const navTitlesTr: Readonly<Record<string, string>> = {
   "/docs/introduction": "Giriş",
   "/docs/installation": "Kurulum",
+  "/docs/cli": "CLI",
+  "/docs/ai": "AI ile kullanım",
   "/docs/usage": "Kullanım",
   "/docs/styling": "Stil ve CSS layer'ları",
   "/docs/server-components": "Server component'ler",

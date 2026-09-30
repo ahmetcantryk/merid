@@ -1,0 +1,152 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { AiRules } from "@/components/AiRules";
+
+export const metadata = docMetadata("en", "/docs/ai", {
+  title: "Using Merid with AI",
+  description: "Give Claude Code, Cursor, VS Code and Windsurf the Merid docs: an MCP server, llms.txt and an official rules file.",
+});
+
+# Using Merid with AI
+
+Coding agents write better Merid code when they can read the real docs instead of guessing props. Merid ships three things for that, all generated from these docs at build time:
+
+- **An MCP server**, `@meridui/mcp`, that answers questions about components, props, tokens, patterns and setup from inside your editor.
+- **`llms.txt`**, plus a Markdown version of every page, for tools that read the web.
+- **An official rules file** that tells the agent how to write Merid code: which imports, which tokens, what not to do.
+
+## Quick setup
+
+Run this in your project. It installs `@meridui/react`, imports the stylesheet, and asks whether to add the rules file and the MCP config for Claude Code, Cursor and VS Code. Every file change is shown as a diff first.
+
+```bash
+npx @meridui/cli init
+```
+
+See [CLI](/docs/cli) for the options, or set things up by hand below.
+
+## MCP server
+
+The server runs locally over stdio with `npx -y @meridui/mcp`. It is read-only and works offline: the docs are compiled into the package, so it makes no network requests and writes no files.
+
+| Tool | What it returns |
+| --- | --- |
+| `list_components` | Every component, grouped by category. Pass `category` to filter. |
+| `get_component` | Import line, example code, props tables, keyboard interaction and accessibility notes. `section` narrows it to `props`, `examples` or `accessibility`. |
+| `search_docs` | Ranked sections from every docs page, with links. |
+| `get_tokens` | The `--mrd-*` tokens with light and dark values. Filter by `category` (`color`, `space`, `radius`, `shadow`, `typography`, `motion`, …) or `theme`. |
+| `get_design_contract` | The design contract (naming, colour, radius, shadow and motion rules) and the rules file. |
+| `get_pattern` | A page pattern's guide and full source: `app-shell`, `settings`, `auth`, `data-table`, `forms`, `confirmations`, `empty-and-loading`. |
+| `get_setup` | Setup steps for `next`, `vite` or `react-router`. |
+
+### Claude Code
+
+Add it for the current project (writes `.mcp.json`, which you can commit so the whole team gets it):
+
+```bash
+claude mcp add --scope project --transport stdio merid -- npx -y @meridui/mcp
+```
+
+Or write `.mcp.json` yourself:
+
+```json
+{
+  "mcpServers": {
+    "merid": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@meridui/mcp"]
+    }
+  }
+}
+```
+
+### Cursor
+
+Create `.cursor/mcp.json` in the project (or `~/.cursor/mcp.json` for every project):
+
+```json
+{
+  "mcpServers": {
+    "merid": {
+      "command": "npx",
+      "args": ["-y", "@meridui/mcp"]
+    }
+  }
+}
+```
+
+### VS Code
+
+Create `.vscode/mcp.json`. VS Code uses a `servers` key rather than `mcpServers`:
+
+```json
+{
+  "servers": {
+    "merid": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@meridui/mcp"]
+    }
+  }
+}
+```
+
+### Windsurf
+
+Open the MCP settings in Cascade, edit `mcp_config.json` and add:
+
+```json
+{
+  "mcpServers": {
+    "merid": {
+      "command": "npx",
+      "args": ["-y", "@meridui/mcp"]
+    }
+  }
+}
+```
+
+### Other clients
+
+Any MCP client that supports stdio servers works: the command is `npx` and the arguments are `-y @meridui/mcp`. Node.js 20 or newer is required.
+
+### Try it
+
+Ask your agent something that needs the docs, for example:
+
+- "Build a settings page with Merid. Use the settings pattern."
+- "Which props does Merid's `Dialog.Content` take?"
+- "Add a dark mode toggle using Merid's tokens."
+
+## llms.txt
+
+For tools that read URLs rather than MCP (chat assistants, v0 and similar), the site publishes the docs as plain text, following the [llms.txt](https://llmstxt.org) convention:
+
+| URL | Contents |
+| --- | --- |
+| [`/llms.txt`](/llms.txt) | An index of every page with a one-line summary and a link to its Markdown. |
+| [`/llms-full.txt`](/llms-full.txt) | The rules file, the design contract and every English docs page in one file. |
+| [`/tr/llms.txt`](/tr/llms.txt) | The index for the Turkish docs. |
+| `/docs/…/<page>.md` | Any page as Markdown: add `.md` to its URL, for example [`/docs/components/button.md`](/docs/components/button.md). |
+
+Paste `https://meridui.dev/llms-full.txt` into a chat to give the model the whole library in one go.
+
+## Rules file
+
+The rules file tells an agent how Merid code should look: import from `@meridui/react`, style only with `--mrd-*` tokens (no raw hex, arbitrary spacing or inline styles), compose existing components before writing new ones, and keep the accessibility rules. It is the same file the CLI and the MCP server use.
+
+<AiRules />
+
+Where to put it:
+
+| Tool | File |
+| --- | --- |
+| Codex, Cursor, Copilot, Jules and other agents that read `AGENTS.md` | `AGENTS.md` at the project root |
+| Cursor project rules | `.cursor/rules/merid.mdc`, with `description` and `globs` frontmatter |
+| Claude Code | `CLAUDE.md` at the project root |
+
+`npx @meridui/cli init --rules` writes all three. In `AGENTS.md` and `CLAUDE.md` it adds a section between `<!-- merid:start -->` and `<!-- merid:end -->`, so your own notes stay untouched and running it again only updates that section.
+
+<Callout title="Review what the agent writes">
+  The rules and the MCP server make good output much more likely, not guaranteed. Review generated UI like any other code, and run your accessibility checks.
+</Callout>
