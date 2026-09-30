@@ -1,0 +1,40 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/browser-support", {
+  title: "Tarayıcı desteği",
+  description: "Merid'in desteklediği tarayıcılar ve dayandığı CSS özellikleri.",
+});
+
+# Tarayıcı desteği
+
+Merid, kendini sürekli güncelleyen tarayıcıların son iki ana sürümünü ve hâlâ güvenlik güncellemesi alan Safari sürümlerini destekler.
+
+<table>
+  <thead>
+    <tr><th>Tarayıcı</th><th>En düşük sürüm</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Chrome ve Edge</td><td>111</td></tr>
+    <tr><td>Firefox</td><td>113</td></tr>
+    <tr><td>Safari (macOS ve iOS)</td><td>16.4</td></tr>
+  </tbody>
+</table>
+
+Internet Explorer ve eski Edge desteklenmez.
+
+## Kullanılan CSS özellikleri
+
+En düşük sürümler, Merid'in dayandığı kısa bir CSS özellikleri listesinden çıkar:
+
+- Override modeli için **cascade layer'lar** (`@layer`).
+- Sıfır specificity'li base stiller için **`:where()`**.
+- Türetilmiş birkaç ton için **`color-mix()`**.
+- Yalnızca klavyede görünen focus halkaları için **`:focus-visible`**.
+- Başlıklar için **`text-wrap: balance`**. Desteklenmediği yerde başlıklar normal şekilde satır atlar.
+
+## React sürümleri
+
+React 18.2 ve üstü desteklenir, React 19 dahil. Merid deneysel React API'lerine dayanmaz.
+
+## Test
+
+Component'lerin davranışı ve erişilebilirliği jsdom'da test edilir. Her minor release'ten önce yukarıdaki tarayıcılarda elle kontrol edilirler: macOS ve iOS'ta VoiceOver, Windows'ta NVDA ile.

@@ -2,14 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const LINKS = [
-  { title: "Docs", href: "/docs/introduction", match: (p: string) => p.startsWith("/docs") && !isSection(p) },
-  { title: "Foundations", href: "/docs/foundations", match: (p: string) => p.startsWith("/docs/foundations") },
-  { title: "Components", href: "/docs/components", match: (p: string) => p.startsWith("/docs/components") },
-  { title: "Integrations", href: "/docs/integrations/react-hook-form", match: (p: string) => p.startsWith("/docs/integrations") },
-  { title: "Patterns", href: "/docs/patterns/forms", match: (p: string) => p.startsWith("/docs/patterns") },
-] as const;
+import { getDictionary, localeFromPath, localizePath, stripLocale } from "@/lib/i18n";
 
 const SECTIONS = ["/docs/foundations", "/docs/components", "/docs/integrations", "/docs/patterns"] as const;
 
@@ -17,15 +10,32 @@ function isSection(pathname: string): boolean {
   return SECTIONS.some((section) => pathname.startsWith(section));
 }
 
+/** `match` receives the locale-neutral pathname. */
+const LINKS = [
+  { key: "docs", href: "/docs/introduction", match: (p: string) => p.startsWith("/docs") && !isSection(p) },
+  { key: "foundations", href: "/docs/foundations", match: (p: string) => p.startsWith("/docs/foundations") },
+  { key: "components", href: "/docs/components", match: (p: string) => p.startsWith("/docs/components") },
+  { key: "integrations", href: "/docs/integrations/react-hook-form", match: (p: string) => p.startsWith("/docs/integrations") },
+  { key: "patterns", href: "/docs/patterns/forms", match: (p: string) => p.startsWith("/docs/patterns") },
+] as const;
+
 export function HeaderNavLinks() {
   const pathname = usePathname() ?? "/";
+  const locale = localeFromPath(pathname);
+  const neutral = stripLocale(pathname);
+  const t = getDictionary(locale).header;
   return (
-    <nav className="site-header__nav" aria-label="Primary">
+    <nav className="site-header__nav" aria-label={t.primaryNav}>
       {LINKS.map((link) => {
-        const active = link.match(pathname);
+        const active = link.match(neutral);
         return (
-          <Link key={link.href} href={link.href} className="nav-link" aria-current={active ? "page" : undefined}>
-            {link.title}
+          <Link
+            key={link.href}
+            href={localizePath(link.href, locale)}
+            className="nav-link"
+            aria-current={active ? "page" : undefined}
+          >
+            {t.nav[link.key]}
           </Link>
         );
       })}

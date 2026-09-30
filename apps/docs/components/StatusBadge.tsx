@@ -1,16 +1,14 @@
+"use client";
+
+import { useDictionary } from "@/lib/i18n/client";
+
 export type ComponentStatus = "stable" | "beta" | "planned" | "deprecated";
 
-const LABEL: Record<ComponentStatus, string> = {
-  stable: "Stable",
-  beta: "Beta",
-  planned: "Planned",
-  deprecated: "Deprecated",
-};
-
 export function StatusBadge({ status }: { readonly status: ComponentStatus }) {
+  const labels = useDictionary().status;
   return (
     <span className="status-badge" data-status={status}>
-      {LABEL[status]}
+      {labels[status]}
     </span>
   );
 }

@@ -1,0 +1,85 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("en", "/docs/integrations/tailwind", {
+  title: "Tailwind CSS",
+  description: "Use Merid alongside Tailwind CSS v4: layer order, Preflight, and Merid tokens as Tailwind theme values.",
+});
+
+# Tailwind CSS
+
+Merid and Tailwind coexist cleanly because both use cascade layers. The only thing to decide is their order.
+
+## Layer order
+
+Merid puts everything in `merid.tokens`, `merid.base` and `merid.components`. Tailwind v4 uses `theme`, `base`, `components` and `utilities`. Declare the order once, before either stylesheet:
+
+```css
+/* app.css */
+@layer theme, base, merid, components, utilities;
+
+@import "tailwindcss";
+@import "@merid/react/styles.css";
+```
+
+With this order:
+
+- Tailwind's Preflight (`base`) comes first, so Merid's base and component styles win over it.
+- Tailwind utilities come last, so `className="mt-4 w-full"` on a Merid component overrides the component's own spacing and width — without `!important`.
+- Your own unlayered CSS still beats both.
+
+If you import Merid from JavaScript instead (`import "@merid/react/styles.css"`), keep the `@layer` statement at the top of the CSS file that Tailwind processes, and make sure that file loads first.
+
+## Preflight
+
+Preflight resets borders to `0 solid`, removes button backgrounds and makes images `display: block`. Merid's component rules restate everything they need, so components are unaffected. One thing to know:
+
+- Preflight sets `border-color` to `currentColor` on every element. Merid hairlines use `--mrd-line`; if you draw your own borders with Tailwind, use the token: `border border-[var(--mrd-line)]` or the theme colour below.
+
+## Tokens in the Tailwind theme
+
+Map Merid's CSS variables into Tailwind with `@theme inline`, so utilities follow light and dark mode automatically:
+
+```css
+@theme inline {
+  --color-accent: var(--mrd-accent);
+  --color-accent-soft: var(--mrd-accent-soft);
+  --color-ink: var(--mrd-ink);
+  --color-body: var(--mrd-body);
+  --color-muted: var(--mrd-muted);
+  --color-line: var(--mrd-line);
+  --color-surface: var(--mrd-surface);
+  --color-tray: var(--mrd-tray);
+  --color-danger: var(--mrd-danger);
+
+  --radius-control: var(--mrd-radius-lg);
+  --radius-card: var(--mrd-radius-card);
+
+  --shadow-sm: var(--mrd-shadow-sm);
+  --shadow-md: var(--mrd-shadow-md);
+
+  --font-sans: var(--mrd-font-sans);
+  --font-mono: var(--mrd-font-mono);
+}
+```
+
+```tsx
+<div className="rounded-card bg-tray p-6 text-body">
+  <h2 className="text-ink font-semibold">Usage</h2>
+  <p className="text-muted">Resets on the 1st.</p>
+</div>
+```
+
+`inline` makes Tailwind emit `var(--mrd-…)` in each utility instead of copying the value, which is what keeps dark mode working. The `@merid/tokens` package exports the same list as `cssVar` if you generate the theme from JavaScript.
+
+## Dark mode variant
+
+Merid switches on `data-theme="dark"`. Point Tailwind's `dark:` variant at the same attribute so both agree:
+
+```css
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+```
+
+This drops Tailwind's default `prefers-color-scheme` behaviour. If you rely on the system setting without a toggle, keep Tailwind's default and let Merid follow the media query too — it does by default.
+
+## Tailwind v3
+
+Tailwind v3 emits its output unlayered, so all of it — Preflight included — beats Merid's layered rules. Disable Preflight (`corePlugins: { preflight: false }`) or scope it, and expect utilities to always win. Map tokens in `tailwind.config.js` with `colors: { accent: "var(--mrd-accent)" }`.

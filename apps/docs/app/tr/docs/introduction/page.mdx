@@ -1,0 +1,33 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/introduction", {
+  title: "Giriş",
+  description: "Merid nedir, ne için yapıldı ve hangi fikirlerin üzerine kurulu.",
+});
+
+# Giriş
+
+Merid, sakin ve güven veren ürünler için yazılmış bir React component kütüphanesi. Erişilebilir component'ler, tek bir sade CSS dosyası ve küçük, derli toplu bir design token seti sunar.
+
+## Neden Merid
+
+Adı *meridian*'dan, yani ince ve kesin bir referans çizgisinden gelir. Görsel fikrin tamamı bu. Kenarlıklar 1px ince çizgidir, etkileşime girebildiğin her şeyi tek bir soğuk mavi işaretler, bölgeleri yumuşak gri yüzeyler (tray) ayırır, hareketler kısa ve sessizdir. Ekranda hiçbir şey içeriğinle dikkat yarışına girmez.
+
+Merid bilerek küçük tutuldu. Uzun bir katalog yerine iyi tanımlanmış birkaç component'i, ayar kalabalığı yerine sıkı bir tasarım sözleşmesini tercih eder.
+
+## Neler sunuyor
+
+- WAI-ARIA Authoring Practices'e uyan, tam klavye desteği ve görünür focus'u olan **component'ler**.
+- Adlandırılmış üç cascade layer içinde **sade CSS**. Runtime'da çalışan bir stil motoru, build plugin'i ya da sınıf adı üretimi yok.
+- `--mrd-` önekli CSS custom property'leri olarak, açık ve koyu değerleriyle **design token'lar**.
+- **Server component dostu** export'lar: statik component'ler sunucuda render'lanır, etkileşimli olanlar client component olarak işaretlidir.
+
+## Merid ne değildir
+
+Merid bir tema motoru değil. Accent rengini, font ailesini ve her token'ı değiştirebilirsin, ama kütüphane senin için yeni paletler ya da varyant sistemleri üretmez. Bir layout framework'ü de değil: sana bir container genişliği, bir boşluk skalası ve breakpoint'ler verir, sayfanın nasıl kurulacağını sana bırakır.
+
+## Sonraki adımlar
+
+- [Kurulum](/tr/docs/installation): npm, Next.js ve Vite ile kurulum.
+- [Kullanım](/tr/docs/usage): ekrana ilk component'i getirmek.
+- [Temeller](/tr/docs/foundations): her token'ı ve neden var olduğunu anlatır.
+- [İlkeler](/tr/docs/foundations/principles): component'lerin uymak zorunda olduğu tasarım sözleşmesi.

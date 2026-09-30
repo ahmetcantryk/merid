@@ -1,0 +1,234 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { DialogDemo, DialogControlledDemo, DialogSizesDemo } from "@/examples/tr/dialog";
+
+export const metadata = docMetadata("tr", "/docs/components/dialog", {
+  title: "Dialog",
+  description: "Odaklı bir iş için modal pencere: focus kapanı, scroll kilidi ve kapatma yönetimiyle.",
+});
+
+# Dialog
+
+Odaklı bir iş için modal pencere. Açıkken focus içeride tutulur, kapanınca tetikleyiciye geri döner.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" /> <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/dialog">Kaynak kodu gör</a>
+</div>
+
+## Import
+
+```tsx
+import { Dialog } from "@merid/react";
+```
+
+<ComponentPreview code={`<Dialog.Root>
+  <Dialog.Trigger asChild>
+    <Button variant="secondary">Profili düzenle</Button>
+  </Dialog.Trigger>
+  <Dialog.Content closeLabel="Kapat">
+    <Dialog.Title>Profili düzenle</Dialog.Title>
+    <Dialog.Description>Değişiklikleri çalışma alanındaki herkes görür.</Dialog.Description>
+    <Field label="Görünen ad">
+      <Input defaultValue="Ada Lovelace" />
+    </Field>
+    <Field label="Rol">
+      <Select.Root defaultValue="editor">
+        <Select.Trigger />
+        <Select.Content>
+          <Select.Item value="viewer">İzleyici</Select.Item>
+          <Select.Item value="editor">Editör</Select.Item>
+          <Select.Item value="admin">Yönetici</Select.Item>
+        </Select.Content>
+      </Select.Root>
+    </Field>
+    <Dialog.Footer>
+      <Dialog.Close>Vazgeç</Dialog.Close>
+      <Dialog.Close asChild>
+        <Button variant="primary">Kaydet</Button>
+      </Dialog.Close>
+    </Dialog.Footer>
+  </Dialog.Content>
+</Dialog.Root>`}>
+  <DialogDemo />
+</ComponentPreview>
+
+<Callout tone="success">
+  Otomatik kapatma butonunun erişilebilir adı varsayılan olarak “Close”dur. Türkçe arayüzde `closeLabel="Kapat"` ver; ekran okuyucular butonu doğru dilde okusun.
+</Callout>
+
+## Anatomi
+
+```tsx
+<Dialog.Root>
+  <Dialog.Trigger />
+  <Dialog.Content>
+    <Dialog.Title />
+    <Dialog.Description />
+    <Dialog.Footer>
+      <Dialog.Close>Vazgeç</Dialog.Close>
+    </Dialog.Footer>
+  </Dialog.Content>
+</Dialog.Root>
+```
+
+- **Root** açık/kapalı state'ini tutar. Kendisi bir eleman render'lamaz.
+- **Trigger**, dialog'u açıp kapatan bir `<button>`'dır. Onun yerine kendi elemanını (örneğin bir `Button`) render'lamak için `asChild` ver.
+- **Content** modal yüzeydir; arka planla (backdrop) birlikte `document.body`'ye portal'lanır. Maksimum genişliğini `size` belirler.
+- **Title** dialog'u etiketler (`aria-labelledby`). Her zaman bir tane ekle.
+- **Description** varsa `aria-describedby` ile bağlanır.
+- **Footer** aksiyonları sağa hizalı dizer.
+- **Close** metin içerikle kullanıldığında secondary bir Button render'lar; farklı bir eleman (örneğin primary bir `Button`) vermek için `asChild` kullan. Content sağ üstteki ikonlu kapatma butonunu kendiliğinden ekler (`showClose`, varsayılan olarak açık). İçeriksiz bir `Close` render'larsan o ikon butonu sen yerleştirmiş olursun, otomatik olan kenara çekilir.
+- Content içinde açılan popover, menü, select ve tooltip'ler dialog'un üstünde katmanlanır; dialog içindeki bir formda `Select` ek ayar gerektirmeden çalışır.
+
+## Örnekler
+
+### Boyutlar
+
+`size` maksimum genişliği belirler: `sm` 440px, `md` 560px (varsayılan), `lg` 720px, `full` ise kenarlarda 16px boşluk bırakarak viewport'un tamamı. 640px ve altında her boyut alttan açılan bir sheet'e dönüşür.
+
+<ComponentPreview code={`<Dialog.Content size="sm">…</Dialog.Content>
+<Dialog.Content size="md">…</Dialog.Content>
+<Dialog.Content size="lg">…</Dialog.Content>
+<Dialog.Content size="full">…</Dialog.Content>`}>
+  <DialogSizesDemo />
+</ComponentPreview>
+
+### Controlled
+
+State'i kendi component'inde tutmak için `open` ve `onOpenChange` ver. Örneğin dialog'u bir Trigger dışında bir yerden açman gerektiğinde.
+
+<ComponentPreview code={`const [open, setOpen] = useState(false);
+
+<Button variant="secondary" onClick={() => setOpen(true)}>State'ten aç</Button>
+<Dialog.Root open={open} onOpenChange={setOpen}>
+  <Dialog.Content>
+    <Dialog.Title>Controlled dialog</Dialog.Title>
+    <Dialog.Description>Açık/kapalı state'i üst component'te tutuluyor.</Dialog.Description>
+    <Dialog.Footer>
+      <Button variant="primary" onClick={() => setOpen(false)}>Tamam</Button>
+    </Dialog.Footer>
+  </Dialog.Content>
+</Dialog.Root>`}>
+  <DialogControlledDemo />
+</ComponentPreview>
+
+### İlk focus
+
+Focus önce `initialFocus` ile verilen elemana, yoksa `data-autofocus` taşıyan elemana, o da yoksa ilk tab'lanabilir elemana gider.
+
+```tsx
+<Dialog.Content>
+  <Dialog.Title>Yeniden adlandır</Dialog.Title>
+  <Input data-autofocus defaultValue="Northwind" />
+</Dialog.Content>
+```
+
+### Kapatmayı engellemek
+
+Kaydedilmemiş işin kaybolması pahalıya patlayacaksa `closeOnOutsidePress={false}` ya da `closeOnEscape={false}` ver. Onaylar için [AlertDialog](/tr/docs/components/alert-dialog)'u tercih et.
+
+## API referansı
+
+### Dialog.Root
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled açık/kapalı state'i." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Uncontrolled kullanımda başlangıç state'i." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Açık/kapalı state'i değişmesi gerektiğinde çağrılır." },
+  { name: "children", type: "ReactNode", description: "Trigger, Content ve bu dialog'un state'ini paylaşan diğer her şey." },
+]} />
+
+### Dialog.Trigger
+
+Tüm `<button>` attribute'larını kabul eder. `type` varsayılan olarak `"button"`'dır (`asChild` kullanıldığında atanmaz).
+
+<PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "`<button>` yerine tek child elemanı (örneğin kendi `Button`'ını) render'lar; props, ref ve handler'ları birleştirir." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Butona iletilen ref." },
+]} />
+
+### Dialog.Content
+
+`role` dışındaki tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "size", type: "DialogSize", default: "\"md\"", description: "Maksimum genişlik: `sm` 440px, `md` 560px, `lg` 720px, `full` kenarlarda 16px boşlukla viewport'un tamamı. `DialogSize` tipi `\"sm\" | \"md\" | \"lg\" | \"full\"`." },
+  { name: "closeOnOutsidePress", type: "boolean", default: "true", description: "Arka plana basıldığında kapanır." },
+  { name: "closeOnEscape", type: "boolean", default: "true", description: "Escape ile kapanır." },
+  { name: "initialFocus", type: "RefObject<HTMLElement | null>", description: "Açılınca focus alacak eleman. Verilmezse önce [data-autofocus], sonra ilk tab'lanabilir eleman." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal hedefi. `undefined` verilirse `document.body` kullanılır; `null` verilirse hedef oluşana kadar hiçbir şey render'lanmaz." },
+  { name: "showClose", type: "boolean", default: "true", description: "Sağ üstteki standart ikonlu kapatma butonunu otomatik render'lar. Kendi ikonlu `Close`'unu render'ladığında atlanır." },
+  { name: "closeLabel", type: "string", default: '"Close"', description: "Otomatik kapatma butonunun erişilebilir adı. Türkçe arayüzde `\"Kapat\"` ver." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Dialog elemanına iletilen ref." },
+]} />
+
+### Dialog.Title
+
+Bir `<h2>` render'lar. Tüm başlık attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "ref", type: "Ref<HTMLHeadingElement>", description: "Başlığa iletilen ref." },
+]} />
+
+### Dialog.Description
+
+Bir `<p>` render'lar. Tüm paragraf attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "ref", type: "Ref<HTMLParagraphElement>", description: "Paragrafa iletilen ref." },
+]} />
+
+### Dialog.Close
+
+Tüm `<button>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "icon", type: "boolean", default: "içerik yoksa true", description: "Sağ üstteki standart ikon butonunu render'lar. false olduğunda (içerik verildiyse varsayılan budur) içeriği secondary bir Button olarak render'lar." },
+  { name: "asChild", type: "boolean", default: "false", description: "`<button>` yerine tek child elemanı (örneğin kendi `Button`'ını) render'lar; props, ref ve handler'ları birleştirir." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Butona iletilen ref." },
+]} />
+
+### Dialog.Footer
+
+Bir `<div>` render'lar ve tüm `<div>` attribute'larını kabul eder; ek prop'u yoktur.
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-dialog__backdrop` | Sabit arka plan, `var(--mrd-backdrop)` |
+| `.mrd-dialog` | Yüzey: maksimum genişlik `data-size`'dan gelir (440 / 560 / 720px / full), `--mrd-radius-card`, `--mrd-shadow-2xl` |
+| `.mrd-dialog__title` | Başlık |
+| `.mrd-dialog__description` | Açıklama metni |
+| `.mrd-dialog__footer` | Aksiyon satırı |
+| `.mrd-dialog__close` | İkonlu kapatma butonu |
+
+Content `data-size` taşır; content ve backdrop DOM'dayken `data-state="open"` taşır; tetikleyici `data-state="open" | "closed"` taşır. 640px ve altında dialog alttan açılan bir sheet'e dönüşür, footer'daki aksiyonlar alt alta dizilir. Kullanılan token'lar: `--mrd-backdrop`, `--mrd-surface`, `--mrd-z-overlay`, `--mrd-duration-enter`. Dialog içinde açılan popover, menü, select ve tooltip'ler onun üstünde katmanlanır (`--mrd-z-popover`, `--mrd-z-tooltip`). Metin içerikli bir Close, `data-variant="secondary"` ile `.mrd-button` olarak render'lanır. Trigger'a ya da farklı varyantta bir Close'a stil vermek için `asChild` ile bir `Button` ver.
+
+## Erişilebilirlik
+
+[WAI-ARIA Dialog (Modal) desenini](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) izler. Content `role="dialog"` ve `aria-modal="true"` taşır; Trigger `aria-haspopup="dialog"` ve `aria-expanded` taşır. Açıkken sayfanın scroll'u kilitlenir.
+
+<KeyboardTable rows={[
+  { keys: ["Space", "Enter"], action: "Tetikleyicideyken dialog'u açar." },
+  { keys: ["Tab"], action: "Focus'u dialog içindeki bir sonraki elemana taşır; sona gelince başa döner." },
+  { keys: ["Shift", "Tab"], action: "Focus'u bir önceki elemana taşır; başa gelince sona döner." },
+  { keys: ["Esc"], action: "Dialog'u kapatır ve focus'u tetikleyiciye döndürür." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do="Dialog'u, kullanıcının istediği kısa ve odaklı bir iş için kullan; örneğin tek bir kaydı düzenlemek."
+  dont="Kullanıcı istemeden dialog açmak ya da bir dialog'un içinde başka bir dialog açmak."
+/>
+
+<DoDont
+  do="Primary aksiyonu ne olacağını söyleyen bir fiille adlandır: Kaydet, Davet et, Yeniden adlandır."
+  dont="Primary aksiyon için Tamam ya da Evet gibi belirsiz etiketler kullanmak."
+/>
+
+## İlgili sayfalar
+
+- [AlertDialog](/tr/docs/components/alert-dialog): yanıt bekleyen onaylar için.
+- [Drawer](/tr/docs/components/drawer): sayfanın yanında duran uzun içerik için.
+- [Popover](/tr/docs/components/popover): modal olmayan, bir tetikleyiciye bağlı içerik için.

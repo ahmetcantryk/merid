@@ -1,0 +1,105 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { PlainHtmlPreview } from "@/examples/integrations/html";
+
+export const metadata = docMetadata("en", "/docs/integrations/html", {
+  title: "Plain HTML and CSS",
+  description: "Use Merid's stylesheet without React: which components work with classes and data attributes, with markup to copy.",
+});
+
+# Plain HTML and CSS
+
+Merid's styles depend only on class names, data attributes and ARIA state — never on React. Server-rendered templates (Rails, Django, Laravel, Astro, plain HTML) can use the stylesheet directly for everything that does not need JavaScript behaviour.
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@merid/react/dist/styles.css" />
+<html>
+```
+
+The preview below is rendered as plain markup — no Merid component code runs.
+
+<ComponentPreview align="start" code={`<div class="mrd-field">
+  <label class="mrd-label" for="email">Email</label>
+  <input id="email" class="mrd-input" data-size="md" type="email" />
+  <p class="mrd-field__description">We only use it for receipts.</p>
+</div>
+
+<button class="mrd-button" data-variant="primary" data-size="md">
+  <span class="mrd-button__content">Create account</span>
+</button>`}>
+  <PlainHtmlPreview />
+</ComponentPreview>
+
+## What works without JavaScript
+
+| Works with markup only | Needs your own script | Needs React |
+|---|---|---|
+| Button, IconButton, Link, Badge, Card, Alert, Separator, Spinner, Skeleton, Progress, Kbd, Code, Avatar (image or initials), Table, EmptyState, Heading, Text, Stack, Grid, Container, Section, Label, Field, Input, Textarea, NativeSelect, Checkbox, Radio, Breadcrumb, SidebarNav | Switch (toggle `data-state` and `aria-checked`), Tabs, SegmentedControl, Accordion (or use `<details>`), Pagination (as links) | Dialog, AlertDialog, Drawer, Popover, Tooltip, DropdownMenu, Select, Toast — focus trapping, positioning and dismissal live in the React code |
+
+For overlays in a non-React page, use the native `<dialog>` element and style it yourself with Merid tokens, or mount the React component as an island.
+
+## Markup reference
+
+### Button
+
+```html
+<button type="button" class="mrd-button" data-variant="secondary" data-size="md">
+  <span class="mrd-button__content">Cancel</span>
+</button>
+<!-- variants: primary | secondary | ghost | danger | link; sizes: sm | md | lg -->
+```
+
+### Field with error
+
+```html
+<div class="mrd-field" data-invalid>
+  <label class="mrd-label" for="user">Username</label>
+  <input id="user" class="mrd-input" data-size="md" data-invalid aria-invalid="true" aria-describedby="user-error" />
+  <p id="user-error" class="mrd-field__error">That username is taken.</p>
+</div>
+```
+
+### Checkbox
+
+```html
+<span class="mrd-checkbox">
+  <span class="mrd-checkbox__control">
+    <input id="terms" type="checkbox" class="mrd-checkbox__input" />
+    <svg class="mrd-checkbox__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M3.5 8.5l3 3 6-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </span>
+  <span class="mrd-checkbox__text">
+    <label for="terms" class="mrd-checkbox__label">I agree to the terms</label>
+  </span>
+</span>
+```
+
+### Badge and alert
+
+```html
+<span class="mrd-badge" data-tone="success"><span class="mrd-badge__dot" aria-hidden="true"></span>Live</span>
+
+<div class="mrd-alert" data-tone="warning" role="status">
+  <div class="mrd-alert__content">
+    <div class="mrd-alert__title">Payment method expiring</div>
+    <div class="mrd-alert__body">Update it before 1 October.</div>
+  </div>
+</div>
+```
+
+### Card and table
+
+```html
+<article class="mrd-card" data-variant="outline" data-padding="md">…</article>
+
+<div class="mrd-table-frame">
+  <table class="mrd-table" data-density="md">
+    <thead class="mrd-table__head"><tr class="mrd-table__row"><th class="mrd-table__header" scope="col">Name</th></tr></thead>
+    <tbody class="mrd-table__body"><tr class="mrd-table__row"><td class="mrd-table__cell">Northwind</td></tr></tbody>
+  </table>
+</div>
+```
+
+## Finding the markup for anything else
+
+Render the React component once and copy its HTML from the browser's element inspector — the output is stable, and class and attribute names are part of Merid's public API ([Versioning](/docs/versioning)). Each component page also lists its classes and data attributes under **Styling**.

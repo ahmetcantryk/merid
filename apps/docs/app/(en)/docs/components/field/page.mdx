@@ -1,0 +1,137 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { FieldDemo, FieldError, FieldControlled, FieldUncontrolled, FieldDisabled } from "@/examples/field";
+
+export const metadata = docMetadata("en", "/docs/components/field", {
+  title: "Field",
+  description: "Label, control, helper text and error message wired together with ids and ARIA.",
+});
+
+# Field
+
+Wraps a single control with its label, helper text and error message, and wires them together — `htmlFor`, `aria-describedby`, `aria-invalid`, `required` and `disabled` — through context.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/field">Source</a>
+</div>
+
+<ComponentPreview code={`<Field label="Email" description="We only use it for receipts.">
+  <Input type="email" placeholder="you@company.com" />
+</Field>`}>
+  <FieldDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Field } from "@merid/react";
+```
+
+## Examples
+
+### Error
+
+When `error` is set, the control gets `aria-invalid="true"` and the invalid style, and the message is appended to its `aria-describedby`. Pass `undefined`, `null` or `false` to clear it.
+
+<ComponentPreview code={`<Field label="Username" error="That username is taken." required>
+  <Input defaultValue="ahmet" />
+</Field>`}>
+  <FieldError />
+</ComponentPreview>
+
+### Controlled input
+
+Field does not own the value. Control the child as usual and derive `error` from your state.
+
+<ComponentPreview code={`const [name, setName] = useState("");
+const error = name.length > 0 && name.length < 3 ? "Use at least 3 characters." : undefined;
+
+<Field label="Project name" description="Shown in the sidebar." error={error}>
+  <Input value={name} onChange={(event) => setName(event.target.value)} />
+</Field>`}>
+  <FieldControlled />
+</ComponentPreview>
+
+### Uncontrolled input
+
+With `defaultValue` and `name`, the control keeps its own state and submits with the form.
+
+<ComponentPreview code={`<Field label="Bio">
+  <Textarea name="bio" defaultValue="Designer in Istanbul." />
+</Field>`}>
+  <FieldUncontrolled />
+</ComponentPreview>
+
+### Disabled
+
+`disabled` disables the control and dims the label.
+
+<ComponentPreview code={`<Field label="Plan" disabled>
+  <NativeSelect defaultValue="team">
+    <option value="free">Free</option>
+    <option value="team">Team</option>
+  </NativeSelect>
+</Field>`}>
+  <FieldDisabled />
+</ComponentPreview>
+
+### Which controls read Field
+
+[Input](/docs/components/input), [Textarea](/docs/components/textarea) and [NativeSelect](/docs/components/native-select) read the full wiring. Props set on the control itself always win over the Field's.
+
+- [Checkbox](/docs/components/checkbox) is named by the Field label. Its own children still render as a clickable label but become its description (`aria-describedby`), so it is never double-labelled.
+- [Switch](/docs/components/switch) takes the Field id (so the Field label names it), `aria-describedby`, `aria-invalid` and `disabled`.
+- [RadioGroup](/docs/components/radio) is named by the Field label (`aria-labelledby`) and picks up its description, error, `required` and `disabled`.
+
+Every control follows the same convention: `aria-invalid` carries the semantics and `data-invalid` drives the styling.
+
+## API reference
+
+`Field` renders a `<div>`, forwards its ref and passes other div attributes through.
+
+<PropsTable rows={[
+  { name: "label", type: "ReactNode", required: true, description: "Visible label, wired to the control via htmlFor." },
+  { name: "children", type: "ReactNode", required: true, description: "A single Merid control; it picks up the wiring from context." },
+  { name: "description", type: "ReactNode", description: "Helper text below the control, linked via aria-describedby." },
+  { name: "error", type: "ReactNode", description: "Error message. Sets aria-invalid on the control and links the message." },
+  { name: "required", type: "boolean", default: "false", description: "Marks the control required and shows the visual marker." },
+  { name: "disabled", type: "boolean", default: "false", description: "Disables the control and dims the label." },
+  { name: "id", type: "string", description: "Explicit id for the control. Generated when omitted." },
+]} />
+
+For custom controls, `useFieldContext()` returns the wiring (`controlId`, `labelId`, `descriptionId`, `errorId`, `invalid`, `required`, `disabled`) or `null` outside a Field.
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-field</code></td><td>Root {"<div>"}</td></tr>
+    <tr><td><code>.mrd-field__description</code></td><td>Helper text</td></tr>
+    <tr><td><code>.mrd-field__error</code></td><td>Error message</td></tr>
+    <tr><td><code>data-invalid</code></td><td>Present when <code>error</code> is set</td></tr>
+    <tr><td><code>data-disabled</code></td><td>Present when <code>disabled</code></td></tr>
+  </tbody>
+</table>
+
+The label is a [Label](/docs/components/label) (`.mrd-label`).
+
+## Accessibility
+
+- The label names the control; the description and error are read after it through `aria-describedby`.
+- The error is not a live region. When validating on submit, move focus to the first invalid control so the message is announced.
+- `required` is set on the control, so it is announced and native validation applies.
+
+## Guidelines
+
+<DoDont
+  do={<p>Write errors that say how to fix the problem: “Use at least 3 characters.”</p>}
+  dont={<p>Show “Invalid input”, or put more than one control inside a Field.</p>}
+/>
+
+## Related
+
+- [Label](/docs/components/label) — the label Field renders.
+- [Input](/docs/components/input), [Textarea](/docs/components/textarea), [NativeSelect](/docs/components/native-select), [Checkbox](/docs/components/checkbox), [Switch](/docs/components/switch), [RadioGroup](/docs/components/radio) — controls that read Field.

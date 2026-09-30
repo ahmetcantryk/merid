@@ -1,0 +1,28 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { RadiusScale } from "@/components/foundations";
+
+export const metadata = docMetadata("en", "/docs/foundations/radius", {
+  title: "Radius",
+  description: "Corner radius tokens and how radius steps down as surfaces nest.",
+});
+
+# Radius
+
+Merid's corners are generous and consistent. Larger surfaces get larger radii, and radius steps down as elements nest, so inner corners stay concentric with outer ones.
+
+## Scale
+
+<RadiusScale />
+
+## Nesting
+
+The rule of thumb is **20 → 14 → 12 → 8**. A card uses `--mrd-radius-card` (20px); a window frame inside it uses `--mrd-radius-xl` (14px); a button inside that uses `--mrd-radius-lg` (12px); a small tile inside a button uses `--mrd-radius-sm` (8px).
+
+<DoDont
+  do={<p>Step radius down as you nest, so the gap between two edges looks even all the way round.</p>}
+  dont={<p>Give an inner element the same radius as its container. The inner corner will look pinched.</p>}
+/>
+
+## Pills
+
+`--mrd-radius-full` is for elements whose shape is defined by their height: pills, badges, switches and avatars. Do not use it on buttons with text; Merid buttons use `--mrd-radius-lg`.

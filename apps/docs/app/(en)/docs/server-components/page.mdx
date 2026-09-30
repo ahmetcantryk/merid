@@ -1,0 +1,87 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("en", "/docs/server-components", {
+  title: "Server components",
+  description: "Which Merid components render on the server and how interactive components behave in the App Router.",
+});
+
+# Server components
+
+Merid works in React Server Components environments such as the Next.js App Router without wrappers.
+
+## How the package is split
+
+- **Static components** — layout, typography helpers, badges, cards, skeletons — contain no state or effects. They render on the server and send no JavaScript to the browser.
+- **Interactive components** — dialogs, menus, tabs, form controls with internal state — every interactive module begins with a `"use client"` directive. Import them directly into a server component, no wrapper file needed; React places the client boundary at the component for you. Only your own event handlers need a client component.
+
+## Compound components: use flat names
+
+Compound components are namespace objects (`Dialog.Root`, `Tabs.List`, `Stepper.Step`). In a **server component file** the import is a client reference, and property access on it is `undefined` on the server — React then throws "Element type is invalid". Every part therefore also has a **flat export**, which works everywhere:
+
+| Namespace | Flat names |
+|---|---|
+| `Accordion` | `AccordionRoot`, `AccordionItem`, `AccordionTrigger`, `AccordionContent` |
+| `AlertDialog` | `AlertDialogRoot`, `AlertDialogTrigger`, `AlertDialogContent`, `AlertDialogTitle`, `AlertDialogDescription`, `AlertDialogFooter`, `AlertDialogAction`, `AlertDialogCancel` |
+| `Breadcrumb` | `BreadcrumbRoot`, `BreadcrumbItem`, `BreadcrumbLink`, `BreadcrumbPage` |
+| `Dialog` | `DialogRoot`, `DialogTrigger`, `DialogContent`, `DialogTitle`, `DialogDescription`, `DialogClose`, `DialogFooter` |
+| `Drawer` | `DrawerRoot`, `DrawerTrigger`, `DrawerContent`, `DrawerTitle`, `DrawerDescription`, `DrawerClose`, `DrawerFooter` |
+| `DropdownMenu` | `DropdownMenuRoot`, `DropdownMenuTrigger`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuGroup`, `DropdownMenuLabel`, `DropdownMenuSeparator` |
+| `Popover` | `PopoverRoot`, `PopoverTrigger`, `PopoverContent`, `PopoverClose` |
+| `Select` | `SelectRoot`, `SelectTrigger`, `SelectContent`, `SelectItem` |
+| `SidebarNav` | `SidebarNavRoot`, `SidebarNavGroup`, `SidebarNavItem` |
+| `Stepper` | `StepperRoot`, `StepperStep` |
+| `Tabs` | `TabsRoot`, `TabsList`, `TabsTrigger`, `TabsPanel` |
+
+**Rule:** in files without `"use client"`, always use the flat names. Client components may use either form.
+
+## Router links from the server
+
+A component cannot be passed as a prop across the boundary, so `as={Link}` fails in a server component. Use `asChild` instead — it takes your router link as a child element: `Button`, `Link` and `BreadcrumbLink` support it.
+
+```tsx
+import Link from "next/link";
+import { Button, BreadcrumbLink } from "@merid/react";
+
+<Button asChild variant="primary">
+  <Link href="/signup">Start free</Link>
+</Button>
+<BreadcrumbLink asChild>
+  <Link href="/">Home</Link>
+</BreadcrumbLink>
+```
+
+## Passing props across the boundary
+
+Props passed from a server component to a client component must be serialisable. Strings, numbers, plain objects and React elements are fine. Functions are not, so event handlers such as `onOpenChange` must be defined in a client component.
+
+```tsx
+// app/settings/page.tsx — a server component
+import { Button, Card, DialogContent, DialogDescription, DialogRoot, DialogTitle, DialogTrigger } from "@merid/react";
+import { DeleteAccount } from "./delete-account"; // "use client" inside: it passes onClick
+
+export default function Settings() {
+  return (
+    <Card>
+      <h2>Danger zone</h2>
+      {/* Interactive Merid components work here directly — with flat part names */}
+      <DialogRoot>
+        <DialogTrigger asChild>
+          <Button variant="secondary">What gets deleted?</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogTitle>What gets deleted</DialogTitle>
+          <DialogDescription>Projects, files and billing history.</DialogDescription>
+        </DialogContent>
+      </DialogRoot>
+      <DeleteAccount />
+    </Card>
+  );
+}
+```
+
+## Styles
+
+The stylesheet is static CSS, so it is collected at build time and never depends on rendering. There is no style injection at runtime and no flash of unstyled content during streaming.
+
+## Portals
+
+Overlays render into `document.body` through a portal after hydration. On the server they render nothing, which keeps the initial HTML free of closed dialogs and menus. See [Portal](/docs/components/portal) for how portalled content keeps its subtree's theme, accent, density and direction.

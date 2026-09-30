@@ -1,10 +1,12 @@
 "use client";
 
 import { useId, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useDictionary } from "@/lib/i18n/client";
 import { CopyButton } from "./CopyButton";
 
 interface PreviewTabsProps {
-  readonly preview: ReactNode;
+  /** Live example; when omitted a "coming soon" note renders. */
+  readonly preview?: ReactNode;
   readonly codeHtml: string;
   readonly code: string;
   readonly align: "center" | "start";
@@ -16,6 +18,7 @@ type Tab = (typeof TABS)[number];
 export function PreviewTabs({ preview, codeHtml, code, align }: PreviewTabsProps) {
   const [tab, setTab] = useState<Tab>("preview");
   const id = useId();
+  const t = useDictionary().preview;
 
   function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
@@ -28,20 +31,20 @@ export function PreviewTabs({ preview, codeHtml, code, align }: PreviewTabsProps
   return (
     <div className="preview">
       <div className="preview__bar">
-        <div role="tablist" aria-label="Example" className="preview__tabs" onKeyDown={onKeyDown}>
-          {TABS.map((t) => (
+        <div role="tablist" aria-label={t.tablist} className="preview__tabs" onKeyDown={onKeyDown}>
+          {TABS.map((tabId) => (
             <button
-              key={t}
-              id={`${id}-tab-${t}`}
+              key={tabId}
+              id={`${id}-tab-${tabId}`}
               type="button"
               role="tab"
-              aria-selected={tab === t}
-              aria-controls={`${id}-panel-${t}`}
-              tabIndex={tab === t ? 0 : -1}
+              aria-selected={tab === tabId}
+              aria-controls={`${id}-panel-${tabId}`}
+              tabIndex={tab === tabId ? 0 : -1}
               className="preview__tab"
-              onClick={() => setTab(t)}
+              onClick={() => setTab(tabId)}
             >
-              {t === "preview" ? "Preview" : "Code"}
+              {tabId === "preview" ? t.preview : t.code}
             </button>
           ))}
         </div>
@@ -55,7 +58,7 @@ export function PreviewTabs({ preview, codeHtml, code, align }: PreviewTabsProps
         className="preview__stage"
         data-align={align}
       >
-        {preview}
+        {preview ?? <p className="preview-pending">{t.pending}</p>}
       </div>
       <div
         id={`${id}-panel-code`}

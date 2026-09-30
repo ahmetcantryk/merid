@@ -1,5 +1,9 @@
+import { localeFromPath, localizePath, stripLocale, type Locale } from "@/lib/i18n/config";
+import { navGroupTitlesTr, navTitlesTr } from "@/lib/i18n/nav.tr";
+
 export interface NavItem {
   readonly title: string;
+  /** Locale-neutral in `docsNav` (`/docs/usage`); localized in the result of `navFor`. */
   readonly href: string;
 }
 
@@ -131,12 +135,26 @@ export const docsNav: readonly NavGroup[] = [
 
 export const flatNav: readonly NavItem[] = docsNav.flatMap((g) => g.items);
 
+/** The sidebar tree with titles and hrefs for one locale. */
+export function navFor(locale: Locale): readonly NavGroup[] {
+  if (locale === "en") return docsNav;
+  return docsNav.map((group) => ({
+    title: navGroupTitlesTr[group.title] ?? group.title,
+    items: group.items.map((item) => ({
+      title: navTitlesTr[item.href] ?? item.title,
+      href: localizePath(item.href, locale),
+    })),
+  }));
+}
+
+/** Previous, next and current page for a (possibly localized) pathname, in that page's locale. */
 export function findNeighbours(pathname: string): {
   prev: NavItem | undefined;
   next: NavItem | undefined;
   current: NavItem | undefined;
 } {
-  const index = flatNav.findIndex((item) => item.href === pathname);
+  const items = navFor(localeFromPath(pathname)).flatMap((g) => g.items);
+  const index = flatNav.findIndex((item) => item.href === stripLocale(pathname));
   if (index === -1) return { prev: undefined, next: undefined, current: undefined };
-  return { prev: flatNav[index - 1], next: flatNav[index + 1], current: flatNav[index] };
+  return { prev: items[index - 1], next: items[index + 1], current: items[index] };
 }

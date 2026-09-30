@@ -1,0 +1,168 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { paginationBasicCode, paginationControlledCode, paginationSiblingsCode, paginationLinksCode } from "@/examples/pagination.code";
+import {
+  PaginationBasic,
+  PaginationControlled,
+  PaginationSiblings,
+  PaginationLinks,
+} from "@/examples/pagination";
+
+export const metadata = docMetadata("en", "/docs/components/pagination", {
+  title: "Pagination",
+  description: "Moves between pages of results, with previous and next controls and a compact page range.",
+});
+
+# Pagination
+
+Moves between pages of results, with previous and next controls and a compact page range.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/pagination">Source</a>
+</div>
+
+<ComponentPreview code={paginationBasicCode}>
+  <PaginationBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Pagination, getPageRange } from "@merid/react";
+```
+
+## Anatomy
+
+`Pagination` is a single component. It renders:
+
+- a `<nav>` landmark with a list inside,
+- a previous control and a next control (icon buttons with labels),
+- page buttons — the first, the last, `siblingCount` pages each side of the current one,
+- an ellipsis wherever two or more pages are skipped.
+
+## Examples
+
+### Controlled
+
+Pass `page` and `onPageChange` when the page lives in your state or the URL.
+
+<ComponentPreview code={paginationControlledCode}>
+  <PaginationControlled />
+</ComponentPreview>
+
+### More siblings
+
+`siblingCount` sets how many pages show on each side of the current one.
+
+<ComponentPreview code={paginationSiblingsCode}>
+  <PaginationSiblings />
+</ComponentPreview>
+
+### As links
+
+With `getHref`, each other page renders as an `<a>` so results are crawlable and open in a new tab. The current page renders as plain text (not a link to itself) with `aria-current="page"`. Disabled previous/next controls stay buttons.
+
+<ComponentPreview code={paginationLinksCode}>
+  <PaginationLinks />
+</ComponentPreview>
+
+For client-side routing, add `renderLink`. It receives every prop of the link (`href`, `className`, `aria-label`, `aria-current`, `onClick`, `children`, …) plus the target `page`:
+
+```tsx
+import NextLink from "next/link";
+
+<Pagination
+  pageCount={12}
+  page={page}
+  getHref={(p) => `/invoices?page=${p}`}
+  renderLink={({ page, ...props }) => <NextLink {...props} />}
+/>
+```
+
+### Custom layouts with getPageRange
+
+`getPageRange(page, pageCount, siblings = 1)` returns the same range the component uses, as an array of page numbers and `"ellipsis-start"` / `"ellipsis-end"` markers.
+
+```tsx
+getPageRange(5, 12); // [1, "ellipsis-start", 4, 5, 6, "ellipsis-end", 12]
+```
+
+## API reference
+
+### Pagination
+
+Renders `<nav>` and accepts its HTML attributes except `onChange`.
+
+<PropsTable
+  rows={[
+    { name: "pageCount", type: "number", required: true, description: "Total number of pages (≥ 1)." },
+    { name: "page", type: "number", description: "Controlled current page, 1-based." },
+    { name: "defaultPage", type: "number", default: "1", description: "Initial page when uncontrolled." },
+    { name: "onPageChange", type: "(page: number) => void", description: "Called with the requested page." },
+    { name: "siblingCount", type: "number", default: "1", description: "Pages shown on each side of the current one." },
+    { name: "getHref", type: "(page: number) => string", description: "When given, pages render as links with this href; the current page renders as text." },
+    { name: "renderLink", type: "(props: PaginationLinkProps) => ReactNode", description: "With getHref, renders each link yourself (e.g. a router link). Spread every prop except `page` onto an element that renders an `<a>`." },
+    { name: "aria-label", type: "string", default: '"Pagination"', description: "Accessible name of the landmark." },
+    { name: "previousLabel", type: "string", default: '"Previous page"', description: "Label of the previous button." },
+    { name: "nextLabel", type: "string", default: '"Next page"', description: "Label of the next button." },
+    { name: "pageLabel", type: "(page: number) => string", default: "(p) => `Page ${p}`", description: "Builds the accessible label for a page button." },
+    { name: "ref", type: "Ref<HTMLElement>", description: "Forwarded ref to the nav element." },
+  ]}
+/>
+
+### getPageRange
+
+<PropsTable
+  rows={[
+    { name: "page", type: "number", required: true, description: "Current page, clamped to 1…pageCount." },
+    { name: "pageCount", type: "number", required: true, description: "Total pages." },
+    { name: "siblings", type: "number", default: "1", description: "Pages on each side of the current one." },
+  ]}
+/>
+
+Returns `PageRangeItem[]`, where `PageRangeItem = number | "ellipsis-start" | "ellipsis-end"`.
+
+## Styling
+
+- `.mrd-pagination` / `.mrd-pagination__list` — nav root and the flex list.
+- `.mrd-pagination__page` — a page button, link, or (current page in link mode) text: `--mrd-icon-button-md` square, `--mrd-radius-md`.
+- `.mrd-pagination__page[aria-current="page"]` (also `data-state="active"`) — current page: `--mrd-accent-soft` fill, `--mrd-accent-strong` text.
+- `.mrd-pagination__control` with `data-direction="previous"` or `"next"` — chevron controls; `:disabled` uses `--mrd-placeholder`.
+- `.mrd-pagination__ellipsis` — the `…` gap, hidden from assistive tech.
+
+On coarse pointers controls grow to `--mrd-icon-button-lg`. Reduced motion removes the press scale.
+
+## Accessibility
+
+There is no dedicated APG pattern for pagination; it follows the [landmark regions guidance](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/) for a named `navigation` region.
+
+- The list sits inside a `nav` named "Pagination". Name it more specifically (for example "Search results pages") when a page has several.
+- Every page control has an accessible label from `pageLabel`; the current page has `aria-current="page"`.
+- Previous and next are disabled, not hidden, at the ends, so the layout does not shift.
+- Ellipses are `aria-hidden`.
+
+<KeyboardTable
+  rows={[
+    { keys: ["Tab"], action: "Moves focus to the next control." },
+    { keys: ["Enter"], action: "Activates the focused page or control." },
+    { keys: ["Space"], action: "Activates the focused button (button mode)." },
+  ]}
+/>
+
+## Guidelines
+
+<DoDont
+  do="Show a result count near the pagination and scroll the list back to the top when the page changes."
+  dont="Use pagination for a handful of items or for steps in a flow. Use a Stepper for sequential tasks."
+/>
+
+<DoDont
+  do="Use getHref when pages are real URLs, so people can share and bookmark them."
+  dont="Change the page size silently between pages."
+/>
+
+## Related
+
+- [Table](/docs/components/table)
+- [Stepper](/docs/components/stepper)
+- [Breadcrumb](/docs/components/breadcrumb)

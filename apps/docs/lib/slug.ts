@@ -11,6 +11,8 @@ export function textOf(node: ReactNode): string {
 export function slugify(text: string): string {
   return text
     .toLowerCase()
+    // Turkish dotless ı has no decomposition, so map it before stripping marks (ç ğ ö ş ü decompose).
+    .replace(/ı/g, "i")
     .normalize("NFKD")
     .replace(/[̀-ͯ]/g, "")
     .replace(/[`'"]/g, "")

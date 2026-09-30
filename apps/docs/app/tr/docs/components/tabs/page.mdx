@@ -1,0 +1,155 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import {
+  TabsBasic,
+  TabsControlled,
+  TabsVertical,
+} from "@/examples/tr/tabs";
+import { tabsBasicCode, tabsControlledCode, tabsVerticalCode } from "@/examples/tr/tabs.code";
+
+export const metadata = docMetadata("tr", "/docs/components/tabs", {
+  title: "Tabs",
+  description: "Birbiriyle ilişkili paneller arasında geçiş için çizgi tab'lar.",
+});
+
+# Tabs
+
+Birbiriyle ilişkili paneller arasında geçiş için çizgi tab'lar.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/tabs">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={tabsBasicCode} align="start">
+  <TabsBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Tabs } from "@merid/react";
+```
+
+## Anatomi
+
+```tsx
+<Tabs.Root>
+  <Tabs.List>
+    <Tabs.Trigger value="a" />
+  </Tabs.List>
+  <Tabs.Panel value="a" />
+</Tabs.Root>
+```
+
+- **Root** seçili değeri ve yönü tutar.
+- **List**, `role="tablist"` elemanıdır; ona bir `aria-label` ver.
+- **Trigger**, tek bir `role="tab"` butonudur; paneline `value` ile bağlanır.
+- **Panel**, `role="tabpanel"` elemanıdır. `forceMount` verilmedikçe aktif olmayan paneller unmount edilir.
+
+## Örnekler
+
+### Controlled
+
+<ComponentPreview code={tabsControlledCode} align="start">
+  <TabsControlled />
+</ComponentPreview>
+
+### Dikey
+
+`orientation="vertical"` verildiğinde liste alt alta dizilir; tab'lar arasında ArrowUp/ArrowDown ile gezilir.
+
+<ComponentPreview code={tabsVerticalCode} align="start">
+  <TabsVertical />
+</ComponentPreview>
+
+## API referansı
+
+### Root
+
+`defaultValue` ve `onChange` dışındaki tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "value", type: "string", description: "Controlled seçili tab değeri." },
+  { name: "defaultValue", type: "string", default: "\"\"", description: "Uncontrolled kullanımda başlangıçta seçili tab." },
+  { name: "onValueChange", type: "(value: string) => void", description: "Seçili tab değiştiğinde çağrılır." },
+  { name: "orientation", type: "\"horizontal\" | \"vertical\"", default: "\"horizontal\"", description: "Ok tuşlarının çalıştığı eksen." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Kök elemana iletilen ref." },
+]} />
+
+### List
+
+Tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "variant", type: "\"line\"", default: "\"line\"", description: "Görsel stil. Şimdilik yalnızca \"line\"." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Tablist'e iletilen ref." },
+]} />
+
+### Trigger
+
+`value` dışındaki tüm `<button>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "value", type: "string", required: true, description: "Bu tab'ı ve panelini tanımlayan değer." },
+  { name: "disabled", type: "boolean", description: "Tab'ı devre dışı bırakır; ok tuşları onu atlar." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Tab butonuna iletilen ref." },
+]} />
+
+### Panel
+
+Tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "value", type: "string", required: true, description: "Bu panelin ait olduğu tab'ın değeri." },
+  { name: "forceMount", type: "boolean", default: "false", description: "Panel aktif değilken de (gizli olarak) DOM'da kalır." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Panele iletilen ref." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-tabs` | Root |
+| `.mrd-tabs__list` | List |
+| `.mrd-tabs__trigger` | Trigger |
+| `.mrd-tabs__panel` | Panel |
+
+| Attribute | Nerede | Değerler |
+|---|---|---|
+| `data-orientation` | Root | `horizontal`, `vertical` |
+| `data-variant` | List | `line` |
+| `data-state` | Trigger, Panel | `active`, `inactive` |
+| `data-disabled` | Trigger | devre dışıyken bulunur |
+| `aria-selected="true"` | Trigger | seçili tab (accent alt çizgiyle gösterilir) |
+
+## Erişilebilirlik
+
+WAI-ARIA [Tabs desenini](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) otomatik aktivasyonla izler: focus'u taşımak tab'ı da seçer. Tab sırasında yalnızca seçili tab bulunur; panelin kendisi focus alabilir, böylece içinde etkileşimli eleman olmayan içeriğe de klavyeyle ulaşılır.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Focus'u tab listesine (seçili tab'a), ardından panele taşır." },
+  { keys: ["ArrowRight"], action: "Yatayda: sonraki tab, sondan başa döner. Tab'ı seçer." },
+  { keys: ["ArrowLeft"], action: "Yatayda: önceki tab, baştan sona döner. Tab'ı seçer." },
+  { keys: ["ArrowDown"], action: "Dikeyde: sonraki tab, sondan başa döner. Tab'ı seçer." },
+  { keys: ["ArrowUp"], action: "Dikeyde: önceki tab, baştan sona döner. Tab'ı seçer." },
+  { keys: ["Home"], action: "İlk tab." },
+  { keys: ["End"], action: "Son tab." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Tab'ları aynı nesnenin eş düzeydeki görünümleri için, bir iki kelimelik kısa etiketlerle kullan.</p>}
+  dont={<p>Tab'ları sıralı adımlar için kullanmak (bunun için <a href="/tr/docs/components/stepper">Stepper</a> var) ya da küçük bir kontrol modunu değiştirmek için kullanmak (bu bir <a href="/tr/docs/components/segmented-control">SegmentedControl</a> işi).</p>}
+/>
+
+<DoDont
+  do={<p>Tab satırını tek satırda tut; nadir kullanılan görünümleri bir menüye taşı.</p>}
+  dont={<p>Bir panelin içine ikinci bir tab satırı yerleştirmek.</p>}
+/>
+
+## İlgili sayfalar
+
+- [SegmentedControl](/tr/docs/components/segmented-control)
+- [Accordion](/tr/docs/components/accordion)
+- [SidebarNav](/tr/docs/components/sidebar-nav)

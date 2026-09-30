@@ -1,0 +1,136 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { breadcrumbBasicCode, breadcrumbLongCode } from "@/examples/breadcrumb.code";
+import { BreadcrumbBasic, BreadcrumbLong } from "@/examples/breadcrumb";
+
+export const metadata = docMetadata("en", "/docs/components/breadcrumb", {
+  title: "Breadcrumb",
+  description: "Shows where the current page sits in a hierarchy, with links to each ancestor.",
+});
+
+# Breadcrumb
+
+Shows where the current page sits in a hierarchy, with links to each ancestor.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/breadcrumb">Source</a>
+</div>
+
+<ComponentPreview code={breadcrumbBasicCode}>
+  <BreadcrumbBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Breadcrumb } from "@merid/react";
+```
+
+## Anatomy
+
+```tsx
+<Breadcrumb.Root>
+  <Breadcrumb.Item>
+    <Breadcrumb.Link href="/" />
+  </Breadcrumb.Item>
+  <Breadcrumb.Item>
+    <Breadcrumb.Page />
+  </Breadcrumb.Item>
+</Breadcrumb.Root>
+```
+
+- `Breadcrumb.Root` — a `<nav>` landmark wrapping an ordered list.
+- `Breadcrumb.Item` — one `<li>` in the trail. Separators are drawn between items in CSS.
+- `Breadcrumb.Link` — an `<a>` to an ancestor page.
+- `Breadcrumb.Page` — the current page as plain text with `aria-current="page"`.
+
+## Examples
+
+### Long trail
+
+The current page truncates with an ellipsis instead of wrapping when space runs out; give its item `min-width: 0` inside a constrained width. The list itself wraps between items.
+
+<ComponentPreview code={breadcrumbLongCode}>
+  <BreadcrumbLong />
+</ComponentPreview>
+
+### With a router
+
+`Breadcrumb.Link` renders a plain `<a>` and does not take an `as` prop. For client-side routing, put your router's link inside `Breadcrumb.Item` and add `className="mrd-breadcrumb__link"` to it.
+
+## API reference
+
+### Breadcrumb.Root
+
+Renders `<nav>` and accepts all its HTML attributes.
+
+<PropsTable
+  rows={[
+    { name: "aria-label", type: "string", default: '"Breadcrumb"', description: "Accessible name of the landmark." },
+    { name: "ref", type: "Ref<HTMLElement>", description: "Forwarded ref to the nav element." },
+  ]}
+/>
+
+### Breadcrumb.Item
+
+Renders `<li>` and accepts all its HTML attributes. No additional props.
+
+### Breadcrumb.Link
+
+Renders `<a>` by default and accepts all anchor attributes. Pass `as` to render a router link instead; extra props such as `to` are forwarded.
+
+<PropsTable
+  rows={[
+    { name: "as", type: "ElementType", default: "\"a\"", description: "Element or component to render, e.g. a router `Link`." },
+    { name: "href", type: "string", description: "Destination of the ancestor page." },
+    { name: "ref", type: "Ref<HTMLAnchorElement>", description: "Forwarded ref to the anchor." },
+  ]}
+/>
+
+### Breadcrumb.Page
+
+Renders `<span aria-current="page">` and accepts all its HTML attributes. No additional props.
+
+## Styling
+
+- `.mrd-breadcrumb` — `nav` root.
+- `.mrd-breadcrumb__list` — the `ol`; a wrapping flex row at `--mrd-text-xs`.
+- `.mrd-breadcrumb__item` — each `li`; `.mrd-breadcrumb__item + .mrd-breadcrumb__item::before` draws the `/` separator in `--mrd-placeholder`.
+- `.mrd-breadcrumb__link` — ancestor link in `--mrd-body`, `--mrd-ink` on hover.
+- `.mrd-breadcrumb__page` — current page in `--mrd-ink`, medium weight, single-line ellipsis.
+
+The separator uses `content: "/" / ""`, so it has empty alternative text and is not announced. To change it, override `.mrd-breadcrumb__item + .mrd-breadcrumb__item::before` in your own layer.
+
+## Accessibility
+
+Follows the [WAI-ARIA Breadcrumb pattern](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/).
+
+- The root is a `nav` landmark named "Breadcrumb" by default. Rename it with `aria-label` if the page has several navigation landmarks.
+- Items are an ordered list, so screen readers announce position and count.
+- The last item uses `Breadcrumb.Page`, which sets `aria-current="page"` and is not a link.
+
+<KeyboardTable
+  rows={[
+    { keys: ["Tab"], action: "Moves focus to the next link in the trail." },
+    { keys: ["Shift", "Tab"], action: "Moves focus to the previous link." },
+    { keys: ["Enter"], action: "Follows the focused link." },
+  ]}
+/>
+
+## Guidelines
+
+<DoDont
+  do="Start at a meaningful root and end with the current page as text. Keep labels to the page titles people already see."
+  dont="Use a breadcrumb as the only navigation, or to show a history of visited pages. It describes hierarchy, not the back button."
+/>
+
+<DoDont
+  do="Make every ancestor a link."
+  dont="Link the current page to itself."
+/>
+
+## Related
+
+- [Link](/docs/components/link)
+- [SidebarNav](/docs/components/sidebar-nav)
+- [Pagination](/docs/components/pagination)

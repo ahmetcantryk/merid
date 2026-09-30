@@ -1,0 +1,132 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { sidebarNavBasicCode, sidebarNavRouterCode } from "@/examples/tr/sidebar-nav.code";
+import { SidebarNavBasic } from "@/examples/tr/sidebar-nav";
+
+export const metadata = docMetadata("tr", "/docs/components/sidebar-nav", {
+  title: "SidebarNav",
+  description: "Uygulama sidebar'ları için grup, ikon ve sağda sayı gösterebilen dikey navigasyon.",
+});
+
+# SidebarNav
+
+Uygulama sidebar'ları için grup, ikon ve sağda sayı gösterebilen dikey navigasyon.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/sidebar-nav">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={sidebarNavBasicCode}>
+  <SidebarNavBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { SidebarNav } from "@merid/react";
+```
+
+`SidebarNavItem` tek başına da export edilir ve `SidebarNav.Item` ile aynı component'tir.
+
+## Anatomi
+
+```tsx
+<SidebarNav aria-label="…">
+  <SidebarNav.Item href="…" icon={…} trailing={…} active />
+  <SidebarNav.Group label="…">
+    <SidebarNav.Item href="…" />
+  </SidebarNav.Group>
+</SidebarNav>
+```
+
+- `SidebarNav` (ya da `SidebarNav.Root`): içinde liste olan bir `<nav>`.
+- `SidebarNav.Item`: kendi `<li>`'sine sarılmış bir link; isteğe bağlı ikon ve sağ taraf elemanı alır.
+- `SidebarNav.Group`: iç içe bir listeye ad veren, görünür etiketli bir `<li>`.
+
+## Örnekler
+
+### Router ile
+
+Router'ının link component'ini `as` ile ver. Fazladan verdiğin prop'lar ona iletilir.
+
+<CodeBlock code={sidebarNavRouterCode} lang="tsx" />
+
+## API referansı
+
+### SidebarNav
+
+`<nav>` render'lar ve onun tüm HTML attribute'larını kabul eder.
+
+<PropsTable
+  rows={[
+    { name: "aria-label", type: "string", description: "Landmark'ın erişilebilir adı (sayfada birden fazla nav varsa zorunlu)." },
+    { name: "ref", type: "Ref<HTMLElement>", description: "Nav elemanına iletilen ref." },
+  ]}
+/>
+
+### SidebarNav.Item
+
+Bir `<li>` içinde `<a>` (ya da `as`) render'lar; tüm anchor attribute'larını ve `as` ile verilen elemanın prop'larını kabul eder.
+
+<PropsTable
+  rows={[
+    { name: "active", type: "boolean", default: "false", description: "Geçerli sayfayı işaretler: aria-current=\"page\" ve seçili stili uygular." },
+    { name: "icon", type: "ReactNode", description: "Etiketin önünde gösterilen ikon (dekoratif)." },
+    { name: "trailing", type: "ReactNode", description: "Sağ taraftaki eleman, örneğin sayı gösteren bir Badge." },
+    { name: "as", type: "ElementType", default: '"a"', description: "<a> yerine render'lanacak eleman ya da component, örneğin bir router Link'i." },
+    { name: "ref", type: "Ref<HTMLAnchorElement>", description: "Link'e iletilen ref." },
+  ]}
+/>
+
+### SidebarNav.Group
+
+`<li>` render'lar ve `title` dışındaki HTML attribute'larını kabul eder.
+
+<PropsTable
+  rows={[
+    { name: "label", type: "ReactNode", required: true, description: "Görünür grup başlığı; iç içe listenin etiketi de olur." },
+  ]}
+/>
+
+## Stil verme
+
+- `.mrd-sidebar-nav`, `.mrd-sidebar-nav__list`: kök eleman ve her liste; öğeler arasında 2px boşluk.
+- `.mrd-sidebar-nav__item`: link; en az 36px yükseklik (kaba işaretçilerde 44px), `--mrd-radius-md`.
+- `.mrd-sidebar-nav__item[aria-current="page"]` (ayrıca `data-state="active"`): `--mrd-accent-soft` dolgu ve `--mrd-accent-strong` metin.
+- `.mrd-sidebar-nav__icon`, `.mrd-sidebar-nav__label`, `.mrd-sidebar-nav__trailing`: ikon slot'u, sığmayınca kısalan etiket, sağ taraf slot'u.
+- `.mrd-sidebar-nav__group`, `.mrd-sidebar-nav__group-label`: grup boşlukları ve grubun soluk etiketi.
+
+## Erişilebilirlik
+
+Bir `navigation` landmark'ı için [APG landmark bölgeleri rehberini](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/) izler; öğeler düz link olduğu için bir widget deseni yoktur.
+
+- Sayfada birden fazla `nav` varsa landmark'a `aria-label` ile ad ver.
+- Aktif link `aria-current="page"` taşır.
+- Her grubun iç içe listesi etiketini `aria-labelledby` ile görünür başlığından alır.
+- İkonlar `aria-hidden`'dır; anlamı etiket taşımalı.
+
+<KeyboardTable
+  rows={[
+    { keys: ["Tab"], action: "Focus'u sonraki link'e taşır." },
+    { keys: ["Shift", "Tab"], action: "Focus'u önceki link'e taşır." },
+    { keys: ["Enter"], action: "Focus'taki link'e gider." },
+  ]}
+/>
+
+## Kullanım ilkeleri
+
+<DoDont
+  do="Etiketleri bir iki kelimede tut ve yalnızca bir öğeyi aktif işaretle."
+  dont="Listeye “Yeni proje” butonu gibi aksiyonlar koymak; bunlar gidilecek bir sayfa değil."
+/>
+
+<DoDont
+  do="trailing'i okunmamış öğeler gibi kullanıcının harekete geçtiği sayılar için kullan."
+  dont="Yalnızca ikona güvenmek; etiket her zaman zorunlu."
+/>
+
+## İlgili sayfalar
+
+- [Breadcrumb](/tr/docs/components/breadcrumb)
+- [Tabs](/tr/docs/components/tabs)
+- [Badge](/tr/docs/components/badge)
