@@ -26,6 +26,15 @@ export const componentCatalog: readonly { readonly group: string; readonly items
       { name: "Radio", slug: "radio", description: "Choose one option from a small visible set.", status: "stable" },
       { name: "Switch", slug: "switch", description: "Turn a setting on or off immediately.", status: "stable" },
       { name: "SegmentedControl", slug: "segmented-control", description: "Switch between a few views or modes.", status: "stable" },
+      // batch 1: form and input
+      { name: "Calendar", slug: "calendar", description: "Month grid for picking a day or a range, localised with Intl.", status: "stable" },
+      { name: "Combobox", slug: "combobox", description: "Searchable select with single, multiple and async options.", status: "stable" },
+      { name: "DatePicker", slug: "date-picker", description: "Typed date field with a calendar popover; single day or range.", status: "stable" },
+      { name: "FileUpload", slug: "file-upload", description: "Accessible file picker with a drag-and-drop zone.", status: "stable" },
+      { name: "NumberInput", slug: "number-input", description: "Numeric field with steppers and Intl.NumberFormat.", status: "stable" },
+      { name: "PinInput", slug: "pin-input", description: "One-time code entry, one cell per character.", status: "stable" },
+      { name: "Slider", slug: "slider", description: "Pick a value or a range on a track.", status: "stable" },
+      { name: "ToggleGroup", slug: "toggle-group", description: "Toggle buttons, alone or as a single or multiple set.", status: "stable" },
     ],
   },
   {

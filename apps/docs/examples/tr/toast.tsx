@@ -17,7 +17,7 @@ function SaveButton() {
 
 export function ToastBasic() {
   return (
-    <ToastProvider label="Bildirimler">
+    <ToastProvider label="Bildirimler" dismissLabel="Bildirimi kapat">
       <SaveButton />
     </ToastProvider>
   );
@@ -41,7 +41,7 @@ function ToneButtons() {
 
 export function ToastTones() {
   return (
-    <ToastProvider label="Bildirimler">
+    <ToastProvider label="Bildirimler" dismissLabel="Bildirimi kapat">
       <ToneButtons />
     </ToastProvider>
   );
@@ -74,7 +74,7 @@ function ArchiveButtons() {
 
 export function ToastAction() {
   return (
-    <ToastProvider label="Bildirimler">
+    <ToastProvider label="Bildirimler" dismissLabel="Bildirimi kapat">
       <ArchiveButtons />
     </ToastProvider>
   );

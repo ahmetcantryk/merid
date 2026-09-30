@@ -27,6 +27,9 @@
       ],
       "@merid/react": [
         "../../packages/react/src/index.ts"
+      ],
+      "@meridui/react": [
+        "../../packages/react/src/index.ts"
       ]
     },
     "esModuleInterop": true

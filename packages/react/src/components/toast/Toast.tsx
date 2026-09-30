@@ -60,12 +60,14 @@ export interface ToastProviderProps {
   limit?: number;
   /** Accessible name of the notification region. Defaults to `"Notifications"`. */
   label?: string;
+  /** Accessible name of each toast's close button. Defaults to `"Dismiss notification"`. */
+  dismissLabel?: string;
 }
 
 let counter = 0;
 
 /** Hosts a polite live region (bottom-right stack) and exposes `useToast`. */
-export function ToastProvider({ children, duration = 5000, limit = 3, label = "Notifications" }: ToastProviderProps) {
+export function ToastProvider({ children, duration = 5000, limit = 3, label = "Notifications", dismissLabel = "Dismiss notification" }: ToastProviderProps) {
   const [toasts, setToasts] = useState<ToastRecord[]>([]);
 
   const dismiss = useCallback((id?: string) => {
@@ -91,7 +93,7 @@ export function ToastProvider({ children, duration = 5000, limit = 3, label = "N
         <section className="mrd-toast-region" aria-label={label}>
           <ol className="mrd-toast-region__list" aria-live="polite" aria-relevant="additions text">
             {toasts.map((t) => (
-              <ToastItem key={t.id} toast={t} duration={t.duration ?? duration} onDismiss={dismiss} />
+              <ToastItem key={t.id} toast={t} duration={t.duration ?? duration} dismissLabel={dismissLabel} onDismiss={dismiss} />
             ))}
           </ol>
         </section>
@@ -103,10 +105,12 @@ export function ToastProvider({ children, duration = 5000, limit = 3, label = "N
 function ToastItem({
   toast,
   duration,
+  dismissLabel,
   onDismiss,
 }: {
   toast: ToastRecord;
   duration: number;
+  dismissLabel: string;
   onDismiss: (id: string) => void;
 }) {
   const [paused, setPaused] = useState(false);
@@ -157,7 +161,7 @@ function ToastItem({
           {toast.action.label}
         </button>
       ) : null}
-      <button type="button" className="mrd-toast__close" aria-label="Dismiss notification" onClick={() => onDismiss(toast.id)}>
+      <button type="button" className="mrd-toast__close" aria-label={dismissLabel} onClick={() => onDismiss(toast.id)}>
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
           <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
         </svg>

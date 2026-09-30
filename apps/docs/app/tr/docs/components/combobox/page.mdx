@@ -1,0 +1,170 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ComboboxBasic, ComboboxMultiple, ComboboxAsync, ComboboxStates } from "@/examples/tr/combobox";
+
+export const metadata = docMetadata("tr", "/docs/components/combobox", {
+  title: "Combobox",
+  description: "Aranabilir select: yazarak filtrele, bir ya da birden çok seçenek seç, seçenekleri async yükle.",
+});
+
+# Combobox
+
+Aranabilir select: yazarak filtrele, bir ya da birden çok seçenek seç, ya da kullanıcı yazdıkça seçenekleri sunucudan yükle.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/combobox">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`const frameworks = [
+  { value: "next", label: "Next.js" },
+  { value: "remix", label: "Remix" },
+  { value: "gatsby", label: "Gatsby", disabled: true },
+  { value: "nuxt", label: "Nuxt", description: "Vue" },
+];
+
+<Field label="Framework">
+  <Combobox
+    options={frameworks}
+    placeholder="Framework ara…"
+    locale="tr-TR"
+    emptyMessage="Sonuç yok"
+    loadingMessage="Yükleniyor…"
+    toggleLabel="Seçenekleri göster"
+    getRemoveLabel={(label) => label + " öğesini kaldır"}
+    name="framework"
+  />
+</Field>`}>
+  <ComboboxBasic />
+</ComponentPreview>
+
+<Callout tone="success">
+  Boş liste, yükleniyor mesajı ve buton etiketleri varsayılan olarak İngilizcedir (“No results”, “Loading…”, “Show options”, “Remove …”). Türkçe arayüzde `emptyMessage`, `loadingMessage`, `toggleLabel` ve `getRemoveLabel` ver. `locale="tr-TR"` de ver ki filtre “İ” ile “i”yi doğru eşleştirsin.
+</Callout>
+
+## Import
+
+```tsx
+import { Combobox, type ComboboxOption } from "@meridui/react";
+```
+
+## Örnekler
+
+### Çoklu seçim
+
+`multiple` her seçimden sonra listeyi açık tutar ve seçimleri çip olarak gösterir. `value` bir `string[]` olur. Alan boşken Backspace son çipi kaldırır.
+
+<ComponentPreview code={`const [value, setValue] = useState<string[]>(["next", "vite"]);
+
+<Field label="Teknoloji yığını" description="İstediğin kadar seç.">
+  <Combobox multiple options={frameworks} value={value} onValueChange={setValue} placeholder="Ekle…" />
+</Field>`}>
+  <ComboboxMultiple />
+</ComponentPreview>
+
+### Async seçenekler
+
+`onInputValueChange` içinde veriyi çek, sonuçları `options` olarak ver, component tekrar filtrelemesin diye `filter={false}` yap ve istek sürerken `loading` ver. Seçilen seçeneklerin etiketleri hatırlanır; sonuçlar değişse de çipler ve alan metnini korur.
+
+<ComponentPreview code={`const [text, setText] = useState("");
+const [options, setOptions] = useState<ComboboxOption[]>([]);
+const [loading, setLoading] = useState(false);
+
+useEffect(() => {
+  if (!text.trim()) return;
+  setLoading(true);
+  const timer = setTimeout(async () => {
+    setOptions(await searchCities(text));
+    setLoading(false);
+  }, 200);
+  return () => clearTimeout(timer);
+}, [text]);
+
+<Combobox
+  options={options}
+  filter={false}
+  loading={loading}
+  onInputValueChange={setText}
+  emptyMessage="Şehir bulunamadı"
+/>`}>
+  <ComboboxAsync />
+</ComponentPreview>
+
+### Boyutlar ve durumlar
+
+<ComponentPreview code={`<Combobox aria-label="Küçük" size="sm" options={frameworks} />
+<Combobox aria-label="Geçersiz" invalid options={frameworks} />
+<Combobox aria-label="Devre dışı" disabled options={frameworks} defaultValue="astro" />`}>
+  <ComboboxStates />
+</ComponentPreview>
+
+## API referansı
+
+Bir `div` sarmalayıcı render'lar; diğer `div` attribute'ları ona gider. `aria-label` ve `aria-labelledby` metin alanına gider. Bir [Field](/tr/docs/components/field) içinde alan id'yi, etiketi, açıklamayı, hatayı, `required` ve `disabled`'ı alır.
+
+<PropsTable rows={[
+  { name: "options", type: "ComboboxOption[]", required: true, description: "{ value, label, description?, disabled? }. Async sonuçlar geldikçe değiştir." },
+  { name: "multiple", type: "boolean", default: "false", description: "Birden çok değer seçtirir; çip olarak gösterilir." },
+  { name: "value", type: "string | string[]", description: "Controlled değer: string (\"\" seçim yok) ya da multiple ile string[]." },
+  { name: "defaultValue", type: "string | string[]", description: "Uncontrolled kullanımda başlangıç değeri." },
+  { name: "onValueChange", type: "(value) => void", description: "Yeni değerle çağrılır." },
+  { name: "inputValue", type: "string", description: "Alandaki controlled metin." },
+  { name: "defaultInputValue", type: "string", description: "Başlangıç metni. Varsayılanı seçili etiket." },
+  { name: "onInputValueChange", type: "(text: string) => void", description: "Her tuşta çağrılır; async seçenekleri burada çek." },
+  { name: "open / defaultOpen / onOpenChange", type: "boolean / boolean / (open) => void", description: "Listenin controlled ya da başlangıç açık state'i." },
+  { name: "filter", type: "((option, text) => boolean) | false", default: "etiket metni içerir", description: "İstemci tarafı filtre. Seçenekler zaten filtreliyse false." },
+  { name: "locale", type: "string", description: "Büyük/küçük harf duyarsız eşleşme için locale; \"tr-TR\" ile İ ve i eşleşir." },
+  { name: "loading", type: "boolean", default: "false", description: "loadingMessage'ı gösterir, listeye aria-busy ekler." },
+  { name: "placeholder", type: "string", description: "Metin alanının placeholder'ı." },
+  { name: "emptyMessage", type: "ReactNode", default: "\"No results\"", description: "Eşleşme yokken gösterilir. Türkçe arayüzde \"Sonuç yok\"." },
+  { name: "loadingMessage", type: "ReactNode", default: "\"Loading…\"", description: "Yüklenirken gösterilir. Türkçe arayüzde \"Yükleniyor…\"." },
+  { name: "toggleLabel", type: "string", default: "\"Show options\"", description: "Ok butonunun erişilebilir adı." },
+  { name: "getRemoveLabel", type: "(label: string) => string", default: "Remove {label}", description: "Çipteki kaldır butonunun erişilebilir adı." },
+  { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Kontrol boyutu." },
+  { name: "invalid", type: "boolean", description: "aria-invalid ve danger kenarlık. Field içinde hatasından türetilir." },
+  { name: "disabled", type: "boolean", description: "Combobox'ı devre dışı bırakır." },
+  { name: "required", type: "boolean", description: "Alanı zorunlu işaretler." },
+  { name: "name", type: "string", description: "Form adı. Seçili her değer için gizli bir input render'lar." },
+  { name: "inputId", type: "string", description: "<label htmlFor> için metin alanının id'si." },
+  { name: "placement", type: "Placement", default: "\"bottom-start\"", description: "Listenin tercih edilen konumu." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Listenin portal hedefi." },
+  { name: "inputRef", type: "Ref<HTMLInputElement>", description: "Metin alanının ref'i." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Sarmalayıcının ref'i." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-combobox` | Sarmalayıcı (`data-size`, `data-state`, `data-multiple`, `data-invalid`, `data-disabled`) |
+| `.mrd-combobox__control` | Çipleri, input'u ve oku tutan kenarlıklı alan |
+| `.mrd-combobox__input`, `.mrd-combobox__toggle` | Metin alanı, ok butonu |
+| `.mrd-combobox__chip`, `.mrd-combobox__chip-remove` | Seçili değer çipi (multiple) |
+| `.mrd-combobox__content`, `.mrd-combobox__listbox` | Portal ile render'lanan açılır panel ve listbox'ı |
+| `.mrd-combobox__item` | Seçenek (`data-active`, `data-disabled`, `aria-selected`) |
+| `.mrd-combobox__status` | Yükleniyor / boş mesajı |
+
+## Erişilebilirlik
+
+WAI-ARIA [listbox açılır panelli Combobox desenine](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) ve liste otomatik tamamlamaya uyar. Focus metin alanında kalır; vurgulanan seçenek `aria-activedescendant` ile bildirilir. Yükleniyor ve boş mesajları bir `role="status"` bölgesidir, yani ekran okuyucu tarafından okunur. Çiplerin kaldır butonları Tab sırasında yer almaz; alan boşken Backspace'i ya da fareyi kullan.
+
+<KeyboardTable rows={[
+  { keys: ["ArrowDown"], action: "Listeyi açar ya da sonraki seçeneği vurgular (başa döner)." },
+  { keys: ["ArrowUp"], action: "Listeyi son seçenekte açar ya da önceki seçeneği vurgular (sona döner)." },
+  { keys: ["Alt", "ArrowDown"], action: "Vurguyu değiştirmeden açar." },
+  { keys: ["Enter"], action: "Vurgulanan seçeneği seçer. Tekli: kapanır. Çoklu: seçimi değiştirir, açık kalır." },
+  { keys: ["Escape"], action: "Listeyi kapatır; tekli modda seçili etiketi geri yükler." },
+  { keys: ["Backspace"], action: "Çoklu, alan boşken: son çipi kaldırır." },
+  { keys: ["Tab"], action: "Kapatır ve sonraki elemana geçer." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Liste uzunsa (20+ öğe) ya da sunucudan geliyorsa ve kullanıcı ne aradığını biliyorsa Combobox kullan.</p>}
+  dont={<p>Birkaç seçenek için kullanma; <a href="/tr/docs/components/select">Select</a> ya da <a href="/tr/docs/components/radio">Radio</a> daha hızlı taranır.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Select](/tr/docs/components/select) — kısa ve sabit bir listeden tek seçim.
+- [Field](/tr/docs/components/field) — bir kontrolün etrafında etiket, yardım metni ve hata.

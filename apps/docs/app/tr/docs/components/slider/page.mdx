@@ -1,0 +1,109 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { SliderBasic, SliderRange, SliderStates } from "@/examples/tr/slider";
+
+export const metadata = docMetadata("tr", "/docs/components/slider", {
+  title: "Slider",
+  description: "Yatay bir track üzerinde bir değer ya da iki tutamaçla bir aralık seçtirir.",
+});
+
+# Slider
+
+Yatay bir track üzerinde bir değer ya da iki tutamaçla bir aralık seçtirir. Değerler `step`'e oturur; track `dir="rtl"`'yi izler.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/slider">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`const [value, setValue] = useState([40]);
+
+<span id="volume">Ses</span>
+<Slider aria-labelledby="volume" value={value} onValueChange={setValue} getValueText={(v) => "%" + v} />`}>
+  <SliderBasic />
+</ComponentPreview>
+
+<Callout tone="success">
+  Aralıkta tutamaçların adları varsayılan olarak İngilizcedir (“Minimum”, “Maximum”). Türkçe arayüzde `thumbLabels` ver; değerin okunuşunu da `getValueText` ile Türkçeleştir (ör. `%40`, `200 ₺`).
+</Callout>
+
+## Import
+
+```tsx
+import { Slider } from "@meridui/react";
+```
+
+## Örnekler
+
+### Aralık
+
+İki değer ver. Tutamaçlar birbirini geçemez; `minStepsBetweenThumbs` aralarında mesafe bırakır. Her tutamağa `thumbLabels` ile ad ver, değerlere `getValueText` ile okunur bir biçim ver.
+
+<ComponentPreview code={`const lira = new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY", maximumFractionDigits: 0 });
+
+<Slider
+  value={value}
+  onValueChange={setValue}
+  min={0}
+  max={1000}
+  step={10}
+  minStepsBetweenThumbs={5}
+  thumbLabels={["En düşük fiyat", "En yüksek fiyat"]}
+  getValueText={(v) => lira.format(v)}
+  name="price"
+/>`}>
+  <SliderRange />
+</ComponentPreview>
+
+### Ondalık adım, devre dışı ve RTL
+
+<ComponentPreview code={`<Slider aria-label="Opaklık" defaultValue={[0.5]} min={0} max={1} step={0.05} />
+<Slider aria-label="Devre dışı" defaultValue={[30]} disabled />
+<div dir="rtl">
+  <Slider aria-label="Sağdan sola" defaultValue={[25]} />
+</div>`}>
+  <SliderStates />
+</ComponentPreview>
+
+## API referansı
+
+Bir `div` render'lar; diğer `div` attribute'ları ve ref ona gider. Tek tutamaçta kökteki `aria-label` / `aria-labelledby` tutamağa ad verir.
+
+<PropsTable rows={[
+  { name: "value", type: "number[]", description: "Controlled değerler: tekli için bir, aralık için iki." },
+  { name: "defaultValue", type: "number[]", default: "[min]", description: "Uncontrolled kullanımda başlangıç değerleri." },
+  { name: "onValueChange", type: "(value: number[]) => void", description: "Sürüklerken ya da tuşa basarken her değişimde çağrılır." },
+  { name: "onValueCommit", type: "(value: number[]) => void", description: "Sürükleme bitince ya da tuşa basıldıktan sonra çağrılır." },
+  { name: "min", type: "number", default: "0", description: "En düşük değer." },
+  { name: "max", type: "number", default: "100", description: "En yüksek değer." },
+  { name: "step", type: "number", default: "1", description: "Artış miktarı." },
+  { name: "largeStep", type: "number", default: "step * 10", description: "Page Up / Page Down ve Shift + ok tuşlarının artışı." },
+  { name: "minStepsBetweenThumbs", type: "number", default: "0", description: "Aralık tutamakları arasındaki en az mesafe, adım cinsinden." },
+  { name: "thumbLabels", type: "string[]", default: "aralıkta [\"Minimum\", \"Maximum\"]", description: "Her tutamağın erişilebilir adı." },
+  { name: "getValueText", type: "(value: number, index: number) => string", description: "aria-valuetext; ör. birim ya da para birimiyle." },
+  { name: "disabled", type: "boolean", default: "false", description: "Slider'ı devre dışı bırakır." },
+  { name: "name", type: "string", description: "Tutamak başına gizli input: tekli için name, aralık için name[]." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-slider` | Kök (`data-disabled`) |
+| `.mrd-slider__track` | Track ve işaretçi hedefi |
+| `.mrd-slider__range` | Track'in dolu kısmı |
+| `.mrd-slider__thumb` | Tutamak, `role="slider"` |
+
+## Erişilebilirlik
+
+Her tutamak `aria-valuenow`, `aria-valuemin` ve `aria-valuemax` taşıyan bir `role="slider"`'dır. Aralıkta her tutamağın sınırı diğer tutamağın değeridir; ekran okuyucular gerçek sınırları okur. Track'in 24px'lik, her tutamağın 24px'lik bir tıklama alanı vardır (dokunmatik ekranlarda 44px).
+
+<KeyboardTable rows={[
+  { keys: ["ArrowRight", "ArrowUp"], action: "step kadar artırır (RTL'de ArrowRight azaltır)." },
+  { keys: ["ArrowLeft", "ArrowDown"], action: "step kadar azaltır (RTL'de ArrowLeft artırır)." },
+  { keys: ["PageUp", "PageDown"], action: "largeStep kadar artırır / azaltır. Shift + ok tuşları da aynısını yapar." },
+  { keys: ["Home", "End"], action: "En düşük / en yüksek değere gider." },
+]} />
+
+## İlgili sayfalar
+
+- [NumberInput](/tr/docs/components/number-input) — kesin sayı önemliyse.

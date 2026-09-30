@@ -17,6 +17,15 @@ const HYDRATED = [
   "Field",
   "RadioGroup",
   "ToastProvider",
+  "Calendar",
+  "Combobox",
+  "DatePicker",
+  "FileUpload",
+  "NumberInput",
+  "PinInput",
+  "Slider",
+  "Toggle",
+  "ToggleGroup",
 ];
 
 describe("hydration (jsdom)", () => {

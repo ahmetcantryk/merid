@@ -1,0 +1,132 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { DatePickerBasic, DatePickerRange, DatePickerConstraints, DatePickerStates } from "@/examples/tr/date-picker";
+
+export const metadata = docMetadata("tr", "/docs/components/date-picker", {
+  title: "DatePicker",
+  description: "Yazılabilen, tek gün ya da aralık için takvim popover'ı açan tarih alanı.",
+});
+
+# DatePicker
+
+Yazılabilen bir tarih alanı; yanındaki buton [Calendar](/tr/docs/components/calendar)'ı bir popover içinde açar. Yazılan metin locale'in sayısal sırasıyla (`tr-TR` için `30.09.2026`, `en-US` için `09/30/2026`) ya da ISO biçiminde (`2026-09-30`) okunur.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/date-picker">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`const [date, setDate] = useState<Date | null>(null);
+
+<Field label="Son tarih" description="GG.AA.YYYY biçiminde yaz ya da takvimden seç.">
+  <DatePicker
+    locale="tr-TR"
+    placeholder="GG.AA.YYYY"
+    calendarLabel="Tarih seç"
+    previousMonthLabel="Önceki ay"
+    nextMonthLabel="Sonraki ay"
+    value={date}
+    onValueChange={setDate}
+    name="due"
+  />
+</Field>`}>
+  <DatePickerBasic />
+</ComponentPreview>
+
+<Callout tone="success">
+  `locale` varsayılan olarak `"en-US"`dir ve placeholder bu yüzden `MM/DD/YYYY` olur. Takvim butonu ve dialog'u “Choose date”, ay butonları “Previous month” / “Next month”, aralık alanları “Start date” / “End date” adını alır. Türkçe arayüzde `locale="tr-TR"`, `placeholder="GG.AA.YYYY"`, `calendarLabel`, `previousMonthLabel`, `nextMonthLabel` ve aralıkta `startLabel` / `endLabel` ver.
+</Callout>
+
+## Import
+
+```tsx
+import { DatePicker } from "@meridui/react";
+```
+
+## Örnekler
+
+### Aralık
+
+`mode="range"` bir başlangıç ve bir bitiş alanı render'lar. İki gün de seçilince takvim kapanır.
+
+<ComponentPreview code={`const [range, setRange] = useState<DateRange>({ start: null, end: null });
+
+<DatePicker
+  locale="tr-TR"
+  mode="range"
+  value={range}
+  onValueChange={setRange}
+  startLabel="Giriş tarihi"
+  endLabel="Çıkış tarihi"
+/>`}>
+  <DatePickerRange />
+</ComponentPreview>
+
+### En erken, en geç ve devre dışı günler
+
+Sınırların dışında yazılan tarihler reddedilir ve alan son geçerli değere döner.
+
+<ComponentPreview code={`<DatePicker locale="tr-TR" min={today} isDateDisabled={(d) => d.getDay() === 0 || d.getDay() === 6} />`}>
+  <DatePickerConstraints />
+</ComponentPreview>
+
+### Boyutlar ve durumlar
+
+<ComponentPreview code={`<DatePicker aria-label="Küçük" size="sm" />
+<DatePicker aria-label="Geçersiz" invalid />
+<DatePicker aria-label="Devre dışı" disabled defaultValue={today} />`}>
+  <DatePickerStates />
+</ComponentPreview>
+
+### Formda
+
+`name` verildiğinde gizli bir input `yyyy-mm-dd` gönderir. Aralık iki değeri `name[]` altında gönderir. `toISODate(date)` aynı string'i verir.
+
+## API referansı
+
+Bir `div` render'lar; diğer `div` attribute'ları ve ref ona gider. `aria-label` / `aria-labelledby` metin alanına ad verir. Bir [Field](/tr/docs/components/field) içinde (ilk) alan id'yi, açıklamayı, hatayı, `required` ve `disabled`'ı alır.
+
+<PropsTable rows={[
+  { name: "mode", type: "\"single\" | \"range\"", default: "\"single\"", description: "Tek gün ya da başlangıç ve bitiş günü." },
+  { name: "value / defaultValue", type: "Date | null | DateRange", description: "Controlled ya da başlangıç seçimi." },
+  { name: "onValueChange", type: "(value) => void", description: "Yeni gün (ya da aralık) ile çağrılır; alan temizlenince null." },
+  { name: "locale", type: "string", default: "\"en-US\"", description: "Takvim adları, hafta başı ve yazılan sayısal biçim. Türkçe arayüzde \"tr-TR\"." },
+  { name: "min / max", type: "Date", description: "Seçilebilen en erken ve en geç gün." },
+  { name: "isDateDisabled", type: "(date: Date) => boolean", description: "Tek tek günleri kullanılamaz işaretler." },
+  { name: "weekStartsOn", type: "0 – 6", description: "Takvimin ilk kolonu. Varsayılanı locale'in hafta başı." },
+  { name: "open / onOpenChange", type: "boolean / (open) => void", description: "Takvimin controlled açık state'i." },
+  { name: "placeholder", type: "string", default: "locale deseni, ör. MM/DD/YYYY", description: "Metin alan(lar)ının placeholder'ı. Türkçe arayüzde \"GG.AA.YYYY\"." },
+  { name: "calendarLabel", type: "string", default: "\"Choose date\"", description: "Takvim butonunun erişilebilir adı. Türkçe arayüzde \"Tarih seç\"." },
+  { name: "dialogLabel", type: "string", default: "calendarLabel", description: "Takvim dialog'unun erişilebilir adı." },
+  { name: "previousMonthLabel / nextMonthLabel", type: "string", default: "\"Previous month\" / \"Next month\"", description: "Takvimdeki ay butonlarının adları." },
+  { name: "startLabel / endLabel", type: "string", default: "\"Start date\" / \"End date\"", description: "Yalnızca aralık: iki alanın adları." },
+  { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Alanın yüksekliği." },
+  { name: "invalid / disabled / required", type: "boolean", description: "Durumlar; Field içinde ondan gelir." },
+  { name: "name", type: "string", description: "yyyy-mm-dd taşıyan gizli input; aralık name[] ile iki kez gönderir." },
+  { name: "icon", type: "ReactNode", description: "Takvim butonundaki ikon." },
+  { name: "inputId", type: "string", description: "(İlk) metin alanının id'si." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-date-picker` | Kök (`data-size`, `data-mode`, `data-invalid`, `data-disabled`) |
+| `.mrd-date-picker__field` | Kenarlıklı alan |
+| `.mrd-date-picker__input`, `.mrd-date-picker__separator` | Metin alan(lar)ı ve aralık tiresi |
+| `.mrd-date-picker__trigger` | Takvim butonu (`data-state`) |
+| `.mrd-date-picker__content` | Takvimi tutan popover |
+
+## Erişilebilirlik
+
+Asıl girdi metin alanıdır; takvim butonu (`aria-haspopup="dialog"`) seçili güne focus veren, modal olmayan bir dialog açar. Gün seçmek ya da Escape dialog'u kapatır ve focus'u butona döndürür. Grid içindeki tuşlar için [Calendar](/tr/docs/components/calendar#erisilebilirlik) sayfasına bak.
+
+<KeyboardTable rows={[
+  { keys: ["Alt", "ArrowDown"], action: "Metin alanında: takvimi açar." },
+  { keys: ["Enter"], action: "Metin alanında: yazılan tarihi okur. Takvimde: focus'taki günü seçer." },
+  { keys: ["Escape"], action: "Takvimi kapatır, focus'u butona döndürür." },
+]} />
+
+## İlgili sayfalar
+
+- [Calendar](/tr/docs/components/calendar) — satır içi grid.
+- [Field](/tr/docs/components/field) — bir kontrolün etrafında etiket, yardım metni ve hata.

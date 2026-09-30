@@ -1,0 +1,122 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ToggleGroupBasic, ToggleGroupMultiple, ToggleDemo } from "@/examples/tr/toggle-group";
+
+export const metadata = docMetadata("tr", "/docs/components/toggle-group", {
+  title: "ToggleGroup",
+  description: "İki durumlu toggle butonlar: tek başına (Toggle) ya da tekli veya çoklu seçimli bir set.",
+});
+
+# ToggleGroup
+
+İki durumlu butonlar (`aria-pressed`). Açık kalan tek bir seçenek için `Toggle`, bir set için `ToggleGroup` kullan: `type="single"` geri alınabilen tek seçim, `type="multiple"` birbirinden bağımsız toggle'lardır.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/toggle">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`const [align, setAlign] = useState("left");
+
+<ToggleGroup type="single" aria-label="Metin hizalama" value={align} onValueChange={setAlign}>
+  <ToggleGroupItem value="left" aria-label="Sola hizala"><AlignLeftIcon /></ToggleGroupItem>
+  <ToggleGroupItem value="center" aria-label="Ortala"><AlignCenterIcon /></ToggleGroupItem>
+  <ToggleGroupItem value="right" aria-label="Sağa hizala"><AlignRightIcon /></ToggleGroupItem>
+</ToggleGroup>`}>
+  <ToggleGroupBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Toggle, ToggleGroup, ToggleGroupItem } from "@meridui/react";
+```
+
+## Örnekler
+
+### Çoklu
+
+<ComponentPreview code={`const [format, setFormat] = useState<string[]>(["bold"]);
+
+<ToggleGroup type="multiple" aria-label="Biçimlendirme" value={format} onValueChange={setFormat}>
+  <ToggleGroupItem value="bold">Kalın</ToggleGroupItem>
+  <ToggleGroupItem value="italic">İtalik</ToggleGroupItem>
+  <ToggleGroupItem value="underline">Altı çizili</ToggleGroupItem>
+</ToggleGroup>`}>
+  <ToggleGroupMultiple />
+</ComponentPreview>
+
+### Toggle
+
+<ComponentPreview code={`<Toggle defaultPressed>Izgarayı göster</Toggle>
+<Toggle size="sm">Hizala</Toggle>
+<Toggle disabled>Cetveller</Toggle>`}>
+  <ToggleDemo />
+</ComponentPreview>
+
+## API referansı
+
+### Toggle
+
+Tüm `<button>` attribute'larını kabul eder; ref butona gider.
+
+<PropsTable rows={[
+  { name: "pressed", type: "boolean", description: "Controlled basılı state'i." },
+  { name: "defaultPressed", type: "boolean", default: "false", description: "Uncontrolled kullanımda başlangıç state'i." },
+  { name: "onPressedChange", type: "(pressed: boolean) => void", description: "Yeni state ile çağrılır." },
+  { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Yükseklik." },
+]} />
+
+### ToggleGroup
+
+Bir `div role="group"` render'lar; `aria-label` ya da `aria-labelledby` ile ad ver.
+
+<PropsTable rows={[
+  { name: "type", type: "\"single\" | \"multiple\"", required: true, description: "Aynı anda tek öğe (tekrar basınca kapanır) ya da istenen sayıda öğe." },
+  { name: "value", type: "string | string[]", description: "Controlled değer: string (\"\" hiçbiri) ya da string[]." },
+  { name: "defaultValue", type: "string | string[]", description: "Uncontrolled kullanımda başlangıç değeri." },
+  { name: "onValueChange", type: "(value) => void", description: "Yeni değerle çağrılır." },
+  { name: "orientation", type: "\"horizontal\" | \"vertical\"", default: "\"horizontal\"", description: "Hangi ok tuşlarının focus'u taşıdığı ve yerleşim." },
+  { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Tüm öğelerin boyutu." },
+  { name: "disabled", type: "boolean", default: "false", description: "Tüm öğeleri devre dışı bırakır." },
+]} />
+
+### ToggleGroupItem
+
+`value` dışındaki tüm `<button>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "value", type: "string", required: true, description: "Öğe açıkken bildirilen değer." },
+  { name: "disabled", type: "boolean", description: "Öğeyi devre dışı bırakır; ok tuşları atlar." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-toggle` | Toggle ve gruptaki her öğe (`data-state="on" \| "off"`, `data-size`) |
+| `.mrd-toggle-group` | Grup (`data-orientation`) |
+| `.mrd-toggle-group__item` | Grup öğesi |
+
+## Erişilebilirlik
+
+Her öğe bir `<button aria-pressed>`'dir; ekran okuyucular “basılı” / “basılı değil” diye okur. Grup tek bir tab durağıdır (roving `tabindex`); ok tuşları state'i değiştirmeden focus'u taşır, Space ya da Enter değiştirir. Yalnızca ikon içeren öğeler `aria-label` ister.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Gruba (basılı öğeye ya da ilk öğeye) girer ve gruptan çıkar." },
+  { keys: ["ArrowRight", "ArrowDown"], action: "Sonraki öğe (başa döner; RTL'de ArrowLeft)." },
+  { keys: ["ArrowLeft", "ArrowUp"], action: "Önceki öğe (sona döner)." },
+  { keys: ["Home", "End"], action: "İlk / son öğe." },
+  { keys: ["Space", "Enter"], action: "Focus'taki öğeyi açar ya da kapatır." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Metin hizalama gibi anında uygulanan araç seçenekleri için tekli bir ToggleGroup kullan.</p>}
+  dont={<p>Görünümler ya da sayfalar arasında geçiş için kullanma; bu <a href="/tr/docs/components/segmented-control">SegmentedControl</a> ya da <a href="/tr/docs/components/tabs">Tabs</a>'in işi.</p>}
+/>
+
+## İlgili sayfalar
+
+- [SegmentedControl](/tr/docs/components/segmented-control) — görünümler arasında zorunlu tek seçim.
+- [Switch](/tr/docs/components/switch) — açık ya da kapalı bir ayar.

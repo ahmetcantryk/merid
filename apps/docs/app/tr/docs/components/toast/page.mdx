@@ -25,7 +25,7 @@ Ekranın köşesinde üst üste dizilen, akışı engellemeyen kısa bildirimler
 </ComponentPreview>
 
 <Callout tone="success">
-  Bildirim bölgesinin erişilebilir adı varsayılan olarak “Notifications”dır. Türkçe arayüzde `ToastProvider`'a `label="Bildirimler"` ver; ekran okuyucular bölgeyi doğru dilde okusun.
+  Bildirim bölgesinin erişilebilir adı varsayılan olarak “Notifications”dır. Kapatma butonunun adı da varsayılan olarak “Dismiss notification”dır. Türkçe arayüzde `ToastProvider`'a `label="Bildirimler"` ve `dismissLabel="Bildirimi kapat"` ver; ekran okuyucular ikisini de doğru dilde okusun.
 </Callout>
 
 ## Import
@@ -73,6 +73,7 @@ Ton yalnızca durum noktasının rengini değiştirir.
   { name: "duration", type: "number", default: "5000", description: "Varsayılan otomatik kapanma süresi, ms cinsinden." },
   { name: "limit", type: "number", default: "3", description: "Aynı anda görünen en fazla toast sayısı; en eskiler düşürülür." },
   { name: "label", type: "string", default: "\"Notifications\"", description: "Bildirim bölgesinin erişilebilir adı. Türkçe arayüzde Türkçe bir değer ver, örneğin \"Bildirimler\"." },
+  { name: "dismissLabel", type: "string", default: "\"Dismiss notification\"", description: "Her toast'un kapatma butonunun erişilebilir adı. Türkçe arayüzde örneğin \"Bildirimi kapat\"." },
 ]} />
 
 ### useToast()

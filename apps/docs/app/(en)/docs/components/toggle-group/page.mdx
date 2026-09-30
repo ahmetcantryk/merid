@@ -1,0 +1,122 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ToggleGroupBasic, ToggleGroupMultiple, ToggleDemo } from "@/examples/toggle-group";
+
+export const metadata = docMetadata("en", "/docs/components/toggle-group", {
+  title: "ToggleGroup",
+  description: "Two-state toggle buttons, alone (Toggle) or as a single- or multiple-choice set.",
+});
+
+# ToggleGroup
+
+Two-state buttons (`aria-pressed`). Use `Toggle` for one option that stays on, and `ToggleGroup` for a set: `type="single"` is a deselectable choice, `type="multiple"` independent toggles.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/toggle">Source</a>
+</div>
+
+<ComponentPreview code={`const [align, setAlign] = useState("left");
+
+<ToggleGroup type="single" aria-label="Text alignment" value={align} onValueChange={setAlign}>
+  <ToggleGroupItem value="left" aria-label="Align left"><AlignLeftIcon /></ToggleGroupItem>
+  <ToggleGroupItem value="center" aria-label="Align center"><AlignCenterIcon /></ToggleGroupItem>
+  <ToggleGroupItem value="right" aria-label="Align right"><AlignRightIcon /></ToggleGroupItem>
+</ToggleGroup>`}>
+  <ToggleGroupBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Toggle, ToggleGroup, ToggleGroupItem } from "@meridui/react";
+```
+
+## Examples
+
+### Multiple
+
+<ComponentPreview code={`const [format, setFormat] = useState<string[]>(["bold"]);
+
+<ToggleGroup type="multiple" aria-label="Formatting" value={format} onValueChange={setFormat}>
+  <ToggleGroupItem value="bold">Bold</ToggleGroupItem>
+  <ToggleGroupItem value="italic">Italic</ToggleGroupItem>
+  <ToggleGroupItem value="underline">Underline</ToggleGroupItem>
+</ToggleGroup>`}>
+  <ToggleGroupMultiple />
+</ComponentPreview>
+
+### Toggle
+
+<ComponentPreview code={`<Toggle defaultPressed>Show grid</Toggle>
+<Toggle size="sm">Snap</Toggle>
+<Toggle disabled>Rulers</Toggle>`}>
+  <ToggleDemo />
+</ComponentPreview>
+
+## API reference
+
+### Toggle
+
+Accepts every `<button>` attribute; the ref goes to the button.
+
+<PropsTable rows={[
+  { name: "pressed", type: "boolean", description: "Controlled pressed state." },
+  { name: "defaultPressed", type: "boolean", default: "false", description: "Initial state when uncontrolled." },
+  { name: "onPressedChange", type: "(pressed: boolean) => void", description: "Called with the new state." },
+  { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Height." },
+]} />
+
+### ToggleGroup
+
+Renders a `div role="group"`; name it with `aria-label` or `aria-labelledby`.
+
+<PropsTable rows={[
+  { name: "type", type: "\"single\" | \"multiple\"", required: true, description: "One item on at a time (pressing it again turns it off), or any number." },
+  { name: "value", type: "string | string[]", description: "Controlled value: string (\"\" for none) or string[]." },
+  { name: "defaultValue", type: "string | string[]", description: "Initial value when uncontrolled." },
+  { name: "onValueChange", type: "(value) => void", description: "Called with the new value." },
+  { name: "orientation", type: "\"horizontal\" | \"vertical\"", default: "\"horizontal\"", description: "Which arrow keys move focus, and the layout." },
+  { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Size of every item." },
+  { name: "disabled", type: "boolean", default: "false", description: "Disables every item." },
+]} />
+
+### ToggleGroupItem
+
+Accepts every `<button>` attribute except `value`.
+
+<PropsTable rows={[
+  { name: "value", type: "string", required: true, description: "Value reported when this item is on." },
+  { name: "disabled", type: "boolean", description: "Disables the item; arrow keys skip it." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-toggle` | Toggle and every group item (`data-state="on" \| "off"`, `data-size`) |
+| `.mrd-toggle-group` | Group (`data-orientation`) |
+| `.mrd-toggle-group__item` | Group item |
+
+## Accessibility
+
+Every item is a `<button aria-pressed>`, so screen readers announce "pressed" / "not pressed". The group is one tab stop (roving `tabindex`); arrow keys move focus without changing the state, Space or Enter toggles. Icon-only items need an `aria-label`.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Move into the group (to the pressed item or the first) and out of it." },
+  { keys: ["ArrowRight", "ArrowDown"], action: "Next item (wraps; ArrowLeft in RTL)." },
+  { keys: ["ArrowLeft", "ArrowUp"], action: "Previous item (wraps)." },
+  { keys: ["Home", "End"], action: "First / last item." },
+  { keys: ["Space", "Enter"], action: "Toggle the focused item." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Use a single ToggleGroup for tool options that apply immediately, like text alignment.</p>}
+  dont={<p>Use it to switch between views or pages; that is <a href="/docs/components/segmented-control">SegmentedControl</a> or <a href="/docs/components/tabs">Tabs</a>.</p>}
+/>
+
+## Related
+
+- [SegmentedControl](/docs/components/segmented-control) — one required choice between views.
+- [Switch](/docs/components/switch) — a setting that is on or off.
