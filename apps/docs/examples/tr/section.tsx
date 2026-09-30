@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Container, Heading, Section, Text } from "@merid/react";
+import { Card, Container, Heading, Section, Text } from "@meridui/react";
 
 const frame = { width: "100%", border: "1px dashed var(--mrd-line-strong)", borderRadius: 12, overflow: "hidden" } as const;
 

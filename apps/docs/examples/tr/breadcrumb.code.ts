@@ -1,6 +1,6 @@
 // Docs'taki kod sekmelerinde gösterilen kaynak metinler. Server component'ler okuyabilsin diye client modülünün dışında tutuluyor.
 
-export const breadcrumbBasicCode = `import { Breadcrumb } from "@merid/react";
+export const breadcrumbBasicCode = `import { Breadcrumb } from "@meridui/react";
 
 export function Example() {
   return (

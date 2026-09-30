@@ -1,6 +1,6 @@
 /**
  * Playground presets. Colours come from the library's `data-accent` presets and
- * density from `data-density` (see @merid/react/styles/tokens.css); nothing is defined here.
+ * density from `data-density` (see @meridui/react/styles/tokens.css); nothing is defined here.
  */
 export const ACCENTS = [
   { id: "blue", key: "1" },

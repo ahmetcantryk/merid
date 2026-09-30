@@ -1,6 +1,6 @@
 "use client";
 
-import { Grid } from "@merid/react";
+import { Grid } from "@meridui/react";
 import { Box } from "../layout-box";
 
 const items = (count: number) => Array.from({ length: count }, (_, i) => <Box key={i}>{i + 1}</Box>);

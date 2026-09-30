@@ -1,7 +1,7 @@
 import { createRef, type RefObject } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Accordion, Button, Dialog, DropdownMenu, Popover, Select, Tabs, Tooltip } from "@merid/react";
+import { Accordion, Button, Dialog, DropdownMenu, Popover, Select, Tabs, Tooltip } from "@meridui/react";
 
 type AnyRef = RefObject<HTMLElement>;
 

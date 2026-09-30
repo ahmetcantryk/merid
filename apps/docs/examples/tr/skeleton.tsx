@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton, Stack } from "@merid/react";
+import { Skeleton, Stack } from "@meridui/react";
 
 export function SkeletonDemo() {
   return (

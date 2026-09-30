@@ -1,6 +1,6 @@
 // Doküman kod sekmelerinde gösterilen kaynak metinler. Server component'ler okuyabilsin diye client modülünün dışında tutulur.
 
-export const sidebarNavBasicCode = `import { Badge, SidebarNav } from "@merid/react";
+export const sidebarNavBasicCode = `import { Badge, SidebarNav } from "@meridui/react";
 
 export function Example() {
   return (
@@ -22,7 +22,7 @@ export function Example() {
 
 export const sidebarNavRouterCode = `import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SidebarNav } from "@merid/react";
+import { SidebarNav } from "@meridui/react";
 
 export function AppNav() {
   const pathname = usePathname();

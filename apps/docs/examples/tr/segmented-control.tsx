@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SegmentedControl } from "@merid/react";
+import { SegmentedControl } from "@meridui/react";
 import { GridIcon, ListIcon } from "../icons";
 
 const RANGE = [

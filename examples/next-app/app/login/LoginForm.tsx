@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Alert, Button, Field, Input, Stack } from "@merid/react";
+import { Alert, Button, Field, Input, Stack } from "@meridui/react";
 import { loginAction } from "@/lib/auth-actions";
 import { loginSchema, type LoginInput } from "@/lib/schemas";
 import { zodResolver } from "@/lib/zod-resolver";

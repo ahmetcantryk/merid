@@ -14,7 +14,7 @@ import {
   Stack,
   Switch,
   Text,
-} from "@merid/react";
+} from "@meridui/react";
 
 interface InviteValues {
   email: string;

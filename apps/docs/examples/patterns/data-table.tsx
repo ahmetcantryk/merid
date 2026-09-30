@@ -16,7 +16,7 @@ import {
   TableRow,
   Text,
   type BadgeTone,
-} from "@merid/react";
+} from "@meridui/react";
 
 type Status = "Paid" | "Pending" | "Overdue";
 interface Invoice {

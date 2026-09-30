@@ -1,6 +1,6 @@
 // Source strings shown in the docs code tabs. Kept out of the client module so server components can read them.
 
-export const breadcrumbBasicCode = `import { Breadcrumb } from "@merid/react";
+export const breadcrumbBasicCode = `import { Breadcrumb } from "@meridui/react";
 
 export function Example() {
   return (

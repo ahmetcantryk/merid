@@ -1,4 +1,4 @@
-// Builds @merid/tokens from packages/react/styles/tokens.css. Node only, no dependencies.
+// Builds @meridui/tokens from packages/react/styles/tokens.css. Node only, no dependencies.
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -207,5 +207,5 @@ function toDts(modes) {
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const { count, modes } = await build();
-  console.log(`@merid/tokens: ${count} tokens, modes: ${Object.keys(modes).join(", ")}`);
+  console.log(`@meridui/tokens: ${count} tokens, modes: ${Object.keys(modes).join(", ")}`);
 }

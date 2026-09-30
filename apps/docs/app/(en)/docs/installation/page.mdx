@@ -1,12 +1,12 @@
 import { docMetadata } from "@/lib/i18n/metadata";
 export const metadata = docMetadata("en", "/docs/installation", {
   title: "Installation",
-  description: "Install @merid/react with npm, pnpm or Yarn, and set it up in Next.js or Vite.",
+  description: "Install @meridui/react with npm, pnpm or Yarn, and set it up in Next.js or Vite.",
 });
 
 # Installation
 
-Merid is published as a single package, `@merid/react`. It contains the components, the stylesheet and the bundled Geist and Geist Mono variable fonts.
+Merid is published as a single package, `@meridui/react`. It contains the components, the stylesheet and the bundled Geist and Geist Mono variable fonts.
 
 ## Requirements
 
@@ -17,14 +17,14 @@ Merid is published as a single package, `@merid/react`. It contains the componen
 ## Install the package
 
 ```bash
-npm i @merid/react
+npm i @meridui/react
 ```
 
 With other package managers:
 
 ```bash
-pnpm add @merid/react
-yarn add @merid/react
+pnpm add @meridui/react
+yarn add @meridui/react
 ```
 
 ## Import the stylesheet once
@@ -32,12 +32,12 @@ yarn add @merid/react
 Every component reads from one stylesheet. Import it once, as high in your tree as possible.
 
 ```tsx
-import "@merid/react/styles.css";
+import "@meridui/react/styles.css";
 ```
 
-If you only want the design tokens — for example, to use the colours and spacing in your own components — import `@merid/react/tokens.css` instead. It contains the custom properties and the font face, and no component rules.
+If you only want the design tokens — for example, to use the colours and spacing in your own components — import `@meridui/react/tokens.css` instead. It contains the custom properties and the font face, and no component rules.
 
-`styles.css` includes a small base layer: `box-sizing: border-box`, the document font, colours, heading weight and focus ring, applied to `:root` at zero specificity (so any rule of yours wins). If your app brings its own document styles and you want none of it, import `@merid/react/components.css` (tokens + components, no base) instead. Components set `box-sizing` on their own elements, so they render the same either way.
+`styles.css` includes a small base layer: `box-sizing: border-box`, the document font, colours, heading weight and focus ring, applied to `:root` at zero specificity (so any rule of yours wins). If your app brings its own document styles and you want none of it, import `@meridui/react/components.css` (tokens + components, no base) instead. Components set `box-sizing` on their own elements, so they render the same either way.
 
 ## Next.js (App Router)
 
@@ -45,7 +45,7 @@ Import the stylesheet in the root layout. The base typography and focus styles a
 
 ```tsx
 // app/layout.tsx
-import "@merid/react/styles.css";
+import "@meridui/react/styles.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -64,7 +64,7 @@ Import the stylesheet in your entry file, before your own CSS so that your rules
 
 ```tsx
 // src/main.tsx
-import "@merid/react/styles.css";
+import "@meridui/react/styles.css";
 import "./app.css";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";

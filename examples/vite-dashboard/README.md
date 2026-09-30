@@ -1,14 +1,14 @@
 # Northwind Cloud console (Vite + Merid)
 
-A single-page SaaS dashboard for the fictional **Northwind Cloud**, built with `@merid/react`, React 19 and Vite. No router or state library: a ~30-line hash router and a React context stand in for them.
+A single-page SaaS dashboard for the fictional **Northwind Cloud**, built with `@meridui/react`, React 19 and Vite. No router or state library: a ~30-line hash router and a React context stand in for them.
 
 ## Run
 
-From the repository root (npm workspaces link `@merid/react` automatically):
+From the repository root (npm workspaces link `@meridui/react` automatically):
 
 ```bash
 npm install
-npm run build -w @merid/react        # the example consumes the built package
+npm run build -w @meridui/react        # the example consumes the built package
 npm run dev -w merid-example-vite-dashboard   # http://localhost:3220
 ```
 

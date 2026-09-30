@@ -13,7 +13,7 @@ Merid, App Router'da hiçbir ayar gerektirmeden çalışır. Bu site de Merid il
 ```tsx
 // app/layout.tsx
 import type { Metadata, Viewport } from "next";
-import "@merid/react/styles.css";
+import "@meridui/react/styles.css";
 import "./globals.css"; // kendi CSS'in Merid'inkinden sonra
 
 export const metadata: Metadata = {
@@ -41,11 +41,11 @@ Base layer tipografi, arka plan ve focus stillerini dokümana sıfır specificit
 
 ## Server component'ler
 
-Her etkileşimli component kendi `"use client"` direktifiyle gelir; bu yüzden bir server component'te `@merid/react`'ten import edip doğrudan render'layabilirsin. Görsel component'ler (`Card`, `Stack`, `Heading`, `Text`, `Badge`, `Table`, …) kendilerine ait hiçbir istemci JavaScript'i olmadan sunucuda render'lanır. Event handler'lar yine de bir client sınırı ister; bkz. [Server component'ler](/tr/docs/server-components).
+Her etkileşimli component kendi `"use client"` direktifiyle gelir; bu yüzden bir server component'te `@meridui/react`'ten import edip doğrudan render'layabilirsin. Görsel component'ler (`Card`, `Stack`, `Heading`, `Text`, `Badge`, `Table`, …) kendilerine ait hiçbir istemci JavaScript'i olmadan sunucuda render'lanır. Event handler'lar yine de bir client sınırı ister; bkz. [Server component'ler](/tr/docs/server-components).
 
 ```tsx
 // app/projects/page.tsx — bir server component
-import { Badge, Card, Heading, Stack, Text } from "@merid/react";
+import { Badge, Card, Heading, Stack, Text } from "@meridui/react";
 
 export default async function Projects() {
   const projects = await db.project.findMany();
@@ -69,7 +69,7 @@ Anchor render'layan component'ler bir `as` prop'u alır; `next/link` verdiğinde
 
 ```tsx
 import NextLink from "next/link";
-import { Breadcrumb, Card, SidebarNav } from "@merid/react";
+import { Breadcrumb, Card, SidebarNav } from "@meridui/react";
 
 <SidebarNav.Item as={NextLink} href="/settings" active={pathname === "/settings"}>Ayarlar</SidebarNav.Item>
 <Breadcrumb.Link as={NextLink} href="/projects">Projeler</Breadcrumb.Link>

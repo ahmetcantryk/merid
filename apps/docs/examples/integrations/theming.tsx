@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type CSSProperties } from "react";
-import { Badge, Button, Card, Checkbox, Field, Input, SegmentedControl, Stack, Switch, Tabs, Text } from "@merid/react";
+import { Badge, Button, Card, Checkbox, Field, Input, SegmentedControl, Stack, Switch, Tabs, Text } from "@meridui/react";
 
 type Brand = "merid" | "teal" | "plum";
 

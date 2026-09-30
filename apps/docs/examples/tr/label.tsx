@@ -1,6 +1,6 @@
 "use client";
 
-import { Input, Label } from "@merid/react";
+import { Input, Label } from "@meridui/react";
 
 const col = { display: "grid", gap: 8, width: "100%", maxWidth: 320 } as const;
 

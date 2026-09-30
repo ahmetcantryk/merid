@@ -1,4 +1,4 @@
-export const tabsBasicCode = `import { Tabs } from "@merid/react";
+export const tabsBasicCode = `import { Tabs } from "@meridui/react";
 
 export function Example() {
   return (

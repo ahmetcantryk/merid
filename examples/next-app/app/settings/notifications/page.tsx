@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Card, Separator, Stack, Switch, Text } from "@merid/react";
+import { Card, Separator, Stack, Switch, Text } from "@meridui/react";
 
 export const metadata: Metadata = { title: "Notifications" };
 

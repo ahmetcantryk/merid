@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Button, Card, Container, Heading, Section, Stack, StepperRoot, StepperStep, Text } from "@merid/react";
+import { Button, Card, Container, Heading, Section, Stack, StepperRoot, StepperStep, Text } from "@meridui/react";
 import { STEPS } from "@/lib/onboarding";
 
 interface Props { params: Promise<{ step: string }> }

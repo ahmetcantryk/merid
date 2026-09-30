@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Field, NativeSelect } from "@merid/react";
+import { Field, NativeSelect } from "@meridui/react";
 
 const wrap = { width: "100%", maxWidth: 320 };
 

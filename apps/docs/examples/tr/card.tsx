@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Heading, Section, Text } from "@merid/react";
+import { Card, Heading, Section, Text } from "@meridui/react";
 
 function Body({ title }: { readonly title: string }) {
   return (

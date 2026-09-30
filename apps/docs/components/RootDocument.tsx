@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { themeInitScript } from "@/components/ThemeToggle";
 import { getDictionary, htmlLang, type Locale } from "@/lib/i18n";
 import "../app/site.css";
-import "@merid/react/styles.css";
+import "@meridui/react/styles.css";
 import "../app/landing.css";
 import "../app/docs.css";
 

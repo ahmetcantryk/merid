@@ -1,5 +1,5 @@
 {
-  "name": "@merid/tokens",
+  "name": "@meridui/tokens",
   "version": "0.1.0",
   "description": "Merid design tokens as W3C DTCG JSON, CSS and JS.",
   "license": "MIT",

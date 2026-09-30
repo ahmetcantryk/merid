@@ -1,6 +1,6 @@
 "use client";
 
-import { Kbd, Text } from "@merid/react";
+import { Kbd, Text } from "@meridui/react";
 
 export function KbdDemo() {
   return (

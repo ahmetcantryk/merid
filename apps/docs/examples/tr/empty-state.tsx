@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, EmptyState } from "@merid/react";
+import { Button, EmptyState } from "@meridui/react";
 import { InboxIcon, PlusIcon, SearchIcon } from "../icons";
 
 const wrap = { width: "100%", maxWidth: 560 } as const;

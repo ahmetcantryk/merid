@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Text, Textarea } from "@merid/react";
+import { Text, Textarea } from "@meridui/react";
 
 const col = { display: "grid", gap: 12, width: "100%", maxWidth: 420 } as const;
 

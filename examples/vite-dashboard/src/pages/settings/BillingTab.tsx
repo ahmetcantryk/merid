@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Button, Card, Heading, Radio, RadioGroup, Stack, Text, useToast } from "@merid/react";
+import { Alert, Button, Card, Heading, Radio, RadioGroup, Stack, Text, useToast } from "@meridui/react";
 
 const PLANS = [
   { value: "hobby", label: "Hobby", price: "$0", description: "1 project, community support." },

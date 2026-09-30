@@ -39,7 +39,7 @@ for (const theme of THEMES) {
             (isComponentNode(node.html, target) ? component : chrome).push(finding);
           }
         }
-        expect.soft(component, `@merid/react component violations on ${route} (${theme})`).toEqual([]);
+        expect.soft(component, `@meridui/react component violations on ${route} (${theme})`).toEqual([]);
         expect.soft(chrome, `docs-site chrome violations on ${route} (${theme})`).toEqual([]);
       });
     }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Badge, Button, Card, Input, SegmentedControl, Stack, Switch, Text } from "@merid/react";
+import { Badge, Button, Card, Input, SegmentedControl, Stack, Switch, Text } from "@meridui/react";
 
 type Theme = "light" | "dark";
 type Accent = "blue" | "violet" | "green" | "graphite";

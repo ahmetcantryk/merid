@@ -1,6 +1,6 @@
 "use client";
 
-import { Stepper } from "@merid/react";
+import { Stepper } from "@meridui/react";
 
 export function StepperBasic() {
   return (

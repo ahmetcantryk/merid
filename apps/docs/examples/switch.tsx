@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Switch } from "@merid/react";
+import { Switch } from "@meridui/react";
 
 const col = { display: "grid", gap: 14 } as const;
 

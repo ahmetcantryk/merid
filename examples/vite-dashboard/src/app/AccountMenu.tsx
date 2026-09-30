@@ -1,4 +1,4 @@
-import { Avatar, DropdownMenu, useToast } from "@merid/react";
+import { Avatar, DropdownMenu, useToast } from "@meridui/react";
 import { CreditCard, LogOut, Settings, User } from "lucide-react";
 import { hrefFor } from "../lib/router";
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Container, Heading, Section, Stack, Text } from "@merid/react";
+import { Container, Heading, Section, Stack, Text } from "@meridui/react";
 import { PlanPicker } from "./PlanPicker";
 
 export const metadata: Metadata = { title: "Billing" };

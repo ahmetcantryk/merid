@@ -9,7 +9,7 @@ const withMDX = createMDX({
 
 const nextConfig: NextConfig = {
   pageExtensions: ["ts", "tsx", "md", "mdx"],
-  transpilePackages: ["@merid/react"],
+  transpilePackages: ["@meridui/react"],
   reactStrictMode: true,
 };
 

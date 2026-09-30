@@ -1,6 +1,6 @@
 "use client";
 
-import { Heading } from "@merid/react";
+import { Heading } from "@meridui/react";
 
 export function HeadingDemo() {
   return <Heading level={2}>Daha sakin arayüzler yayınla</Heading>;

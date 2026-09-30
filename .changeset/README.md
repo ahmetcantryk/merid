@@ -1,6 +1,6 @@
 # Changesets
 
-This folder holds pending release notes. Every pull request that changes the published package (`@merid/react`) should add one:
+This folder holds pending release notes. Every pull request that changes the published package (`@meridui/react`) should add one:
 
 ```bash
 npx changeset

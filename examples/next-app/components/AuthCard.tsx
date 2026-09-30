@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Card, Heading, Stack, Text } from "@merid/react";
+import { Card, Heading, Stack, Text } from "@meridui/react";
 
 export function AuthCard({ title, description, footer, children }: { title: string; description: string; footer: ReactNode; children: ReactNode }) {
   return (

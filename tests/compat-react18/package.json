@@ -2,12 +2,12 @@
   "name": "merid-compat-react18",
   "private": true,
   "type": "module",
-  "description": "Standalone (not a workspace) smoke suite: the built @merid/react against React 18.",
+  "description": "Standalone (not a workspace) smoke suite: the built @meridui/react against React 18.",
   "scripts": {
     "test": "vitest run"
   },
   "dependencies": {
-    "@merid/react": "file:../../packages/react"
+    "@meridui/react": "file:../../packages/react"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",

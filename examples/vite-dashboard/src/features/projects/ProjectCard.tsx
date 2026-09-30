@@ -1,4 +1,4 @@
-import { Badge, Card, Stack, Text } from "@merid/react";
+import { Badge, Card, Stack, Text } from "@meridui/react";
 import { Globe } from "lucide-react";
 import { REGIONS, STATUS_LABEL, STATUS_TONE, formatDate, formatNumber, type Project } from "../../lib/data";
 

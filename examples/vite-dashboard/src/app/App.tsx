@@ -1,4 +1,4 @@
-import { ToastProvider } from "@merid/react";
+import { ToastProvider } from "@meridui/react";
 import { ProjectsProvider } from "../lib/projects-store";
 import { useHashRoute, type Route } from "../lib/router";
 import { OverviewPage } from "../pages/OverviewPage";

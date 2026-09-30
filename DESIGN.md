@@ -7,8 +7,8 @@ If a value is not here, derive it from an existing one — do not invent a new c
 
 | Thing | Rule | Example |
 |---|---|---|
-| npm package | `@merid/react` (components + CSS) | `import { Button } from "@merid/react"` |
-| CSS entry | `@merid/react/styles.css` | one import, all components |
+| npm package | `@meridui/react` (components + CSS) | `import { Button } from "@meridui/react"` |
+| CSS entry | `@meridui/react/styles.css` | one import, all components |
 | Class prefix | `mrd-` + BEM-ish | `.mrd-button`, `.mrd-button__icon` |
 | State / variant hooks | data attributes, never modifier classes | `data-variant="primary" data-size="sm" data-state="open"` |
 | CSS variables | `--mrd-` + tier | primitive `--mrd-blue-500`, semantic `--mrd-accent`, component `--mrd-button-height` |

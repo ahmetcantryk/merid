@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Popover } from "@merid/react";
+import { Button, Popover } from "@meridui/react";
 
 export function PopoverDemo() {
   return (

@@ -13,7 +13,7 @@ import {
   Stack,
   Switch,
   Tabs,
-} from "@merid/react";
+} from "@meridui/react";
 
 export function RtlPreview() {
   return (

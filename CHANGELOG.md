@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `@merid/react` are documented here. The project follows [Semantic Versioning](https://semver.org); see the versioning policy in the documentation.
+All notable changes to `@meridui/react` are documented here. The project follows [Semantic Versioning](https://semver.org); see the versioning policy in the documentation.
 
 ## 0.1.0 — 2026-09-28
 

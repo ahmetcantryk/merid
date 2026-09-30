@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Alert, Button, Card, Field, Grid, Heading, Input, NativeSelect, Separator, Stack, Text, Textarea } from "@merid/react";
+import { Alert, Button, Card, Field, Grid, Heading, Input, NativeSelect, Separator, Stack, Text, Textarea } from "@meridui/react";
 
 type Status = "idle" | "submitting" | "success" | "error";
 type Errors = Partial<Record<"name" | "email" | "company", string>>;

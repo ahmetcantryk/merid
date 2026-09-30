@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Stack, Tabs } from "@merid/react";
+import { Stack, Tabs } from "@meridui/react";
 import { hashQuery } from "../../lib/router";
 import { PageHeader } from "../PageHeader";
 import { BillingTab } from "./BillingTab";

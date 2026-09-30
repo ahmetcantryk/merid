@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Drawer, type DrawerSide, type DrawerSize } from "@merid/react";
+import { Button, Drawer, type DrawerSide, type DrawerSize } from "@meridui/react";
 
 function SideDrawer({ side }: { readonly side: DrawerSide }) {
   return (

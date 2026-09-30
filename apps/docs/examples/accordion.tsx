@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Accordion } from "@merid/react";
+import { Accordion } from "@meridui/react";
 
 const wrap = { width: "100%", maxWidth: 520 } as const;
 

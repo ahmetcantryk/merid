@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, IconButton, Tooltip } from "@merid/react";
+import { Button, IconButton, Tooltip } from "@meridui/react";
 
 function CopyIcon() {
   return (

@@ -2,8 +2,8 @@
  * Base. Applies to the document (:root) out of the box and to any subtree marked
  * class="mrd-root" (e.g. inside a host page with its own styles).
  * Everything is wrapped in :where() inside @layer merid.base, so it has zero specificity and
- * any of your own rules win. To opt out entirely, import "@merid/react/components.css"
- * (tokens + components, no base) instead of "@merid/react/styles.css".
+ * any of your own rules win. To opt out entirely, import "@meridui/react/components.css"
+ * (tokens + components, no base) instead of "@meridui/react/styles.css".
  */
 @layer merid.base {
   :where(*, *::before, *::after) {

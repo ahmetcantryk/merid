@@ -1,5 +1,5 @@
 name: Bug report
-description: Something in @merid/react does not work as documented.
+description: Something in @meridui/react does not work as documented.
 labels: [bug, triage]
 body:
   - type: markdown
@@ -8,7 +8,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: "@merid/react version"
+      label: "@meridui/react version"
       placeholder: "0.1.0"
     validations:
       required: true

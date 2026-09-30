@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, ToastProvider, useToast, type ToastTone } from "@merid/react";
+import { Button, ToastProvider, useToast, type ToastTone } from "@meridui/react";
 
 function SaveButton() {
   const { toast } = useToast();

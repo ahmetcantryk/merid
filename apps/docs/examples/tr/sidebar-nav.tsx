@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, SidebarNav } from "@merid/react";
+import { Badge, SidebarNav } from "@meridui/react";
 
 function Icon() {
   return (

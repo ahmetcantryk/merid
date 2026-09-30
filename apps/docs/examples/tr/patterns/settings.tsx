@@ -16,7 +16,7 @@ import {
   Text,
   ToastProvider,
   useToast,
-} from "@merid/react";
+} from "@meridui/react";
 
 function Section({ title, description, children }: { readonly title: string; readonly description: string; readonly children: ReactNode }) {
   return (

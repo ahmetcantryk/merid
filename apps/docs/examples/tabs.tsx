@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Tabs } from "@merid/react";
+import { Tabs } from "@meridui/react";
 
 const panel = { padding: "16px 0", color: "var(--mrd-body)", fontSize: 14 } as const;
 const root = { width: "100%", maxWidth: 480 } as const;

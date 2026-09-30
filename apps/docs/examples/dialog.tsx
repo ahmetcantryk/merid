@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Dialog, Field, Input, Select, Stack, type DialogSize } from "@merid/react";
+import { Button, Dialog, Field, Input, Select, Stack, type DialogSize } from "@meridui/react";
 
 export function DialogDemo() {
   return (

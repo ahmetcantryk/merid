@@ -1,6 +1,6 @@
 "use client";
 
-import { Spinner, Stack, Text } from "@merid/react";
+import { Spinner, Stack, Text } from "@meridui/react";
 
 export function SpinnerDemo() {
   return <Spinner label="Yükleniyor" />;

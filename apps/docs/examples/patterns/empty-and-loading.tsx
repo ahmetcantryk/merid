@@ -13,7 +13,7 @@ import {
   Stack,
   Text,
   VisuallyHidden,
-} from "@merid/react";
+} from "@meridui/react";
 
 type View = "loading" | "empty" | "error" | "ready";
 

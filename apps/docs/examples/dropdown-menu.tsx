@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, DropdownMenu } from "@merid/react";
+import { Button, DropdownMenu } from "@meridui/react";
 
 
 export function DropdownMenuBasic() {

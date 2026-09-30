@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Tabs } from "@merid/react";
+import { Tabs } from "@meridui/react";
 
 const TABS = [
   { href: "/settings", label: "Profile" },

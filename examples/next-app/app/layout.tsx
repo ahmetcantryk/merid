@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import "@merid/react/styles.css";
+import "@meridui/react/styles.css";
 import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 

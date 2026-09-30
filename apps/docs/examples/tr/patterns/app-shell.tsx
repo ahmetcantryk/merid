@@ -14,7 +14,7 @@ import {
   SidebarNav,
   Stack,
   Text,
-} from "@merid/react";
+} from "@meridui/react";
 
 const ICON = { size: 16, strokeWidth: 1.75, "aria-hidden": true } as const;
 const PAGES = ["Genel bakış", "Gelen kutusu", "Projeler", "Ayarlar"] as const;

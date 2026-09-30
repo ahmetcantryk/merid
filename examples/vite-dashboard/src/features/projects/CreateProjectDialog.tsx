@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Button, Dialog, Field, Input, Select, Stack, Textarea, useToast } from "@merid/react";
+import { Button, Dialog, Field, Input, Select, Stack, Textarea, useToast } from "@meridui/react";
 import { Plus } from "lucide-react";
 import { REGIONS, type Region } from "../../lib/data";
 import { useProjects } from "../../lib/projects-store";

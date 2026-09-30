@@ -1,6 +1,6 @@
 // Source strings shown in the docs code tabs. Kept out of the client module so server components can read them.
 
-export const sidebarNavBasicCode = `import { Badge, SidebarNav } from "@merid/react";
+export const sidebarNavBasicCode = `import { Badge, SidebarNav } from "@meridui/react";
 
 export function Example() {
   return (
@@ -22,7 +22,7 @@ export function Example() {
 
 export const sidebarNavRouterCode = `import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SidebarNav } from "@merid/react";
+import { SidebarNav } from "@meridui/react";
 
 export function AppNav() {
   const pathname = usePathname();

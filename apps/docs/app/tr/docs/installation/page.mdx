@@ -1,12 +1,12 @@
 import { docMetadata } from "@/lib/i18n/metadata";
 export const metadata = docMetadata("tr", "/docs/installation", {
   title: "Kurulum",
-  description: "@merid/react'i npm, pnpm veya Yarn ile kur, Next.js ya da Vite projene ekle.",
+  description: "@meridui/react'i npm, pnpm veya Yarn ile kur, Next.js ya da Vite projene ekle.",
 });
 
 # Kurulum
 
-Merid tek bir paket olarak yayınlanır: `@merid/react`. Component'ler, stil dosyası ve paketle gelen Geist ile Geist Mono variable font'ları bu pakettedir.
+Merid tek bir paket olarak yayınlanır: `@meridui/react`. Component'ler, stil dosyası ve paketle gelen Geist ile Geist Mono variable font'ları bu pakettedir.
 
 ## Gereksinimler
 
@@ -17,14 +17,14 @@ Merid tek bir paket olarak yayınlanır: `@merid/react`. Component'ler, stil dos
 ## Paketi kur
 
 ```bash
-npm i @merid/react
+npm i @meridui/react
 ```
 
 Diğer paket yöneticileriyle:
 
 ```bash
-pnpm add @merid/react
-yarn add @merid/react
+pnpm add @meridui/react
+yarn add @meridui/react
 ```
 
 ## Stil dosyasını bir kez import et
@@ -32,12 +32,12 @@ yarn add @merid/react
 Bütün component'ler tek bir stil dosyasından beslenir. Onu bir kez, ağacın olabildiğince üst noktasında import et.
 
 ```tsx
-import "@merid/react/styles.css";
+import "@meridui/react/styles.css";
 ```
 
-Yalnızca design token'ları istiyorsan, örneğin renkleri ve boşlukları kendi component'lerinde kullanmak için, onun yerine `@merid/react/tokens.css` dosyasını import et. Bu dosyada custom property'ler ve font tanımı vardır, component kuralı yoktur.
+Yalnızca design token'ları istiyorsan, örneğin renkleri ve boşlukları kendi component'lerinde kullanmak için, onun yerine `@meridui/react/tokens.css` dosyasını import et. Bu dosyada custom property'ler ve font tanımı vardır, component kuralı yoktur.
 
-`styles.css` küçük bir base layer içerir: `box-sizing: border-box`, doküman font'u, renkler, başlık kalınlığı ve focus halkası. Bunlar `:root`'a sıfır specificity ile uygulanır, yani senin yazdığın her kural kazanır. Uygulaman kendi doküman stillerini getiriyorsa ve bunların hiçbirini istemiyorsan, onun yerine `@merid/react/components.css` dosyasını (token'lar + component'ler, base yok) import et. Component'ler `box-sizing`'i kendi elemanlarına kendileri verir, bu yüzden iki durumda da aynı görünürler.
+`styles.css` küçük bir base layer içerir: `box-sizing: border-box`, doküman font'u, renkler, başlık kalınlığı ve focus halkası. Bunlar `:root`'a sıfır specificity ile uygulanır, yani senin yazdığın her kural kazanır. Uygulaman kendi doküman stillerini getiriyorsa ve bunların hiçbirini istemiyorsan, onun yerine `@meridui/react/components.css` dosyasını (token'lar + component'ler, base yok) import et. Component'ler `box-sizing`'i kendi elemanlarına kendileri verir, bu yüzden iki durumda da aynı görünürler.
 
 ## Next.js (App Router)
 
@@ -45,7 +45,7 @@ Stil dosyasını root layout'ta import et. Temel tipografi ve focus stilleri tü
 
 ```tsx
 // app/layout.tsx
-import "@merid/react/styles.css";
+import "@meridui/react/styles.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -64,7 +64,7 @@ Stil dosyasını giriş dosyanda, kendi CSS'inden önce import et. Böylece kayn
 
 ```tsx
 // src/main.tsx
-import "@merid/react/styles.css";
+import "@meridui/react/styles.css";
 import "./app.css";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";

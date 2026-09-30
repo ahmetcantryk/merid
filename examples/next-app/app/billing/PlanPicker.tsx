@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Badge, Button, Card, Grid, Radio, RadioGroup, Stack, Text } from "@merid/react";
+import { Badge, Button, Card, Grid, Radio, RadioGroup, Stack, Text } from "@meridui/react";
 import { Check } from "lucide-react";
 import { PLANS, type PlanId } from "@/lib/plans";
 

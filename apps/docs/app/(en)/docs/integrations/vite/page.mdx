@@ -9,7 +9,7 @@ export const metadata = docMetadata("en", "/docs/integrations/vite", {
 ```bash
 npm create vite@latest my-app -- --template react-ts
 cd my-app
-npm i @merid/react
+npm i @meridui/react
 ```
 
 ## Entry file
@@ -20,7 +20,7 @@ Import Merid's stylesheet before your own CSS.
 // src/main.tsx
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "@merid/react/styles.css";
+import "@meridui/react/styles.css";
 import "./index.css";
 import { App } from "./App";
 
@@ -57,4 +57,4 @@ See [Dark mode strategies](/docs/integrations/dark-mode) for the toggle.
 
 ## Library mode
 
-If you build your own component package on top of Merid with Vite's library mode, list `@merid/react`, `react` and `react-dom` in `build.rollupOptions.external` so consumers get a single copy of Merid's context and styles.
+If you build your own component package on top of Merid with Vite's library mode, list `@meridui/react`, `react` and `react-dom` in `build.rollupOptions.external` so consumers get a single copy of Merid's context and styles.

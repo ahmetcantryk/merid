@@ -1,6 +1,6 @@
 "use client";
 
-import { IconButton } from "@merid/react";
+import { IconButton } from "@meridui/react";
 import { CloseIcon, PlusIcon, SettingsIcon, TrashIcon } from "./icons";
 
 export function IconButtonDemo() {

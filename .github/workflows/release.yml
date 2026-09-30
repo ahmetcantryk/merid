@@ -22,7 +22,7 @@ jobs:
           cache: npm
           registry-url: https://registry.npmjs.org
       - run: npm ci
-      - run: npm run build -w @merid/react
+      - run: npm run build -w @meridui/react
       - name: Create release pull request or publish
         uses: changesets/action@v1
         with:

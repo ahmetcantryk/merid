@@ -1,23 +1,23 @@
 import { docMetadata } from "@/lib/i18n/metadata";
 export const metadata = docMetadata("en", "/docs/integrations/design-tokens", {
   title: "Figma and Style Dictionary",
-  description: "Use @merid/tokens to bring Merid's design tokens into Figma (Tokens Studio), Style Dictionary and JavaScript.",
+  description: "Use @meridui/tokens to bring Merid's design tokens into Figma (Tokens Studio), Style Dictionary and JavaScript.",
 });
 
 # Figma and Style Dictionary
 
-`@merid/tokens` publishes Merid's tokens in formats other tools read. It is generated from the same `tokens.css` that `@merid/react` ships, and a test fails the build if the two ever disagree.
+`@meridui/tokens` publishes Merid's tokens in formats other tools read. It is generated from the same `tokens.css` that `@meridui/react` ships, and a test fails the build if the two ever disagree.
 
 ```bash
-npm i @merid/tokens
+npm i @meridui/tokens
 ```
 
 | Import | Format | Use it for |
 |---|---|---|
-| `@merid/tokens/tokens.json` | [W3C Design Tokens](https://www.designtokens.org/tr/drafts/format/) (`$value`, `$type`) | Style Dictionary v4+, Terrazzo, other DTCG tools |
-| `@merid/tokens/figma-tokens.json` | Tokens Studio for Figma | Syncing variables and styles in Figma |
-| `@merid/tokens` | ES module + types | Raw values and `var()` references in JS |
-| `@merid/tokens/tokens.css` | CSS | A copy of the source, for non-React stacks |
+| `@meridui/tokens/tokens.json` | [W3C Design Tokens](https://www.designtokens.org/tr/drafts/format/) (`$value`, `$type`) | Style Dictionary v4+, Terrazzo, other DTCG tools |
+| `@meridui/tokens/figma-tokens.json` | Tokens Studio for Figma | Syncing variables and styles in Figma |
+| `@meridui/tokens` | ES module + types | Raw values and `var()` references in JS |
+| `@meridui/tokens/tokens.css` | CSS | A copy of the source, for non-React stacks |
 
 ## Token groups
 
@@ -52,7 +52,7 @@ Style Dictionary v4 reads DTCG natively. Use it to emit tokens for platforms Mer
 import StyleDictionary from "style-dictionary";
 
 const sd = new StyleDictionary({
-  source: ["node_modules/@merid/tokens/dist/tokens.json"],
+  source: ["node_modules/@meridui/tokens/dist/tokens.json"],
   platforms: {
     ios: { transformGroup: "ios-swift", buildPath: "ios/", files: [{ destination: "Merid.swift", format: "ios-swift/class.swift" }] },
     scss: { transformGroup: "scss", buildPath: "scss/", files: [{ destination: "_merid.scss", format: "scss/variables" }] },
@@ -67,7 +67,7 @@ For a dark build, add a small preprocessor that swaps `$value` for `$extensions[
 ## JavaScript
 
 ```ts
-import { tokens, cssVar } from "@merid/tokens";
+import { tokens, cssVar } from "@meridui/tokens";
 
 tokens.light.accent; // "#3f63f5"
 tokens.dark.accent; // "#6b8aff"
@@ -78,4 +78,4 @@ In the browser, prefer `cssVar`: it follows the active theme. Reach for raw `tok
 
 ## Changing tokens
 
-Tokens are defined once, in `packages/react/styles/tokens.css`. Edit there, then run `npm run build -w @merid/tokens`. The build fails if the `[data-theme="dark"]` block and the `prefers-color-scheme: dark` block drift apart.
+Tokens are defined once, in `packages/react/styles/tokens.css`. Edit there, then run `npm run build -w @meridui/tokens`. The build fails if the `[data-theme="dark"]` block and the `prefers-color-scheme: dark` block drift apart.

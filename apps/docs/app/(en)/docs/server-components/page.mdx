@@ -39,7 +39,7 @@ A component cannot be passed as a prop across the boundary, so `as={Link}` fails
 
 ```tsx
 import Link from "next/link";
-import { Button, BreadcrumbLink } from "@merid/react";
+import { Button, BreadcrumbLink } from "@meridui/react";
 
 <Button asChild variant="primary">
   <Link href="/signup">Start free</Link>
@@ -55,7 +55,7 @@ Props passed from a server component to a client component must be serialisable.
 
 ```tsx
 // app/settings/page.tsx — a server component
-import { Button, Card, DialogContent, DialogDescription, DialogRoot, DialogTitle, DialogTrigger } from "@merid/react";
+import { Button, Card, DialogContent, DialogDescription, DialogRoot, DialogTitle, DialogTrigger } from "@meridui/react";
 import { DeleteAccount } from "./delete-account"; // "use client" inside: it passes onClick
 
 export default function Settings() {
