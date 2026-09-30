@@ -1,6 +1,6 @@
 {
   "name": "@meridui/mcp",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "MCP server for Merid: components, props, tokens, patterns and setup guides for AI coding agents. Read-only, offline.",
   "license": "MIT",
   "type": "module",
