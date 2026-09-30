@@ -1,5 +1,3 @@
-"use client";
-
 import { forwardRef, type ReactElement, type ReactNode, type Ref, version } from "react";
 
 const REACT_MAJOR = Number.parseInt(version, 10);
