@@ -38,7 +38,6 @@ export function renderOgImage(locale: Locale) {
         {cross(64, 566)}
         {cross(1136, 566)}
         <div style={{ position: "absolute", left: 112, top: 112, display: "flex" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={logoDataUri()} width={218} height={38} alt="" />
         </div>
         <div style={{ position: "absolute", left: 112, top: 250, display: "flex", flexDirection: "column", gap: 26 }}>
@@ -47,6 +46,40 @@ export function renderOgImage(locale: Locale) {
           </span>
           <span style={{ fontSize: 26, color: BODY }}>{t.ogSub}</span>
         </div>
+        <div style={{ position: "absolute", left: 112, top: 566, width: 180, height: 1, background: ACCENT }} />
+      </div>
+    ),
+    ogSize,
+  );
+}
+
+interface TitleOg {
+  readonly title: string;
+  /** Short URL shown under the title, e.g. `meridui.dev/blog`. */
+  readonly label: string;
+}
+
+/**
+ * Per-page Open Graph image for blog posts and comparisons: the same hairline frame and logo,
+ * the page title (up to three lines) and a URL label. No other text.
+ * next/og's bundled Geist covers Latin Extended, so Turkish titles (ş, ğ, ı, İ) render.
+ */
+export function renderTitleOgImage({ title, label }: TitleOg) {
+  const fontSize = title.length > 48 ? 58 : 66;
+  return new ImageResponse(
+    (
+      <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", background: "#ffffff", color: INK }}>
+        <div style={{ position: "absolute", left: 64, top: 0, width: 1, height: 630, background: LINE }} />
+        <div style={{ position: "absolute", left: 1136, top: 0, width: 1, height: 630, background: LINE }} />
+        <div style={{ position: "absolute", left: 0, top: 64, width: 1200, height: 1, background: LINE }} />
+        <div style={{ position: "absolute", left: 0, top: 566, width: 1200, height: 1, background: LINE }} />
+        <div style={{ position: "absolute", left: 112, top: 112, display: "flex" }}>
+          <img src={logoDataUri()} width={182} height={32} alt="" />
+        </div>
+        <div style={{ position: "absolute", left: 112, top: 190, width: 960, height: 300, display: "flex", alignItems: "center" }}>
+          <span style={{ fontSize, letterSpacing: "-0.035em", lineHeight: 1.1, maxWidth: 960 }}>{title}</span>
+        </div>
+        <div style={{ position: "absolute", left: 112, top: 510, display: "flex", fontSize: 24, color: BODY }}>{label}</div>
         <div style={{ position: "absolute", left: 112, top: 566, width: 180, height: 1, background: ACCENT }} />
       </div>
     ),
