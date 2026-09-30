@@ -3,7 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "llms": "node scripts/build-llms.mjs",
+    "predev": "node scripts/build-llms.mjs",
     "dev": "next dev -p 3210",
+    "prebuild": "node scripts/build-llms.mjs",
     "build": "next build",
     "start": "next start -p 3210",
     "typecheck": "tsc --noEmit"

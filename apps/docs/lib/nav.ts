@@ -18,6 +18,8 @@ export const docsNav: readonly NavGroup[] = [
     items: [
       { title: "Introduction", href: "/docs/introduction" },
       { title: "Installation", href: "/docs/installation" },
+      { title: "CLI", href: "/docs/cli" },
+      { title: "Using Merid with AI", href: "/docs/ai" },
       { title: "Usage", href: "/docs/usage" },
       { title: "Styling and CSS layers", href: "/docs/styling" },
       { title: "Server components", href: "/docs/server-components" },
