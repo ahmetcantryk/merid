@@ -1,0 +1,188 @@
+---
+title: "Yapay Zeka ile Arayüz: Tutarlı UI İçin 5 Kural"
+description: "Cursor veya Claude Code ile yazdığın arayüz her sayfada farklı mı görünüyor? Token, kural dosyası ve doğru component seçimiyle tutarlılığı geri kazan."
+slug: yapay-zeka-ile-arayuz-tutarliligi
+lang: tr
+canonical: /tr/blog/yapay-zeka-ile-arayuz-tutarliligi
+alternate: /blog/why-ai-generated-ui-looks-generic
+keywords:
+  - yapay zeka ile arayüz tasarımı
+  - vibe coding arayüz
+  - cursor kuralları
+  - cursor rules
+  - yapay zeka ile yapılan tasarım
+date: 2026-10-27
+updated: 2026-10-27
+tags:
+  - ai-coding
+author: Ahmet Can Tiryaki
+---
+
+# Yapay zeka ile arayüz yazarken tutarlılığı nasıl korursun?
+
+Cursor'a "bir ayarlar sayfası yap" dediğinde çalışan bir sayfa alıyorsun. Ertesi gün "fatura sayfası ekle" diyorsun, o da çalışıyor. Sonra iki sayfayı yan yana açıyorsun ve bir şeyler tutmuyor: butonların yüksekliği farklı, bir kartın köşesi 8px, diğerininki 12px, gri tonlar birbirine çok yakın ama aynı değil, focus halkası bir yerde var, bir yerde yok.
+
+Vibe coding ile ürün çıkaran çoğu kişi bu noktaya geliyor. Uygulama çalışıyor ama "her yapay zeka sitesine benziyor" ya da daha kötüsü, kendi içinde bile birbirine benzemiyor. Bu yazıda sorunun nereden geldiğini ve kodu yazan model değişse bile arayüzü tutarlı tutmanın beş somut yolunu anlatıyorum.
+
+## Sorun modelde değil, verdiğin boşlukta
+
+Dil modelleri eğitim verisinin ortalamasını üretir. Sen "güzel bir kart yap" dediğinde model binlerce farklı kart örneğinin ortalamasını yazar: `rounded-lg`, `shadow-md`, `p-6`, `text-gray-500`. Bir sonraki istekte bağlam biraz farklıdır ve ortalama da biraz kayar: `rounded-xl`, `shadow`, `p-5`, `text-slate-500`.
+
+Tek başına her karar makul. Sorun, kararların birbirinden haberi olmaması. İnsan bir tasarımcı "bu projede kart köşesi 14px" diye bir kez karar verir ve bunu hatırlar. Model her istekte o kararı yeniden verir, çünkü onu nereye yazdığını bilmiyor.
+
+Yani çözüm daha iyi prompt yazmak değil, modelin karar vermesi gereken yerleri azaltmak.
+
+## 1. Kuralları repoya yaz
+
+İlk adım, tasarım kararlarını bir dosyaya yazmak. Cursor'da bu `.cursor/rules/` altındaki kurallar, Claude Code'da `CLAUDE.md` ya da `AGENTS.md`. Hangi aracı kullandığın önemli değil; önemli olan kararların sohbet geçmişinde değil, repoda durması.
+
+İyi bir kural dosyası "modern ve temiz olsun" demez. Ölçülebilir şeyler söyler:
+
+```md
+# UI kuralları
+
+- Yeni component yazma. Önce @meridui/react içinde var mı bak.
+- Renk, boşluk, köşe yarıçapı için sabit değer yazma. Sadece --mrd-* token'larını kullan.
+- Her border 1px ve var(--mrd-line).
+- Tek accent rengi var: var(--mrd-accent). Başka vurgu rengi ekleme.
+- Metin tonları: ink (başlık), body (metin), muted (meta). Hiyerarşiyi renkle değil tonla kur.
+- font-weight: 700 kullanma. Başlıklar 600.
+- İkon butonlarına aria-label ekle. Her form alanının görünür bir label'ı olsun.
+```
+
+Merid'in kendi reposunda bu işi `DESIGN.md` görüyor: "Bir değer burada yoksa mevcut bir değerden türet, yeni renk, yarıçap ya da gölge icat etme" diye başlayan bağlayıcı bir tasarım sözleşmesi. Kendi projen için buradan yola çıkabilirsin.
+
+## 2. Değer yerine token kullan
+
+Kural dosyası tek başına yetmez; model onu zaman zaman unutur. Asıl koruma, sabit değer yazmayı zorlaştırmak.
+
+`#6b7280` yazan bir satır modelin keyfine kalmış bir karar. `var(--mrd-muted)` yazan satır ise projenin kararına bağlı. İkincisini dark mode'a geçirmek de bedava, çünkü token'ın koyu tema değeri zaten tanımlı.
+
+```css
+/* Kötü: model her seferinde yeni bir gri seçer */
+.invoice-meta {
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+/* İyi: kararlar tek yerde */
+.invoice-meta {
+  color: var(--mrd-muted);
+  border: 1px solid var(--mrd-line);
+  border-radius: var(--mrd-radius-card);
+}
+```
+
+Tailwind kullanıyorsan aynı fikir geçerli: `text-[#6b7280]` gibi keyfi değerleri lint kuralıyla yasakla ve token'ları `@theme` içine eşle. Böylece model `text-muted` yazmak zorunda kalır.
+
+## 3. Küçük, varyant tabanlı bir component API'si seç
+
+Modele ne kadar çok serbestlik verirsen o kadar çok varyasyon alırsın. `className` ile her şeyi değiştirebildiğin bir buton, modelin her seferinde yeniden stil yazması için davetiye.
+
+Buna karşılık `variant` ve `size` gibi sınırlı seçenekleri olan bir API'de model şunu yazar:
+
+```tsx
+import { Button } from "@meridui/react";
+
+<Button variant="primary">Kaydet</Button>
+<Button variant="secondary" size="sm">Vazgeç</Button>
+```
+
+Burada yanlış yapılabilecek pek bir şey yok. Yükseklik, padding, köşe, focus halkası component'in içinde sabit. Model sadece hangi varyantın uygun olduğuna karar veriyor, ki bu da zaten onun iyi yaptığı bir iş.
+
+Bu yüzden yapay zeka ile çalışırken component kütüphanesi seçimi, sadece "hangisi daha güzel" sorusu değil. "Hangisi modelin keyfi karar vermesine daha az alan bırakıyor" sorusu da.
+
+## 4. Erişilebilirliği component'e göm, CI'da ölç
+
+Modellerin en sık atladığı şey erişilebilirlik: klavye ile açılmayan menüler, focus'u tuzaklamayan dialog'lar, label'sız input'lar. Bunları her prompt'ta hatırlatmak yerine, erişilebilirliği hazır gelen component'lere bırakmak daha sağlam.
+
+Merid'de dialog, menü, tabs gibi etkileşimli component'ler WAI-ARIA kalıplarını izliyor, klavye desteğiyle geliyor ve WCAG 2.2 AA'yı hedefliyor. Her component için axe testleri CI'da çalışıyor. Ama bu senin sayfanı otomatik olarak erişilebilir yapmaz: ikon butonuna `aria-label` vermek, alanlara label koymak hâlâ senin (ve modelin) işin. Kendi projende de axe'ı CI'a eklemen, modelin ürettiği hataları merge'den önce yakalar.
+
+Detaylar için: [meridui.dev/docs/accessibility](https://meridui.dev/docs/accessibility)
+
+## 5. Temayı prop ile değil, attribute ile yönet
+
+Model bir "koyu kenar çubuğu" istendiğinde genellikle yeni renkler uydurur. Oysa tema bir attribute olarak ağacın bir parçasına uygulanabiliyorsa, modelin yapması gereken tek şey o attribute'u koymak:
+
+```tsx
+<aside data-theme="dark">
+  <SidebarNav.Root>{/* ... */}</SidebarNav.Root>
+</aside>
+
+<section data-density="compact">
+  {/* sıkışık tablo */}
+</section>
+```
+
+Merid'de `data-theme`, `data-accent` (blue, violet, green, graphite) ve `data-density` herhangi bir elemanda çalışıyor ve iç içe geçebiliyor. Portal ile açılan menüler de geldikleri yerin temasını taşıyor. Model yeni renk icat etmek yerine mevcut bir kararı seçiyor.
+
+Detaylar: [meridui.dev/docs/integrations/subtree-attributes](https://meridui.dev/docs/integrations/subtree-attributes)
+
+## Önce ve sonra: aynı prompt
+
+Aynı isteği iki kez düşün: "Kullanıcı ayarları için bir sayfa yap, profil formu ve tehlikeli bölge olsun."
+
+Kısıtsız bir projede model büyük ihtimalle şunları üretir: kendi yazdığı `<button>` ile Tailwind sınıfları, silme için kırmızı bir buton ama onay adımı olmadan, `gray-200` border ile bir kart, label'ı placeholder'a gömülmüş input'lar.
+
+Kural dosyası, token'lar ve hazır component'ler olan bir projede model şunu üretme eğiliminde:
+
+```tsx
+import { AlertDialog, Button, Card, Field, Input } from "@meridui/react";
+
+export function DangerZone({ onDelete }: { onDelete: () => void }) {
+  return (
+    <Card>
+      <h2>Tehlikeli bölge</h2>
+      <AlertDialog.Root>
+        <AlertDialog.Trigger asChild>
+          <Button variant="danger">Hesabı sil</Button>
+        </AlertDialog.Trigger>
+        <AlertDialog.Content>
+          <AlertDialog.Title>Hesabın silinsin mi?</AlertDialog.Title>
+          <AlertDialog.Description>Bu işlem geri alınamaz.</AlertDialog.Description>
+          <AlertDialog.Footer>
+            <AlertDialog.Cancel>Vazgeç</AlertDialog.Cancel>
+            <AlertDialog.Action tone="danger" onClick={onDelete}>
+              Sil
+            </AlertDialog.Action>
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog.Root>
+    </Card>
+  );
+}
+```
+
+Burada modelin verdiği görsel karar neredeyse yok. Hepsi component'lerde ve token'larda.
+
+## Merid hakkında dürüst birkaç not
+
+Bu yazıdaki örnekler Merid ile, çünkü onu biz geliştiriyoruz. Aynı prensipleri başka bir kütüphaneyle ya da kendi component'lerinle de uygulayabilirsin. Merid'i seçmeden önce bilmen gerekenler:
+
+- Sürüm 0.1. API 1.0'a kadar değişebilir.
+- 46 component var. Combobox/autocomplete, date picker ve grafik component'leri yok; Figma kütüphanesi de yok.
+- MCP sunucusu ya da registry yok. Yapay zeka tarafındaki desteği, repodaki yazılı tasarım sözleşmesi ve küçük API'den geliyor.
+- Dokümantasyon şu an İngilizce. Türkçe sürüm meridui.dev/tr altında geliyor.
+
+Kurulum tek satır:
+
+```bash
+npm i @meridui/react
+```
+
+```tsx
+import "@meridui/react/styles.css";
+```
+
+Provider gerekmiyor (sadece toast'lar için `ToastProvider` var). Başlangıç için: [meridui.dev/docs/installation](https://meridui.dev/docs/installation)
+
+## Kısa kontrol listesi
+
+- Tasarım kararların repoda yazılı mı, yoksa sohbet geçmişinde mi kaldı?
+- Kodda kaç tane sabit renk ya da piksel değeri var? `grep` ile bak.
+- Butonun ve input'un kaç farklı yüksekliği var?
+- Dialog'lar klavyeyle açılıp kapanıyor, focus geri dönüyor mu?
+- CI'da axe çalışıyor mu?
+
+Bu beş soruya verdiğin cevap, modelin ne kadar iyi olduğundan daha çok şey belirliyor.

@@ -1,0 +1,195 @@
+---
+title: "Tailwind Olmadan React: CSS Modules mi, Düz CSS mi?"
+description: "CSS modules mi Tailwind mi? Tailwind kullanmadan React'te stil yazmanın yolları, artıları, eksileri ve Tailwind'siz çalışan component kütüphaneleri."
+slug: tailwind-olmadan-react
+lang: tr
+canonical: /tr/blog/tailwind-olmadan-react
+alternate: /blog/react-components-without-tailwind
+keywords:
+  - tailwind olmadan react
+  - css modules mi tailwind mi
+  - react css yöntemleri
+  - tailwind'siz component kütüphanesi
+date: 2026-11-17
+updated: 2026-11-17
+tags:
+  - css
+author: Ahmet Can Tiryaki
+---
+
+# Tailwind olmadan React: hangi yol sana uyar?
+
+Tailwind çok yaygın. Yeni bir React projesi açtığında şablonların çoğu onunla geliyor, yapay zeka araçları da varsayılan olarak Tailwind sınıfları yazıyor. Ama herkes onu kullanmak zorunda değil ve kullanmayanlar için seçenekler hiç kötü değil.
+
+Bu yazıda Tailwind'siz React'te stil yazmanın dört yolunu, hangisinin ne zaman mantıklı olduğunu ve Tailwind'siz çalışan component kütüphanelerini anlatıyorum.
+
+## Neden Tailwind kullanmamak isteyesin?
+
+Önce şunu söyleyeyim: Tailwind kötü bir araç değil. Ama şu durumlarda başka bir yol daha rahat olabilir:
+
+- **Mevcut CSS'in var.** Sass ya da düz CSS ile yazılmış büyük bir kod tabanına Tailwind eklemek iki stil sistemi yönetmek demek.
+- **Markup'ı okunur tutmak istiyorsun.** Uzun sınıf listeleri bazı ekiplere yük gibi geliyor.
+- **Tasarım kararlarını tek yerde görmek istiyorsun.** Utility sınıflarında karar her elemana dağılıyor.
+- **Build adımını sade tutmak istiyorsun.** Düz CSS hiçbir plugin istemez.
+
+## Dört yöntem
+
+### 1. Düz CSS + CSS değişkenleri
+
+En basit yol. Global bir stylesheet, BEM benzeri sınıf isimleri ve CSS custom property'leri.
+
+```css
+:root {
+  --color-accent: #3f63f5;
+  --radius-control: 8px;
+}
+
+.button {
+  height: 32px;
+  border-radius: var(--radius-control);
+  background: var(--color-accent);
+}
+```
+
+**Artı:** Build aracı gerekmez, tarayıcı doğrudan anlar, dark mode sadece değişkenleri değiştirmek.
+**Eksi:** Sınıf isimleri global; çakışmaları isimlendirme kuralıyla önlemen gerekir.
+
+### 2. CSS modules
+
+Her component'in kendi `.module.css` dosyası olur, sınıf isimleri build sırasında benzersiz hale gelir. Next.js ve Vite bunu kurulumsuz destekler.
+
+```tsx
+import styles from "./Card.module.css";
+
+export function Card({ children }: { children: React.ReactNode }) {
+  return <div className={styles.card}>{children}</div>;
+}
+```
+
+**Artı:** Kapsam sorunu yok, kullanılmayan stil kolay silinir, düz CSS yazıyorsun.
+**Eksi:** Tema ve token'lar için yine CSS değişkenleri gerekir; dosya sayısı artar.
+
+### 3. CSS-in-JS
+
+styled-components ve Emotion gibi kütüphaneler. MUI ve Chakra'nın varsayılan kurulumu Emotion kullanıyor.
+
+**Artı:** Props'a göre dinamik stil yazmak kolay.
+**Eksi:** Stiller runtime'da üretilir. React Server Components ile birlikte kullanmak ek ayar ister, çünkü stil enjeksiyonu client tarafında olur. Yeni başlayan bir App Router projesi için genelde ilk tercih olmuyor.
+
+### 4. Tailwind'siz bir component kütüphanesi
+
+Stili kendin yazmak yerine hazır bir kütüphane kullanıp sadece özelleştirmek. Bu durumda "CSS modules mi Tailwind mi" sorusunu büyük ölçüde atlıyorsun; component'lerin stili kütüphaneden geliyor, sen sadece sayfa düzenini yazıyorsun.
+
+## CSS modules mi Tailwind mi?
+
+En çok sorulan soru bu, o yüzden doğrudan cevap vereyim:
+
+| Durum | Öneri |
+|---|---|
+| Yeni proje, ekip Tailwind biliyor | Tailwind |
+| Mevcut Sass/CSS kod tabanı | CSS modules |
+| Tasarımcı CSS yazıyor | CSS modules ya da düz CSS |
+| Kodun çoğunu yapay zeka yazıyor | Token'lı bir kütüphane + hangisi olursa |
+| Çok küçük proje | Düz CSS |
+
+Tailwind'in kendi dokümantasyonu da iki yaklaşımı aynı projede karıştırmamayı öneriyor. Birini seç ve ona sadık kal.
+
+Yapay zeka satırı için bir not: model Tailwind ile de CSS modules ile de keyfi değer yazabilir (`text-[#6b7280]` ya da `color: #6b7280`). Asıl koruma, token'ları zorunlu kılmak. Bununla ilgili: [Yapay zeka ile arayüz tutarlılığı](/tr/blog/yapay-zeka-ile-arayuz-tutarliligi)
+
+## Tailwind'siz çalışan React component kütüphaneleri
+
+| Kütüphane | Stil | Provider | Not |
+|---|---|---|---|
+| Radix Themes | Düz CSS | `<Theme>` | Sade, ~45 component, WorkOS destekli |
+| Mantine | CSS modules + PostCSS preset | MantineProvider | 100+ component, form ve tarih paketleri |
+| MUI | Emotion | Tema için ThemeProvider | En geniş ekosistem |
+| Merid | Düz CSS, cascade layer | Yok | 46 component, token tabanlı |
+| React Aria / Radix Primitives | Stilsiz | Yok | Stili tamamen sen yazarsın |
+
+## Merid ile Tailwind'siz kurulum
+
+Merid'i biz geliştiriyoruz; Tailwind'siz bir kütüphane ararken neye benzediğini görmen için örnek veriyorum.
+
+```bash
+npm i @meridui/react
+```
+
+```tsx
+// app/layout.tsx
+import "@meridui/react/styles.css";
+```
+
+Tek stylesheet, build plugin yok, provider yok. Kendi stillerini yazarken token'ları kullanırsın:
+
+```css
+/* app/settings.module.css */
+.panel {
+  background: var(--mrd-tray);
+  border: 1px solid var(--mrd-line);
+  border-radius: var(--mrd-radius-card);
+  padding: 24px;
+  color: var(--mrd-body);
+}
+```
+
+Bu değişkenlerin light ve dark değerleri tanımlı, yani `data-theme="dark"` olan bir alanda senin CSS'in de otomatik koyu olur.
+
+Bir component'i özelleştirmek için `!important` gerekmez, çünkü Merid'in tüm kuralları cascade layer içinde. Layer dışında yazdığın her stil onları geçer:
+
+```css
+.mrd-button[data-variant="primary"] {
+  letter-spacing: 0.01em;
+}
+```
+
+Cascade layer'ın nasıl çalıştığını ayrı bir yazıda anlattım: [CSS cascade layers nedir?](/tr/blog/css-cascade-layers-nedir)
+
+### Sonradan Tailwind eklemek istersen
+
+Tailwind'siz başlamak, ileride Tailwind'e kapıyı kapatmak demek değil. Merid, Tailwind v4 ile layer sırasını bir kez tanımlayarak birlikte çalışıyor:
+
+```css
+@layer theme, base, merid, components, utilities;
+
+@import "tailwindcss";
+@import "@meridui/react/styles.css";
+```
+
+Token'ları `@theme inline` ile Tailwind'e eşleyip `bg-tray` ya da `text-muted` gibi utility'ler de kullanabilirsin. Ayrıntı: [meridui.dev/docs/integrations/tailwind](https://meridui.dev/docs/integrations/tailwind)
+
+### Eksikler
+
+Merid 0.1 sürümünde. Combobox, date picker ve grafik component'leri yok, Figma kütüphanesi yok. Dokümantasyon şimdilik İngilizce; Türkçe sürüm meridui.dev/tr altında geliyor. Tema değişkenlerinin tam listesi: [meridui.dev/docs/integrations/design-tokens](https://meridui.dev/docs/integrations/design-tokens)
+
+## Dark mode'u Tailwind'siz yapmak
+
+Tailwind'in `dark:` varyantı çok kullanışlı, onu bırakınca dark mode nasıl olacak diye düşünebilirsin. Aslında düz CSS ile daha da sade:
+
+```css
+:root {
+  --page-bg: #ffffff;
+  --page-text: #0f1219;
+}
+
+[data-theme="dark"] {
+  --page-bg: #0b0d12;
+  --page-text: #eef0f4;
+}
+
+body {
+  background: var(--page-bg);
+  color: var(--page-text);
+}
+```
+
+Tema değiştirmek için sadece `<html>` elemanındaki `data-theme` attribute'unu değiştirirsin. Stil dosyalarında `dark:` gibi ikinci bir sınıf seti yazmana gerek kalmaz; her kural tek kez yazılır, değerler değişkenlerden gelir.
+
+Merid'de bu yapı hazır geliyor: `data-theme` attribute'u `<html>` üzerinde de, tek bir kart ya da kenar çubuğu üzerinde de çalışıyor. Ayrıntı: [meridui.dev/docs/integrations/dark-mode](https://meridui.dev/docs/integrations/dark-mode)
+
+## Özet
+
+- Tailwind'siz React tamamen mümkün ve çoğu zaman daha sade.
+- Mevcut CSS'in varsa CSS modules, yoksa düz CSS + değişkenler iyi bir başlangıç.
+- Runtime CSS-in-JS, App Router projelerinde ek iş çıkarır.
+- Component'leri sıfırdan yazmak istemiyorsan Radix Themes, Mantine ya da Merid gibi Tailwind'siz bir kütüphane seç.
+- Hangi yolu seçersen seç, değerleri token'larda tut.

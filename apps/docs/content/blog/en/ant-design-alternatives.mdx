@@ -1,0 +1,127 @@
+---
+title: "Ant Design Alternatives for React Teams in 2026"
+description: "Ant Design alternatives compared: MUI, Mantine, Radix Themes, shadcn/ui and Merid. Which replace antd's tables and forms, and which only replace the look."
+slug: ant-design-alternatives
+canonical: /blog/ant-design-alternatives
+keywords:
+  - ant design alternative
+  - antd alternative react
+  - ant design vs mui
+  - lighter alternative to antd
+date: 2026-12-09
+updated: 2026-12-09
+lastReviewed: 2026-12-09
+tags:
+  - comparisons
+author: Ahmet Can Tiryaki
+---
+
+# Ant Design alternatives for React teams in 2026
+
+Ant Design is built for enterprise back-office software. It is very good at that job. Most teams who search for an Ant Design alternative fall into one of two groups:
+
+1. They build an admin product and want a different look, a different licence story, or less weight, but still need heavy tables and forms.
+2. They picked antd for a product that is not really an admin panel, and now fight its visual language on every screen.
+
+These groups need different answers. We build Merid, which only fits the second group. We will say so again where it matters.
+
+## What Ant Design gets right
+
+According to the [official introduction](https://ant.design/docs/react/introduce), antd is an "enterprise-class UI designed for web applications", written in TypeScript, with theme customisation and built-in internationalisation for many languages. The current major line is v6, which dropped support for React 16 and 17.
+
+In practice its strengths are:
+
+- **Table and Form.** Sorting, filtering, pagination, fixed columns, tree data, validation rules, dependent fields: most of it is configuration, not code.
+- **Breadth.** Tree select, transfer, cascader, upload, date and time pickers, and more. Few libraries ship this many data-entry components in one package.
+- **Ecosystem.** [Ant Design Pro](https://pro.ant.design/), charts, mobile variants and icon sets from the same team.
+- **Theming via design tokens.** antd v5 introduced a token-based theme through `ConfigProvider`, and v6 continues that model with CSS variables. See [customize theme](https://ant.design/docs/react/customize-theme).
+
+If your product is a dense internal tool with dozens of data grids, the honest recommendation may be to stay.
+
+## Why teams leave
+
+- **Visual language.** antd looks like antd. You can change tokens, but its density, iconography and interaction patterns come from a specific design tradition. Consumer-facing products often want something quieter.
+- **Weight.** A big component set with rich defaults means more JavaScript per component than smaller libraries. Tree-shaking helps; it does not make a `Table` light.
+- **CSS-in-JS.** antd generates styles in JavaScript. v6 leans on CSS variables, which reduces some cost, but styles still come from the runtime, which affects server rendering setup. Check the [SSR guide](https://ant.design/docs/react/server-side-rendering) for your framework.
+- **Defaults and locale.** Many examples and community answers assume Chinese-language defaults, and some locale setup is manual. This is less of an issue than it was, but it still surprises new teams.
+
+## Group 1: you need enterprise tables and forms
+
+### MUI + MUI X
+
+[MUI](https://mui.com/material-ui/getting-started/) is the closest match in scale. The core is MIT. The advanced data grid and date pickers live in [MUI X](https://mui.com/x/introduction/), with free community versions and paid Pro and Premium tiers for features like row grouping and Excel export. Styling uses Emotion by default.
+
+**Choose MUI if:** you want a Western-default ecosystem with a commercial support path and a data grid that can match antd's Table.
+
+### Mantine
+
+[Mantine](https://mantine.dev/getting-started/) (v9) has 100+ components plus separate packages for forms, dates and charts, all MIT. It uses CSS modules with a PostCSS preset and requires `MantineProvider`. For tables, many teams pair it with TanStack Table.
+
+**Choose Mantine if:** you want broad coverage without a paid tier and a lighter look than antd.
+
+### Build on TanStack Table
+
+Whatever library you choose, [TanStack Table](https://tanstack.com/table/latest) is the headless engine many teams use for complex grids. It gives you sorting, filtering, grouping and virtualisation logic; you render the cells with your component library. This decouples your hardest component from your UI kit choice.
+
+## Group 2: you need a product UI, not an admin suite
+
+### shadcn/ui
+
+[shadcn/ui](https://ui.shadcn.com/docs) copies components into your repo, styled with Tailwind, on Radix or Base UI primitives. Its data table is a recipe built on TanStack Table, not a configurable component.
+
+**Choose it if:** you use Tailwind and want full control of the source.
+
+### Radix Themes
+
+[Radix Themes](https://www.radix-ui.com/themes/docs/overview/getting-started) is a styled package in plain CSS with a `<Theme>` wrapper. Restrained look, good accessibility from Radix Primitives, smaller component set.
+
+**Choose it if:** you want a calm default and a package you update rather than own.
+
+### Merid
+
+[Merid](https://meridui.dev) is a plain-CSS React library with 46 components and a fixed design contract: 1px hairlines, one accent, soft grey trays, 32px default controls. All styles sit in cascade layers, so your own CSS wins without `!important`. No provider (only toasts need `ToastProvider`), no runtime styling. Static components render on the server.
+
+It includes a `Table` component and a [data tables pattern](https://meridui.dev/docs/patterns/data-tables) that shows how to compose sorting and selection yourself. Forms integrate with [React Hook Form](https://meridui.dev/docs/integrations/react-hook-form) and Zod.
+
+**Be clear on what it is not:**
+
+- Not an admin-suite replacement. No configurable data grid, no tree select, no cascader, no transfer, no upload component.
+- No date picker, no combobox or autocomplete, no charts (not planned).
+- Version 0.1 and independently maintained. antd has a large team and years of production use behind it.
+
+**Choose Merid if:** your product is not a back office, you want a quiet look and plain CSS, and your forms are ordinary fields, selects and switches.
+
+## Comparison table
+
+| | Ant Design | MUI + MUI X | Mantine | shadcn/ui | Radix Themes | Merid |
+|---|---|---|---|---|---|---|
+| Best fit | Enterprise admin | Enterprise + product | Broad product apps | Tailwind product apps | Product apps | Product apps, AI-assisted |
+| Advanced data grid | Built-in Table | MUI X (paid tiers for advanced) | Via TanStack | Recipe on TanStack | No | Table + pattern, no grid |
+| Date picker | Yes | MUI X | `@mantine/dates` | Community | No | No |
+| Styling | CSS-in-JS, CSS variables | Emotion default | CSS modules + PostCSS | Tailwind | Plain CSS | Plain CSS, cascade layers |
+| Root wrapper | `ConfigProvider` (optional) | `ThemeProvider` for custom themes | `MantineProvider` | None | `<Theme>` | None |
+| Licence | MIT | MIT + commercial X | MIT | MIT | MIT | MIT |
+
+Sources: official docs linked in each section, checked on the date at the top.
+
+## A migration strategy that works
+
+Moving off antd in one go rarely works. What does:
+
+1. **Split by screen type.** List your screens as "grid-heavy" or "product". Grid-heavy screens can stay on antd longer, or move to TanStack Table first.
+2. **Extract tokens.** Take the values from your antd `theme` config and define them as CSS custom properties. The new library consumes those; antd can read them too through `ConfigProvider` during the transition.
+3. **Wrap, then swap.** Put an in-house `Button`, `Input` and `Modal` in front of antd. Replace the implementation behind the wrapper, not every call site.
+4. **Watch bundle size per route**, not total size. The benefit shows on routes that no longer import antd at all.
+5. **Test with a keyboard and axe** after each swap. Focus handling in modals and menus is where regressions hide. Merid documents its [accessibility approach](https://meridui.dev/docs/accessibility) if you want a checklist.
+
+For a wider view, see our [roundup of React component libraries](/blog/best-react-component-libraries-ai-coding-2026), and [MUI alternatives](/blog/mui-alternatives) if MUI is on your shortlist.
+
+## FAQ
+
+**What is the best Ant Design alternative for admin panels?** MUI with MUI X, or Mantine with TanStack Table. Both cover the heavy data components.
+
+**Is there a lighter alternative to antd?** Radix Themes, shadcn/ui and Merid all ship less JavaScript per component, but none match antd's data-entry breadth.
+
+**Does Ant Design work with Next.js App Router?** Yes, with the setup described in its [SSR docs](https://ant.design/docs/react/server-side-rendering).
+
+**Can Merid replace antd?** Only for product UIs with standard forms and simple tables. For heavy back-office screens, no.

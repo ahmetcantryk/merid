@@ -1,0 +1,214 @@
+---
+title: "CSS @layer Nedir? Cascade Layers ile Specificity Sorunu"
+description: "CSS cascade layers (@layer) nasıl çalışır, specificity sorununu nasıl çözer? Örneklerle layer sırası, Tailwind v4 ile kullanım ve component kütüphaneleri."
+slug: css-cascade-layers-nedir
+lang: tr
+canonical: /tr/blog/css-cascade-layers-nedir
+alternate: /blog/design-tokens-css-layers
+keywords:
+  - css @layer nedir
+  - cascade layers
+  - css specificity
+  - css !important kullanmadan
+  - tailwind v4 layer
+date: 2026-12-22
+updated: 2026-12-22
+tags:
+  - css
+  - design-tokens
+author: Ahmet Can Tiryaki
+---
+
+# CSS @layer nedir?
+
+Bir component kütüphanesinin butonunun rengini değiştirmek istedin. Kendi sınıfını ekledin, olmadı. Seçiciyi uzattın, olmadı. Sonunda `!important` yazdın ve çalıştı. Bir ay sonra başka biri senin kuralını ezmek için bir `!important` daha yazdı.
+
+Cascade layers (`@layer`) bu döngüyü bitirmek için var. Bu yazıda ne olduğunu, nasıl çalıştığını ve gerçek bir projede nasıl kullanıldığını örneklerle anlatıyorum.
+
+## Kısa tanım
+
+`@layer`, CSS kurallarını isimli katmanlara koymanı sağlar. Tarayıcı iki kuralı karşılaştırırken önce **hangi katmanda olduklarına** bakar, specificity'ye ancak ondan sonra bakar.
+
+Yani sonra tanımlanan bir katmandaki basit bir `.btn` seçicisi, önceki bir katmandaki `#app .toolbar button.btn.primary` seçicisini geçer. Specificity sadece aynı katman içinde önemli.
+
+Tüm modern tarayıcılar 2022'den beri destekliyor.
+
+## Temel kullanım
+
+Önce katmanların sırasını tanımlarsın:
+
+```css
+@layer reset, base, components, utilities;
+```
+
+Bu satır sırayı belirler: `utilities` en güçlü, `reset` en zayıf. Sonra kuralları katmanlara koyarsın:
+
+```css
+@layer base {
+  a {
+    color: blue;
+  }
+}
+
+@layer components {
+  .nav a {
+    color: gray;
+  }
+}
+
+@layer utilities {
+  .text-red {
+    color: red;
+  }
+}
+```
+
+`<a class="text-red">` içinde `.nav` altında olsa bile kırmızı olur. `.nav a` seçicisi daha spesifik, ama `utilities` katmanı daha sonra geldiği için kazanır.
+
+## En önemli kural: katmansız CSS her zaman kazanır
+
+Hiçbir katmana koymadığın CSS, tüm katmanlardan sonra gelmiş gibi davranır. Bu, component kütüphaneleri için çok kullanışlı:
+
+- Kütüphane tüm stillerini bir katmana koyar.
+- Sen kendi CSS'ini normal yazarsın, hiçbir katman olmadan.
+- Senin kuralın, specificity ne olursa olsun kazanır.
+
+```css
+/* kütüphane */
+@layer lib {
+  .lib-button.lib-button--primary {
+    background: #3f63f5;
+  }
+}
+
+/* senin CSS'in, katmansız */
+.lib-button {
+  background: #0f766e; /* kazanır */
+}
+```
+
+Artık `!important` yazmana gerek yok.
+
+## `!important` tersine döner
+
+Bilmen gereken ince bir nokta: `!important` kurallarında katman sırası tersine döner. Önceki katmandaki `!important`, sonraki katmandakini geçer. Bu, bir reset katmanının "bunu kimse ezmesin" demesine izin vermek için tasarlandı. Pratikte kural basit: layer kullanıyorsan `!important`'a zaten ihtiyacın kalmaz, kullanma.
+
+## İç içe katmanlar
+
+Katmanlar iç içe olabilir ve nokta ile isimlendirilir:
+
+```css
+@layer merid.tokens, merid.base, merid.components;
+```
+
+Dışarıdan bakınca bunların hepsi tek bir `merid` katmanı. Sen kendi sıranı tanımlarken sadece `merid` diyebilirsin; iç sıra kütüphanenin kendi işi.
+
+## `@import` ile katman atamak
+
+Üçüncü taraf bir stylesheet'i katmana koymak için:
+
+```css
+@import url("some-library.css") layer(vendor);
+```
+
+Böylece kütüphane kendi `@layer` kullanmasa bile onu zayıf bir katmana alabilirsin.
+
+## Tailwind v4 ile layer
+
+Tailwind v4 çıktısını `theme`, `base`, `components` ve `utilities` katmanlarına koyar. Başka bir layer kullanan kütüphaneyle birlikte kullanıyorsan sırayı bir kez, her şeyden önce tanımlaman yeterli:
+
+```css
+@layer theme, base, merid, components, utilities;
+
+@import "tailwindcss";
+@import "@meridui/react/styles.css";
+```
+
+Bu sırayla:
+
+- Tailwind'in Preflight reset'i (`base`) önce gelir, kütüphanenin stilleri onu geçer.
+- Tailwind utility'leri en sonda gelir, yani `className="mt-4 w-full"` component'in kendi boşluğunu geçer.
+- Senin katmansız CSS'in ikisini de geçer.
+
+Tailwind v3 çıktısı katmansızdır; bu yüzden v3'te tüm Tailwind stilleri (Preflight dahil) layer kullanan kütüphaneleri geçer. v3 kullanıyorsan Preflight'ı kapatman ya da kapsamını daraltman gerekebilir.
+
+## Gerçek bir örnek: Merid'in layer yapısı
+
+Merid'i biz geliştiriyoruz ve tüm stilini baştan layer üzerine kurduk. Tek stylesheet'teki her kural bu üç katmandan birinde:
+
+| Katman | İçerik |
+|---|---|
+| `merid.tokens` | `--mrd-*` CSS değişkenleri, light ve dark değerleri |
+| `merid.base` | Temel element ayarları |
+| `merid.components` | `.mrd-button`, `.mrd-card` gibi component stilleri |
+
+Varyant ve durumlar sınıfla değil data attribute ile: `data-variant="primary"`, `data-size="sm"`, `data-state="open"`. Bu da seçicileri kısa ve tahmin edilebilir tutuyor.
+
+Bir component'i özelleştirmek şöyle:
+
+```css
+/* senin global CSS'in */
+.mrd-card {
+  padding: 32px;
+}
+
+.mrd-button[data-variant="primary"] {
+  letter-spacing: 0.01em;
+}
+```
+
+`!important` yok, seçici uzatma yok. Renkleri değiştirmek içinse component'e hiç dokunmadan token'ı değiştirirsin:
+
+```css
+:root {
+  --mrd-accent: #0f766e;
+}
+```
+
+Kurulum:
+
+```bash
+npm i @meridui/react
+```
+
+```tsx
+import "@meridui/react/styles.css";
+```
+
+Stil sisteminin detayları: [meridui.dev/docs/styling](https://meridui.dev/docs/styling). Tailwind ile birlikte kullanım: [meridui.dev/docs/integrations/tailwind](https://meridui.dev/docs/integrations/tailwind).
+
+Merid'in eksiklerini de söyleyeyim: sürüm 0.1, combobox, date picker ve grafik component'leri yok, Figma kütüphanesi yok. Dokümantasyon şimdilik İngilizce; Türkçe sürüm meridui.dev/tr altında geliyor.
+
+## Sık yapılan hatalar
+
+**Sırayı tanımlamadan katman kullanmak.** `@layer` bloklarını sırasız yazarsan sıra, tarayıcının onları ilk gördüğü sıra olur. Import sırası değiştiğinde öncelik de sessizce değişir. Sırayı her zaman tek satırda, açıkça yaz.
+
+**Her şeyi katmana koymak.** Tüm CSS'ini katmanlara taşırsan "son söz" hakkını kaybedersin. Sayfaya özel, istisnai kuralları katmansız bırakmak, onların her zaman kazanmasını garanti eder.
+
+**Katmanı specificity yerine kullanmaya çalışmak.** Aynı katmandaki iki kural arasında hâlâ specificity ve kaynak sırası belirleyici. Katman, farklı sahipleri (reset, kütüphane, senin kodun) ayırmak için; bir component içindeki durumları sıralamak için değil.
+
+**Tailwind v3 ile v4 davranışını karıştırmak.** Yukarıda anlattığım gibi v3 çıktısı katmansız. Bir projeyi v4'e taşırken layer sırasını yeniden gözden geçir; daha önce kazanan bir kural artık kaybedebilir.
+
+## Kendi projende layer'a geçiş
+
+Mevcut bir projeye layer eklemek için büyük bir refactor gerekmez:
+
+1. Ana CSS dosyanın en başına sırayı yaz: `@layer reset, vendor, components;`
+2. Reset CSS'ini `@layer reset { ... }` içine al.
+3. Üçüncü taraf stilleri `@import ... layer(vendor)` ile al.
+4. Kendi component stillerini `components` katmanına taşı.
+5. Sayfaya özel CSS'i katmansız bırak; en güçlü o olsun.
+6. `!important` araması yap ve her birinin hâlâ gerekli olup olmadığına bak. Çoğu gereksiz kalacak.
+
+Tarayıcı geliştirici araçlarında (Chrome ve Firefox) her kuralın hangi katmanda olduğu gösteriliyor; geçiş sırasında hangi kuralın neden kazandığını buradan takip edebilirsin.
+
+## Sık sorulan sorular
+
+**`@layer` specificity'yi tamamen ortadan kaldırıyor mu?**
+Hayır. Aynı katman içinde specificity hâlâ geçerli. Sadece katmanlar arasındaki karşılaştırmada önce sıraya bakılıyor.
+
+**Katman sırasını birden fazla yerde tanımlarsam ne olur?**
+İlk görülen sıra geçerli olur. Bu yüzden sırayı tanımlayan satırı, tüm stillerden önce yüklenen dosyanın en başına koy.
+
+**CSS modules ile layer birlikte kullanılır mı?**
+Evet. Module dosyasının içinde de `@layer components { ... }` yazabilirsin. CSS modules sınıf isimlerini benzersiz yapar, layer ise öncelik sırasını belirler; ikisi farklı sorunları çözer.

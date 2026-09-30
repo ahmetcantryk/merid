@@ -1,0 +1,234 @@
+---
+title: "Design Tokens and CSS Cascade Layers in a Design System"
+description: "How to structure design tokens in three tiers and use CSS cascade layers so your overrides win without !important. Worked examples from a React library."
+slug: design-tokens-css-layers
+canonical: /blog/design-tokens-css-layers
+keywords:
+  - css cascade layers design system
+  - design tokens react
+  - css variables design system
+  - "@layer component library"
+  - design tokens tailwind v4
+date: 2026-11-20
+updated: 2026-11-20
+lastReviewed: 2026-11-20
+tags:
+  - design-tokens
+  - css
+author: Ahmet Can Tiryaki
+---
+
+# Design tokens and CSS cascade layers in a design system
+
+Two CSS features solve most of the pain of shipping a design system as CSS: custom properties for tokens, and cascade layers for ordering. Neither is new anymore, but they are still rarely combined deliberately.
+
+This post shows one way to do it, using Merid (the React library we build) as the worked example. The patterns apply to any design system, with or without React.
+
+## Part 1: tokens in three tiers
+
+A token is a named design decision. The mistake most teams make is having only one tier: a flat list of colours that components use directly. Then "make the primary button green" means finding every place that used `blue-500`.
+
+Three tiers fix that:
+
+1. **Primitive tokens.** The raw palette and scales. They describe what a value *is*.
+   `--mrd-blue-500`
+2. **Semantic tokens.** What a value is *for*. Components read these.
+   `--mrd-accent`, `--mrd-line`, `--mrd-ink`, `--mrd-surface`
+3. **Component tokens.** Values specific to one component, defaulting to semantic ones.
+   `--mrd-button-height`
+
+In CSS:
+
+```css
+:root {
+  /* semantic */
+  --mrd-accent: #3f63f5;
+  --mrd-line: #e6e8ec;
+  --mrd-ink: #0f1219;
+  --mrd-surface: #ffffff;
+}
+
+.mrd-button {
+  block-size: var(--mrd-button-height);
+  border: 1px solid var(--mrd-line);
+}
+```
+
+Rules that keep the tiers useful:
+
+- Components never read primitives directly. Only semantic or component tokens.
+- Semantic names describe roles, not colours. `--mrd-danger`, not `--mrd-red`.
+- Keep the semantic set small. Merid has three text tones (`ink`, `body`, `muted`) and a single accent. Every extra token is another choice someone (or some AI model) has to make.
+
+## Part 2: light and dark from the same names
+
+Semantic tokens are what make dark mode cheap. Components do not change; the values behind the names do:
+
+```css
+:root,
+[data-theme="light"] {
+  --mrd-bg: #ffffff;
+  --mrd-ink: #0f1219;
+  --mrd-line: #e6e8ec;
+}
+
+[data-theme="dark"] {
+  --mrd-bg: #0b0d12;
+  --mrd-ink: #eef0f4;
+  --mrd-line: #262b35;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --mrd-bg: #0b0d12;
+    --mrd-ink: #eef0f4;
+    --mrd-line: #262b35;
+  }
+}
+```
+
+Because custom properties inherit, the attribute works on any element, not just `<html>`. Merid uses this for three attributes that nest freely:
+
+| Attribute | Values |
+|---|---|
+| `data-theme` | `light`, `dark` |
+| `data-accent` | `blue`, `violet`, `green`, `graphite` |
+| `data-density` | `compact`, `default`, `comfortable` |
+
+```html
+<body>
+  <aside data-theme="dark" data-density="compact">...</aside>
+  <main>...</main>
+</body>
+```
+
+A dark sidebar in a light app, with no React context involved. See [subtree attributes](https://meridui.dev/docs/integrations/subtree-attributes).
+
+One detail that is easy to miss: set `color-scheme` with the theme so native controls and scrollbars follow it.
+
+## Part 3: cascade layers
+
+Tokens solve "what value". Layers solve "whose rule wins".
+
+Without layers, a library's `.lib-card .lib-card__title` (two classes) beats your `.title` (one class). You add a wrapper class, the library adds one, and eventually someone writes `!important`.
+
+With `@layer`, the order of layers decides precedence before specificity is even considered. And **unlayered styles beat all layered styles.** A library that puts everything in layers hands you the last word.
+
+Merid declares:
+
+```css
+@layer merid.tokens, merid.base, merid.components;
+
+@layer merid.tokens {
+  :root { --mrd-accent: #3f63f5; }
+}
+
+@layer merid.components {
+  .mrd-card { border-radius: var(--mrd-radius-card); }
+}
+```
+
+Your app CSS, unlayered:
+
+```css
+.pricing .mrd-card {
+  border-radius: 0; /* wins, no !important */
+}
+```
+
+Or change a token and let every component follow:
+
+```css
+:root {
+  --mrd-accent: #0f766e;
+}
+```
+
+Your `:root` rule is unlayered, so it beats the `merid.tokens` layer.
+
+### Ordering layers across tools
+
+If you use multiple layered stylesheets, declare the full order once, at the top of your first stylesheet. For Tailwind CSS v4 and Merid:
+
+```css
+@layer theme, base, merid, components, utilities;
+
+@import "tailwindcss";
+@import "@meridui/react/styles.css";
+```
+
+Tailwind's Preflight (`base`) comes before Merid, so Merid's component styles win over the reset. Tailwind `utilities` come after, so `className="mt-4"` on a Merid component works. Your unlayered CSS beats both. Full notes in the [Tailwind guide](https://meridui.dev/docs/integrations/tailwind).
+
+Tailwind v3 emits unlayered CSS, so it always wins over layered libraries. That is manageable, but know it before you upgrade or migrate.
+
+### Layer pitfalls
+
+- **`!important` inverts layer order.** An important declaration in an earlier layer beats one in a later layer. Avoid `!important` inside layered library CSS entirely.
+- **Declare order before any `@layer` block.** The first time a layer name appears fixes its position.
+- **Imports can be layered too:** `@import url("legacy.css") layer(legacy);` is a quick way to tame an old stylesheet.
+
+## Part 4: tokens in JavaScript
+
+Sometimes you need token values outside CSS: charts, canvas, email templates, a Tailwind config, a design tool. Merid publishes `@meridui/tokens` with the same tokens as:
+
+- W3C Design Tokens Community Group (DTCG) JSON (`tokens.json`)
+- a Figma-tokens-plugin-compatible JSON file (`figma-tokens.json`)
+- CSS (`tokens.css`)
+- JS/TS exports, including `cssVar` names
+
+```ts
+import { cssVar } from "@meridui/tokens";
+// use the var() reference, not a copied hex, so dark mode keeps working
+```
+
+(See the [design tokens guide](https://meridui.dev/docs/integrations/design-tokens) for the exact export shape.)
+
+Note that a token JSON file is not a Figma component library. Merid does not ship Figma components.
+
+Prefer referencing `var(--mrd-…)` over copying resolved values wherever the consumer supports CSS. A copied hex does not know about dark mode.
+
+## Part 5: mapping tokens into Tailwind
+
+If your app uses Tailwind, expose tokens as theme values with `@theme inline`:
+
+```css
+@theme inline {
+  --color-accent: var(--mrd-accent);
+  --color-ink: var(--mrd-ink);
+  --color-line: var(--mrd-line);
+  --radius-card: var(--mrd-radius-card);
+}
+```
+
+`inline` makes Tailwind emit `var(--mrd-accent)` in utilities instead of the resolved value, so `bg-accent` follows the theme and accent attributes.
+
+## Why this matters more with AI in the loop
+
+Models writing UI code tend to invent values: a `#4a6cf7` that is almost your accent, `padding: 14px` next to your 12 and 16. A small semantic token set, documented in the repo, gives the model fewer choices and a reviewer something to check against. A lint rule that flags raw hex values in component CSS catches the rest.
+
+## Comparison: how libraries expose tokens
+
+| | Token format | Layers | Override without `!important` |
+|---|---|---|---|
+| Radix Themes | CSS variables | Check docs | Generally yes |
+| Mantine | CSS variables + theme object | Check docs | With Styles API |
+| MUI | JS theme (CSS variables mode available) | Emotion layer option, check docs | Via theme / `sx` |
+| shadcn/ui | CSS variables + Tailwind theme | Tailwind layers | Edit source |
+| Merid | `--mrd-*` CSS variables, DTCG JSON, JS | Yes, three named layers | Yes |
+
+Verify each against the official docs; several libraries have added layer support recently.
+
+## Limits
+
+Merid is 0.1: 46 components, no Combobox, date picker or charts, and no Figma component library. The token and layer structure described here is stable in intent but the API can change before 1.0. If you only want the pattern, the three-tier structure and layer ordering work with any CSS you write. To see how Merid's approach differs from copying Tailwind components, read [Merid vs shadcn/ui, side by side](https://meridui.dev/compare/shadcn-ui-vs-merid).
+
+## Checklist
+
+- [ ] Primitive, semantic and component tiers; components read only the last two.
+- [ ] Semantic names describe roles.
+- [ ] Light and dark set the same names; `color-scheme` set with the theme.
+- [ ] Theme attributes work on any subtree.
+- [ ] All library CSS in named layers, order declared once.
+- [ ] No `!important` in layered CSS.
+- [ ] JS consumers reference `var()` where possible.
+- [ ] Lint for raw values in component styles.

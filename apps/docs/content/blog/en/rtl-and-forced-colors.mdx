@@ -1,0 +1,143 @@
+---
+title: "RTL and Forced Colors in React Component Libraries"
+description: "How to check a React component library for right-to-left layouts and Windows forced colors: logical properties, mirrored keys, icons and a test checklist."
+slug: rtl-and-forced-colors
+canonical: /blog/rtl-and-forced-colors
+keywords:
+  - rtl react component library
+  - react rtl support
+  - windows high contrast react
+  - forced-colors css
+  - logical properties css
+date: 2026-12-18
+updated: 2026-12-18
+lastReviewed: 2026-12-18
+tags:
+  - accessibility
+  - css
+author: Ahmet Can Tiryaki
+---
+
+# RTL and forced colors in React component libraries
+
+Two features get tested last and break first: right-to-left layouts and Windows forced colors mode (the successor of High Contrast mode). Both are invisible in a default English, light-theme demo. Both decide whether real users can use your product: people who read Arabic, Hebrew, Persian or Urdu, and people who rely on system colour themes for low vision or light sensitivity.
+
+This post explains what a component library has to do for each, how to test it in an afternoon, and how to read library docs for real support rather than a checkbox.
+
+We build Merid, and use it for examples because we know its internals. The checks apply to any library.
+
+## Part 1: right-to-left
+
+### What "RTL support" actually requires
+
+Setting `dir="rtl"` on `<html>` flips text and inline flow. Everything a library hard-codes as "left" or "right" does not flip. Real support means four things.
+
+**1. Logical CSS properties.** Instead of `margin-left`, `padding-right`, `left: 0` or `border-left`, the CSS uses `margin-inline-start`, `padding-inline-end`, `inset-inline-start` and `border-inline-start`. These resolve against the writing direction. [MDN's guide to logical properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties_and_values) lists the mapping. A library that uses physical properties needs a second, mirrored stylesheet or a PostCSS RTL plugin.
+
+**2. Mirrored keyboard navigation.** In a horizontal tab list, the right arrow key moves to the next tab in LTR. In RTL, the next tab is on the left, so the left arrow key should move forward. The [WAI-ARIA APG tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) and similar patterns expect arrow keys to follow visual order. The same applies to sliders, segmented controls, menubars and submenus that open to the side.
+
+**3. Directional icons.** A chevron in a "next" button or a breadcrumb separator points the other way in RTL. Icons without direction (a search magnifier, a check) must not flip. CSS can do this with the [`:dir()` pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/:dir), now supported in all major browsers:
+
+```css
+.breadcrumb-separator:dir(rtl) {
+  transform: scaleX(-1);
+}
+```
+
+**4. Positioned overlays.** Popovers, tooltips and dropdown menus placed with `side="right"` or `align="start"` have to resolve "start" against the direction. Portalled content (rendered into `document.body`) must also know the direction of the place it came from, not of the body.
+
+### How libraries handle it
+
+- **MUI** documents an [RTL guide](https://mui.com/material-ui/customization/right-to-left/) using a theme `direction` and an Emotion cache with an RTL stylis plugin.
+- **Ant Design** supports RTL through `ConfigProvider`'s `direction` prop ([docs](https://ant.design/components/config-provider)).
+- **Mantine** documents RTL with a `DirectionProvider` ([docs](https://mantine.dev/styles/rtl/)).
+- **Radix Primitives** offer a `DirectionProvider` for keyboard behaviour ([docs](https://www.radix-ui.com/primitives/docs/utilities/direction-provider)).
+- **React Aria** reads direction from its `I18nProvider` locale, and is known for strong internationalisation.
+
+Most of these use a provider or config, because direction affects JavaScript behaviour (arrow keys), not only CSS.
+
+**Merid** takes a CSS-first route. All component CSS uses logical properties, and directional icons flip with `:dir(rtl)`. You set `dir="rtl"` on `<html>` or on any subtree, and components inside follow it, including keyboard navigation. Portals inherit the direction of the subtree they were opened from. There is no direction provider. See the [RTL guide](https://meridui.dev/docs/integrations/rtl).
+
+```tsx
+<section dir="rtl" lang="ar">
+  <Tabs.Root defaultValue="account">...</Tabs.Root>
+</section>
+```
+
+Merid's gaps apply here too: it has 46 components and no date picker or combobox, which are the components where RTL is hardest. Check those carefully in whichever library provides them.
+
+## Part 2: forced colors
+
+### What forced colors mode does
+
+Windows lets users pick a contrast theme. When it is on, browsers enter [forced colors mode](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors): they replace your colours with a small system palette (`Canvas`, `CanvasText`, `LinkText`, `ButtonFace`, `ButtonText`, `Highlight`, `GrayText` and a few more). Background images are kept, but box shadows are removed and many backgrounds become `Canvas`.
+
+What breaks:
+
+- **State shown only with background colour.** A selected tab, a checked switch or an active menu item that differs only by fill becomes identical to the others.
+- **Borders drawn with shadows.** Many modern libraries draw 1px borders with `box-shadow` for crispness. In forced colors, those disappear, and inputs lose their edges.
+- **Focus rings made of shadows.** The same problem, but worse: keyboard users lose focus visibility.
+- **Custom checkboxes and switches.** If the "checked" state is a coloured fill with a white SVG, the SVG may stay while the fill vanishes.
+
+### What good support looks like
+
+1. **Real borders** (transparent in normal mode if needed) so forced colors has something to paint.
+2. **Focus with `outline`**, not only `box-shadow`. Outlines are kept and recoloured.
+3. **State with system colours** in a `@media (forced-colors: active)` block: selected items use `Highlight` and `HighlightText`, disabled items `GrayText`.
+4. **`forced-color-adjust: none` only where necessary**, for example a colour swatch that must show its real colour, and then with a border.
+
+```css
+@media (forced-colors: active) {
+  .switch[data-state="checked"] {
+    background: Highlight;
+    border-color: Highlight;
+  }
+  .tab[aria-selected="true"] {
+    outline: 1px solid Highlight;
+  }
+}
+```
+
+Few libraries document forced colors per component. When the docs say nothing, assume it is untested and check yourself.
+
+Merid lists forced colors as a supported mode: focus is drawn with an outline (2px accent, offset 3px), in a `forced-colors: active` block, controls get a 1px `ButtonText` border, and checked checkboxes and switches that are on use `Highlight` and `HighlightText`. The [accessibility page](https://meridui.dev/docs/accessibility) describes what is tested. We still recommend you test your own screens, since your custom CSS can break what the library does right.
+
+## A one-afternoon test checklist
+
+Use this on any library before you commit.
+
+**RTL**
+
+- [ ] Set `dir="rtl"` on `<html>`. Does anything stay on the wrong side? Look at input icons, close buttons in dialogs, drawer position, badges on avatars.
+- [ ] Tabs, segmented controls and menus: do arrow keys follow visual order?
+- [ ] Breadcrumbs, pagination and "next" buttons: do chevrons point the right way?
+- [ ] Open a popover and a dropdown near the inline edge. Do they align to the correct side?
+- [ ] Set `dir="rtl"` on one section only. Does a dialog opened from that section render RTL?
+- [ ] Mixed content: an English product name inside Arabic text. Is it isolated (`<bdi>` or `unicode-bidi: isolate`)?
+
+**Forced colors**
+
+- [ ] On Windows, turn on a contrast theme (Settings, Accessibility, Contrast themes). Or in Chrome DevTools, Rendering panel, emulate `forced-colors: active`.
+- [ ] Tab through the page. Is focus visible on every control?
+- [ ] Are input, select and textarea edges visible?
+- [ ] Can you tell checked from unchecked, selected from unselected, disabled from enabled?
+- [ ] Do icons still show? SVG icons with `fill="currentColor"` usually adapt; icons with hard-coded fills may not.
+- [ ] Is any text lost on an image or a gradient?
+
+Record what fails, then check the library's issue tracker. A library that closes such issues quickly is worth more than one that claims full support.
+
+## Why this matters more with AI-written UI
+
+Coding agents rarely write `margin-inline-start` unprompted, and never add a forced colors block on their own. If the library handles direction and forced colors inside its components, the agent cannot break it by accident as long as it uses the components. If the agent writes custom CSS around them, lint for physical properties (Stylelint has plugins for logical properties) and keep the checklist above in your review.
+
+Related: [accessible React component libraries compared](/blog/accessible-react-component-libraries), and [Merid vs shadcn/ui](https://meridui.dev/compare/shadcn-ui-vs-merid).
+
+## FAQ
+
+**Which React component library has the best RTL support?** React Aria has the deepest internationalisation. MUI, Ant Design and Mantine document RTL through a provider or config. Merid supports it through `dir` on any element, without a provider.
+
+**Is Windows High Contrast mode the same as forced colors?** Forced colors is the standard CSS media feature that browsers use when High Contrast (now "contrast themes") is on.
+
+**Can I test forced colors on a Mac?** Chrome and Edge DevTools can emulate `forced-colors: active` on any OS.
+
+**Does `dir="rtl"` on a subtree work?** With CSS logical properties and `:dir()`, yes. JavaScript behaviour depends on the library: providers usually read direction from context, not from the DOM.

@@ -1,0 +1,72 @@
+---
+title: "Chakra UI vs Merid: Style Props or Strict Tokens?"
+description: "Chakra UI vs Merid: style props on Emotion with a provider, or plain CSS with fixed tokens and no provider. Theming, RSC, coverage and maturity."
+slug: chakra-ui-vs-merid
+canonical: /compare/chakra-ui-vs-merid
+keywords:
+  - chakra ui vs merid
+  - chakra ui alternative
+  - react component library without emotion
+  - style props vs design tokens
+date: 2026-09-30
+updated: 2026-09-30
+lastReviewed: 2026-09-30
+author: Ahmet Can Tiryaki
+---
+
+# Chakra UI vs Merid
+
+Chakra UI made style props popular: `<Box p={4} bg="gray.50">` reads well and writes fast. Version 3 kept that model and rebuilt the internals on Ark UI and Zag.js state machines. Merid takes the opposite approach: components do not accept free-form style values, and every value comes from a named token.
+
+We build Merid, so read this with that in mind. We describe Chakra from its own documentation and say where it is ahead.
+
+## At a glance
+
+| | Chakra UI v3 | Merid |
+|---|---|---|
+| Package | `@chakra-ui/react` | `@meridui/react` |
+| Styling | Emotion at runtime (per Chakra's docs), recipes and semantic tokens | One plain-CSS stylesheet in three cascade layers |
+| Style props | Yes, on every component | No; tokens, variants and your own CSS |
+| Root requirement | `Provider` wraps the app | None (only toasts need `ToastProvider`) |
+| Behaviour layer | Ark UI (Zag.js) | Built in-house, Floating UI for positioning |
+| Theming scope | Theme system and color mode | `data-theme`, `data-accent`, `data-density`, `dir` on any element |
+| Server components | Styled parts need a client boundary | Static parts render on the server; interactive modules ship `"use client"` |
+| Accessibility | Solid, tested state machines | Targets WCAG 2.2 AA; axe suite in CI; newer |
+| Maturity | High; large community | 0.1, independently maintained |
+| Licence | MIT | MIT |
+
+Sources: [Chakra UI installation](https://chakra-ui.com/docs/get-started/installation), [Ark UI](https://ark-ui.com/), [Merid README](https://github.com/ahmetcantryk/merid).
+
+## Where Chakra UI is ahead
+
+- **Authoring speed.** Style props are quick to learn and keep layout in one file.
+- **Behaviour.** Ark UI and Zag.js give components well-specified, well-tested state logic.
+- **Theme system.** Recipes, slot recipes and semantic tokens with full typing.
+- **Community and coverage.** Years of tutorials, templates and answers, and more components than Merid's 46.
+
+## Where Merid is different
+
+**No runtime, no provider.** Chakra's installation guide states that it uses Emotion at runtime today, with zero-runtime styling as a long-term direction, and it needs a `Provider` at the root. Merid is static CSS with no wrapper, so a Next.js App Router layout stays a server component.
+
+**Consistency over freedom.** Style props make one-off values easy, and in a big codebase, or when an agent writes most of the JSX, you get `mt={3}` next to `mt="14px"`. Merid fixes the values: one accent, hairline borders, a rounding scale that steps down as surfaces nest, three text tones. You write less arbitrary CSS, and the output stays consistent.
+
+**Scoped themes as attributes.** A dark sidebar, a green panel or a compact table is one attribute on the element, and it nests.
+
+## What Merid does not have
+
+No style props or layout primitives with spacing props, no combobox, date picker or charts, and a smaller set overall. If your codebase leans on `Box` everywhere, you will write more CSS, or use Tailwind alongside Merid (the [Tailwind guide](/docs/integrations/tailwind) covers layer order).
+
+## Which should you pick?
+
+**Pick Chakra UI if** your team likes style props, you are already on v3, runtime styling has not caused measurable problems, or you need components Merid lacks.
+
+**Pick Merid if** you want no runtime CSS-in-JS and no provider, fewer ways for call sites to drift, and theme scoping through plain HTML attributes.
+
+## Moving from Chakra UI to Merid
+
+1. Write your Chakra theme decisions down as CSS custom properties; set `--mrd-accent` to your brand colour.
+2. Replace `Box`/`Flex` layout with CSS or Merid's `Stack`, `Grid` and `Container`.
+3. Swap leaf components first, then overlays; test keyboard flows as you go.
+4. Remove the `Provider` last, once nothing depends on Chakra context.
+
+**Related:** [Chakra UI alternatives](/blog/chakra-ui-alternatives) · [MUI vs Merid](/compare/mui-vs-merid)

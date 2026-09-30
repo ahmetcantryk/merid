@@ -1,0 +1,66 @@
+# Privacy
+
+Last updated: 30 September 2026
+
+The short version: meridui.dev sets no cookies, shows no ads, has no accounts and does not track you across other sites. We count visits and a handful of clicks so we know which docs are useful. This page lists exactly what that involves.
+
+This is a plain-language description of how the site is set up. It is not legal advice, and it may not cover every legal nuance of every jurisdiction. If something here is unclear or looks wrong, tell us and we will fix it.
+
+## What we measure
+
+### Visits and a few events (Umami)
+
+We use [Umami](https://umami.is/docs), an open-source analytics tool that works without cookies. For each page view it records:
+
+- the page address and the referring page, if your browser sends one,
+- browser, operating system, device type and screen size,
+- your language setting and a country derived from your IP address.
+
+Umami does not set cookies and does not store your IP address; visits are counted without an identifier that follows you from site to site. If your browser sends a Do Not Track signal, the script records nothing.
+
+We also send five named events, each with a small amount of context and nothing typed by you:
+
+| Event | When | Extra data |
+|---|---|---|
+| `copy_install` | You copy an install command such as `npm i @meridui/react` | The command, where it was copied (hero, docs, blog) and the page path |
+| `github_click` | You follow a link to the GitHub repository | Where the link was (header, footer, hero, blog) |
+| `locale_switch` | You switch between English and Turkish | Source and target language, page path |
+| `playground_change` | You change a control in the landing page token editor | Which control, the new value, pointer or keyboard |
+| `blog_cta_click` | You use the call to action at the end of a post | Docs or GitHub, page path |
+
+The analytics script only loads on the production site and only when it has been configured. Ad and tracker blockers usually block it; the site works the same either way.
+
+### Page speed (Vercel Speed Insights)
+
+The site is hosted on [Vercel](https://vercel.com/docs/speed-insights/privacy-policy). Speed Insights measures how fast pages load and respond (Core Web Vitals such as LCP, INP and CLS) together with the route, device type, browser and country. According to Vercel it uses no cookies and no identifiers that link measurements to a person.
+
+### Server logs (Vercel)
+
+Like any web host, Vercel processes your IP address and request details (time, address, user agent) to deliver pages and to protect the service against abuse. We do not use these logs for analytics.
+
+## What we store in your browser
+
+One `localStorage` entry, `merid-theme`, remembers whether you chose the light or dark theme. It never leaves your browser. There are no cookies, so there is no cookie banner.
+
+## What we do not do
+
+- No advertising, no ad pixels, no social media trackers.
+- No selling or sharing of data for marketing.
+- No fingerprinting and no tracking across other websites.
+- No accounts, forms or newsletters on this site.
+
+## Where the data goes
+
+Hosting and Speed Insights are provided by Vercel Inc., which processes data in the United States and other countries. Umami data is held by the analytics service configured for this site. We keep aggregated statistics for as long as they are useful to plan documentation work; we do not keep raw data about individual people.
+
+## Your rights
+
+Depending on where you live, laws such as the GDPR or Türkiye's KVKK (Law No. 6698) give you rights to ask what data about you is processed, to have it corrected or deleted, and to object. Because we do not collect names, email addresses or identifiers, we usually cannot link any stored record to you, but we will answer any request.
+
+The Turkish version of this page, [Gizlilik](/tr/gizlilik), includes a KVKK information notice (aydınlatma metni).
+
+## Contact
+
+Merid is maintained by Ahmet Can Tiryaki. For privacy questions, open an issue on [GitHub](https://github.com/ahmetcantryk/merid/issues) or contact the maintainer through the profile linked from the repository.
+
+We will update this page when the setup changes, and change the date at the top.
