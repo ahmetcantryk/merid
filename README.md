@@ -9,7 +9,7 @@
 
 <h3>Quiet, precise components for React.</h3>
 
-<p>46 accessible components · plain CSS · design tokens · server-component friendly</p>
+<p>60+ accessible components · plain CSS · design tokens · server-component friendly</p>
 
 <p>
   <a href="https://github.com/ahmetcantryk/merid/actions/workflows/ci.yml"><img src="https://github.com/ahmetcantryk/merid/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
@@ -172,16 +172,24 @@ One stylesheet import. No theme provider — only toasts need a <code>ToastProvi
 
 | Category | Components |
 | :-- | :-- |
-| **Actions** | Button · IconButton · Link · DropdownMenu · SegmentedControl |
-| **Forms** | Field · Label · Input · Textarea · Select · NativeSelect · Checkbox · Radio · Switch |
-| **Overlays** | Dialog · AlertDialog · Drawer · Popover · Tooltip · Toast · Portal |
-| **Navigation** | Tabs · Breadcrumb · Pagination · Stepper · SidebarNav |
+| **Actions** | Button · IconButton · Link · Toggle · ToggleGroup · Toolbar · DropdownMenu · ContextMenu · Command · SegmentedControl |
+| **Forms** | Field · Label · Input · Textarea · NumberInput · PinInput · Select · NativeSelect · Combobox · DatePicker · Calendar · Slider · Checkbox · Radio · Switch · FileUpload |
+| **Overlays** | Dialog · AlertDialog · Drawer · Popover · HoverCard · Tooltip · Toast · Portal |
+| **Navigation** | Tabs · NavigationMenu · Breadcrumb · Pagination · Stepper · SidebarNav |
 | **Feedback** | Alert · Progress · Spinner · Skeleton · EmptyState · Badge |
-| **Data display** | Table · Card · Avatar · Accordion · Code · Kbd |
-| **Layout** | Container · Section · Stack · Grid · Separator |
+| **Data display** | Table · DataTable · Card · Avatar · Accordion · Collapsible · Code · Kbd · Shortcut |
+| **Layout** | Container · Section · Stack · Grid · ScrollArea · Separator |
 | **Typography** | Heading · Text · VisuallyHidden |
 
-Every component has a page with live examples, props and keyboard notes at **[meridui.dev](https://meridui.dev)**.
+Every component has a page with live examples, props and keyboard notes at **[meridui.dev](https://meridui.dev)**, in English and [Turkish](https://meridui.dev/tr).
+
+## Use it with AI
+
+```bash
+npx meridui init
+```
+
+Installs `@meridui/react`, imports the stylesheet, and can add an AI rules file (`AGENTS.md`, Cursor rules) and the Merid MCP server config for Claude Code, Cursor and VS Code. The docs also ship [`llms.txt`](https://meridui.dev/llms.txt). See [Using Merid with AI](https://meridui.dev/docs/ai).
 
 <br>
 
@@ -212,6 +220,8 @@ Need to go deeper? Override tokens in your own CSS — it always wins over Merid
 | :-- | :-- |
 | [`@meridui/react`](packages/react) | React components, stylesheet and bundled Geist fonts |
 | [`@meridui/tokens`](packages/tokens) | Design tokens as CSS custom properties and typed JS |
+| [`@meridui/cli`](packages/cli) | `npx meridui init`: install, stylesheet, AI rules, MCP config and page patterns |
+| [`@meridui/mcp`](packages/mcp) | Read-only MCP server so AI agents can look up components, tokens and the design contract |
 
 <br>
 
