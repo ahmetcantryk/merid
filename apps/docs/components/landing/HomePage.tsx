@@ -2,16 +2,20 @@ import Link from "next/link";
 import { CopyButton } from "@/components/CopyButton";
 import { componentCount } from "@/lib/components-catalog";
 import { getDictionary, localizePath, type Locale } from "@/lib/i18n";
+import { trackAttrs } from "@/lib/analytics";
+import { JsonLd, organization, softwareSourceCode, website } from "@/lib/seo/jsonld";
 import { site } from "@/lib/site";
 import { ComponentIndex } from "./ComponentIndex";
 import { FoundationIndex } from "./FoundationIndex";
 import { Playground } from "./Playground";
 
 export function HomePage({ locale }: { readonly locale: Locale }) {
-  const t = getDictionary(locale).landing;
+  const dict = getDictionary(locale);
+  const t = dict.landing;
   const href = (path: string) => localizePath(path, locale);
   return (
     <div className="board">
+      <JsonLd data={[organization(), website(), softwareSourceCode(dict.meta.description)]} />
       <section className="band hero" aria-labelledby="hero-title">
         <div className="frame">
           <div className="hero__grid">
@@ -33,7 +37,7 @@ export function HomePage({ locale }: { readonly locale: Locale }) {
                 <div className="install" aria-label={t.installLabel}>
                   <span className="install__prompt" aria-hidden="true">$</span>
                   <code>{site.install}</code>
-                  <CopyButton value={site.install} className="install__copy" />
+                  <CopyButton value={site.install} className="install__copy" eventLocation="hero" />
                 </div>
               </div>
             </div>
@@ -149,7 +153,7 @@ export function HomePage({ locale }: { readonly locale: Locale }) {
               <Link href={href("/docs/installation")} className="btn" data-variant="primary">
                 {t.installation}
               </Link>
-              <a href={site.repo} className="btn" data-variant="secondary">
+              <a href={site.repo} className="btn" data-variant="secondary" {...trackAttrs("github_click", { location: "hero" })}>
                 GitHub
               </a>
             </div>
