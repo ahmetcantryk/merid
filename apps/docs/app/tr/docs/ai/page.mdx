@@ -1,0 +1,152 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { AiRules } from "@/components/AiRules";
+
+export const metadata = docMetadata("tr", "/docs/ai", {
+  title: "AI ile kullanım",
+  description: "Claude Code, Cursor, VS Code ve Windsurf'e Merid dokümanlarını ver: MCP server, llms.txt ve resmî kural dosyası.",
+});
+
+# AI ile kullanım
+
+Kod yazan agent'lar prop'ları tahmin etmek yerine gerçek dokümanı okuyabildiğinde daha iyi Merid kodu yazar. Merid bunun için üç şey sunar; üçü de build sırasında bu dokümanlardan üretilir:
+
+- **MCP server**, `@meridui/mcp`: component'ler, prop'lar, token'lar, desenler ve kurulum hakkındaki soruları editörün içinden yanıtlar.
+- **`llms.txt`** ve her sayfanın Markdown sürümü: web'i okuyan araçlar için.
+- **Resmî kural dosyası**: agent'a Merid kodunun nasıl yazılacağını söyler; hangi import'lar, hangi token'lar, neyin yapılmayacağı.
+
+## Hızlı kurulum
+
+Projende şunu çalıştır. `@meridui/react`'i kurar, stil dosyasını import eder ve kural dosyasıyla Claude Code, Cursor ve VS Code için MCP config'ini ekleyip eklemeyeceğini sorar. Her dosya değişikliği önce diff olarak gösterilir.
+
+```bash
+npx @meridui/cli init
+```
+
+Seçenekler için [CLI](/tr/docs/cli) sayfasına bak ya da aşağıdaki adımlarla elle kur.
+
+## MCP server
+
+Server stdio üzerinden, `npx -y @meridui/mcp` ile yerelde çalışır. Salt okunurdur ve internet olmadan çalışır: dokümanlar pakete derlenmiştir, ağ isteği yapmaz ve dosya yazmaz.
+
+| Araç | Döndürdüğü |
+| --- | --- |
+| `list_components` | Kategoriye göre gruplanmış tüm component'ler. Filtrelemek için `category` ver. |
+| `get_component` | Import satırı, örnek kod, props tabloları, klavye etkileşimi ve erişilebilirlik notları. `section` ile yalnızca `props`, `examples` ya da `accessibility` döner. |
+| `search_docs` | Tüm doküman sayfalarından sıralanmış bölümler ve linkleri. |
+| `get_tokens` | `--mrd-*` token'ları, açık ve koyu değerleriyle. `category` (`color`, `space`, `radius`, `shadow`, `typography`, `motion`, …) ya da `theme` ile filtrelenir. |
+| `get_design_contract` | Tasarım sözleşmesi (adlandırma, renk, köşe yuvarlaklığı, gölge ve hareket kuralları) ve kural dosyası. |
+| `get_pattern` | Bir sayfa deseninin rehberi ve tam kaynak kodu: `app-shell`, `settings`, `auth`, `data-table`, `forms`, `confirmations`, `empty-and-loading`. |
+| `get_setup` | `next`, `vite` ya da `react-router` için kurulum adımları. |
+
+### Claude Code
+
+Mevcut proje için ekle (`.mcp.json` yazar; commit'lersen tüm ekip kullanır):
+
+```bash
+claude mcp add --scope project --transport stdio merid -- npx -y @meridui/mcp
+```
+
+Ya da `.mcp.json` dosyasını kendin yaz:
+
+```json
+{
+  "mcpServers": {
+    "merid": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@meridui/mcp"]
+    }
+  }
+}
+```
+
+### Cursor
+
+Projede `.cursor/mcp.json` oluştur (tüm projeler için `~/.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "merid": {
+      "command": "npx",
+      "args": ["-y", "@meridui/mcp"]
+    }
+  }
+}
+```
+
+### VS Code
+
+`.vscode/mcp.json` oluştur. VS Code `mcpServers` yerine `servers` anahtarını kullanır:
+
+```json
+{
+  "servers": {
+    "merid": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@meridui/mcp"]
+    }
+  }
+}
+```
+
+### Windsurf
+
+Cascade'de MCP ayarlarını aç, `mcp_config.json` dosyasını düzenle ve şunu ekle:
+
+```json
+{
+  "mcpServers": {
+    "merid": {
+      "command": "npx",
+      "args": ["-y", "@meridui/mcp"]
+    }
+  }
+}
+```
+
+### Diğer araçlar
+
+stdio server destekleyen her MCP client'ı çalışır: komut `npx`, argümanlar `-y @meridui/mcp`. Node.js 20 veya üstü gerekir.
+
+### Dene
+
+Agent'ına dokümana ihtiyaç duyan bir şey sor, örneğin:
+
+- "Merid ile bir ayarlar sayfası yap. settings desenini kullan."
+- "Merid'in `Dialog.Content` component'i hangi prop'ları alıyor?"
+- "Merid token'larıyla bir dark mode düğmesi ekle."
+
+## llms.txt
+
+MCP yerine URL okuyan araçlar (sohbet asistanları, v0 ve benzerleri) için site, dokümanları [llms.txt](https://llmstxt.org) kuralına uygun düz metin olarak yayınlar:
+
+| URL | İçerik |
+| --- | --- |
+| [`/llms.txt`](/llms.txt) | Her sayfanın tek satırlık özeti ve Markdown linkiyle İngilizce dizin. |
+| [`/llms-full.txt`](/llms-full.txt) | Kural dosyası, tasarım sözleşmesi ve tüm İngilizce doküman sayfaları tek dosyada. |
+| [`/tr/llms.txt`](/tr/llms.txt) | Türkçe dokümanların dizini. |
+| `/docs/…/<sayfa>.md` | Herhangi bir sayfanın Markdown hali: URL'nin sonuna `.md` ekle, örneğin [`/tr/docs/components/button.md`](/tr/docs/components/button.md). |
+
+Modele kütüphanenin tamamını tek seferde vermek için `https://meridui.dev/llms-full.txt` adresini sohbete yapıştır.
+
+## Kural dosyası
+
+Kural dosyası agent'a Merid kodunun nasıl görünmesi gerektiğini söyler: `@meridui/react`'ten import et, yalnızca `--mrd-*` token'larıyla stil ver (ham hex, keyfi boşluk ve inline stil yok), yeni component yazmadan önce var olanları birleştir ve erişilebilirlik kurallarına uy. CLI ve MCP server'ın kullandığı dosyanın aynısıdır. Agent'lar İngilizce talimatlarla en tutarlı sonucu verdiği için dosya İngilizcedir.
+
+<AiRules />
+
+Nereye koyulur:
+
+| Araç | Dosya |
+| --- | --- |
+| Codex, Cursor, Copilot, Jules ve `AGENTS.md` okuyan diğer agent'lar | Proje kökünde `AGENTS.md` |
+| Cursor proje kuralları | `description` ve `globs` frontmatter'ı ile `.cursor/rules/merid.mdc` |
+| Claude Code | Proje kökünde `CLAUDE.md` |
+
+`npx @meridui/cli init --rules` üçünü de yazar. `AGENTS.md` ve `CLAUDE.md` dosyalarında `<!-- merid:start -->` ile `<!-- merid:end -->` arasına bir bölüm ekler; kendi notlarına dokunmaz, tekrar çalıştırdığında yalnızca o bölümü günceller.
+
+<Callout title="Agent'ın yazdığını gözden geçir">
+  Kurallar ve MCP server iyi sonuç alma ihtimalini ciddi biçimde artırır ama garanti etmez. Üretilen arayüzü diğer kodlar gibi gözden geçir ve erişilebilirlik kontrollerini çalıştır.
+</Callout>

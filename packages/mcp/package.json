@@ -1,0 +1,59 @@
+{
+  "name": "@meridui/mcp",
+  "version": "0.0.0",
+  "description": "MCP server for Merid: components, props, tokens, patterns and setup guides for AI coding agents. Read-only, offline.",
+  "license": "MIT",
+  "type": "module",
+  "homepage": "https://meridui.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahmetcantryk/merid.git",
+    "directory": "packages/mcp"
+  },
+  "bugs": "https://github.com/ahmetcantryk/merid/issues",
+  "bin": {
+    "merid-mcp": "dist/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/server.d.ts",
+      "default": "./dist/server.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node scripts/build-data.mjs && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && vitest run",
+    "lint": "eslint src test",
+    "publint": "publint"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "^2.2.0",
+    "zod": "^4.2.0"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "^2.2.0",
+    "@types/node": "^26.6.3",
+    "publint": "^0.3.24",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.2"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "merid",
+    "react",
+    "design-system",
+    "ai"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

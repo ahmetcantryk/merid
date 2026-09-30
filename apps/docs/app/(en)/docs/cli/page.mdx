@@ -1,0 +1,99 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+
+export const metadata = docMetadata("en", "/docs/cli", {
+  title: "CLI",
+  description: "npx @meridui/cli: set up Merid in a Next.js, Vite or React Router project, add AI rules and MCP config, and copy page patterns.",
+});
+
+# CLI
+
+`@meridui/cli` sets up Merid in an existing project. It detects the framework and package manager, installs `@meridui/react`, imports the stylesheet, and can add the [AI rules file and MCP config](/docs/ai). It can also copy the docs [patterns](/docs/patterns/app-shell) into your code.
+
+```bash
+npx @meridui/cli init
+```
+
+The package's command is `merid`. After `npm i -D @meridui/cli` you can run `npx merid init`.
+
+## Safe by default
+
+- Every change to a file is printed as a diff before it is written.
+- An existing file is never overwritten without a yes. In a non-interactive shell (CI) existing files are skipped unless you pass `--yes`.
+- `--dry-run` prints the diffs and commands and writes or runs nothing.
+- Running a command twice changes nothing the second time.
+- The CLI has no runtime dependencies and makes no network requests of its own; only the package manager does, when it installs.
+
+## Commands
+
+### init
+
+```bash
+npx @meridui/cli init
+```
+
+1. Detects the framework: Next.js (App Router), Vite or React Router (framework mode).
+2. Detects the package manager from `packageManager` in `package.json` or the lockfile: npm, pnpm, Yarn or Bun.
+3. Installs `@meridui/react`, unless it is already a dependency.
+4. Adds `import "@meridui/react/styles.css";` to the app entry, before your own CSS imports.
+5. Asks whether to add the rules file (`AGENTS.md`, `.cursor/rules/merid.mdc`, `CLAUDE.md`).
+6. Asks whether to add the MCP config (`.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`). Other servers in those files are kept.
+
+| Framework | Detected by | Stylesheet goes into |
+| --- | --- | --- |
+| Next.js | `next` dependency | `app/layout.tsx` or `src/app/layout.tsx` |
+| React Router | `@react-router/dev` or `react-router.config.ts` | `app/root.tsx` |
+| Vite | `vite` dependency or `vite.config.*` | `src/main.tsx` |
+
+### add
+
+```bash
+npx @meridui/cli add settings
+```
+
+Copies a pattern's source into `components/merid/` (or `src/components/merid/`, or `app/components/merid/` for React Router) and offers to install what it imports. Pass `--dir` to choose the folder. The files are yours to change; running `add` again shows a diff against your copy and asks before replacing it.
+
+| Pattern | Page |
+| --- | --- |
+| `app-shell` | [Navigation layouts](/docs/patterns/app-shell) |
+| `settings` | [Settings pages](/docs/patterns/settings) |
+| `auth` | [Authentication](/docs/patterns/authentication) |
+| `data-table` | [Data tables](/docs/patterns/data-tables) |
+| `forms` | [Forms](/docs/patterns/forms) |
+| `confirmations` | [Confirmations](/docs/patterns/confirmations) |
+| `empty-and-loading` | [Empty and loading states](/docs/patterns/empty-and-loading) |
+
+### mcp
+
+```bash
+npx @meridui/cli mcp --client cursor
+```
+
+Writes the [MCP server](/docs/ai#mcp-server) config only. `--client` takes `claude`, `cursor`, `vscode` or `all` (the default), comma-separated.
+
+### doctor
+
+```bash
+npx @meridui/cli doctor
+```
+
+Checks that `@meridui/react` and React 18+ are installed, the stylesheet is imported, and whether the rules file and MCP config are present. Exits with code 1 when a required check fails, so it can run in CI.
+
+## Options
+
+| Option | Commands | Effect |
+| --- | --- | --- |
+| `--yes`, `-y` | all | Answer yes to every prompt, including overwriting files. Diffs are still printed. |
+| `--dry-run` | all | Print diffs and commands; write and run nothing. |
+| `--rules`, `--no-rules` | `init` | Add or skip the rules file without asking. |
+| `--mcp`, `--no-mcp` | `init` | Add or skip the MCP config without asking. |
+| `--client <list>` | `init`, `mcp` | `claude`, `cursor`, `vscode` or `all`. |
+| `--dir <path>` | `add` | Folder for pattern files. |
+| `--no-install` | `init`, `add` | Do not run the package manager; print the command instead. |
+| `--cwd <path>` | all | Run in another folder. |
+
+## In CI
+
+```bash
+npx @meridui/cli init --yes --no-install --rules --no-mcp
+npx @meridui/cli doctor
+```
