@@ -9,6 +9,9 @@ export const site = {
   version: "0.1.0",
   releaseDate: "2026-09-28",
   install: "npm i @meridui/react",
+  packageName: "@meridui/react",
+  npm: "https://www.npmjs.com/package/@meridui/react",
+  author: { name: "Ahmet Can Tiryaki", url: "https://github.com/ahmetcantryk" },
 } as const;
 
 /**

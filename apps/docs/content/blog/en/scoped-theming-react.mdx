@@ -1,0 +1,187 @@
+---
+title: "Dark Mode per Component in React: Scoped Theming"
+description: "How to give one section of a React app its own dark mode, accent or density: context vs attribute theming, portals, and how popular libraries do it."
+slug: scoped-theming-react
+canonical: /blog/scoped-theming-react
+keywords:
+  - dark mode per component react
+  - nested theme react
+  - scoped theming css variables
+  - data-theme attribute
+date: 2026-12-16
+updated: 2026-12-16
+lastReviewed: 2026-12-16
+tags:
+  - theming
+  - css
+author: Ahmet Can Tiryaki
+---
+
+# Dark mode per component in React: scoped theming
+
+Most dark mode tutorials stop at one switch: the whole app is light or the whole app is dark. Real products ask for more:
+
+- A dark sidebar next to a light content area.
+- A light "preview" card inside a dark editor.
+- A compact data table in an otherwise roomy settings page.
+- A marketing section with a different accent colour.
+- An Arabic or Hebrew widget embedded in an English page.
+
+All of these are the same problem: a theme that applies to a **subtree**, not to the document. This post looks at the two ways React apps solve it, the portal trap that catches most implementations, and how popular component libraries handle it.
+
+## Two models: context or attributes
+
+### Context-based theming
+
+The theme lives in a React context. A provider at the root supplies it; a nested provider overrides it for its children. Components read the context and compute styles.
+
+```tsx
+<ThemeProvider theme={light}>
+  <App>
+    <ThemeProvider theme={dark}>
+      <Sidebar />
+    </ThemeProvider>
+  </App>
+</ThemeProvider>
+```
+
+This is the model of MUI (`ThemeProvider` can be nested), Chakra UI and most CSS-in-JS setups.
+
+Strengths: the theme can be any JavaScript value, including functions; components get typed access to it.
+
+Costs: every themed component needs to be a client component that reads context. The styles depend on JavaScript running, so server-rendered HTML needs extra work to match. And each provider is another client boundary in a Next.js App Router tree.
+
+### Attribute-based theming
+
+The theme lives in CSS custom properties, switched by an attribute (or class) on an element:
+
+```css
+:root,
+[data-theme="light"] {
+  --bg: #ffffff;
+  --text: #0f1219;
+}
+[data-theme="dark"] {
+  --bg: #0b0d12;
+  --text: #eef0f4;
+}
+.card {
+  background: var(--bg);
+  color: var(--text);
+}
+```
+
+```tsx
+<body>
+  <aside data-theme="dark">…</aside>
+  <main>…</main>
+</body>
+```
+
+Custom properties inherit down the DOM. Any element with `data-theme="dark"` redefines the variables for everything inside it. Components don't read anything in JavaScript; they just use `var(--bg)`.
+
+Strengths: works in server components and static HTML, zero runtime, no client boundary, no flash on first paint if the attribute is in the server HTML.
+
+Costs: themes are limited to what CSS can express. Anything that needs JavaScript values (for example a charting library that wants hex strings) has to read computed styles or a separate token export.
+
+For per-section dark mode, the attribute model is usually the simpler choice.
+
+## Getting scoped dark mode right
+
+A few details separate a working implementation from one that looks right in a screenshot.
+
+**1. Scope both themes, not just dark.** If only `[data-theme="dark"]` sets variables, a light card inside a dark page inherits dark values. Define light values on `[data-theme="light"]` too, not just `:root`.
+
+**2. Set `color-scheme`.** Native controls (scrollbars, date inputs, autofill) follow `color-scheme`, not your variables:
+
+```css
+[data-theme="dark"] { color-scheme: dark; }
+[data-theme="light"] { color-scheme: light; }
+```
+
+**3. Respect the system setting without breaking overrides.** A common pattern:
+
+```css
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { /* dark values */ }
+}
+```
+
+**4. Avoid the flash.** If the user's choice is stored in `localStorage`, set the attribute on `<html>` in a tiny inline script before first paint. For subtrees whose theme is fixed (a dark sidebar), put the attribute in server HTML and no script is needed.
+
+**5. Don't forget other axes.** The same technique works for accent colour (`data-accent`) and density (`data-density` switching spacing and control-height variables) and for direction (`dir="rtl"` with logical properties like `margin-inline-start`).
+
+## The portal trap
+
+Dialogs, dropdown menus, popovers, tooltips and toasts usually render into a portal at the end of `document.body`. That's good for stacking and overflow. It's bad for scoped themes: the portalled node is no longer inside `<aside data-theme="dark">`, so it gets the root theme.
+
+You see this as a light dropdown menu opening from a dark sidebar. It's the most common bug in scoped theming.
+
+Fixes, in order of preference:
+
+1. **Copy the scope onto the portal container.** When the overlay opens, read the nearest `data-theme`, `data-accent`, `data-density` and `dir` from the trigger's ancestors (`trigger.closest("[data-theme]")`) and set the same attributes on the portal's root element.
+2. **Portal into the scoped container** instead of `body`. Simpler, but reintroduces overflow and stacking issues.
+3. **With context theming,** make sure the provider wraps the portal content. React portals preserve context, so this works naturally, which is one advantage of the context model.
+
+## How component libraries handle it
+
+| Library | Mechanism | Nested scopes | Notes |
+|---|---|---|---|
+| MUI | `ThemeProvider` (context), CSS theme variables | Yes, nest providers | Can also use `colorSchemeSelector` with CSS variables |
+| Chakra UI v3 | Class-based colour mode via `next-themes`; `className="dark"` / `"light"` on a subtree | Yes | Docs show forcing a mode on a section |
+| Mantine | `MantineProvider` colour scheme on `data-mantine-color-scheme` | Limited; documented pattern is app-wide | Check docs for your version |
+| Radix Themes | `<Theme appearance="dark">` component | Yes, nest `<Theme>` | Also scopes accent, grey, radius, scaling |
+| shadcn/ui | `.dark` class with CSS variables | Yes, add the class to a subtree | You own the portal behaviour in your files |
+| Merid | `data-theme`, `data-accent`, `data-density`, `dir` attributes | Yes, any element | Portals inherit the scope they came from |
+
+Sources: [MUI CSS theme variables](https://mui.com/material-ui/customization/css-theme-variables/overview/), [Chakra color mode](https://chakra-ui.com/docs/components/concepts/color-mode), [Mantine color schemes](https://mantine.dev/theming/color-schemes/), [Radix Themes Theme](https://www.radix-ui.com/themes/docs/components/theme).
+
+Library behaviour changes between versions; confirm against the docs for the version you use.
+
+## An example with Merid
+
+We build Merid, so here is how it looks there. Merid's three subtree attributes work on `<html>` or any element and resolve against the nearest ancestor that sets them:
+
+```tsx
+import { Button, DropdownMenu, SidebarNav } from "@meridui/react";
+
+export function Shell({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="shell">
+      <aside data-theme="dark" data-density="compact">
+        <SidebarNav.Root>{/* … */}</SidebarNav.Root>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
+            <Button variant="ghost">Workspace</Button>
+          </DropdownMenu.Trigger>
+          {/* Opens dark and compact, even though it portals to body */}
+          <DropdownMenu.Content>{/* … */}</DropdownMenu.Content>
+        </DropdownMenu.Root>
+      </aside>
+      <main data-accent="violet">{children}</main>
+    </div>
+  );
+}
+```
+
+`data-theme` accepts `light` or `dark` and also sets `color-scheme`; `data-accent` accepts `blue`, `violet`, `green` or `graphite`; `data-density` accepts `compact`, `default` or `comfortable` (compact only applies to fine pointers, so touch targets stay large). In a server component file, use the flat exports (`DropdownMenuRoot` etc.) instead of the dot syntax. Details are in the [subtree attributes guide](https://meridui.dev/docs/integrations/subtree-attributes) and the [dark mode guide](https://meridui.dev/docs/integrations/dark-mode). Merid is at 0.1, so check the component list before adopting it.
+
+## Testing checklist
+
+- Toggle each scope and check every overlay type opens with the right theme.
+- Check native controls (select dropdown, scrollbars, autofill) follow `color-scheme`.
+- Check contrast in both themes, including focus rings on dark surfaces.
+- Load the page with JavaScript disabled or throttled: server HTML should already show the right scopes.
+- Test Windows forced colours mode: your custom properties are overridden, so borders and focus indicators must not rely on colour alone.
+- Take visual regression screenshots of mixed-theme screens; they break silently.
+
+## FAQ
+
+**Can I have dark mode on one component only?**
+Yes. Put the theme attribute or class on that component's root element and make sure your variables are defined for both light and dark scopes.
+
+**Does nested theming hurt performance?**
+With CSS variables, no measurable cost for normal apps. With context providers, re-rendering on theme change is the main cost.
+
+**Should the toggle live in context or in an attribute?**
+Store the user's choice wherever you like, but apply it as an attribute on `<html>`. That keeps server HTML and client in agreement.

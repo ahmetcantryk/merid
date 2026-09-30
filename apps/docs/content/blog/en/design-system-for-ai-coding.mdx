@@ -1,0 +1,127 @@
+---
+title: "A Design System for AI Coding: What Agents Need"
+description: "What a design system for AI coding looks like: closed APIs, tokens, a written contract and automated checks, so agents produce consistent React UI."
+slug: design-system-for-ai-coding
+canonical: /blog/design-system-for-ai-coding
+keywords:
+  - design system for ai coding
+  - ai coding design system
+  - design tokens for ai agents
+  - react design system agents
+date: 2026-10-30
+updated: 2026-10-30
+lastReviewed: 2026-10-30
+tags:
+  - ai-coding
+  - design-tokens
+author: Ahmet Can Tiryaki
+---
+
+# A design system for AI coding: what agents actually need
+
+Most design systems were built for people. A designer publishes a Figma library, a developer reads the docs site, a reviewer catches the rest. The system relies on humans remembering conventions and noticing when something looks off.
+
+Agents do not remember and do not notice. They read what is in the context window, write plausible code, and move on. When a growing share of your UI is written by Cursor, Claude Code or v0, the design system has to change shape. Less guidance, more constraint. Less documentation for browsing, more for reading in one pass. And checks that fail loudly.
+
+This post describes that shape in five parts. We use Merid, the React library we build, as the running example, and point out where it falls short.
+
+## 1. Constraints beat guidance
+
+Human-oriented systems often describe intent: "use spacing generously", "the accent should draw attention to the primary action". A person can interpret that. A model interprets it differently every session.
+
+An agent-oriented system turns intent into a closed set of choices:
+
+| Guidance (for humans) | Constraint (for agents) |
+|---|---|
+| "Use a calm colour palette" | Three text tokens: `ink`, `body`, `muted`. Nothing else for text. |
+| "Keep rounding consistent" | Radius scale 16 → 14 → 12 → 8 → 6, by nesting level. |
+| "Emphasise the main action" | One `variant="primary"` button per view. |
+| "Be careful with destructive actions" | Destructive actions use `AlertDialog` with a danger action. |
+
+The right column can be checked. The left column cannot. When you write your system, try to convert each principle into a rule a script could verify, even if you never write the script.
+
+## 2. Tokens as the only source of values
+
+Tokens are the part of a design system agents use best, because they turn a judgement ("which grey?") into a lookup ("which token?"). Three rules make them work for agents.
+
+**Every value is a token.** Not just colours: spacing, radii, shadows, font sizes, motion durations. If a single category is left as raw values, that is where drift will concentrate.
+
+**Semantic names over scale names.** `--mrd-muted` tells the model when to use it. `--gray-500` does not. Merid uses three tiers: primitives (`--mrd-blue-500`), semantic roles (`--mrd-accent`, `--mrd-line`, `--mrd-tray`) and component tokens (`--mrd-button-height`). Components and app code should reference the semantic tier.
+
+**Machine-readable export.** An agent that can list the tokens will pick from the list. Merid ships its tokens as CSS, JS and W3C design token (DTCG) JSON in `@meridui/tokens`:
+
+```ts
+import tokens from "@meridui/tokens/tokens.json";
+// Feed the semantic colour names into a lint rule, a codegen step,
+// or a prompt that lists allowed values.
+```
+
+Light and dark values live on the same token, so the agent never has to write a `dark:` variant for colour. See [design tokens](/docs/integrations/design-tokens) for the format.
+
+## 3. Small, variant-based component APIs
+
+The size of a component's API is the number of ways an agent can use it wrong.
+
+A component that accepts `className`, `style`, `color`, `size`, `radius`, `shadow` and `padding` gives the model seven places to improvise. A component that accepts `variant` and `size` from fixed unions gives it two, both typed, both validated by the compiler.
+
+```tsx
+// Typed and closed: TypeScript rejects anything outside the union
+<Button variant="secondary" size="sm">Export</Button>
+
+// Merid Button variants: primary | secondary | ghost | danger | link
+// Sizes: sm | md | lg
+```
+
+Some practical consequences:
+
+- **Prefer data attributes and props over class overrides.** Merid components expose state and variants as `data-*` attributes, which keeps styling out of call sites.
+- **Keep escape hatches, but make them visible.** You will need to customise. Plain CSS in a known layer is easier to audit than props that accept anything. Merid puts all its styles in `@layer merid.tokens, merid.base, merid.components`, so any unlayered app CSS wins without `!important`. Overrides are allowed; they just live in your CSS, where a reviewer or a lint rule can find them.
+- **Do not make the agent wire up context.** Providers are one more thing to forget. Merid has no theme provider; theme, accent and density are attributes (`data-theme`, `data-accent`, `data-density`) on any element. Only toasts need a `ToastProvider`.
+- **Composition that survives server components.** With the Next.js App Router, agents frequently put interactive components in server files. Merid exports flat part names (`DialogRoot`, `TabsList`) alongside `Dialog.Root`, and uses `asChild` for router links, so the code works in either file type. The [server components guide](/docs/server-components) has the details.
+
+## 4. A contract written for one-pass reading
+
+Documentation sites are built for browsing: navigation, search, examples on separate pages. Agents read differently. They load a file into context and act on it. The design system needs a text artefact built for that.
+
+We call it a design contract. Merid's is `DESIGN.md` at the repository root. It opens with "This file is binding" and contains naming rules, the token tables, ten numbered principles, and per-component notes. A few properties make it agent-friendly:
+
+- **One file.** The agent reads it in one go; no links to follow.
+- **Tables for values.** Token name, light value, dark value, role. Models extract tables reliably.
+- **Explicit negatives.** "Never 2px. No gradients. Weight 700 is never used." Negative rules are the ones models break most, so state them.
+- **A fallback rule.** "If a value is not here, derive it from an existing one." This tells the agent what to do in the gap, instead of improvising.
+
+Then connect it to the tools. A `CLAUDE.md` or `.cursor/rules` file that says "read DESIGN.md before UI changes" is enough to start. We wrote a full example rules file in [Cursor UI consistency](/blog/cursor-ui-consistency).
+
+Other libraries approach this through protocols rather than files. shadcn/ui, MUI, Chakra UI and Mantine each offer an MCP server so agents can query components and docs directly, and several publish `llms.txt` (see their docs: [shadcn/ui](https://ui.shadcn.com/docs/mcp), [MUI](https://mui.com/material-ui/getting-started/mcp/), [Mantine](https://mantine.dev/guides/llms/)). Merid has neither an MCP server nor an `llms.txt` yet. A contract file and a server are complementary: the server says what exists, the contract says what is allowed.
+
+## 5. Verification that fails loudly
+
+A design system for humans can rely on review. A design system for agents needs checks, because agent output volume outgrows review quickly.
+
+The checks, from cheapest to most thorough:
+
+1. **Type checking.** Closed variant unions make TypeScript your first design linter.
+2. **Raw-value lint.** Fail CI on hex colours or raw px in app CSS outside token files. A one-line `rg` is enough to start.
+3. **Import restrictions.** `no-restricted-imports` blocks a second component library.
+4. **Accessibility tests.** Run axe on key routes. Merid targets WCAG 2.2 AA and runs axe against every component in CI ([accessibility](/docs/accessibility)); your composed pages need their own run.
+5. **Visual regression.** Screenshot two or three representative screens in light and dark. Merid's own gallery images come from its visual regression suite.
+
+When a check fails, the agent gets a precise error. That is a better instruction than anything in a prompt.
+
+## Where Merid fits, and where it does not
+
+Merid was designed around these ideas: a binding contract in the repo, tokens for every value, closed variant APIs, no provider, attribute-based theming, axe in CI. That makes it a reasonable base if your UI is mostly written by agents.
+
+It has real limits. It is at version 0.1, so APIs can change before 1.0. It has 46 components and no combobox, date picker or charts, and there is no Figma library. It is maintained independently, not by a company. If you need a large enterprise component set today, a larger library plus your own contract and checks may serve you better. For how Merid compares with the most common agent default, see [Merid vs shadcn/ui](/compare/shadcn-ui-vs-merid).
+
+## A minimal setup you can copy
+
+Whatever library you use:
+
+1. Pick one component library and ban the others with a lint rule.
+2. Express every value as a semantic token; export the list as JSON.
+3. Write a one-page `DESIGN.md` with tables, numbered rules and explicit bans.
+4. Add a rules file for each agent that points at `DESIGN.md`.
+5. Add raw-value lint, axe and a few visual snapshots to CI.
+
+To try it with Merid: `npm i @meridui/react`, import `@meridui/react/styles.css` once, and read the contract in the [repository](https://github.com/ahmetcantryk/merid).

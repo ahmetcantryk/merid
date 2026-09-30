@@ -1,0 +1,169 @@
+---
+title: "shadcn Alternatifi Arıyorsan: Önce Neden Aradığını Bil"
+description: "shadcn/ui nedir, neden bazı ekipler alternatif arar? Tailwind'siz, güncellenebilir ve erişilebilir seçenekler: Radix Themes, Mantine, HeroUI, Merid."
+slug: shadcn-alternatifi
+lang: tr
+canonical: /tr/blog/shadcn-alternatifi
+alternate: /blog/shadcn-ui-alternatives
+keywords:
+  - shadcn alternatifi
+  - shadcn ui nedir
+  - shadcn tailwind olmadan
+  - shadcn ui alternatif
+date: 2026-11-10
+updated: 2026-11-10
+tags:
+  - comparisons
+author: Ahmet Can Tiryaki
+---
+
+# shadcn alternatifi: önce neden aradığını bil
+
+shadcn/ui son birkaç yılda React projelerinin varsayılan tercihine dönüştü. v0, Lovable, Bolt gibi araçların çıktısında onu görüyorsun, Cursor da sık sık ona yöneliyor. Yine de "shadcn alternatifi" araması boş değil. İnsanlar farklı sebeplerle arıyor ve her sebebin doğru cevabı farklı.
+
+Bu yazıda önce shadcn/ui'ın ne olduğunu kısaca anlatıyorum, sonra alternatif aramanın dört yaygın sebebini ve her biri için hangi seçeneğin mantıklı olduğunu.
+
+## shadcn/ui nedir?
+
+shadcn/ui klasik bir npm kütüphanesi değil. Bir CLI ile component kaynak kodunu doğrudan projene kopyalıyorsun:
+
+```bash
+npx shadcn@latest add button
+```
+
+Bu komut `components/ui/button.tsx` dosyasını senin repona yazar. Artık o dosya senin. İstediğin gibi değiştirebilirsin, kimse upstream'den onu bozamaz.
+
+Temel özellikleri:
+
+- Stil Tailwind CSS ile yazılmış; Tailwind zorunlu.
+- Davranış ve erişilebilirlik Radix UI ya da Base UI primitive'lerinden geliyor.
+- Registry sistemi, resmi MCP sunucusu ve `llms.txt` ile yapay zeka araçlarıyla çok iyi entegre.
+- MIT lisanslı.
+
+Bu yaklaşım çok güçlü. Ama her ekibe uymuyor.
+
+## Neden alternatif ararsın?
+
+### 1. Tailwind kullanmıyorsun
+
+Belki projen CSS modules, Sass ya da düz CSS ile yazılmış. Belki ekip Tailwind'i sevmiyor. shadcn/ui'ı Tailwind'siz kullanmanın pratik bir yolu yok; component'ler Tailwind sınıflarıyla yazılmış.
+
+**Seçenekler:**
+- **Radix Themes:** Düz CSS, sade görünüm. `<Theme>` bileşeni ile sarmalıyorsun. shadcn/ui'ın altındaki primitive'lerin hazır stilli hali gibi düşünebilirsin.
+- **Mantine:** CSS modules ve PostCSS preset. 100'den fazla component, form, tarih ve grafik paketleriyle geniş. `MantineProvider` gerekiyor.
+- **Merid:** Tek bir düz CSS dosyası, üç cascade layer içinde. Provider yok. Tailwind'e ihtiyaç duymuyor, ama istersen Tailwind v4 ile yan yana çalışıyor.
+
+Tailwind'siz seçenekleri daha detaylı anlattığım yazı: [Tailwind olmadan React](/tr/blog/tailwind-olmadan-react)
+
+### 2. Güncellemeleri birleştirmekten yoruldun
+
+Kaynağı sahiplenmenin bedeli, güncellemenin de sana ait olması. shadcn/ui'da bir component iyileştiğinde CLI'ı tekrar çalıştırıp farkları kendi değişikliklerinle elle birleştiriyorsun. Beş component'te sorun değil. Kırk component'te ve üç kişilik ekipte ciddi bir iş.
+
+**Seçenekler:** Paket olarak kurulan herhangi bir kütüphane: MUI, Mantine, Chakra, Radix Themes, Merid. `npm update` ile güncelliyorsun; özelleştirmeyi tema ya da token'lar üzerinden yapıyorsun.
+
+### 3. Arayüz zamanla dağılıyor
+
+Bu, yapay zeka ile kod yazanların en sık yaşadığı sorun. `button.tsx` senin dosyan olduğu için model de onu değiştirebilir. "Bu butonu header'a sığdır" dediğinde model çoğu zaman butonun kendisini değiştirir. Birkaç ay sonra ayarlar sayfasındaki buton ile dashboard'daki buton aynı buton değildir.
+
+Kod incelemesi ile yönetilebilir ama disiplin ister.
+
+**Seçenekler:** Tasarım kararlarının kütüphanede kilitli durduğu bir yapı. Merid'de her değer bir `--mrd-*` token'ı ve component kodu `node_modules`'ta. Görünümü değiştirmek istediğinde token'ı değiştiriyorsun:
+
+```css
+:root {
+  --mrd-accent: #0f766e;
+}
+```
+
+ya da ağacın bir parçasına attribute koyuyorsun:
+
+```tsx
+<aside data-theme="dark" data-accent="violet">
+  {/* bu alt ağaç koyu tema ve mor accent kullanır */}
+</aside>
+```
+
+Model de aynı yolu kullanmak zorunda kalıyor; butonun içine girip padding'i değiştiremiyor.
+
+Bu konuyu ayrıca yazdım: [Yapay zeka ile arayüz tutarlılığı](/tr/blog/yapay-zeka-ile-arayuz-tutarliligi)
+
+### 4. Her site aynı görünüyor
+
+shadcn/ui'ın varsayılan görünümü o kadar yaygın ki, özelleştirmeden bıraktığında ürünün "bir AI sitesi" gibi duruyor. Bu shadcn/ui'ın suçu değil, popülerliğin bedeli.
+
+**Seçenekler:** Tema'yı ciddi şekilde özelleştirmek (shadcn/ui'da bu tamamen mümkün), ya da farklı bir görsel dili olan bir kütüphane: HeroUI (hareketli, belirgin), Mantine, Radix Themes, Merid (hairline border, tek accent, gri tray'ler).
+
+## Hızlı karşılaştırma
+
+| | shadcn/ui | Radix Themes | Mantine | HeroUI | Merid |
+|---|---|---|---|---|---|
+| Kurulum | CLI ile kopyalama | npm paketi | npm paketi | npm paketi | npm paketi |
+| Tailwind | Zorunlu | Gerekmez | Gerekmez | Zorunlu (v4) | Gerekmez |
+| Provider | Yok | `<Theme>` | MantineProvider | Dokümana bak | Yok |
+| Temel | Radix / Base UI | Radix | Kendi | React Aria | Kendi + Floating UI |
+| Olgunluk | Çok yaygın | WorkOS destekli | Olgun | Şirket destekli | 0.1, bağımsız |
+
+Bilgiler Eylül 2026 itibarıyla her projenin kendi dokümantasyonundan. Sürümler hızlı değiştiği için karar vermeden önce resmi dokümana bak.
+
+## Karar vermeden önce kendine sor
+
+Alternatif aramaya başlamadan önce gerçek sorunu adlandırmak işini kolaylaştırır. Şu soruların cevabını bir kâğıda yaz:
+
+- Son üç ayda `components/ui` klasöründe kaç dosya değişti ve bunların kaçı bilinçli bir tasarım kararıydı?
+- Aynı component'in projede kaç farklı versiyonu var? Örneğin kaç farklı buton yüksekliği görüyorsun?
+- Tailwind'den rahatsızlığın gerçek mi, yoksa sadece uzun sınıf listelerinden mi? İkincisi ise `cn()` yardımcıları ve component soyutlamaları yeterli olabilir.
+- Güncelleme yapmadığın için kaçırdığın erişilebilirlik düzeltmeleri var mı?
+- Ekipte "bu buton neden böyle" sorusuna cevap verecek biri var mı?
+
+Cevapların çoğu "sorun yok" diyorsa, kütüphane değiştirmek yerine mevcut yapını disipline sokmak daha ucuz. Cevaplar dağılmayı gösteriyorsa, sabit bir paket ve token tabanlı bir yapı işine yarar.
+
+## shadcn/ui'da kalman gereken durumlar
+
+Dürüst olmak gerekirse, çoğu durumda shadcn/ui iyi bir seçim. Şu durumlarda değiştirmene gerek yok:
+
+- Tailwind'i seviyorsun ve zaten kullanıyorsun.
+- Component'leri gerçekten özelleştirmek istiyorsun ve bunu yapacak zamanın var.
+- v0 ya da benzeri araçlarla prototip çıkarıp sonra koda devam ediyorsun.
+- Topluluk registry'lerindeki hazır blokları kullanmak istiyorsun.
+- Combobox, date picker, grafik gibi component'lere ihtiyacın var (Merid'de bunlar yok).
+
+## Merid'i denemek istersen
+
+```bash
+npm i @meridui/react
+```
+
+```tsx
+import "@meridui/react/styles.css";
+import { Button, Tabs } from "@meridui/react";
+
+export function Example() {
+  return (
+    <Tabs.Root defaultValue="genel">
+      <Tabs.List>
+        <Tabs.Trigger value="genel">Genel</Tabs.Trigger>
+        <Tabs.Trigger value="fatura">Fatura</Tabs.Trigger>
+      </Tabs.List>
+      <Tabs.Panel value="genel">
+        <Button variant="primary">Kaydet</Button>
+      </Tabs.Panel>
+      <Tabs.Panel value="fatura">Fatura ayarları</Tabs.Panel>
+    </Tabs.Root>
+  );
+}
+```
+
+Bilmen gerekenler: sürüm 0.1, API değişebilir. 46 component var; combobox, date picker ve grafik yok, Figma kütüphanesi yok, MCP sunucusu ya da registry yok. Dokümantasyon şu an İngilizce, Türkçe sürüm meridui.dev/tr altında geliyor.
+
+İki yaklaşımı yan yana görmek için İngilizce karşılaştırma sayfası: [Merid vs shadcn/ui](https://meridui.dev/compare/shadcn-ui-vs-merid). Kurulum: [meridui.dev/docs/installation](https://meridui.dev/docs/installation). Tailwind ile birlikte kullanım: [meridui.dev/docs/integrations/tailwind](https://meridui.dev/docs/integrations/tailwind).
+
+## Sık sorulan sorular
+
+**shadcn/ui ücretsiz mi?**
+Evet, MIT lisanslı. Üçüncü taraf ücretli blok setleri var ama shadcn/ui'ın kendisi ücretsiz.
+
+**shadcn/ui'ı Tailwind olmadan kullanabilir miyim?**
+Pratikte hayır. Component'ler Tailwind sınıflarıyla yazılmış. Tailwind'siz bir şey istiyorsan Radix Themes, Mantine ya da Merid'e bak.
+
+**shadcn'dan Merid'e geçiş zor mu?**
+Component isimleri ve yapıları benzer (`Dialog.Root`, `Tabs.List` gibi compound component'ler), ama className ile yazılmış özel stillerini token'lara ya da kendi CSS'ine taşıman gerekir. Her iki kütüphaneyi bir süre yan yana çalıştırıp sayfa sayfa geçmek en güvenli yol.

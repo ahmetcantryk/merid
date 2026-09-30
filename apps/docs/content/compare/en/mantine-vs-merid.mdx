@@ -1,0 +1,76 @@
+---
+title: "Mantine vs Merid: Complete Suite or Small Contract?"
+description: "Mantine vs Merid: 100+ components with forms, dates and charts, or a small plain-CSS library with no provider and no build plugin. An honest comparison."
+slug: mantine-vs-merid
+canonical: /compare/mantine-vs-merid
+keywords:
+  - mantine vs merid
+  - mantine alternative
+  - react library without provider
+  - mantine without postcss
+date: 2026-09-30
+updated: 2026-09-30
+lastReviewed: 2026-09-30
+author: Ahmet Can Tiryaki
+---
+
+# Mantine vs Merid
+
+Mantine is one of the most complete React libraries you can install: components, hooks, forms, dates, charts, notifications and a rich text editor, all MIT. Merid is much smaller on purpose. If you depend on Mantine's extra packages, that difference probably decides it; this page covers the other cases.
+
+We build Merid, so weigh this accordingly.
+
+## At a glance
+
+| | Mantine | Merid |
+|---|---|---|
+| Packages | `@mantine/core`, `@mantine/hooks`, plus forms, dates, charts, notifications and more | `@meridui/react` |
+| Styling | CSS modules with `postcss-preset-mantine` | One plain-CSS stylesheet in three cascade layers; no build plugin |
+| Root requirement | `MantineProvider` | None (only toasts need `ToastProvider`) |
+| Theme | JavaScript theme object | `--mrd-*` custom properties; subtree attributes for theme, accent, density, direction |
+| Forms, dates, charts | Yes, first-party | No; guides for React Hook Form and Zod |
+| Hooks library | Yes, `@mantine/hooks` | No |
+| AI tooling | `llms.txt`, per-page Markdown, LLM guide | Written design contract in the repo |
+| Components | 100+ | 46 |
+| Maturity | High; frequent releases, donation-funded | 0.1, independently maintained |
+| Licence | MIT | MIT |
+
+Sources: [Mantine getting started](https://mantine.dev/getting-started/), [Mantine LLM guide](https://mantine.dev/guides/llms/), [Merid README](https://github.com/ahmetcantryk/merid).
+
+## Where Mantine is ahead
+
+- **Breadth.** Date pickers, charts, forms, spotlight search and a rich text editor from the same vendor as your buttons.
+- **Hooks.** `@mantine/hooks` is useful even without the components.
+- **Docs for AI tools.** Mantine publishes `llms.txt` and Markdown for every page; among React libraries it has one of the most thorough setups for coding agents.
+- **Maturity.** Years of releases and a large user base.
+
+## Where Merid is different
+
+**No provider and no build step.** Mantine needs `MantineProvider` at the root and `postcss-preset-mantine` in your build. Merid is one stylesheet import; nothing wraps your layout and your bundler needs no plugin.
+
+**Themes per subtree.** Theme, accent, density and direction are HTML attributes that work on any element, including from server components:
+
+```html
+<aside data-theme="dark" data-density="compact">...</aside>
+```
+
+**A smaller, stricter surface.** A large API is great for people who read the docs and harder for AI agents, who will reach for a prop that exists but does not fit your design. Merid's components expose a few variants and read every value from tokens.
+
+## What Merid does not have
+
+46 components, not 100+. No combobox, date picker, charts (not planned) or rich text editor, no hooks package and no form library. If you use `@mantine/dates`, `@mantine/charts` or `@mantine/form` today, Merid cannot replace them.
+
+## Which should you pick?
+
+**Pick Mantine if** you want one vendor for most of your UI, including dates, charts and forms, or you rely on its hooks.
+
+**Pick Merid if** you want no provider, no runtime and no build plugin, scoped themes through attributes, and a strict API for many contributors, and 46 components cover your product.
+
+## Moving from Mantine to Merid
+
+1. Inventory every `@mantine/*` import; packages without an equivalent decide whether a full move is realistic.
+2. Move the theme to tokens first: colours, radius and spacing as CSS custom properties.
+3. Keep `@mantine/hooks` if you like it; it does not depend on `@mantine/core`.
+4. Move forms last, screen by screen, and remove the provider at the end.
+
+**Related:** [Mantine alternatives](/blog/mantine-alternatives) · [Radix Themes vs Merid](/compare/radix-themes-vs-merid)

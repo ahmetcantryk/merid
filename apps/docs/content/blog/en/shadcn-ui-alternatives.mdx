@@ -1,0 +1,128 @@
+---
+title: "shadcn/ui Alternatives: 7 Options Compared (2026)"
+description: "Seven shadcn/ui alternatives for React, from styled libraries to headless primitives. When to switch, when to stay, and a side-by-side table."
+slug: shadcn-ui-alternatives
+keywords:
+  - shadcn alternatives
+  - shadcn/ui alternative
+  - shadcn without tailwind
+  - react component library
+  - radix themes vs shadcn
+date: 2026-10-21
+updated: 2026-10-21
+tags:
+  - comparisons
+author: Ahmet Can Tiryaki
+---
+
+# shadcn/ui alternatives: seven options, compared honestly
+
+shadcn/ui changed how React teams think about components. Instead of installing a package, you run a CLI and the source lands in your repo. You own it, you edit it, and nobody ships a breaking change into your `node_modules`.
+
+It is also the default output of v0, Lovable and Bolt, which is why so many projects now start with it. And that is often when people start looking for alternatives: the first version ships fast, then the tenth screen looks slightly different from the first.
+
+This post covers when shadcn/ui is the right call, why teams move off it, and seven alternatives with their real trade-offs. We make one of them, [Merid](https://github.com/ahmetcantryk/merid), and we will be clear about its limits.
+
+## What shadcn/ui does well
+
+Start with credit where it is due.
+
+- **Ownership.** The code is yours. No waiting on upstream fixes.
+- **Good primitives.** Components sit on Radix (and now Base UI), so keyboard and focus behaviour are solid.
+- **AI tooling.** The [docs](https://ui.shadcn.com/docs) include a registry, an MCP server and "skills" for agents. Models know it extremely well.
+- **Ecosystem.** Hundreds of community registries, blocks and templates.
+
+If your team is fluent in Tailwind and has someone who owns the design system, shadcn/ui is a very good choice.
+
+## Why teams look elsewhere
+
+The reasons we hear most:
+
+1. **Drift.** Because every component is editable source, every edit is a fork. Over months, and especially with AI agents making edits, `button.tsx` in one app stops matching another.
+2. **Tailwind is required.** If your team prefers plain CSS or CSS modules, or has an existing stylesheet, adopting Tailwind just for components is a large decision.
+3. **Arbitrary values.** Tailwind makes `p-[18px]` as easy to write as `p-4`. Models write both. The result is the generic, slightly-off look people associate with AI output.
+4. **Updates are manual.** Upstream fixes do not reach you unless you re-run the CLI and resolve diffs.
+5. **Coverage.** The base set covers common needs; teams building dashboards or complex forms often assemble the rest themselves.
+
+None of these are flaws in shadcn/ui's design. They are the cost of its main feature, ownership.
+
+## Comparison table
+
+| | shadcn/ui | Merid | Radix Themes | Mantine | HeroUI | MUI | React Aria | daisyUI |
+|---|---|---|---|---|---|---|---|---|
+| Distribution | Copied source | npm package | npm package | npm package | npm package | npm package | npm package | Tailwind plugin |
+| Styling | Tailwind | Plain CSS, cascade layers | Plain CSS | CSS modules + PostCSS | Tailwind v4 | Emotion (default) | Unstyled | Tailwind classes |
+| Needs Tailwind | Yes | No (works with it) | No | No | Yes | No | No | Yes |
+| Provider | No | No | `<Theme>` | `MantineProvider` | See docs | For custom theme | No | No |
+| Design tokens | Tailwind theme + CSS vars | `--mrd-*` for every value | CSS vars | CSS vars | Tailwind theme | JS theme | n/a | CSS vars |
+| Upstream updates | Manual | `npm update` | `npm update` | `npm update` | `npm update` | `npm update` | `npm update` | `npm update` |
+| Maturity | Very high adoption | 0.1, early | Stable (3.x) | Stable (9.x) | Stable (3.x) | Stable (9.x) | Stable | Stable (5.x) |
+
+## The alternatives
+
+### 1. Merid: shadcn-level calm, without owning the source
+
+[Merid](https://github.com/ahmetcantryk/merid) is an npm package of 46 accessible React components written in plain CSS. Everything lives in one stylesheet under three cascade layers (`merid.tokens`, `merid.base`, `merid.components`), so your own CSS wins without `!important`. Every value is a `--mrd-*` custom property. There is no runtime styling and no provider.
+
+The pitch for shadcn/ui users is simple: similar restrained aesthetic, but the design decisions live in the package and a written design contract, not in files your agent can rewrite. Customisation goes through tokens and data attributes:
+
+```html
+<section data-theme="dark" data-accent="violet" data-density="compact">
+  <!-- every Merid component inside follows these -->
+</section>
+```
+
+If you use Tailwind, Merid still fits. The [Tailwind guide](https://meridui.dev/docs/integrations/tailwind) shows the layer order and maps Merid tokens into `@theme` so utilities and components share one palette.
+
+Limits: version 0.1, independent project, no combobox, date picker or charts, and no Figma kit yet. There is no registry or MCP server either. See [Merid vs shadcn/ui](/compare/shadcn-ui-vs-merid) for a full side-by-side.
+
+### 2. Radix Themes
+
+If you like shadcn/ui because of Radix, [Radix Themes](https://www.radix-ui.com/themes/docs/overview/getting-started) is the most direct step: same primitives, styled as a package, with a token system and a colour palette generator. You wrap the app in `<Theme>`. You get updates through npm, and you give up line-level ownership.
+
+### 3. Mantine
+
+[Mantine](https://mantine.dev/) is the answer when shadcn/ui feels too thin. It ships over a hundred components plus hooks, forms, dates, charts and notifications. It does not require Tailwind. You adopt Mantine's theming model and `MantineProvider`.
+
+### 4. HeroUI
+
+[HeroUI](https://heroui.com/docs/react/getting-started) (previously NextUI) v3 is built on React Aria Components and Tailwind CSS v4. If Tailwind is not the problem and you want a more finished, animated look out of the box, it is a natural move.
+
+### 5. MUI
+
+[MUI](https://mui.com/material-ui/getting-started/installation/) is the pick when you need the heavy components: data grid, date pickers, tree views. Expect to spend time theming if you do not want Material Design.
+
+### 6. React Aria Components
+
+If what you actually want is to build your own system properly, [React Aria](https://react-spectrum.adobe.com/react-aria/) gives you the best accessibility and i18n foundation available, unstyled. Pair it with your own tokens.
+
+### 7. daisyUI
+
+[daisyUI](https://daisyui.com/) keeps Tailwind but replaces long class strings with semantic ones (`btn btn-primary`) and adds themes. It is CSS only, so there is no JavaScript behaviour for menus or dialogs.
+
+## When to stay on shadcn/ui
+
+Stay if you have a person or team who owns the component code, you are committed to Tailwind, and you want maximum freedom. Consider adding a lint rule against arbitrary values and a written design spec for your agents.
+
+## When to move
+
+Move if you notice the same component drifting between apps, if Tailwind is a constraint rather than a choice, or if AI-generated screens keep coming out slightly inconsistent and you would rather the library enforce the rules than your review process.
+
+## FAQ
+
+**Is shadcn/ui a component library?**
+Not in the npm sense. Its own docs describe it as a way to build your component library: you copy source into your project and maintain it. That is why "alternatives" range from packages to headless primitives.
+
+**Can I use shadcn/ui without Tailwind?**
+Not practically. The components are written with Tailwind classes. If you want the same restrained look without Tailwind, Radix Themes and Merid both ship plain CSS.
+
+**Which alternative is closest to shadcn/ui?**
+Radix Themes, because it sits on the same primitives. Park UI is close in distribution model (copy-in, on Ark UI). Merid is close in aesthetic but differs in distribution: it is a versioned package, not source you own.
+
+**Do these alternatives work with v0, Cursor or Claude Code?**
+Any React library works with coding agents, but models have seen shadcn/ui far more than most alternatives. With a newer library, keep its docs or design rules in your agent's context. Merid's design contract is a single Markdown file you can reference from a rules file.
+
+**Can I mix shadcn/ui with another library during migration?**
+Yes. Because shadcn/ui components are local files, they can sit next to a package library indefinitely. Migrate screen by screen and share colour tokens between both so the transition is not visible.
+
+**Related:** [Best React component libraries for AI coding](/blog/best-react-component-libraries-ai-coding-2026) · [Merid vs shadcn/ui](/compare/shadcn-ui-vs-merid) · [MUI alternatives](/blog/mui-alternatives)

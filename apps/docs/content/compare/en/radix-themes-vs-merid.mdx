@@ -1,0 +1,131 @@
+---
+title: "Radix Themes vs Merid: Plain-CSS React Libraries"
+description: "Radix Themes vs Merid: two plain-CSS React libraries. Theme wrapper vs subtree attributes, primitives, coverage and maturity, and when to pick which."
+slug: radix-themes-vs-merid
+canonical: /compare/radix-themes-vs-merid
+keywords:
+  - radix themes alternative
+  - radix themes vs merid
+  - radix themes vs shadcn
+  - plain css react component library
+date: 2026-12-02
+updated: 2026-12-02
+lastReviewed: 2026-12-02
+author: Ahmet Can Tiryaki
+---
+
+# Radix Themes vs Merid
+
+Of all the libraries we compare Merid with, Radix Themes is the closest in spirit. Both are styled React libraries that ship plain CSS instead of Tailwind or runtime CSS-in-JS. Both aim for a calm, modern default look. Both let you theme a section of the page differently from the rest.
+
+We build Merid, so weigh this accordingly. We have tried to describe Radix Themes accurately from its own docs, and to be specific about where it is ahead.
+
+## At a glance
+
+| | Radix Themes | Merid |
+|---|---|---|
+| Package | `@radix-ui/themes` | `@meridui/react` + `@meridui/tokens` |
+| Version | 3.x | 0.1 |
+| Styling | Plain CSS | Plain CSS in `@layer merid.tokens, merid.base, merid.components` |
+| Root requirement | `<Theme>` component wraps the app | None; one stylesheet import (only toasts need `ToastProvider`) |
+| Scoped theming | Nest `<Theme>` with its own props | `data-theme`, `data-accent`, `data-density`, `dir` on any element |
+| Appearance | `appearance`: inherit, light, dark | `data-theme`: light, dark; follows `prefers-color-scheme` by default |
+| Accent choice | `accentColor` from a large colour palette, plus `grayColor` | Four presets: blue, violet, green, graphite; or override `--mrd-accent` |
+| Radius and scale | `radius` (none to full), `scaling` 90–110% | Fixed rounding scale 16/14/12/8/6px; `data-density` compact/default/comfortable |
+| Behaviour | Radix Primitives | Built in-house; Floating UI for positioning |
+| Tokens outside CSS | Radix Colors package | `@meridui/tokens` as W3C DTCG JSON, CSS and JS |
+| RTL / forced colours | Via Radix Primitives direction support | Logical properties, `:dir(rtl)` icon flips, forced-colors styles |
+| Maintainer | WorkOS | Independent, single maintainer |
+| Licence | MIT | MIT |
+
+Sources: [Radix Themes Theme docs](https://www.radix-ui.com/themes/docs/components/theme), [Radix Themes overview](https://www.radix-ui.com/themes/docs/overview/getting-started), [Merid README](https://github.com/ahmetcantryk/merid).
+
+## How theming is expressed
+
+Radix Themes puts configuration on a component. You wrap your app in `<Theme accentColor="indigo" grayColor="slate" radius="medium" scaling="100%">`, and you can nest another `<Theme>` anywhere to change settings for a subtree. Configuration inherits from the parent. The props are typed, discoverable and fun to play with in the Theme Panel.
+
+Merid puts configuration on attributes:
+
+```tsx
+<aside data-theme="dark" data-density="compact">
+  <SidebarNav.Root>…</SidebarNav.Root>
+</aside>
+```
+
+Each attribute resolves against the nearest ancestor that sets it, and they nest freely. Because they are plain HTML attributes, they work from server components, from static HTML, and from CSS selectors you write yourself. Portalled overlays such as dialogs and menus keep the theme, accent, density and direction of the subtree they came from.
+
+The practical difference is small for most apps. It shows up when you want to theme a region from a server component without a client boundary (attributes are simpler), or when you want a fine-grained choice of accent and grey from a big palette (Radix Themes gives you far more options out of the box).
+
+## Primitives and behaviour
+
+Radix Themes is built on Radix Primitives, which are among the most widely used headless components in React (they also power shadcn/ui). That is a real advantage: years of bug reports from a very large user base have hardened the keyboard and focus behaviour.
+
+Merid's behaviour is written in-house, following the WAI-ARIA Authoring Practices, with Floating UI for positioning. Every component has axe tests on its rendered states and keyboard interaction tests, and the target is WCAG 2.2 AA. It has not had anything like Radix's exposure yet.
+
+## Customising beyond the knobs
+
+With Radix Themes, going beyond the props usually means overriding its CSS variables or class names, or composing Radix Primitives yourself for things Themes doesn't style.
+
+With Merid, every value is a `--mrd-*` custom property with light and dark values, and all library CSS sits in cascade layers, so any unlayered CSS you write wins without `!important`:
+
+```css
+:root {
+  --mrd-accent: #0f766e;
+}
+.checkout .mrd-button { border-radius: 999px; }
+```
+
+Merid also exports its tokens as W3C DTCG JSON and JS through `@meridui/tokens`, and documents mapping them into Tailwind v4 via `@theme inline`.
+
+## Coverage
+
+Both cover everyday product UI: buttons, form controls, dialogs, alert dialogs, dropdown menus, popovers, tabs, tables, tooltips, avatars, badges, cards, layout helpers.
+
+Radix Themes has been around since 2023 and includes components Merid doesn't yet, such as a context menu, hover card, slider and several layout and typography helpers. Merid 0.1 has 46 components, including some Radix Themes doesn't style (for example a stepper, sidebar nav, empty state, drawer and toast). Neither ships a combobox, date picker or charts; Merid does not plan charts.
+
+Check both component lists against your requirements before choosing; this is the most likely deciding factor.
+
+## Maturity and support
+
+This is where Radix Themes is clearly ahead. It is maintained by WorkOS, has been in production use for years, and sits in a large ecosystem. Merid is 0.1, pre-1.0, independently maintained, and its API may still change before 1.0 (the versioning policy is in the docs).
+
+If you need a long track record today, that alone may decide it.
+
+## Moving between them
+
+The two libraries are close enough that a gradual move is realistic in either direction.
+
+- Both can load in the same app. Merid's rules sit in cascade layers, so any unlayered CSS wins where selectors overlap; check how your Radix Themes stylesheet is loaded and migrate one screen at a time.
+- Map `<Theme appearance="dark">` to `data-theme="dark"` and `accentColor` to the nearest `data-accent` preset, or set `--mrd-accent` directly.
+- `scaling` has no direct Merid equivalent; `data-density` changes control heights and spacing instead of scaling everything.
+- Replace Radix Themes layout components (`Flex`, `Box`, `Grid`) with Merid's `Stack`, `Grid` and `Container`, or with your own CSS.
+- Keep a list of components Merid lacks and leave those screens on Radix Themes, or build them on Radix Primitives with Merid tokens.
+
+## When to pick which
+
+**Pick Radix Themes if:**
+- You want a mature plain-CSS library backed by a company.
+- You want lots of accent and grey options and the Theme Panel for tuning.
+- You need components Merid doesn't have yet.
+
+**Pick Merid if:**
+- You want theming through HTML attributes that work in server components without a wrapper.
+- You want a fixed design contract (one accent, hairline borders, a set rounding scale) that AI agents and teammates can't easily drift from.
+- You want tokens as DTCG JSON and a documented Tailwind v4 mapping.
+- You're comfortable adopting a 0.1 library and reporting issues.
+
+Useful next reads: [subtree attributes](https://meridui.dev/docs/integrations/subtree-attributes), [design tokens](https://meridui.dev/docs/integrations/design-tokens), and the wider [roundup of shadcn/ui alternatives](https://meridui.dev/blog/shadcn-ui-alternatives).
+
+## FAQ
+
+**Is Radix Themes the same as Radix UI?**
+No. Radix Primitives are unstyled behaviour components. Radix Themes is a styled library built on them.
+
+**Can I use Radix Primitives with Merid?**
+Yes. They are unstyled, so you can style a primitive Merid lacks with Merid tokens, for example `background: var(--mrd-surface)`.
+
+**Does either need Tailwind?**
+No. Both ship plain CSS and work alongside Tailwind if you use it.
+
+**Which is smaller?**
+Measure in your own app; both are tree-shakeable JS plus one stylesheet, and the CSS cost depends on which you import.

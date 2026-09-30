@@ -1,0 +1,55 @@
+---
+title: "Radix Themes ve Merid: Sade CSS'li İki React Kütüphanesi"
+description: "Radix Themes ve Merid: Theme sarmalayıcısı mı, alt ağaç attribute'ları mı? Primitive'ler, kapsam, olgunluk ve hangisinin ne zaman uygun olduğu."
+slug: radix-themes-vs-merid
+lang: tr
+canonical: /tr/compare/radix-themes-vs-merid
+keywords:
+  - radix themes alternatifi
+  - radix themes vs merid
+  - sade css react component kütüphanesi
+date: 2026-12-02
+updated: 2026-12-02
+lastReviewed: 2026-12-02
+author: Ahmet Can Tiryaki
+---
+
+# Radix Themes ve Merid
+
+Merid'i karşılaştırdığımız kütüphaneler arasında ruhen en yakını Radix Themes. İkisi de Tailwind ya da runtime CSS-in-JS yerine sade CSS gönderen stilli React kütüphaneleri. İkisi de sakin, modern bir varsayılan görünüm hedefliyor ve sayfanın bir bölümünü diğerlerinden farklı temalandırmana izin veriyor.
+
+Merid'i biz geliştiriyoruz; buna göre değerlendir.
+
+## Bir bakışta
+
+| | Radix Themes | Merid |
+|---|---|---|
+| Paket | `@radix-ui/themes` | `@meridui/react` + `@meridui/tokens` |
+| Sürüm | 3.x | 0.1 |
+| Stil | Sade CSS | `@layer merid.tokens, merid.base, merid.components` içinde sade CSS |
+| Kök gereksinimi | Uygulamayı `<Theme>` component'i sarar | Yok; tek stil dosyası import'u |
+| Kapsamlı tema | Kendi props'larıyla iç içe `<Theme>` | Herhangi bir elemanda `data-theme`, `data-accent`, `data-density`, `dir` |
+| Accent seçimi | Geniş paletten `accentColor` ve `grayColor` | Dört preset (mavi, mor, yeşil, grafit) ya da `--mrd-accent` |
+| Davranış | Radix Primitives | Kendi yazdığı; konumlandırma için Floating UI |
+| Geliştiren | WorkOS | Bağımsız, tek geliştirici |
+| Lisans | MIT | MIT |
+
+Kaynaklar: [Radix Themes Theme dokümanı](https://www.radix-ui.com/themes/docs/components/theme), [Radix Themes genel bakış](https://www.radix-ui.com/themes/docs/overview/getting-started), [Merid README](https://github.com/ahmetcantryk/merid).
+
+## Radix Themes'in önde olduğu yerler
+
+- **Primitive'ler.** Radix Primitives, React'in en yaygın headless component'lerinden; yılların hata raporlarıyla sağlamlaşmış klavye ve focus davranışı.
+- **Seçenekler.** Çok sayıda accent ve gri seçeneği, radius ve scaling ayarları, Theme Panel.
+- **Olgunluk.** Bir şirket tarafından geliştiriliyor ve yıllardır production'da.
+
+## Merid'in farklı olduğu yerler
+
+Yapılandırma bir component'te değil attribute'larda durur. Sade HTML attribute'ları oldukları için server component'lerden, statik HTML'den ve kendi CSS seçicilerinden çalışırlar. Portal ile açılan overlay'ler geldikleri alt ağacın temasını, accent'ini, yoğunluğunu ve yönünü korur. Token'lar ayrıca `@meridui/tokens` ile W3C DTCG JSON olarak da gelir.
+
+## Hangisini seçmeli?
+
+**Radix Themes'i seç**: şirket destekli olgun bir sade CSS kütüphanesi, geniş renk seçenekleri ya da Merid'de henüz olmayan component'ler istiyorsan.
+
+**Merid'i seç**: sarmalayıcısız, server component'lerde çalışan attribute tabanlı tema, ajanların ve ekip arkadaşlarının kolayca sapamayacağı sabit bir tasarım sözleşmesi istiyorsan; 0.1 bir kütüphaneyi benimsemek de sorun değilse.
+
+**İlgili:** [Mantine ve Merid](/tr/compare/mantine-vs-merid) · [shadcn/ui ve Merid](/tr/compare/shadcn-ui-vs-merid)

@@ -1,0 +1,160 @@
+---
+title: "Accessible React Component Libraries Compared (2026)"
+description: "What accessible React components actually require, how to evaluate a library in an afternoon, and how React Aria, Radix, MUI, Merid and others compare."
+slug: accessible-react-component-libraries
+canonical: /blog/accessible-react-component-libraries
+keywords:
+  - accessible react components
+  - accessible react component library
+  - wcag react components
+  - react a11y library
+  - keyboard accessible react
+date: 2026-11-13
+updated: 2026-11-13
+lastReviewed: 2026-11-13
+tags:
+  - accessibility
+  - comparisons
+author: Ahmet Can Tiryaki
+---
+
+# Accessible React component libraries compared
+
+Almost every React component library says it is accessible. Few say what that means, how they test it, or where it stops. This post gives you a checklist you can apply to any library, then goes through the main options.
+
+One thing first: **no component library makes your product compliant.** WCAG conformance is a property of pages, not packages. A perfect dialog does not help if the button that opens it is an unlabelled icon. A library can remove most of the hard problems. The rest is yours.
+
+Disclosure: we build Merid, one of the libraries below.
+
+## What "accessible" actually requires
+
+For interactive components, these are the areas where libraries differ most:
+
+- **Semantics.** Native elements where they exist (`<button>`, `<input type="checkbox">`, `<dialog>` or equivalent). Where they do not, roles and states from the [WAI-ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/).
+- **Keyboard.** Every pointer action has a keyboard path. Menus use arrow keys, tabs use roving focus, Escape closes overlays.
+- **Focus management.** Focus is always visible, trapped inside modal dialogs, and returned to the trigger on close.
+- **Contrast.** Text at 4.5:1, UI boundaries and focus indicators at 3:1, in both light and dark themes. Muted grey text is where most libraries slip.
+- **Target size.** WCAG 2.2 adds a minimum target size (24 by 24 CSS pixels, with exceptions).
+- **Reduced motion.** `prefers-reduced-motion` should remove non-essential animation.
+- **Forced colours.** In Windows High Contrast, custom backgrounds disappear. Components that signal state with background colour alone become unreadable.
+- **Right-to-left.** Logical CSS properties, mirrored arrow-key navigation, flipped directional icons.
+- **Zoom and reflow.** Usable at 200% zoom and 320 CSS pixels wide.
+
+## How to evaluate a library in an afternoon
+
+1. **Read the accessibility statement.** Does it name a standard and level? Does it say "targets" or claim "compliant"? The honest ones say targets and list known issues.
+2. **Check per-component docs for keyboard tables.** If the Tabs page does not list its keys, nobody wrote them down.
+3. **Tab through the docs site.** Can you see focus everywhere? Does Escape close the menu and put focus back?
+4. **Run axe on a few pages.** Browser extension or `@axe-core/playwright`. Automated tools catch perhaps a third of issues, but a library that fails them on its own docs has not been tested.
+5. **Turn on a screen reader.** VoiceOver (macOS) or NVDA (Windows). Open a select, pick an option, close a dialog. Listen for labels and state changes.
+6. **Toggle forced colours.** In Chrome DevTools, Rendering panel, emulate `forced-colors: active`.
+7. **Look at CI.** Is there an automated accessibility suite in the repo?
+
+## The libraries
+
+Details come from each project's docs at the time of writing. Verify before relying on them.
+
+### React Aria Components (Adobe)
+
+Unstyled components and hooks with arguably the most thorough accessibility and internationalisation work in the ecosystem: screen reader testing across platforms, touch and pointer handling, localisation for many languages. You write all the styling. If accessibility is your top constraint and you have design capacity, start here. [React Aria](https://react-spectrum.adobe.com/react-aria/).
+
+### Radix Primitives and Radix Themes
+
+Radix Primitives are unstyled, follow WAI-ARIA patterns, and document keyboard interactions per component. They underpin shadcn/ui. Radix Themes adds styling on top. [Radix accessibility](https://www.radix-ui.com/primitives/docs/overview/accessibility).
+
+### shadcn/ui
+
+Inherits behaviour from Radix or Base UI primitives. Because you own the copied source, accessibility can drift if edits remove attributes or change elements. Worth a lint rule and an axe check in your own CI. [shadcn/ui docs](https://ui.shadcn.com/docs).
+
+### Ark UI and Chakra UI
+
+Ark UI provides headless components built on Zag state machines; Chakra v3 builds on Ark. Both document keyboard support per component. [Ark UI](https://ark-ui.com/), [Chakra UI](https://chakra-ui.com/).
+
+### HeroUI
+
+HeroUI v3 is built on React Aria Components with Tailwind v4 styling, so it inherits much of React Aria's behaviour. [HeroUI](https://www.heroui.com/).
+
+### MUI
+
+Large, mature, with accessibility sections on most component pages and a long history of fixes. Some complex components (data grid, date pickers) are in MUI X. [MUI accessibility](https://mui.com/material-ui/getting-started/accessibility/).
+
+### Merid
+
+Merid's [accessibility statement](https://meridui.dev/docs/accessibility) says it **targets** WCAG 2.2 AA. What it documents:
+
+- Native elements where they exist; WAI-ARIA APG patterns elsewhere (for example, `Select` is a select-only combobox per the APG).
+- Keyboard table on each component page.
+- Visible focus: a 2px accent outline offset by 3px, or an accent border with a halo on inputs. Overlays trap focus and return it.
+- Targets at least 24 by 24 CSS pixels; controls grow on coarse pointers.
+- Works at 200% zoom and 320px wide.
+- `prefers-reduced-motion` removes all transitions and animation, including skeleton shimmer.
+- Body and UI text at 4.5:1 in light and dark; measured ratios on the [colour page](https://meridui.dev/docs/foundations/color).
+- Forced colours treated as a supported mode; RTL via logical properties and mirrored keyboard navigation.
+- An axe suite runs against rendered states of every component in CI, plus keyboard interaction tests; manual VoiceOver and NVDA checks before minor releases.
+
+Gaps: Merid is 0.1, has 46 components, and has no Combobox/Autocomplete or date picker yet. Those two are among the hardest components to make accessible, so their absence matters if you need them.
+
+## Comparison
+
+| | Styled | Standard stated | Keyboard docs per component | Forced colours documented | RTL | Automated a11y tests in repo |
+|---|---|---|---|---|---|---|
+| React Aria | No | Yes, extensive | Yes | Check docs | Yes, strong i18n | Yes |
+| Radix Primitives | No | WAI-ARIA | Yes | Check docs | Yes | Check repo |
+| shadcn/ui | Yes (your copy) | Via primitives | Via primitives | Your responsibility | Via primitives | Your CI |
+| Chakra / Ark | Yes / No | WAI-ARIA | Yes | Check docs | Yes | Check repo |
+| HeroUI v3 | Yes | Via React Aria | Check docs | Check docs | Check docs | Check repo |
+| MUI | Yes | WAI-ARIA | Most pages | Check docs | Yes | Check repo |
+| Merid | Yes | Targets WCAG 2.2 AA | Yes | Yes | Yes | Yes (axe in CI) |
+
+"Check docs" means we could not confirm it from official sources, not that it is missing.
+
+## Your part
+
+Whatever library you choose, these stay with you:
+
+```tsx
+// Icon-only buttons need a name
+<IconButton aria-label="Close panel"><XIcon /></IconButton>
+
+// Every field needs a visible label, not just a placeholder
+<Field label="Email" description="We only use this for receipts">
+  <Input type="email" name="email" />
+</Field>
+```
+
+- Write link text that makes sense out of context ("Download invoice", not "click here").
+- Keep heading order logical.
+- Do not signal errors with colour alone; include text.
+- Add an axe check to your end-to-end tests. With Playwright:
+
+```ts
+import AxeBuilder from "@axe-core/playwright";
+
+test("settings page has no axe violations", async ({ page }) => {
+  await page.goto("/settings");
+  const results = await new AxeBuilder({ page }).analyze();
+  expect(results.violations).toEqual([]);
+});
+```
+
+## AI-generated UI and accessibility
+
+If you build with Cursor, Claude Code or v0, accessibility regressions are common in generated code: `div` buttons, missing labels, focus outlines removed because they "looked noisy". Using a component library with accessibility built in, and telling the model to use it instead of raw elements, removes most of those. The axe test above catches the rest.
+
+## How to choose
+
+- Maximum accessibility, own styling: React Aria Components.
+- Tailwind and owned source: shadcn/ui, with your own axe checks.
+- Breadth and a long track record: MUI.
+- Styled, plain CSS, documented forced-colours and RTL support, axe in CI, and you accept a 0.1 library: Merid. If you are comparing it to shadcn/ui, see [Merid vs shadcn/ui, side by side](https://meridui.dev/compare/shadcn-ui-vs-merid).
+
+## FAQ
+
+**Is any React library WCAG certified?**
+There is no official certification for component libraries. Be wary of claims that there is.
+
+**Is automated testing enough?**
+No. Tools like axe catch a portion of issues. Keyboard and screen reader testing find the rest.
+
+**Does dark mode affect accessibility?**
+Yes. Contrast must be checked in both themes. Muted text and placeholder colours are where dark themes fail most often.
