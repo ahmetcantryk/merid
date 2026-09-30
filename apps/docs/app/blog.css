@@ -1,7 +1,7 @@
 /*
  * Blog, comparison and privacy pages. Same language as the docs: hairlines, trays, one accent.
- * Articles use a three-track grid: text sits in a ~70ch `content` column; tables, code and
- * images break out to the ~1120px `wide` column.
+ * Articles use one wide column: text, tables, code and images share the same ~920px edge,
+ * so the page reads as one block. The grid tracks stay so a future breakout needs no rewrite.
  */
 
 /* Links inside running text are underlined, not told apart by colour alone. */
@@ -52,14 +52,14 @@
 
 /* Article */
 .entry-shell {
-  --measure: 70ch;
-  --wide: 1120px;
+  --measure: 920px;
+  --wide: 920px;
   display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px;
   max-width: calc(var(--wide) + var(--mrd-gutter) * 2); margin-inline: auto;
   padding: 32px var(--mrd-gutter) 96px;
 }
 .entry-shell > .docs-toc { display: none; }
-@media (min-width: 1400px) {
+@media (min-width: 1240px) {
   .entry-shell { grid-template-columns: minmax(0, var(--wide)) 200px; max-width: calc(var(--wide) + 248px + var(--mrd-gutter) * 2); }
   .entry-shell > .docs-toc { display: block; padding-top: 120px; }
 }
@@ -123,7 +123,7 @@
 
 /* Plain prose pages (privacy) */
 .prose-page { padding-block: 48px 96px; }
-.prose-page .doc-article { max-width: 72ch; font-size: var(--mrd-text-md); line-height: 1.7; }
+.prose-page .doc-article { max-width: 920px; font-size: var(--mrd-text-md); line-height: 1.7; }
 .prose-page .doc-article > p:first-of-type { color: var(--mrd-muted); font-size: var(--mrd-text-xs); }
 
 @media (max-width: 920px) {
