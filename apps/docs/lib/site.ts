@@ -1,3 +1,5 @@
+import reactPackage from "@meridui/react/package.json";
+
 export const site = {
   name: "Merid",
   tagline: "Quiet, precise React components.",
@@ -6,8 +8,8 @@ export const site = {
   url: "https://meridui.dev",
   repo: "https://github.com/ahmetcantryk/merid",
   docsSourcePath: "apps/docs/app",
-  version: "0.1.0",
-  releaseDate: "2026-09-28",
+  version: reactPackage.version,
+  releaseDate: "2026-09-30",
   install: "npm i @meridui/react",
   packageName: "@meridui/react",
   npm: "https://www.npmjs.com/package/@meridui/react",
