@@ -30,6 +30,8 @@ jobs:
       - run: npm run build
       - name: publint
         run: npx publint packages/react
+      - name: publint (AI packages, built by npm test above)
+        run: npx publint packages/mcp && npx publint packages/cli
 
   consumers:
     runs-on: ubuntu-latest
