@@ -1,0 +1,107 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { FileUploadBasic, FileUploadSingle, FileUploadDisabled } from "@/examples/file-upload";
+
+export const metadata = docMetadata("en", "/docs/components/file-upload", {
+  title: "FileUpload",
+  description: "An accessible file picker with a drag-and-drop zone, validation and a file list.",
+});
+
+# FileUpload
+
+A file picker with a drag-and-drop zone. The browse button is the keyboard and screen reader path; dropping is a shortcut for the pointer. Files are checked against `accept`, size and count before they are kept.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/file-upload">Source</a>
+</div>
+
+<ComponentPreview code={`<Field label="Attachments" error={error}>
+  <FileUpload
+    multiple
+    maxFiles={3}
+    maxSize={2_000_000}
+    accept="image/*,.pdf"
+    description="PNG, JPG or PDF, up to 2 MB each. Three files at most."
+    value={files}
+    onValueChange={setFiles}
+    onReject={(rejections) => setError(describe(rejections))}
+    name="attachments"
+  />
+</Field>`}>
+  <FileUploadBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { FileUpload, type FileRejection } from "@meridui/react";
+```
+
+## Examples
+
+### Single file
+
+Without `multiple`, a new file replaces the old one.
+
+<ComponentPreview code={`<Field label="Avatar">
+  <FileUpload accept="image/*" label="Drop an image" buttonLabel="Choose image" onValueChange={(files) => setFile(files[0] ?? null)} />
+</Field>`}>
+  <FileUploadSingle />
+</ComponentPreview>
+
+### Disabled
+
+<ComponentPreview code={`<FileUpload disabled description="Uploads are paused." />`}>
+  <FileUploadDisabled />
+</ComponentPreview>
+
+### Uploading
+
+FileUpload only selects files. Send them from `onValueChange` (or on form submit — with `name`, the kept files are mirrored onto the real `<input type="file">`) and show progress with [Progress](/docs/components/progress).
+
+## API reference
+
+Renders a `div`; other `div` attributes and the ref go on it.
+
+<PropsTable rows={[
+  { name: "value / defaultValue", type: "File[]", description: "Controlled or initial files." },
+  { name: "onValueChange", type: "(files: File[]) => void", description: "Called with every kept file after an add or remove." },
+  { name: "onReject", type: "(rejections: FileRejection[]) => void", description: "Files that failed a check, with reasons: file-invalid-type, file-too-large, file-too-small, too-many-files." },
+  { name: "accept", type: "string", description: "As on <input type=\"file\">: \"image/*,.pdf\". Also checked on drop." },
+  { name: "multiple", type: "boolean", default: "false", description: "Keep more than one file." },
+  { name: "maxSize / minSize", type: "number", description: "Size limits in bytes." },
+  { name: "maxFiles", type: "number", description: "Most files kept when multiple." },
+  { name: "label", type: "ReactNode", default: "\"Drag and drop files here\"", description: "Main line in the dropzone." },
+  { name: "buttonLabel", type: "ReactNode", default: "\"Browse files\"", description: "Text of the browse button." },
+  { name: "description", type: "ReactNode", description: "Hint under the label; describes the button." },
+  { name: "showFileList", type: "boolean", default: "true", description: "Render the file list with remove buttons." },
+  { name: "getRemoveLabel", type: "(file: File) => string", default: "Remove {name}", description: "Accessible name of a remove button." },
+  { name: "getStatusText", type: "(count: number) => string", default: "\"N file(s) selected\"", description: "Announced when the selection changes." },
+  { name: "locale", type: "string", description: "Locale for file sizes (Intl units)." },
+  { name: "icon", type: "ReactNode", description: "Icon above the label." },
+  { name: "invalid / disabled / required", type: "boolean", description: "States; inside a Field they come from it." },
+  { name: "name", type: "string", description: "Name of the file input for native form submit." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-file-upload` | Root (`data-dragging`, `data-invalid`, `data-disabled`) |
+| `.mrd-file-upload__dropzone` | Dashed drop area |
+| `.mrd-file-upload__icon`, `__label`, `__description`, `__button` | Dropzone content |
+| `.mrd-file-upload__list`, `__item`, `__name`, `__size`, `__remove` | File list |
+
+## Accessibility
+
+Drag and drop has no keyboard equivalent, so the dropzone is not focusable; the browse button inside it is. It is described by `description` and, inside a Field, named by the visible button text followed by the field label. Adding or removing files updates a visually hidden `role="status"` region ("2 files selected"). Removing a file returns focus to the browse button.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Browse button, then each remove button." },
+  { keys: ["Enter", "Space"], action: "On the browse button: open the file picker. On a remove button: remove that file." },
+]} />
+
+## Related
+
+- [Field](/docs/components/field) — label, hint and error around a control.
+- [Progress](/docs/components/progress) — upload progress.

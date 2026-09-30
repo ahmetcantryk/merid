@@ -79,7 +79,7 @@ function UndoArchive() {
 
 export function ConfirmTyped() {
   return (
-    <ToastProvider label="Bildirimler">
+    <ToastProvider label="Bildirimler" dismissLabel="Bildirimi kapat">
       <TypedConfirm />
     </ToastProvider>
   );
@@ -87,7 +87,7 @@ export function ConfirmTyped() {
 
 export function ConfirmUndo() {
   return (
-    <ToastProvider label="Bildirimler">
+    <ToastProvider label="Bildirimler" dismissLabel="Bildirimi kapat">
       <UndoArchive />
     </ToastProvider>
   );

@@ -79,6 +79,7 @@ Forwards its ref to the `<a>` and passes all native anchor attributes through. W
   { name: "tone", type: '"accent" | "ink" | "muted"', default: '"accent"', description: "Text colour." },
   { name: "underline", type: '"hover" | "always" | "none"', default: '"hover"', description: "When the underline shows." },
   { name: "external", type: "boolean", default: "false", description: "Opens in a new tab with rel=\"noopener noreferrer\" and appends a visually hidden hint." },
+  { name: "externalLabel", type: "string", default: "\"(opens in a new tab)\"", description: "Visually hidden hint appended to `external` links. Translate it for other languages." },
   { name: "href", type: "string", description: "Native link target." },
   { name: "asChild", type: "boolean", default: "false", description: "Render the single child element (e.g. a router link) with link styling instead of an `<a>`." },
 ]} />

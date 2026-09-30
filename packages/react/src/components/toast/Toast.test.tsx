@@ -48,6 +48,19 @@ describe("Toast", () => {
     expect(screen.queryByText("Saved")).not.toBeInTheDocument();
   });
 
+  it("localises the close button with dismissLabel", async () => {
+    const user = userEvent.setup();
+    render(
+      <ToastProvider label="Bildirimler" dismissLabel="Bildirimi kapat">
+        <Emitter />
+      </ToastProvider>,
+    );
+    expect(screen.getByRole("region", { name: "Bildirimler" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Save" }));
+    await user.click(screen.getByRole("button", { name: "Bildirimi kapat" }));
+    expect(screen.queryByText("Saved")).not.toBeInTheDocument();
+  });
+
   it("auto-dismisses and pauses while hovered", () => {
     vi.useFakeTimers();
     try {

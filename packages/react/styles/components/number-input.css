@@ -1,0 +1,122 @@
+@layer merid.components {
+  .mrd-number-input {
+    --mrd-number-input-height: var(--mrd-input-md);
+
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+    height: var(--mrd-number-input-height);
+    border: 1px solid var(--mrd-line);
+    border-radius: var(--mrd-radius-lg);
+    background: var(--mrd-surface);
+    color: var(--mrd-ink);
+    font-size: var(--mrd-text-sm);
+    transition:
+      border-color var(--mrd-duration) var(--mrd-ease),
+      box-shadow var(--mrd-duration) var(--mrd-ease);
+  }
+
+  .mrd-number-input[data-size="sm"] {
+    --mrd-number-input-height: var(--mrd-input-sm);
+
+    font-size: var(--mrd-text-xs);
+  }
+
+  .mrd-number-input[data-size="lg"] {
+    --mrd-number-input-height: var(--mrd-input-lg);
+
+    font-size: var(--mrd-text-md);
+  }
+
+  .mrd-number-input:hover:not([data-disabled], :focus-within) {
+    border-color: var(--mrd-line-strong);
+  }
+
+  .mrd-number-input:focus-within {
+    border-color: var(--mrd-accent);
+    box-shadow: var(--mrd-focus-ring);
+  }
+
+  .mrd-number-input[data-invalid] {
+    border-color: var(--mrd-danger);
+  }
+
+  .mrd-number-input[data-disabled] {
+    background: var(--mrd-tray);
+    color: var(--mrd-muted);
+    cursor: not-allowed;
+  }
+
+  .mrd-number-input__field {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    padding: 0 var(--mrd-input-pad);
+    border: 0;
+    border-radius: inherit;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    text-align: start;
+  }
+
+  .mrd-number-input__field:focus {
+    outline: none;
+  }
+
+  .mrd-number-input__field:disabled {
+    cursor: not-allowed;
+  }
+
+  .mrd-number-input__stepper {
+    display: flex;
+    flex: none;
+  }
+
+  .mrd-number-input__step {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: max(24px, calc(var(--mrd-number-input-height) - 4px));
+    padding: 0;
+    border: 0;
+    border-inline-start: 1px solid var(--mrd-line);
+    background: transparent;
+    color: var(--mrd-muted);
+    cursor: pointer;
+    transition:
+      background-color var(--mrd-duration) var(--mrd-ease),
+      color var(--mrd-duration) var(--mrd-ease);
+  }
+
+  .mrd-number-input__step:last-child {
+    border-start-end-radius: calc(var(--mrd-radius-lg) - 1px);
+    border-end-end-radius: calc(var(--mrd-radius-lg) - 1px);
+  }
+
+  .mrd-number-input__step:hover:not(:disabled) {
+    background: var(--mrd-tray);
+    color: var(--mrd-ink);
+  }
+
+  .mrd-number-input__step:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  @media (pointer: coarse) {
+    .mrd-number-input {
+      --mrd-number-input-height: 44px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-number-input,
+    .mrd-number-input__step {
+      transition: none;
+    }
+  }
+}

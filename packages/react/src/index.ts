@@ -37,6 +37,16 @@ export * from "./components/switch";
 export * from "./components/native-select";
 export * from "./components/segmented-control";
 
+// forms and inputs (batch 1)
+export * from "./components/calendar";
+export * from "./components/combobox";
+export * from "./components/date-picker";
+export * from "./components/file-upload";
+export * from "./components/number-input";
+export * from "./components/pin-input";
+export * from "./components/slider";
+export * from "./components/toggle";
+
 // utilities
 export { cx } from "./utils/cx";
 

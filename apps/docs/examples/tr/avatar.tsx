@@ -35,7 +35,7 @@ export function AvatarFallback() {
 
 export function AvatarGroupDemo() {
   return (
-    <AvatarGroup label="Proje üyeleri" max={3} size="sm">
+    <AvatarGroup label="Proje üyeleri" max={3} size="sm" formatOverflowLabel={(n) => `${n} kişi daha`}>
       <Avatar name="Ada Lovelace" size="sm" />
       <Avatar name="Grace Hopper" size="sm" />
       <Avatar name="Alan Turing" size="sm" />

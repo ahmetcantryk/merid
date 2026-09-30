@@ -104,3 +104,66 @@
     }
   }
 }
+
+/* Form and input components: Calendar, Combobox, DatePicker, FileUpload, NumberInput, PinInput, Slider, Toggle. */
+@layer merid.components {
+  .mrd-calendar__nav:dir(rtl) > svg {
+    transform: scaleX(-1);
+  }
+
+  @media (forced-colors: active) {
+    .mrd-combobox__control,
+    .mrd-date-picker__field,
+    .mrd-number-input,
+    .mrd-pin-input__cell,
+    .mrd-toggle,
+    .mrd-file-upload__button,
+    .mrd-slider__thumb {
+      border: 1px solid ButtonText;
+    }
+
+    .mrd-file-upload__dropzone {
+      border: 1px dashed ButtonText;
+    }
+
+    .mrd-slider__track {
+      border: 1px solid ButtonText;
+    }
+
+    .mrd-slider__range {
+      forced-color-adjust: none;
+      background: Highlight;
+    }
+
+    .mrd-combobox__content,
+    .mrd-calendar {
+      border: 1px solid CanvasText;
+    }
+
+    .mrd-toggle[data-state="on"],
+    .mrd-combobox__item[data-active],
+    .mrd-calendar__day[data-selected],
+    .mrd-calendar__cell[data-in-range] {
+      outline: 2px solid Highlight;
+      outline-offset: -2px;
+    }
+
+    .mrd-slider__thumb:focus-visible,
+    .mrd-combobox__control:focus-within,
+    .mrd-date-picker__field:focus-within,
+    .mrd-number-input:focus-within,
+    .mrd-pin-input__cell:focus {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
+  }
+
+  @media print {
+    .mrd-combobox__content,
+    .mrd-number-input__stepper,
+    .mrd-date-picker__trigger,
+    .mrd-combobox__toggle {
+      display: none !important;
+    }
+  }
+}

@@ -1,0 +1,82 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { PinInputBasic, PinInputVariants } from "@/examples/pin-input";
+
+export const metadata = docMetadata("en", "/docs/components/pin-input", {
+  title: "PinInput",
+  description: "One-time code and PIN entry with one cell per character, paste and autofill.",
+});
+
+# PinInput
+
+One-time code and PIN entry with one cell per character. Typing moves forward, Backspace moves back, and pasting or SMS autofill fills every cell.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/pin-input">Source</a>
+</div>
+
+<ComponentPreview code={`<Field label="Verification code" description="We sent a 6-digit code to your phone.">
+  <PinInput value={code} onValueChange={setCode} onComplete={verify} name="otp" />
+</Field>`}>
+  <PinInputBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { PinInput } from "@meridui/react";
+```
+
+## Examples
+
+### Length, mask and characters
+
+<ComponentPreview code={`<PinInput aria-label="PIN" length={4} mask size="lg" />
+<PinInput aria-label="Invite code" length={5} type="alphanumeric" placeholder="·" />
+<PinInput aria-label="Invalid code" length={4} defaultValue="1234" invalid />`}>
+  <PinInputVariants />
+</ComponentPreview>
+
+## API reference
+
+Renders a `div role="group"`; name it with `aria-label`, `aria-labelledby` or a [Field](/docs/components/field). The ref goes to the group.
+
+<PropsTable rows={[
+  { name: "length", type: "number", default: "6", description: "Number of cells." },
+  { name: "value", type: "string", description: "Controlled code." },
+  { name: "defaultValue", type: "string", default: "\"\"", description: "Initial code when uncontrolled." },
+  { name: "onValueChange", type: "(value: string) => void", description: "Called on every change." },
+  { name: "onComplete", type: "(value: string) => void", description: "Called once every cell is filled." },
+  { name: "type", type: "\"numeric\" | \"alphanumeric\"", default: "\"numeric\"", description: "Accepted characters; numeric opens the number pad on mobile." },
+  { name: "mask", type: "boolean", default: "false", description: "Hide characters like a password." },
+  { name: "placeholder", type: "string", description: "Placeholder of empty cells." },
+  { name: "getCellLabel", type: "(index: number, length: number) => string", default: "Character {i} of {n}", description: "Accessible name of each cell." },
+  { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Cell size." },
+  { name: "invalid / disabled / required", type: "boolean", description: "States; inside a Field they come from it." },
+  { name: "autoFocus", type: "boolean", default: "false", description: "Focus the first empty cell on mount." },
+  { name: "name", type: "string", description: "Hidden input with the whole code." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-pin-input` | Group (`data-size`, `data-invalid`, `data-disabled`) |
+| `.mrd-pin-input__cell` | Each `<input>` (`data-filled`) |
+
+## Accessibility
+
+Each cell is a labelled text input ("Character 1 of 6") inside a named group, and the first cell has `autocomplete="one-time-code"` so browsers can offer the SMS code. Codes never contain gaps: typing past the end of the code writes into the first empty cell.
+
+<KeyboardTable rows={[
+  { keys: ["0–9", "A–Z"], action: "Fill the cell and move to the next." },
+  { keys: ["Backspace"], action: "Clear the cell, or the previous one when empty, and move back." },
+  { keys: ["Delete"], action: "Remove the character in the cell; later characters shift back." },
+  { keys: ["ArrowLeft", "ArrowRight"], action: "Previous / next cell (reversed in RTL)." },
+  { keys: ["Home", "End"], action: "First cell / last filled cell." },
+]} />
+
+## Related
+
+- [Input](/docs/components/input) — for codes people copy rather than type.
+- [Authentication pattern](/docs/patterns/authentication).

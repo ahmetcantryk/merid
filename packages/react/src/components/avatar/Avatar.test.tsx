@@ -42,6 +42,17 @@ describe("Avatar", () => {
     expect(document.querySelectorAll("[tabindex]")).toHaveLength(0);
   });
 
+  it("names the overflow chip with formatOverflowLabel", () => {
+    render(
+      <AvatarGroup aria-label="Ekip" max={1} formatOverflowLabel={(n) => `${n} kişi daha`}>
+        <Avatar name="A B" />
+        <Avatar name="C D" />
+        <Avatar name="E F" />
+      </AvatarGroup>,
+    );
+    expect(screen.getByRole("img", { name: "2 kişi daha" })).toHaveTextContent("+2");
+  });
+
   it("has no axe violations", async () => {
     const { container } = render(
       <AvatarGroup aria-label="Team" max={1}>

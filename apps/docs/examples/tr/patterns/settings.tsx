@@ -104,7 +104,7 @@ function SettingsForm() {
 
 export function SettingsPageExample() {
   return (
-    <ToastProvider label="Bildirimler">
+    <ToastProvider label="Bildirimler" dismissLabel="Bildirimi kapat">
       <div style={{ display: "flex", flexWrap: "wrap", gap: 32, width: "100%" }}>
         <div style={{ width: 180 }}>
           <SidebarNav aria-label="Ayarlar">

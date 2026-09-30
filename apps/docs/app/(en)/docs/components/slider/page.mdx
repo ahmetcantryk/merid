@@ -1,0 +1,103 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { SliderBasic, SliderRange, SliderStates } from "@/examples/slider";
+
+export const metadata = docMetadata("en", "/docs/components/slider", {
+  title: "Slider",
+  description: "Pick a value, or a range with two thumbs, on a horizontal track.",
+});
+
+# Slider
+
+Pick a value, or a range with two thumbs, on a horizontal track. Values snap to `step`; the track follows `dir="rtl"`.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/slider">Source</a>
+</div>
+
+<ComponentPreview code={`const [value, setValue] = useState([40]);
+
+<span id="volume">Volume</span>
+<Slider aria-labelledby="volume" value={value} onValueChange={setValue} />`}>
+  <SliderBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Slider } from "@meridui/react";
+```
+
+## Examples
+
+### Range
+
+Pass two values. Thumbs cannot cross; `minStepsBetweenThumbs` keeps them apart. Name each thumb with `thumbLabels` and give values a readable form with `getValueText`.
+
+<ComponentPreview code={`<Slider
+  value={value}
+  onValueChange={setValue}
+  min={0}
+  max={1000}
+  step={10}
+  minStepsBetweenThumbs={5}
+  thumbLabels={["Minimum price", "Maximum price"]}
+  getValueText={(v) => "$" + v}
+  name="price"
+/>`}>
+  <SliderRange />
+</ComponentPreview>
+
+### Decimal steps, disabled and RTL
+
+<ComponentPreview code={`<Slider aria-label="Opacity" defaultValue={[0.5]} min={0} max={1} step={0.05} />
+<Slider aria-label="Disabled" defaultValue={[30]} disabled />
+<div dir="rtl">
+  <Slider aria-label="RTL" defaultValue={[25]} />
+</div>`}>
+  <SliderStates />
+</ComponentPreview>
+
+## API reference
+
+Renders a `div`; other `div` attributes and the ref go on it. For a single thumb, `aria-label` / `aria-labelledby` on the root name the thumb.
+
+<PropsTable rows={[
+  { name: "value", type: "number[]", description: "Controlled values: one for a single slider, two for a range." },
+  { name: "defaultValue", type: "number[]", default: "[min]", description: "Initial values when uncontrolled." },
+  { name: "onValueChange", type: "(value: number[]) => void", description: "Called on every change while dragging or pressing keys." },
+  { name: "onValueCommit", type: "(value: number[]) => void", description: "Called when a drag ends or after a key press." },
+  { name: "min", type: "number", default: "0", description: "Lowest value." },
+  { name: "max", type: "number", default: "100", description: "Highest value." },
+  { name: "step", type: "number", default: "1", description: "Increment." },
+  { name: "largeStep", type: "number", default: "step * 10", description: "Increment for Page Up / Page Down and Shift + arrows." },
+  { name: "minStepsBetweenThumbs", type: "number", default: "0", description: "Minimum distance between range thumbs, in steps." },
+  { name: "thumbLabels", type: "string[]", default: "[\"Minimum\", \"Maximum\"] for a range", description: "Accessible name of each thumb." },
+  { name: "getValueText", type: "(value: number, index: number) => string", description: "aria-valuetext, e.g. with a unit or currency." },
+  { name: "disabled", type: "boolean", default: "false", description: "Disables the slider." },
+  { name: "name", type: "string", description: "Hidden input per thumb: name for one thumb, name[] for a range." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-slider` | Root (`data-disabled`) |
+| `.mrd-slider__track` | Track, and the pointer target |
+| `.mrd-slider__range` | Filled part of the track |
+| `.mrd-slider__thumb` | Thumb, `role="slider"` |
+
+## Accessibility
+
+Each thumb is a `role="slider"` with `aria-valuenow`, `aria-valuemin` and `aria-valuemax`. In a range, the limits of each thumb are the other thumb's value, so screen readers report the real bounds. The track has a 24px hit area and each thumb a 24px target (44px on coarse pointers).
+
+<KeyboardTable rows={[
+  { keys: ["ArrowRight", "ArrowUp"], action: "Increase by step (ArrowRight decreases in RTL)." },
+  { keys: ["ArrowLeft", "ArrowDown"], action: "Decrease by step (ArrowLeft increases in RTL)." },
+  { keys: ["PageUp", "PageDown"], action: "Increase / decrease by largeStep. Shift + arrows do the same." },
+  { keys: ["Home", "End"], action: "Set to the minimum / maximum." },
+]} />
+
+## Related
+
+- [NumberInput](/docs/components/number-input) — when the exact number matters.
