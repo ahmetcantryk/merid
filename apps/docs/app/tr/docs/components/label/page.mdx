@@ -1,0 +1,87 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { LabelDemo, LabelRequired, LabelDisabled } from "@/examples/tr/label";
+
+export const metadata = docMetadata("tr", "/docs/components/label", {
+  title: "Label",
+  description: "İsteğe bağlı zorunlu işareti ve devre dışı stiliyle bir form etiketi.",
+});
+
+# Label
+
+Form etiketi: 14px, 500 ağırlık, ink rengi. Kontrolü kendin bağladığında doğrudan kullan; [Field](/tr/docs/components/field) bunu senin yerine render'lar.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/label">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Label htmlFor="email">E-posta</Label>
+<Input id="email" type="email" placeholder="sen@sirket.com" />`}>
+  <LabelDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Label } from "@merid/react";
+```
+
+## Örnekler
+
+### Zorunlu
+
+`required`, yardımcı teknolojilerden gizlenen bir `*` ekler. Bu yalnızca görsel bir işarettir: alanın duyurulması ve doğrulanması için `required`'ı kontrolün kendisine de ver.
+
+<ComponentPreview code={`<Label htmlFor="name" required>Ad soyad</Label>
+<Input id="name" required />`}>
+  <LabelRequired />
+</ComponentPreview>
+
+### Devre dışı
+
+`disabled`, etiketi devre dışı bir kontrolle uyumlu olacak şekilde soluklaştırır. Kendi başına hiçbir şeyi devre dışı bırakmaz.
+
+<ComponentPreview code={`<Label htmlFor="workspace" disabled>Çalışma alanı</Label>
+<Input id="workspace" defaultValue="acme" disabled />`}>
+  <LabelDisabled />
+</ComponentPreview>
+
+## API referansı
+
+`Label` ref'ini `<label>`'a iletir, diğer label attribute'larını (`htmlFor`, `id`, …) olduğu gibi geçirir.
+
+<PropsTable rows={[
+  { name: "required", type: "boolean", default: "false", description: "Yardımcı teknolojilerden gizlenen görsel bir * işareti ekler." },
+  { name: "disabled", type: "boolean", default: "false", description: "Etiketi devre dışı bir kontrolle uyumlu olacak şekilde soluklaştırır." },
+  { name: "htmlFor", type: "string", description: "Etiketin adlandırdığı kontrolün id'si." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-label</code></td><td>Kök {"<label>"}</td></tr>
+    <tr><td><code>.mrd-label__required</code></td><td>Zorunlu işareti</td></tr>
+    <tr><td><code>data-disabled</code></td><td><code>disabled</code> verildiğinde bulunur</td></tr>
+  </tbody>
+</table>
+
+## Erişilebilirlik
+
+- Etiketi her zaman kontrolün `id`'siyle eşleşen `htmlFor` ile bağla; böylece etikete tıklamak kontrole focus verir ve etiket kontrolün erişilebilir adı olur.
+- `*` işareti `aria-hidden`'dır; “zorunlu” bilgisi kontrolün kendi `required` attribute'undan duyurulur.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Etiketleri kısa isimler olarak yaz (“E-posta”, “Şirket adı”) ve her zaman görünür tut.</p>}
+  dont={<p>Placeholder'ı tek etiket olarak kullanmak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Field](/tr/docs/components/field): etiket, kontrol, açıklama ve hata birbirine bağlı gelir.
+- [Input](/tr/docs/components/input), [Textarea](/tr/docs/components/textarea), [NativeSelect](/tr/docs/components/native-select).

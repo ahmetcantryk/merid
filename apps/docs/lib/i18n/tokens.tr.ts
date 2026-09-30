@@ -77,7 +77,22 @@ export const tokenUsesTr: Readonly<Record<string, string>> = {
   "--mrd-ease": "Tüm geçişler",
 };
 
-export const foundationsUiTr = {
+export interface FoundationsUi {
+  readonly token: string;
+  readonly light: string;
+  readonly dark: string;
+  readonly role: string;
+  readonly value: string;
+  readonly use: string;
+  readonly groupTokens: (title: string) => string;
+  readonly motionTokens: string;
+  readonly specimen: string;
+  readonly lift: string;
+  readonly press: string;
+  readonly tint: string;
+}
+
+export const foundationsUiTr: FoundationsUi = {
   token: "Token",
   light: "Açık",
   dark: "Koyu",
@@ -90,4 +105,4 @@ export const foundationsUiTr = {
   lift: "Hover'da 3px yüksel",
   press: "Basınca .97'ye küçül",
   tint: "Hover'da renklen",
-} as const;
+};

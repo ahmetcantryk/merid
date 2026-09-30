@@ -1,0 +1,49 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/foundations/layout", {
+  title: "Breakpoint'ler ve layer'lar",
+  description: "Merid'in iki breakpoint'i, dokunmatik ekranlar için boyutlar ve z-index ölçeği.",
+});
+
+# Breakpoint'ler ve layer'lar
+
+## Breakpoint'ler
+
+Merid yalnızca CSS'te iki breakpoint kullanır. Component'ler sahip oldukları alana uyum sağlar; JavaScript tarafında bir breakpoint API'si yoktur.
+
+<table>
+  <thead>
+    <tr><th>Genişlik</th><th>Ne değişir</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>920px ve altı</td><td>Çok kolonlu layout'lar tek kolona iner; bölüm padding'i 80px'e düşer.</td></tr>
+    <tr><td>640px ve altı</td><td>Mobil düzen: gutter 20px, bölüm padding'i 64px olur, dialog'lar alttan açılan panele (bottom sheet) dönüşür.</td></tr>
+  </tbody>
+</table>
+
+Custom property'ler media query içinde kullanılamadığı için değerler açıkça yazılır:
+
+```css
+@media (max-width: 920px) { /* layout tek kolona iner */ }
+@media (max-width: 640px) { /* mobil düzen */ }
+```
+
+## Dokunmatik ekranlar
+
+Dokunmatik ekranlarda (`pointer: coarse`) kontroller daha kolay dokunulsun diye büyür: varsayılan buton 48px, input'lar 50px, segmented pill'ler 40px yüksekliğe çıkar.
+
+## Z-index ölçeği
+
+<table>
+  <thead>
+    <tr><th>Token</th><th>Değer</th><th>Kullanım</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>--mrd-z-sticky</code></td><td>50</td><td>Sticky header'lar ve toolbar'lar</td></tr>
+    <tr><td><code>--mrd-z-overlay</code></td><td>100</td><td>Dialog'lar, drawer'lar ve arka plan örtüleri</td></tr>
+    <tr><td><code>--mrd-z-popover</code></td><td>105</td><td>Popover'lar, menüler ve select listeleri; dialog içinde de çalışsınlar diye overlay'lerin üstünde</td></tr>
+    <tr><td><code>--mrd-z-toast</code></td><td>110</td><td>Toast'lar, overlay'lerin üstünde</td></tr>
+    <tr><td><code>--mrd-z-tooltip</code></td><td>120</td><td>Tooltip'ler, her şeyin üstünde</td></tr>
+  </tbody>
+</table>
+
+Kendi layer'ların Merid'inkilerle öngörülebilir biçimde üst üste binsin diye rastgele sayılar yerine bu token'ları kullan.

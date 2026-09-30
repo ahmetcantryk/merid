@@ -15,15 +15,15 @@ function Sample({ label }: { readonly label: string }) {
           <Text size="sm" weight="semibold" tone="ink">
             {label}
           </Text>
-          <Badge tone="accent">Preview</Badge>
+          <Badge tone="accent">Önizleme</Badge>
         </Stack>
-        <Input aria-label={`${label} name`} defaultValue="northwind-web" />
-        <Switch defaultChecked>Auto-deploy</Switch>
+        <Input aria-label={`${label} adı`} defaultValue="northwind-web" />
+        <Switch defaultChecked>Otomatik deploy</Switch>
         <Stack direction="row" gap={2}>
           <Button variant="primary" size="sm">
-            Save
+            Kaydet
           </Button>
-          <Button size="sm">Cancel</Button>
+          <Button size="sm">Vazgeç</Button>
         </Stack>
       </Stack>
     </Card>
@@ -42,41 +42,41 @@ export function SubtreeNested() {
     <Stack gap={4} style={{ width: "100%", maxWidth: 520 }}>
       <Stack direction="row" gap={3} wrap>
         <SegmentedControl
-          aria-label="Outer theme"
+          aria-label="Dış tema"
           value={outer}
           onValueChange={(v) => setOuter(v as Theme)}
           options={[
-            { value: "light", label: "Light" },
-            { value: "dark", label: "Dark" },
+            { value: "light", label: "Açık" },
+            { value: "dark", label: "Koyu" },
           ]}
         />
         <SegmentedControl
-          aria-label="Inner accent"
+          aria-label="İç accent"
           value={accent}
           onValueChange={(v) => setAccent(v as Accent)}
           options={[
-            { value: "blue", label: "Blue" },
-            { value: "violet", label: "Violet" },
-            { value: "green", label: "Green" },
-            { value: "graphite", label: "Graphite" },
+            { value: "blue", label: "Mavi" },
+            { value: "violet", label: "Mor" },
+            { value: "green", label: "Yeşil" },
+            { value: "graphite", label: "Grafit" },
           ]}
         />
         <SegmentedControl
-          aria-label="Inner density"
+          aria-label="İç yoğunluk"
           value={density}
           onValueChange={(v) => setDensity(v as Density)}
           options={[
-            { value: "compact", label: "Compact" },
-            { value: "default", label: "Default" },
-            { value: "comfortable", label: "Comfortable" },
+            { value: "compact", label: "Kompakt" },
+            { value: "default", label: "Varsayılan" },
+            { value: "comfortable", label: "Rahat" },
           ]}
         />
       </Stack>
       <div data-theme={outer} style={surface}>
         <Stack gap={4}>
-          <Sample label={`Outer · ${outer} · blue`} />
+          <Sample label={`Dış · ${outer} · blue`} />
           <div data-theme={inner} data-accent={accent} data-density={density} style={surface}>
-            <Sample label={`Inner · ${inner} · ${accent} · ${density}`} />
+            <Sample label={`İç · ${inner} · ${accent} · ${density}`} />
           </div>
         </Stack>
       </div>

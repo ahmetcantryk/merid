@@ -1,0 +1,114 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { SpinnerDemo, SpinnerSizes, SpinnerWithText, SpinnerColor } from "@/examples/tr/spinner";
+
+export const metadata = docMetadata("tr", "/docs/components/spinner", {
+  title: "Spinner",
+  description: "Geçerli metin rengini alan, süresi belirsiz bir yükleme göstergesi.",
+});
+
+# Spinner
+
+Süresi bilinmeyen kısa beklemeler için belirsiz bir yükleme göstergesi. `currentColor`'ı aldığı için içinde durduğu metne ya da butona uyar.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/spinner">Kaynak kod</a>
+</div>
+
+<Callout tone="success">
+  `label` varsayılan olarak İngilizce `"Loading"` değerini alır. Türkçe arayüzlerde `label="Yükleniyor"` ver.
+</Callout>
+
+<ComponentPreview code={`<Spinner label="Yükleniyor" />`}>
+  <SpinnerDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Spinner } from "@merid/react";
+```
+
+## Örnekler
+
+### Boyutlar
+
+Çaplar 14px (`sm`), 18px (`md`, varsayılan) ve 24px (`lg`).
+
+<ComponentPreview code={`<Spinner size="sm" label="Yükleniyor" />
+<Spinner size="md" label="Yükleniyor" />
+<Spinner size="lg" label="Yükleniyor" />`}>
+  <SpinnerSizes />
+</ComponentPreview>
+
+### Metnin yanında
+
+Neyin yüklendiğini görünür bir metin zaten söylüyorsa spinner'ı yardımcı teknolojiden gizlemek için `label={null}` ver; böylece mesaj iki kez okunmaz.
+
+<ComponentPreview code={`<Stack direction="row" gap={2} align="center">
+  <Spinner size="sm" label={null} />
+  <Text size="sm" as="span">Faturalar yükleniyor…</Text>
+</Stack>`}>
+  <SpinnerWithText />
+</ComponentPreview>
+
+### Renk
+
+`color`'ı spinner'a ya da bir üst elemana ver. Tek başına duruyorsa ona özel bir `label` ver.
+
+<ComponentPreview code={`<span style={{ color: "var(--mrd-accent)" }}>
+  <Spinner size="lg" label="Yükleniyor" />
+</span>`}>
+  <SpinnerColor />
+</ComponentPreview>
+
+## API referansı
+
+Bir `span` render'lar; ref'ini iletir ve native attribute'ları aktarır.
+
+<PropsTable rows={[
+  { name: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Çap: sm 14px, md 18px, lg 24px." },
+  { name: "label", type: "string | null", default: '"Loading"', description: "Erişilebilir ad. Dekoratifse null ver; spinner o zaman aria-hidden olur. Türkçe arayüzlerde Türkçe bir değer ver." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-spinner</code></td><td>Kök <code>{"<span>"}</code></td></tr>
+    <tr><td><code>.mrd-spinner__svg</code></td><td>SVG</td></tr>
+    <tr><td><code>.mrd-spinner__track</code></td><td>Soluk tam daire</td></tr>
+    <tr><td><code>.mrd-spinner__arc</code></td><td>Dönen çeyrek yay</td></tr>
+    <tr><td><code>data-size</code></td><td><code>sm</code> · <code>md</code> · <code>lg</code></td></tr>
+  </tbody>
+</table>
+
+Component değişkeni: her boyut için ayarlanan `--mrd-spinner-size`.
+
+```css
+.hero .mrd-spinner {
+  --mrd-spinner-size: 32px;
+}
+```
+
+## Erişilebilirlik
+
+- Etiket verildiğinde spinner `role="status"` ve `aria-label` taşır, ekran okuyucular onu araya girmeden okur.
+- `label={null}` ile `aria-hidden` olur. Yüklenen bölgeyi `aria-busy="true"` ile işaretle.
+- `prefers-reduced-motion` açıkken dönüş durmaz, yavaşlar; böylece ilerleme görünür kalır.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Spinner'ı birkaç saniyenin altındaki beklemeler için kullan. Daha uzun ya da ölçülebilir işlerde bir <code>Progress</code> çubuğu göster.</p>}
+  dont={<p>Bir <code>Skeleton</code> gelecek içeriğin şeklini gösterebilecekken bütün sayfayı bir spinner'la değiştirmek.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Button](/tr/docs/components/button): `loading` bu spinner'ı butonun içinde gösterir.
+- [Skeleton](/tr/docs/components/skeleton): yüklenen içerik için yer tutucu.
+- [Progress](/tr/docs/components/progress): ilerlemesi ölçülebilen işler için.

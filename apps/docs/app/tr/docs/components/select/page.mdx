@@ -1,0 +1,185 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import {
+  SelectBasic,
+  SelectControlled,
+  SelectSizes,
+} from "@/examples/tr/select";
+import { selectBasicCode, selectControlledCode, selectSizesCode } from "@/examples/tr/select.code";
+
+export const metadata = docMetadata("tr", "/docs/components/select", {
+  title: "Select",
+  description: "Stilli bir listeden tek bir seçenek seç.",
+});
+
+# Select
+
+Stilli bir listeden tek bir seçenek seç.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/select">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={selectBasicCode}>
+  <SelectBasic />
+</ComponentPreview>
+
+<Callout tone="success">
+  Değer seçilmemişken tetikleyicide görünen `placeholder` varsayılan olarak “Select…” olur. Türkçe arayüzde Root'a `placeholder="Seç…"` gibi Türkçe bir değer ver.
+</Callout>
+
+## Import
+
+```tsx
+import { Select } from "@merid/react";
+```
+
+## Anatomi
+
+```tsx
+<Select.Root>
+  <Select.Trigger />
+  <Select.Content>
+    <Select.Item value="a">A</Select.Item>
+  </Select.Content>
+</Select.Root>
+```
+
+- **Root** değeri ve açık state'ini tutar; `name` verildiğinde gizli bir `<input>` render'lar.
+- **Trigger**, `role="combobox"` butonudur. Seçili etiketi ya da placeholder'ı gösterir.
+- **Content**, portal ile render'lanan `role="listbox"` elemanıdır. Seçenekler etiketlerini bildirebilsin diye (gizli olarak) mount'lu kalır.
+- **Item**, tek bir `role="option"` elemanıdır. Metin children'ı etikettir; tetikleyicide gösterilir ve yazarak arama (typeahead) için kullanılır.
+
+## Örnekler
+
+### Controlled
+
+`value` ve `onValueChange` ver. Boş string hiçbir şeyin seçili olmadığı anlamına gelir ve `placeholder` gösterilir.
+
+<ComponentPreview code={selectControlledCode}>
+  <SelectControlled />
+</ComponentPreview>
+
+### Boyutlar ve devre dışı
+
+<ComponentPreview code={selectSizesCode}>
+  <SelectSizes />
+</ComponentPreview>
+
+### Form içinde
+
+Root'a `name` (istersen `required` ve `form` da) ver. Gönderimde değeri gizli bir input taşır.
+
+```tsx
+<form>
+  <Select.Root name="region" required>
+    <Select.Trigger aria-label="Bölge" />
+    <Select.Content>…</Select.Content>
+  </Select.Root>
+</form>
+```
+
+## API referansı
+
+### Root
+
+<PropsTable rows={[
+  { name: "value", type: "string", description: "Controlled seçili değer (\"\" hiçbir şeyin seçili olmadığı anlamına gelir)." },
+  { name: "defaultValue", type: "string", default: "\"\"", description: "Uncontrolled kullanımda başlangıç değeri." },
+  { name: "onValueChange", type: "(value: string) => void", description: "Yeni seçilen değerle çağrılır." },
+  { name: "open", type: "boolean", description: "Controlled açık state'i." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Uncontrolled kullanımda başlangıçtaki açık state'i." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Açık state'i değişmesi gerektiğinde çağrılır." },
+  { name: "name", type: "string", description: "Form alanı adı; değeri taşıyan gizli bir input render'lar." },
+  { name: "required", type: "boolean", description: "Gizli input'u zorunlu olarak işaretler." },
+  { name: "disabled", type: "boolean", default: "false", description: "Select'in tamamını devre dışı bırakır." },
+  { name: "placeholder", type: "ReactNode", default: "\"Select…\"", description: "Değer seçilmemişken tetikleyicide gösterilir. Türkçe arayüzde Türkçe bir değer ver, örneğin \"Seç…\"." },
+  { name: "form", type: "string", description: "Gizli input'u id ile bir forma bağlar." },
+  { name: "children", type: "ReactNode", description: "Trigger ve Content." },
+]} />
+
+### Trigger
+
+`value` dışındaki tüm `<button>` attribute'larını kabul eder. Children verilirse gösterilen etiketin yerine geçer. Verdiğin `id` korunur (böylece `<label htmlFor>` çalışır) ve listbox bu id ile etiketlenmeye devam eder. Bir [Field](/tr/docs/components/field) içinde tetikleyici, her Merid kontrolü gibi bağlantıları devralır: field'ın id'si ve etiketi (`aria-labelledby`), açıklama ve hata için `aria-describedby`, `aria-invalid` + `data-invalid`, `aria-required` ve `disabled`. Açıkça verilen prop'lar önceliklidir.
+
+<PropsTable rows={[
+  { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Kontrol boyutu." },
+  { name: "invalid", type: "boolean", description: "Alanı geçersiz olarak işaretler: anlam için `aria-invalid`, danger kenarlığı için `data-invalid`. Field içindeyse onun error değerinden türetilir." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Combobox butonuna iletilen ref." },
+]} />
+
+### Content
+
+Tüm `<div>` attribute'larını kabul eder. Listbox, tetikleyicinin genişliğini alır.
+
+<PropsTable rows={[
+  { name: "placement", type: "Placement", default: "\"bottom-start\"", description: "Tercih edilen konum." },
+  { name: "sideOffset", type: "number", default: "6", description: "Tetikleyiciye px cinsinden uzaklık." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal hedefi. `undefined` verilirse `document.body` kullanılır; `null` verilirse hedef oluşana kadar hiçbir şey render'lanmaz." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Listbox'a iletilen ref." },
+]} />
+
+### Item
+
+`children` dışındaki tüm `<div>` attribute'larını kabul eder. Senin `onClick` ve `onPointerMove` handler'ların önce çalışır; seçeneği seçmeyi ya da vurgulamayı atlamak için içlerinde `event.preventDefault()` çağır.
+
+<PropsTable rows={[
+  { name: "value", type: "string", required: true, description: "Form ile gönderilen ve onValueChange ile bildirilen değer." },
+  { name: "children", type: "string", required: true, description: "Görünür etiket. Tetikleyicide ve yazarak aramada da kullanılır." },
+  { name: "disabled", type: "boolean", default: "false", description: "Seçeneği devre dışı bırakır." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-select__trigger` | Trigger |
+| `.mrd-select__value`, `.mrd-select__icon` | Tetikleyici etiketi ve chevron |
+| `.mrd-select__content` | Listbox |
+| `.mrd-select__item`, `.mrd-select__item-text`, `.mrd-select__check` | Seçenek, metni, seçili işareti |
+
+| Attribute | Nerede | Değerler |
+|---|---|---|
+| `data-state` | Trigger, Content | `open`, `closed` |
+| `data-size` | Trigger | `sm`, `md`, `lg` |
+| `data-placeholder` | Trigger | değer seçilmemişken bulunur |
+| `data-invalid` | Trigger | geçersizken bulunur (danger kenarlığını sağlar) |
+| `data-active` | Item | klavye ya da işaretçiyle vurgulanan seçenekte bulunur |
+| `data-disabled` | Item | devre dışıyken bulunur |
+| `aria-selected="true"` | Item | seçili seçenek |
+
+Tetikleyici yüksekliği, `data-size` değerine göre ayarlanan `--mrd-select-height` değişkeninden gelir.
+
+## Erişilebilirlik
+
+WAI-ARIA [Select-Only Combobox desenini](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/) izler. Focus tetikleyicide kalır; vurgulanan seçenek `aria-activedescendant` ile bildirilir. Tetikleyiciye `aria-label`, `aria-labelledby` ya da bir `<label htmlFor>` tarafından gösterilen bir `id` ile erişilebilir bir ad ver.
+
+<KeyboardTable rows={[
+  { keys: ["Enter"], action: "Açar ya da vurgulanan seçeneği seçip kapatır." },
+  { keys: ["Space"], action: "Açar ya da vurgulanan seçeneği seçip kapatır." },
+  { keys: ["ArrowDown"], action: "Açar ya da sonraki seçeneği vurgular." },
+  { keys: ["ArrowUp"], action: "Açar ya da önceki seçeneği vurgular." },
+  { keys: ["Home"], action: "İlk seçeneği vurgular." },
+  { keys: ["End"], action: "Son seçeneği vurgular." },
+  { keys: ["A–Z"], action: "Yazarak arama. Kapalıyken eşleşeni doğrudan seçer." },
+  { keys: ["Tab"], action: "Vurgulanan seçeneği seçer, kapatır ve focus'u sonrakine taşır." },
+  { keys: ["Escape"], action: "Değeri değiştirmeden kapatır." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Select'i, listenin kendisinin tanıdık olduğu 5–15 seçenek için kullan (ülkeler, bölgeler, paketler).</p>}
+  dont={<p>İki üç seçenek için Select kullanmak. Onları <a href="/tr/docs/components/radio">Radio</a> ya da bir <a href="/tr/docs/components/segmented-control">SegmentedControl</a> olarak göster.</p>}
+/>
+
+<DoDont
+  do={<p>Tetikleyiciyi her zaman görünür bir etiketle birlikte kullan.</p>}
+  dont={<p>Tek etiket olarak placeholder'a güvenmek; bir değer seçildiği anda kaybolur.</p>}
+/>
+
+## İlgili sayfalar
+
+- [NativeSelect](/tr/docs/components/native-select): platformun `<select>` elemanı; mobilde ve uzun listelerde en iyisi.
+- [DropdownMenu](/tr/docs/components/dropdown-menu): değerler için değil, aksiyonlar için.
+- [Field](/tr/docs/components/field): bir kontrolün çevresinde etiket, ipucu ve hata.

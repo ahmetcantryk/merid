@@ -1,0 +1,153 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import {
+  NativeSelectDemo,
+  NativeSelectSizes,
+  NativeSelectField,
+  NativeSelectStates,
+  NativeSelectControlled,
+} from "@/examples/tr/native-select";
+
+export const metadata = docMetadata("tr", "/docs/components/native-select", {
+  title: "NativeSelect",
+  description: "Merid stiliyle platformun select elemanı: native klavye desteği ve mobilde sistem seçicisi.",
+});
+
+# NativeSelect
+
+Merid stiliyle platformun `<select>` elemanı. Tam native klavye desteğini, mobilde işletim sisteminin seçicisini ve form entegrasyonunu hiç JavaScript olmadan alırsın.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/native-select">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<NativeSelect aria-label="Ülke" placeholder="Bir ülke seç">
+  <option value="tr">Türkiye</option>
+  <option value="de">Almanya</option>
+  <option value="nl">Hollanda</option>
+</NativeSelect>`}>
+  <NativeSelectDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { NativeSelect } from "@merid/react";
+```
+
+## Örnekler
+
+### Boyutlar
+
+`sm` 36px, `md` 46px (varsayılan), `lg` 50px. Yükseklikler [Input](/tr/docs/components/input) ile aynı olduğu için aynı satırda hizalanırlar.
+
+<ComponentPreview code={`<NativeSelect aria-label="Küçük" size="sm" defaultValue="a">…</NativeSelect>
+<NativeSelect aria-label="Orta" size="md" defaultValue="a">…</NativeSelect>
+<NativeSelect aria-label="Büyük" size="lg" defaultValue="a">…</NativeSelect>`}>
+  <NativeSelectSizes />
+</ComponentPreview>
+
+### Field içinde
+
+Bir [Field](/tr/docs/components/field) içindeyken select, `id`, `aria-describedby`, `required` ve `disabled` değerlerini context'ten alır; elle bağlamana gerek kalmaz.
+
+<ComponentPreview code={`<Field label="Plan" description="Planını istediğin zaman değiştirebilirsin." required>
+  <NativeSelect placeholder="Bir plan seç">
+    <option value="free">Ücretsiz</option>
+    <option value="team">Ekip</option>
+    <option value="business">Kurumsal</option>
+  </NativeSelect>
+</Field>`}>
+  <NativeSelectField />
+</ComponentPreview>
+
+### Geçersiz ve devre dışı
+
+Field'a verilen `error`, select'e `aria-invalid` ekler ve mesajı ona bağlar. Field dışında `invalid`'i doğrudan ver.
+
+<ComponentPreview code={`<Field label="Bölge" error="Devam etmek için bir bölge seç.">
+  <NativeSelect placeholder="Bir bölge seç">…</NativeSelect>
+</Field>
+
+<Field label="Para birimi" disabled>
+  <NativeSelect defaultValue="eur">
+    <option value="eur">EUR</option>
+  </NativeSelect>
+</Field>`}>
+  <NativeSelectStates />
+</ComponentPreview>
+
+### Controlled
+
+`value` ve `onChange`'i native bir select'te olduğu gibi kullan.
+
+<ComponentPreview code={`const [value, setValue] = useState("weekly");
+
+<Field label="Özet sıklığı">
+  <NativeSelect value={value} onChange={(e) => setValue(e.target.value)}>
+    <option value="daily">Günlük</option>
+    <option value="weekly">Haftalık</option>
+    <option value="monthly">Aylık</option>
+  </NativeSelect>
+</Field>`}>
+  <NativeSelectControlled />
+</ComponentPreview>
+
+## API referansı
+
+Ref ve tüm native select attribute'ları `<select>`'e gider; yalnızca `className` ve `style` dıştaki sarmalayıcıya uygulanır. Native `size` attribute'unun yerini aşağıdaki `size` prop'u alır.
+
+<PropsTable rows={[
+  { name: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Yükseklik: sm 36px, md 46px, lg 50px." },
+  { name: "invalid", type: "boolean", description: "Geçersiz stilini (`data-invalid`) ve `aria-invalid`'i zorlar. Field içinde Field'ın error değerinden türetilir." },
+  { name: "placeholder", type: "string", description: "Başa devre dışı ve gizli bir `value=\"\"` seçeneği ekler; değer `\"\"` olduğunda (uncontrolled başlangıçta ya da controlled `value=\"\"` ile) görünür." },
+  { name: "children", type: "ReactNode", description: "option ve optgroup elemanları." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-native-select</code></td><td>Sarmalayıcı {"<span>"}; <code>className</code> ve <code>style</code> buraya uygulanır</td></tr>
+    <tr><td><code>.mrd-native-select__control</code></td><td>{"<select>"} elemanı</td></tr>
+    <tr><td><code>.mrd-native-select__chevron</code></td><td>Dekoratif chevron ikonu</td></tr>
+    <tr><td><code>data-size</code></td><td><code>sm</code> · <code>md</code> · <code>lg</code> (sarmalayıcıda)</td></tr>
+    <tr><td><code>data-invalid</code></td><td>Geçersizken kontrolde bulunur; danger kenarlığını sağlar (anlamı <code>aria-invalid</code> taşır)</td></tr>
+  </tbody>
+</table>
+
+Component değişkeni: Input ile ortak kullanılan `--mrd-input-height`.
+
+## Erişilebilirlik
+
+- Gerçek bir `<select>` olduğu için ekran okuyucular onu seçenekleriyle birlikte combobox ya da list box olarak duyurur, mobil tarayıcılar da native seçiciyi açar.
+- Ona bir ad ver: çevreleyen bir Field, `htmlFor` ile bir `Label` ya da `aria-label`. `placeholder` seçeneği etiket yerine geçmez.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Focus'u select'e taşır." },
+  { keys: ["Space"], action: "Seçenek listesini açar (platforma göre değişir)." },
+  { keys: ["↑", "↓"], action: "Seçili seçeneği değiştirir." },
+  { keys: ["A–Z"], action: "Yazılan karakterle başlayan ilk seçeneğe atlar." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>NativeSelect'i bilinen seçeneklerden oluşan sade listeler için kullan, özellikle telefonda doldurulan formlarda.</p>}
+  dont={<p>İçine zengin içerik, ikon ya da arama koymak. Bunlar için <a href="/tr/docs/components/select">Select</a> kullan.</p>}
+/>
+
+<DoDont
+  do={<p>Mantıklı bir varsayılan yoksa seçim yapmaya yönlendiren bir <code>placeholder</code> kullan, örneğin “Bir plan seç”.</p>}
+  dont={<p>Placeholder'ı tek etiket olarak kullanmak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Select](/tr/docs/components/select): daha zengin seçenekler sunan özel listbox.
+- [Field](/tr/docs/components/field): etiket, açıklama ve hata bağlantısı.
+- [Input](/tr/docs/components/input): aynı boyutlarda tek satırlık metin.
+- [SegmentedControl](/tr/docs/components/segmented-control): iki ila beş görünür seçenek için.

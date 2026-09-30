@@ -1,0 +1,51 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/foundations/dark-mode", {
+  title: "Dark mode",
+  description: "Merid açık ve koyu tema arasında nasıl geçiş yapar, bunu sayfa ya da alt ağaç bazında nasıl kontrol edersin.",
+});
+
+# Dark mode
+
+Her semantic renk token'ının bir koyu değeri vardır. Component'lerin ayrı bir dark varyantına ihtiyacı olmaz: token'ları okurlar, token'lar değişir.
+
+## Tema nasıl seçilir
+
+1. Bir elemanda `data-theme="dark"` varsa, o eleman ve altındakiler koyu değerleri kullanır.
+2. Bir elemanda `data-theme="light"` varsa, sistem koyu temayı tercih etse bile açık değerler kullanılır.
+3. İkisi de yoksa token'lar `prefers-color-scheme`'i izler.
+
+Attribute her elemanda çalıştığı için açık bir sayfanın içinde koyu bir panel render'layabilirsin, tersi de olur.
+
+```tsx
+<section data-theme="dark">
+  {/* buradaki her şey koyu token'ları kullanır */}
+</section>
+```
+
+## Tema seçici ekleme
+
+Kullanıcının seçimini sakla, ilk boyamadan önce `<html>`'e uygula ve kayıtlı bir değer yoksa sistem tercihine dön.
+
+```html
+<script>
+  try {
+    const theme = localStorage.getItem("theme");
+    if (theme === "light" || theme === "dark") {
+      document.documentElement.setAttribute("data-theme", theme);
+    }
+  } catch {}
+</script>
+```
+
+Script `try` içinde, çünkü gizli pencerelerde ya da site verileri engellendiğinde storage erişilemez olabilir. Body render'lanmadan önce çalışması için script'i dokümanın `head` bölümüne koy.
+
+## Dark mode'da neler değişir
+
+- Yüzeyler yükseldikçe açılır: sayfa `#0b0d12`, surface `#12151c`, tray `#161a22`.
+- Gölgeler mürekkep tonundan daha derin bir siyaha geçer ve yükseltilmiş yüzeyler 1px'lik bir `--mrd-line` halkası kazanır, çünkü koyu arka planda yalnızca gölgeyi görmek zordur.
+- Accent, koyu sayfaya karşı kontrastı koruması için `#6b8aff`'e açılır.
+- Durum tonları her yüzeye oturabilmek için yarı saydam olur.
+
+## Kendi component'lerini kontrol etme
+
+Renk eklediğin her seferde iki temayı da test et. Hızlı bir yol, tarayıcının element inspector'ında `<html>` üzerindeki `data-theme`'i değiştirmek.

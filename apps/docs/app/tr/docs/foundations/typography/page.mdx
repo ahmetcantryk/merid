@@ -1,0 +1,41 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { TypeSpecimen } from "@/components/foundations";
+
+export const metadata = docMetadata("tr", "/docs/foundations/typography", {
+  title: "Tipografi",
+  description: "Merid'in yazı tipi, tipografi ölçeği, ağırlıkları ve dizgi kuralları.",
+});
+
+# Tipografi
+
+Merid metinleri **Geist** ile; kodu, etiketleri ve token adlarını **Geist Mono** ile dizer. İkisi de variable font olarak pakete dahildir. Rakamlar her yerde tabular'dır; böylece tablolarda sayılar hizalanır, fiyatlar değiştikçe kaymaz.
+
+## Ölçek
+
+Boyutlar token'dır: boyut için `--mrd-text-*`, satır yüksekliği için eşleşen `--mrd-leading-*` ve gerektiği yerde harf aralığı için `--mrd-tracking-*`.
+
+<TypeSpecimen locale="tr" />
+
+Display ve bölüm boyutları `clamp()` kullanır ve viewport'la birlikte ölçeklenir. Yukarıdaki örnekler bunları temsili bir masaüstü boyutunda gösterir.
+
+## Ağırlıklar
+
+- **400** (`--mrd-weight-regular`): gövde metni.
+- **500** (`--mrd-weight-medium`): tüm arayüz metinleri; butonlar, etiketler, navigasyon, tab'lar.
+- **600** (`--mrd-weight-semibold`): başlıklar ve vurgu gereken sayılar.
+
+700 ağırlığı hiç kullanılmaz. 600 yeterli kontrastı vermiyorsa ağırlık yerine tonu değiştir.
+
+## Kurallar
+
+- Büyük başlıklar sıkıdır: negatif harf aralığı ve 1'e yakın satır yüksekliği. Gövde metni 1.6 ile ferahtır.
+- Başlıklar `text-wrap: balance` kullanır; böylece kısa başlıklar son satırda tek bir kelime bırakmaz.
+- Okuma genişliğini `--mrd-prose` (720px) veya altında tut.
+- Hiyerarşi için üç metin tonunu kullan: başlıklar için `--mrd-ink`, metin için `--mrd-body`, meta için `--mrd-muted`.
+
+## Font stack'leri
+
+```css
+--mrd-font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+--mrd-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+```

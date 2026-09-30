@@ -1,0 +1,101 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { BadgeDemo, BadgeTones, BadgeDots, BadgeCount } from "@/examples/tr/badge";
+
+export const metadata = docMetadata("tr", "/docs/components/badge", {
+  title: "Badge",
+  description: "Durum ve sayılar için küçük, etkileşimsiz bir hap etiket.",
+});
+
+# Badge
+
+Durumu etiketleyen ya da bir sayı gösteren 22px yüksekliğinde hap şeklinde bir etiket. Badge'ler salt okunurdur: asla focus almaz, tıklamaya tepki vermez.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/badge">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Badge tone="success" dot>Aktif</Badge>`}>
+  <BadgeDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Badge } from "@merid/react";
+```
+
+## Örnekler
+
+### Tonlar
+
+Her ton, koyu metinli yumuşak bir renk tonudur. Tek dolgulu ton `solid`'dir; onu öne çıkması gereken tek badge'e sakla.
+
+<ComponentPreview code={`<Badge>Nötr</Badge>
+<Badge tone="accent">Accent</Badge>
+<Badge tone="success">Başarılı</Badge>
+<Badge tone="warning">Uyarı</Badge>
+<Badge tone="danger">Hata</Badge>
+<Badge tone="solid">Dolgulu</Badge>`}>
+  <BadgeTones />
+</ComponentPreview>
+
+### Durum noktası
+
+`dot`, başa mevcut metin renginde küçük bir nokta ekler; canlı durumlar için iyi okunur.
+
+<ComponentPreview code={`<Badge tone="success" dot>Çevrimiçi</Badge>
+<Badge tone="warning" dot>Yavaşladı</Badge>
+<Badge tone="danger" dot>Erişilemiyor</Badge>`}>
+  <BadgeDots />
+</ComponentPreview>
+
+### Sayı
+
+Badge içindeki sayılar tabular rakamlar kullanır; sayı değiştikçe genişlik kaymaz.
+
+<ComponentPreview code={`<Badge tone="accent">12</Badge>`}>
+  <BadgeCount />
+</ComponentPreview>
+
+## API referansı
+
+Ref'i `<span>`'e iletir ve native span attribute'larını geçirir.
+
+<PropsTable rows={[
+  { name: "tone", type: '"neutral" | "accent" | "success" | "warning" | "danger" | "solid"', default: '"neutral"', description: "Renk tonu. Tek dolgulu ton solid'dir." },
+  { name: "dot", type: "boolean", default: "false", description: "Başa mevcut metin renginde küçük bir durum noktası ekler." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-badge</code></td><td>Root <code>{"<span>"}</code></td></tr>
+    <tr><td><code>.mrd-badge__dot</code></td><td>Baştaki durum noktası (aria-hidden)</td></tr>
+    <tr><td><code>data-tone</code></td><td><code>neutral</code> · <code>accent</code> · <code>success</code> · <code>warning</code> · <code>danger</code> · <code>solid</code></td></tr>
+  </tbody>
+</table>
+
+Badge'in component değişkeni yoktur; tonlar `--mrd-*-soft` ve `--mrd-*-strong` renk token'larına bağlanır.
+
+## Erişilebilirlik
+
+- Badge düz metindir; içeriği belge sırasına göre okunur. Etiketlediği şeyin yanında anlamlı olduğundan emin ol.
+- Nokta dekoratiftir. Asla yalnızca noktanın rengine güvenme; durumu metin söylemeli.
+- Tek başına bir sayı (“12”) bağlam ister. Anlamı yakındaki metinden anlaşılmıyorsa görsel olarak gizli bir ek ekle, örneğin `12 <VisuallyHidden>okunmamış</VisuallyHidden>`.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Badge metnini bir iki kelimede tut: “Taslak”, “Vadesi geçti”.</p>}
+  dont={<p>Badge'i buton ya da filtre çipi olarak kullanmak; etkileşimli değildir ve focus alamaz.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Alert](/tr/docs/components/alert): bir cümle gerektiren durumlar için.
+- [VisuallyHidden](/tr/docs/components/visually-hidden): sayılara erişilebilir bir anlam vermek için.

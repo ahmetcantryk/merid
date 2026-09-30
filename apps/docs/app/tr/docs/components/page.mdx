@@ -1,0 +1,19 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ComponentCatalog } from "@/components/ComponentCatalog";
+
+export const metadata = docMetadata("tr", "/docs/components", {
+  title: "Component'ler",
+  description: "Tüm Merid component'leri, amaçlarına göre gruplanmış ve güncel durumlarıyla.",
+});
+
+# Component'ler
+
+Merid'in component'leri ne işe yaradıklarına göre gruplanır. Her birinin canlı önizleme, props, klavye etkileşimleri ve kullanım önerileri içeren kendi sayfası vardır.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" /> <span>API oturdu</span>
+  <StatusBadge status="beta" /> <span>Yayında, API hâlâ değişebilir</span>
+  <StatusBadge status="planned" /> <span>Yol haritasında</span>
+</div>
+
+<ComponentCatalog locale="tr" />

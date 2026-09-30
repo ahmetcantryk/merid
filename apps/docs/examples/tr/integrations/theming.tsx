@@ -5,7 +5,7 @@ import { Badge, Button, Card, Checkbox, Field, Input, SegmentedControl, Stack, S
 
 type Brand = "merid" | "teal" | "plum";
 
-/** Each brand overrides the full accent family; values checked for AA on white (solid ≥ 4.5:1). */
+/** Her marka accent ailesinin tamamını ezer; değerler beyaz zeminde AA için kontrol edildi (solid ≥ 4.5:1). */
 const BRANDS: Record<Brand, CSSProperties> = {
   merid: {},
   teal: {
@@ -33,7 +33,7 @@ export function ThemingBrandPreview() {
   return (
     <Stack gap={4} style={{ width: "100%", maxWidth: 440 }}>
       <SegmentedControl
-        aria-label="Brand"
+        aria-label="Marka"
         value={brand}
         onValueChange={(value) => setBrand(value as Brand)}
         options={[
@@ -47,24 +47,24 @@ export function ThemingBrandPreview() {
           <Stack gap={4}>
             <Stack direction="row" justify="between" align="center">
               <Text weight="semibold" tone="ink">
-                Workspace
+                Çalışma alanı
               </Text>
               <Badge tone="accent">Pro</Badge>
             </Stack>
             <Tabs.Root defaultValue="general">
-              <Tabs.List aria-label="Brand preview">
-                <Tabs.Trigger value="general">General</Tabs.Trigger>
-                <Tabs.Trigger value="members">Members</Tabs.Trigger>
+              <Tabs.List aria-label="Marka önizlemesi">
+                <Tabs.Trigger value="general">Genel</Tabs.Trigger>
+                <Tabs.Trigger value="members">Üyeler</Tabs.Trigger>
               </Tabs.List>
             </Tabs.Root>
-            <Field label="Workspace name">
+            <Field label="Çalışma alanı adı">
               <Input defaultValue="Northwind" />
             </Field>
-            <Checkbox defaultChecked>Allow guests</Checkbox>
-            <Switch defaultChecked>Weekly digest</Switch>
+            <Checkbox defaultChecked>Misafirlere izin ver</Checkbox>
+            <Switch defaultChecked>Haftalık özet</Switch>
             <Stack direction="row" gap={2}>
-              <Button variant="primary">Save changes</Button>
-              <Button variant="link">Learn more</Button>
+              <Button variant="primary">Değişiklikleri kaydet</Button>
+              <Button variant="link">Daha fazla bilgi</Button>
             </Stack>
           </Stack>
         </Card>

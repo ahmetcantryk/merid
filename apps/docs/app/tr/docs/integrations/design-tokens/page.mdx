@@ -1,0 +1,81 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/integrations/design-tokens", {
+  title: "Figma ve Style Dictionary",
+  description: "Merid'in design token'larını @merid/tokens ile Figma'ya (Tokens Studio), Style Dictionary'ye ve JavaScript'e taşı.",
+});
+
+# Figma ve Style Dictionary
+
+`@merid/tokens`, Merid'in token'larını başka araçların okuyabildiği formatlarda yayımlar. `@merid/react`'in içinde gelen `tokens.css`'ten üretilir; ikisi birbirini tutmazsa bir test build'i kırar.
+
+```bash
+npm i @merid/tokens
+```
+
+| Import | Format | Ne için |
+|---|---|---|
+| `@merid/tokens/tokens.json` | [W3C Design Tokens](https://www.designtokens.org/tr/drafts/format/) (`$value`, `$type`) | Style Dictionary v4+, Terrazzo, diğer DTCG araçları |
+| `@merid/tokens/figma-tokens.json` | Tokens Studio for Figma | Figma'da değişkenleri ve stilleri senkronlamak |
+| `@merid/tokens` | ES module + tipler | JS'te ham değerler ve `var()` referansları |
+| `@merid/tokens/tokens.css` | CSS | React kullanmayan stack'ler için kaynağın bir kopyası |
+
+## Token grupları
+
+`color`, `space`, `radius`, `typography`, `shadow`, `motion`, `size` (kontrol yükseklikleri, layout genişlikleri) ve `z`. Her token CSS adını `$extensions["com.merid"].cssVariable` içinde saklar.
+
+```json
+"accent": {
+  "$value": "#3f63f5",
+  "$type": "color",
+  "$extensions": {
+    "com.merid": { "cssVariable": "--mrd-accent", "modes": { "dark": "#6b8aff" } }
+  }
+}
+```
+
+`$value` açık (varsayılan) temadaki değerdir. Koyu değerler ile responsive ve dokunmatik override'lar (`viewport-md`, `viewport-sm`, `pointer-coarse`) `modes` altında durur.
+
+## Figma (Tokens Studio)
+
+1. Tokens Studio'da `figma-tokens.json`'u gösteren bir sync provider (GitHub, URL ya da JSON dosyası) ekle.
+2. Dosyada üç set, yani `core`, `dark` ve `pointer-coarse`, ve iki tema var: **Light** (`core`) ve **Dark** (kaynak olarak `core` + `dark`).
+3. İki tema seçiliyken **Create variables**'ı kullan; Light ve Dark modları olan bir Figma değişken koleksiyonu elde edersin.
+
+Gölgeler `boxShadow` token'ı olarak gelir; süre, easing ve z-index `other` tipindedir, bunları Figma değişkenlerinin dışında bırakmak en iyisi.
+
+## Style Dictionary
+
+Style Dictionary v4 DTCG'yi doğrudan okur. Merid'in hedeflemediği platformlar, örneğin iOS, Android ya da e-posta şablonları için token üretmekte kullan:
+
+```js
+// sd.config.mjs
+import StyleDictionary from "style-dictionary";
+
+const sd = new StyleDictionary({
+  source: ["node_modules/@merid/tokens/dist/tokens.json"],
+  platforms: {
+    ios: { transformGroup: "ios-swift", buildPath: "ios/", files: [{ destination: "Merid.swift", format: "ios-swift/class.swift" }] },
+    scss: { transformGroup: "scss", buildPath: "scss/", files: [{ destination: "_merid.scss", format: "scss/variables" }] },
+  },
+});
+
+await sd.buildAllPlatforms();
+```
+
+Koyu tema build'i için, varsa `$value`'yu `$extensions["com.merid"].modes.dark` ile değiştiren küçük bir preprocessor ekle.
+
+## JavaScript
+
+```ts
+import { tokens, cssVar } from "@merid/tokens";
+
+tokens.light.accent; // "#3f63f5"
+tokens.dark.accent; // "#6b8aff"
+cssVar.accent; // "var(--mrd-accent)"
+```
+
+Tarayıcıda `cssVar`'ı tercih et: aktif temayı izler. Ham `tokens`'a yalnızca CSS değişkenlerinin olmadığı yerlerde başvur: canvas, görsele render'lanan grafikler, e-postalar, native kod.
+
+## Token'ları değiştirmek
+
+Token'lar tek bir yerde, `packages/react/styles/tokens.css` içinde tanımlanır. Orada düzenle, sonra `npm run build -w @merid/tokens` çalıştır. `[data-theme="dark"]` bloğu ile `prefers-color-scheme: dark` bloğu birbirinden ayrışırsa build kırılır.

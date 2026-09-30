@@ -1,0 +1,67 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { DataTableExample } from "@/examples/tr/patterns/data-table";
+
+export const metadata = docMetadata("tr", "/docs/patterns/data-tables", {
+  title: "Veri tabloları",
+  description: "Table, Checkbox ve Pagination ile sıralama, filtreleme, toplu aksiyonlu satır seçimi ve sayfalama.",
+});
+
+# Veri tabloları
+
+Merid'in `Table`'ı stil verilmiş semantik bir `<table>`'dır, bir data grid değildir. Sıralama, seçim ve sayfalama, etrafına yazılan birkaç satırlık state'ten ibarettir; böylece sunucuda neyin çalışacağının kontrolü sende kalır.
+
+<ComponentPreview align="start" code={`<Table hoverable scrollLabel="Faturalar">
+  <TableHead>
+    <TableRow>
+      <TableHeader><Checkbox aria-label="Bu sayfadakilerin tümünü seç" checked={allOnPage}
+        indeterminate={someOnPage && !allOnPage} onChange={togglePage} /></TableHeader>
+      <TableHeader>Fatura</TableHeader>
+      <TableHeader aria-sort={sort.key === "customer" ? sort.dir : "none"}>
+        <Button variant="ghost" size="sm" onClick={() => onSort("customer")}>Müşteri ↑</Button>
+      </TableHeader>
+      <TableHeader align="end">Tutar</TableHeader>
+    </TableRow>
+  </TableHead>
+  <TableBody>
+    {visible.map((row) => (
+      <TableRow key={row.id} selected={selected.has(row.id)}>
+        <TableCell><Checkbox aria-label={\`\${row.id} faturasını seç\`} checked={selected.has(row.id)} onChange={() => toggle(row.id)} /></TableCell>
+        …
+      </TableRow>
+    ))}
+  </TableBody>
+</Table>
+<Pagination pageCount={pageCount} page={page} onPageChange={setPage}
+  previousLabel="Önceki sayfa" nextLabel="Sonraki sayfa" pageLabel={(p) => \`Sayfa \${p}\`} />`}>
+  <DataTableExample />
+</ComponentPreview>
+
+`Pagination`'ın erişilebilir etiketleri varsayılan olarak İngilizcedir (`"Pagination"`, `"Previous page"`, `"Next page"`, `"Page 1"`). Türkçe arayüzde `aria-label`, `previousLabel`, `nextLabel` ve `pageLabel` ver.
+
+## Sıralama
+
+- Başlık etiketini ghost bir `Button` yap ve `TableHeader`'a `aria-sort` (`ascending`, `descending` ya da `none`) ver. Ekran okuyucular kolona girildiğinde sıralama durumunu duyurur.
+- Aktif kolonda yön okunu göster; sıralanabilir ama aktif olmayan kolonlardaki soluk bir ok, bu kolonların sıralanabildiğini belli eder.
+- İlk tıklama artan sırada sıralar (A–Z, küçükten büyüğe); tekrar tıklamak sırayı ters çevirir.
+
+## Seçim ve toplu aksiyonlar
+
+- Bir checkbox kolonu ekle. Başlıktaki checkbox **mevcut sayfayı** seçer ve bazı satırlar seçiliyken `indeterminate` olur.
+- `TableRow selected`, satırı accent-soft dolguyla boyar. State'i yardımcı teknolojiye checkbox taşır; `selected` yalnızca görseldir.
+- Toplu aksiyonları tablonun üstündeki araç çubuğuna koy, bir şey seçilene kadar devre dışı tut ve satır sayısının yerine bir `aria-live` bölgesinde "3 seçili" yaz.
+- Sayfa değişirken seçimi koru; filtre veri kümesini değiştirdiğinde seçimi temizle ya da kaç seçili satırın gizlendiğini söyle.
+
+## Sayfalama ve filtreleme
+
+- Filtre veya sıralama her değiştiğinde 1. sayfaya dön.
+- `Pagination`'ın yanında "Sayfa 2 / 4" ya da "21–30 / 230" göster.
+- Sunucudan gelen veride, görünümler paylaşılabilsin diye `page`, `sort` ve filtreyi URL'de tut; bkz. [React Router ve TanStack](/tr/docs/integrations/routers).
+- Sonuç yoksa: aramayı tekrarlayan, tam genişlikte tek bir satır (`colSpan`). Bkz. [Boş ve yükleniyor durumları](/tr/docs/patterns/empty-and-loading).
+
+## Sayılar ve hizalama
+
+Sayısal kolonları sağa hizala (hem başlıkta hem hücrelerde `align="end"`) ve rakamlar alt alta hizalansın diye tablo rakamları için `Text numeric` kullan. Durum bir `Badge` içinde gösterilir, asla yalnızca renkle değil.
+
+## Geniş tablolar
+
+`Table` kendini bir scroll çerçevesine sarar. `scrollLabel` bu bölgeye bir ad verir; klavye kullanıcıları ona focus verip yatayda kaydırabilir. Kullanıcıların okumaktan çok göz gezdirdiği tablolarda `density="sm"` kullan.

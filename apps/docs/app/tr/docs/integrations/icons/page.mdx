@@ -1,0 +1,61 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { IconsInControls } from "@/examples/tr/integrations/icons";
+
+export const metadata = docMetadata("tr", "/docs/integrations/icons", {
+  title: "İkonlar",
+  description: "lucide-react'i (ya da herhangi bir SVG ikon setini) Merid ile kullan: boyutlar, çizgi kalınlığı ve ikonların yeri.",
+});
+
+# İkonlar
+
+Merid bir ikon setiyle gelmez. İkon alan her slot herhangi bir React node'unu kabul eder; [lucide-react](https://lucide.dev), Heroicons, Phosphor ya da kendi SVG'lerin çalışır. Merid'in geometrisine en iyi Lucide'ın 24px grid'i ve yuvarlak birleşimleri uyar.
+
+```bash
+npm i lucide-react
+```
+
+<ComponentPreview align="start" code={`import { Plus, Search, Settings } from "lucide-react";
+
+const ICON = { size: 16, strokeWidth: 1.75, "aria-hidden": true } as const;
+const ICON_SM = { size: 14, strokeWidth: 1.75, "aria-hidden": true } as const;
+
+<Button variant="primary" leadingIcon={<Plus {...ICON} />}>Yeni proje</Button>
+<IconButton label="Ayarlar" icon={<Settings {...ICON} />} />
+<Input leading={<Search {...ICON_SM} />} placeholder="Projelerde ara" aria-label="Projelerde ara" />
+<SidebarNav.Item href="/inbox" icon={<Mail {...ICON} />}>Gelen kutusu</SidebarNav.Item>`}>
+  <IconsInControls />
+</ComponentPreview>
+
+## Boyutlar
+
+| Nerede | Boyut | Çizgi |
+|---|---|---|
+| `Button` (`leadingIcon`, `trailingIcon`), `IconButton`, `SidebarNav.Item` | 16px | 1.75 |
+| `Input` `leading` / `trailing`, `Badge`, sıkı tablo hücreleri | 14px | 1.75 |
+| `EmptyState` `icon`, `Alert` `icon` | 20px | 1.5 |
+
+Lucide'ın varsayılan 2 çizgi kalınlığı, 16px'te Merid'in 1.5px metninden ve ince çizgilerinden daha ağır durur; 1.75, `medium` etiketlerin ağırlığıyla eşleşir. Her ikon tutarlı kalsın diye tek bir prop setini bir sabitte tut.
+
+## Erişilebilirlik
+
+- Metnin yanındaki ikonlar dekoratiftir: `aria-hidden` ver. `Button` ve `Input` ikon slot'larını zaten `aria-hidden` span'lere sarar; bu yalnızca ek bir güvence.
+- `IconButton` `label` ister; bu erişilebilir ad olur (onu `Tooltip`'e sararsan tooltip metni de). İkonun kendisi gizli kalır.
+- Bir `Badge`'de ya da tablo hücresinde anlamı hiçbir zaman tek başına bir ikonla taşıma; metin ya da `VisuallyHidden` bir etiket ekle.
+
+## Renk
+
+İkonlar `currentColor` kullanır, yani slot'larının metin tonunu izler: input'larda soluk, ghost butonlarda ink, primary üzerinde beyaz. Kontrolün tamamı accent'li değilse ikonları accent ile boyama.
+
+## Kendi SVG'lerin
+
+16 ya da 20 birimlik bir grid üzerinde çiz, çizgi `currentColor`, dolgu yok, uçlar yuvarlak. `<svg>`'ye `aria-hidden="true"` ve `focusable="false"` ver (eski Edge için).
+
+```tsx
+export function ProjectIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false" {...props}>
+      <rect x="2.5" y="2.5" width="11" height="11" rx="3" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+```

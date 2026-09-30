@@ -1,0 +1,130 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { InputDemo, InputSizes, InputAddons, InputStates, InputControlled } from "@/examples/tr/input";
+
+export const metadata = docMetadata("tr", "/docs/components/input", {
+  title: "Input",
+  description: "Boyutları, baş ve son ekleri ve Field bağlantısıyla tek satırlık metin input'u.",
+});
+
+# Input
+
+Tek satırlık bir metin input'u. Bir [Field](/tr/docs/components/field) içinde id'sini, açıklamasını, hatasını ve zorunluluk state'ini otomatik olarak alır.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/input">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Input aria-label="E-posta" type="email" placeholder="sen@sirket.com" />`}>
+  <InputDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Input } from "@merid/react";
+```
+
+## Örnekler
+
+### Boyutlar
+
+`sm` 36px, `md` 46px (varsayılan), `lg` 50px.
+
+<ComponentPreview code={`<Input size="sm" placeholder="Küçük, 36px" />
+<Input size="md" placeholder="Orta, 46px" />
+<Input size="lg" placeholder="Büyük, 50px" />`}>
+  <InputSizes />
+</ComponentPreview>
+
+### Baş ve son ekler
+
+`leading` ve `trailing`, çerçevenin içine dekoratif ikonlar, önekler ya da birimler ekler. Bunlar `aria-hidden`'dır; anlamlı olan her şeyi (örneğin para birimini) etikette de belirt. İkisinden biri verildiğinde input `.mrd-input-group` ile sarılır ve `className` bu sarmalayıcıya geçer.
+
+<ComponentPreview code={`<Input aria-label="Ara" leading={<SearchIcon />} placeholder="Projelerde ara" />
+<Input aria-label="Tutar" type="number" trailing="TRY" defaultValue="250" />`}>
+  <InputAddons />
+</ComponentPreview>
+
+### Geçersiz, devre dışı, salt okunur
+
+`invalid`, geçersiz stilini ve `aria-invalid`'i zorlar; Field içinde Field'ın `error`'unu izler. `disabled` ve `readOnly` native attribute'lardır.
+
+<ComponentPreview code={`<Input aria-label="Geçersiz" invalid defaultValue="e-posta-degil" />
+<Input aria-label="Devre dışı" disabled defaultValue="Devre dışı" />
+<Input aria-label="Salt okunur" readOnly defaultValue="Salt okunur" />`}>
+  <InputStates />
+</ComponentPreview>
+
+### Controlled
+
+Input sade bir `<input>`'tur: kontrol etmek için `value` + `onChange`, uncontrolled bırakmak için `defaultValue` kullan.
+
+<ComponentPreview code={`const [value, setValue] = useState("");
+
+<Input
+  aria-label="Çalışma alanı URL'si"
+  value={value}
+  onChange={(event) => setValue(event.target.value)}
+  placeholder="acme"
+/>
+<Text size="xs" tone="muted">meridui.dev/{value || "…"}</Text>`}>
+  <InputControlled />
+</ComponentPreview>
+
+## API referansı
+
+`Input` ref'ini `<input>`'a iletir ve diğer tüm native input attribute'larını olduğu gibi geçirir. `className` ve `style` her zaman kök elemana gider: `<input>`'un kendisine ya da `leading` veya `trailing` verildiğinde `.mrd-input-group` sarmalayıcısına. `type` varsayılan olarak `"text"`'tir.
+
+<PropsTable rows={[
+  { name: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Yükseklik: sm 36px, md 46px, lg 50px." },
+  { name: "invalid", type: "boolean", description: "Geçersiz stilini (`data-invalid`) ve `aria-invalid`'i zorlar. Field içinde onun hatasından türetilir." },
+  { name: "leading", type: "ReactNode", description: "Metinden önceki dekoratif eleman (ikon, önek)." },
+  { name: "trailing", type: "ReactNode", description: "Metinden sonraki dekoratif eleman (ikon, birim)." },
+  { name: "type", type: "string", default: '"text"', description: "Native input tipi." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-input</code></td><td>{"<input>"} elemanı</td></tr>
+    <tr><td><code>.mrd-input-group</code></td><td>Sarmalayıcı, yalnızca <code>leading</code> ya da <code>trailing</code> verildiğinde</td></tr>
+    <tr><td><code>.mrd-input-group__addon</code></td><td>Ek slot'u, <code>data-side</code> ile: <code>leading</code> · <code>trailing</code></td></tr>
+    <tr><td><code>data-size</code></td><td><code>sm</code> · <code>md</code> · <code>lg</code> (input ve group üzerinde)</td></tr>
+    <tr><td><code>data-invalid</code></td><td>Geçersizken bulunur; danger kenarlığını yönetir (semantiği <code>aria-invalid</code> taşır)</td></tr>
+  </tbody>
+</table>
+
+Component değişkeni: `--mrd-input-height`, boyuta göre atanır.
+
+```css
+.filters .mrd-input {
+  --mrd-input-height: 40px;
+}
+```
+
+## Erişilebilirlik
+
+- Her input'un bir adı olmalı: görünür bir [Label](/tr/docs/components/label) / [Field](/tr/docs/components/field) ya da amacı bağlamdan belli olduğunda (arama gibi) `aria-label`.
+- Placeholder bir etiket değildir; yazmaya başlayınca kaybolur ve kontrastı düşüktür.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Focus'u input'a taşır." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Bir satır tek yükseklikte kalsın diye input <code>size</code>'ını komşu butonlarla eşleştir.</p>}
+  dont={<p><code>leading</code> ya da <code>trailing</code> içine buton gibi etkileşimli elemanlar koymak. Ekler yardımcı teknolojiden gizlenir.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Field](/tr/docs/components/field): etiket, açıklama ve hata bağlantısı.
+- [Textarea](/tr/docs/components/textarea): çok satırlı metin.
+- [NativeSelect](/tr/docs/components/native-select): listeden seçim.

@@ -1,0 +1,147 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { RadioDemo, RadioControlled, RadioHorizontal, RadioStates } from "@/examples/tr/radio";
+
+export const metadata = docMetadata("tr", "/docs/components/radio", {
+  title: "Radio",
+  description: "Küçük bir seçenek kümesinden tam olarak birini seçmek için RadioGroup içinde native radio'lar.",
+});
+
+# Radio
+
+Küçük ve görünür bir seçenek kümesinden tam olarak birini seç. `Radio` native bir radio input'tur; `RadioGroup` ortak `name` değerini, seçili değeri ve ok tuşlarıyla gezinmeyi sağlar.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/radio">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<RadioGroup aria-label="Paket" defaultValue="team">
+  <Radio value="free">Ücretsiz</Radio>
+  <Radio value="team">Ekip</Radio>
+  <Radio value="business">İşletme</Radio>
+</RadioGroup>`}>
+  <RadioDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Radio, RadioGroup } from "@merid/react";
+```
+
+## Örnekler
+
+### Controlled, açıklamalı
+
+`defaultValue` grubu uncontrolled yapar. Controlled kullanım için `value` ve `onValueChange` ver; `onValueChange` yeni değeri string olarak alır. `description`, radio'ya bağlı ikinci bir satır ekler.
+
+<ComponentPreview code={`const [value, setValue] = useState("standard");
+
+<RadioGroup aria-label="Kargo" value={value} onValueChange={setValue}>
+  <Radio value="standard" description="3–5 iş günü">Standart</Radio>
+  <Radio value="express" description="Sonraki iş günü">Hızlı</Radio>
+</RadioGroup>`}>
+  <RadioControlled />
+</ComponentPreview>
+
+### Yatay
+
+<ComponentPreview code={`<RadioGroup aria-label="Fatura dönemi" orientation="horizontal" defaultValue="monthly">
+  <Radio value="monthly">Aylık</Radio>
+  <Radio value="yearly">Yıllık</Radio>
+</RadioGroup>`}>
+  <RadioHorizontal />
+</ComponentPreview>
+
+### Devre dışı ve geçersiz
+
+Grupta `disabled` tüm radio'ları devre dışı bırakır; tek bir `Radio`'da yalnızca o seçeneği devre dışı bırakır ve ok tuşları onu atlar. `invalid`, gruba `aria-invalid` ekler ve daireleri kırmızıya çevirir.
+
+<ComponentPreview code={`<RadioGroup aria-label="Devre dışı grup" disabled defaultValue="a">…</RadioGroup>
+
+<RadioGroup aria-label="Beden" defaultValue="m">
+  <Radio value="s">Küçük</Radio>
+  <Radio value="m">Orta</Radio>
+  <Radio value="l" disabled>Büyük (tükendi)</Radio>
+</RadioGroup>
+
+<RadioGroup aria-label="Geçersiz grup" invalid required>
+  <Radio value="yes">Evet</Radio>
+  <Radio value="no">Hayır</Radio>
+</RadioGroup>`}>
+  <RadioStates />
+</ComponentPreview>
+
+## API referansı
+
+### RadioGroup
+
+`role="radiogroup"` olan bir `div` render'lar; ref ve diğer div attribute'ları bu elemana iletilir.
+
+<PropsTable rows={[
+  { name: "value", type: "string", description: "Seçili değer (controlled)." },
+  { name: "defaultValue", type: "string", description: "Başlangıçta seçili değer (uncontrolled)." },
+  { name: "onValueChange", type: "(value: string) => void", description: "Seçim değiştiğinde yeni değerle çağrılır." },
+  { name: "name", type: "string", description: "Tüm radio'ların paylaştığı form alanı adı. Verilmezse otomatik üretilir." },
+  { name: "orientation", type: '"vertical" | "horizontal"', default: '"vertical"', description: "Yerleşim yönü." },
+  { name: "disabled", type: "boolean", default: "false", description: "Gruptaki tüm radio'ları devre dışı bırakır. `Field` içindeyse ondan devralınır." },
+  { name: "required", type: "boolean", default: "false", description: "Grubu form doğrulaması için zorunlu yapar. `Field` içindeyse ondan devralınır." },
+  { name: "invalid", type: "boolean", default: "false", description: "Grubu geçersiz olarak işaretler (`aria-invalid`; grupta ve her input'ta `data-invalid`). `Field` içindeyse onun `error` değerinden türetilir." },
+  { name: "children", type: "ReactNode", description: "Radio elemanları." },
+]} />
+
+### Radio
+
+Ref ve native input attribute'ları `<input>`'a, `className` ve `style` ise dış sarmalayıcıya gider.
+
+<PropsTable rows={[
+  { name: "value", type: "string", required: true, description: "Form ile gönderilen ve RadioGroup.onValueChange'e iletilen değer." },
+  { name: "children", type: "ReactNode", description: "Dairenin yanındaki görünür etiket." },
+  { name: "description", type: "ReactNode", description: "Etiketin altındaki ikinci satır, aria-describedby ile bağlanır." },
+  { name: "disabled", type: "boolean", description: "Bu radio'yu devre dışı bırakır. Varsayılanı grubun disabled değeridir." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-radio-group</code></td><td>Grup kapsayıcısı; <code>data-orientation</code> = <code>vertical</code> · <code>horizontal</code></td></tr>
+    <tr><td><code>.mrd-radio</code></td><td>Radio sarmalayıcısı; devre dışıyken <code>data-disabled</code></td></tr>
+    <tr><td><code>.mrd-radio__control</code>, <code>__input</code>, <code>__circle</code></td><td>Native input ve çizilen dairesi</td></tr>
+    <tr><td><code>.mrd-radio__text</code>, <code>__label</code>, <code>__description</code></td><td>Etiket kolonu</td></tr>
+    <tr><td><code>data-invalid</code></td><td>Grupta ve her input'ta; daireleri geçersiz stilde gösterir</td></tr>
+  </tbody>
+</table>
+
+Radio'nun component değişkeni yoktur.
+
+## Erişilebilirlik
+
+- Grubun `role="radiogroup"` rolü vardır. Ona `aria-label` ile ya da görünür bir başlığı gösteren `aria-labelledby` ile ad ver. `Field` içindeyse adını Field etiketinden alır; açıklamasını, hatasını, zorunlu ve devre dışı state'ini de devralır.
+- Grup tek bir Tab durağıdır: Tab seçili radio'ya (hiçbiri seçili değilse ilkine) gelir.
+- Ok tuşları focus'u ve seçimi birlikte taşır, uçlarda başa ya da sona döner; devre dışı radio'lar atlanır. Sağdan sola (RTL) yerleşimde Sol/Sağ yer değiştirir.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Focus'u gruba, seçili radio'ya taşır." },
+  { keys: ["↓", "→"], action: "Sonraki etkin radio'yu seçer, sondan ilkine döner." },
+  { keys: ["↑", "←"], action: "Önceki etkin radio'yu seçer, baştan sonuncuya döner." },
+  { keys: ["Home"], action: "İlk etkin radio'yu seçer." },
+  { keys: ["End"], action: "Son etkin radio'yu seçer." },
+  { keys: ["Space"], action: "Focus'taki radio seçili değilse onu seçer." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Radio'ları, insanların yan yana karşılaştırması gereken iki ile altı seçenek için, mantıklı bir varsayılan seçiliyken kullan.</p>}
+  dont={<p>Uzun listeler için radio kullanmak (bunun için <a href="/tr/docs/components/native-select">NativeSelect</a> var) ya da tek bir evet/hayır için kullanmak (o bir checkbox işi).</p>}
+/>
+
+## İlgili sayfalar
+
+- [SegmentedControl](/tr/docs/components/segmented-control): görünüm değiştirmek için kompakt tekli seçim.
+- [Checkbox](/tr/docs/components/checkbox): birbirinden bağımsız seçimler.
+- [NativeSelect](/tr/docs/components/native-select): çok sayıda seçenek.

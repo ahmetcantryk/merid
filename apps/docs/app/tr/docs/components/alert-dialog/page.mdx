@@ -1,0 +1,166 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { AlertDialogDemo } from "@/examples/tr/alert-dialog";
+
+export const metadata = docMetadata("tr", "/docs/components/alert-dialog", {
+  title: "AlertDialog",
+  description: "Akışı durdurup yanıt bekleyen modal onay penceresi.",
+});
+
+# AlertDialog
+
+Yanıt bekleyen modal onay penceresi. Dışarıya basınca kapanmaz ve focus önce Vazgeç butonuna gider.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" /> <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/alert-dialog">Kaynak kodu gör</a>
+</div>
+
+## Import
+
+```tsx
+import { AlertDialog } from "@merid/react";
+```
+
+<ComponentPreview code={`<AlertDialog.Root>
+  <AlertDialog.Trigger asChild>
+    <Button variant="danger">Projeyi sil</Button>
+  </AlertDialog.Trigger>
+  <AlertDialog.Content>
+    <AlertDialog.Title>“Northwind” silinsin mi?</AlertDialog.Title>
+    <AlertDialog.Description>
+      Proje ve içindeki 24 dosya kalıcı olarak silinir. Bu işlem geri alınamaz.
+    </AlertDialog.Description>
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel>Vazgeç</AlertDialog.Cancel>
+      <AlertDialog.Action tone="danger">Projeyi sil</AlertDialog.Action>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>`}>
+  <AlertDialogDemo />
+</ComponentPreview>
+
+## Anatomi
+
+```tsx
+<AlertDialog.Root>
+  <AlertDialog.Trigger />
+  <AlertDialog.Content>
+    <AlertDialog.Title />
+    <AlertDialog.Description />
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel />
+      <AlertDialog.Action />
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>
+```
+
+Root, Trigger, Title, Description ve Footer, [Dialog](/tr/docs/components/dialog)'daki parçalarla aynıdır. **Cancel**, dialog'u kapatan ve ilk focus'u alan secondary bir Button'dır; **Action** onaylayıp kapatan primary (ya da `tone="danger"`) bir Button'dır. İkonlu kapatma butonu yoktur.
+
+## Örnekler
+
+### Yıkıcı işlem onayı
+
+Yukarıdaki örnek tipik kullanımdır: nesnenin adını ver, sonucunu söyle ve Action butonunda fiili tekrarla.
+
+### İş sürerken dialog'u açık tutmak
+
+Dialog'u açık tutmak için Action'ın `onClick`'inde `event.preventDefault()` çağır, iş bitince de controlled state ile dialog'u kendin kapat.
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<AlertDialog.Root open={open} onOpenChange={setOpen}>
+  <AlertDialog.Content>
+    <AlertDialog.Title>Proje silinsin mi?</AlertDialog.Title>
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel>Vazgeç</AlertDialog.Cancel>
+      <AlertDialog.Action
+        onClick={async (event) => {
+          event.preventDefault();
+          await deleteProject();
+          setOpen(false);
+        }}
+      >
+        Sil
+      </AlertDialog.Action>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>
+```
+
+## API referansı
+
+### AlertDialog.Root
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled açık/kapalı state'i." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Uncontrolled kullanımda başlangıç state'i." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Açık/kapalı state'i değişmesi gerektiğinde çağrılır." },
+  { name: "children", type: "ReactNode", description: "Trigger, Content ve bu dialog'un state'ini paylaşan diğer her şey." },
+]} />
+
+### AlertDialog.Content
+
+`role` dışındaki tüm `<div>` attribute'larını kabul eder. Dışarıya basmak onu asla kapatmaz.
+
+<PropsTable rows={[
+  { name: "closeOnEscape", type: "boolean", default: "true", description: "Escape ile kapanır." },
+  { name: "initialFocus", type: "RefObject<HTMLElement | null>", description: "Açılınca focus alacak eleman. Verilmezse önce [data-autofocus] (Vazgeç butonu), sonra ilk tab'lanabilir eleman." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal hedefi. `undefined` verilirse `document.body` kullanılır; `null` verilirse hedef oluşana kadar hiçbir şey render'lanmaz." },
+  { name: "showClose", type: "boolean", default: "false", description: "Sağ üstteki standart ikonlu kapatma butonunu otomatik render'lar. Kendi ikonlu `Close`'unu render'ladığında atlanır." },
+  { name: "closeLabel", type: "string", default: '"Close"', description: "Otomatik kapatma butonunun erişilebilir adı. `showClose` açıksa Türkçe arayüzde `\"Kapat\"` ver." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Dialog elemanına iletilen ref." },
+]} />
+
+### AlertDialog.Action
+
+Tüm `<button>` attribute'larını kabul eder. `tone`'a göre stillenen bir Button render'lar. Handler `event.preventDefault()` çağırmadıkça tıklanınca kapanır.
+
+<PropsTable rows={[
+  { name: "tone", type: "AlertDialogActionTone", default: "\"primary\"", description: "Buton stili: `primary` ya da yıkıcı işlemler için `danger`. `AlertDialogActionTone` tipi `\"primary\" | \"danger\"`." },
+  { name: "asChild", type: "boolean", default: "false", description: "`<button>` yerine tek child elemanı (örneğin kendi `Button`'ını) render'lar; props, ref ve handler'ları birleştirir." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Butona iletilen ref." },
+]} />
+
+### AlertDialog.Cancel
+
+Tüm `<button>` attribute'larını kabul eder. Secondary bir Button render'lar ve `data-autofocus` taşır, bu yüzden ilk focus'u o alır.
+
+<PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "`<button>` yerine tek child elemanı (örneğin kendi `Button`'ını) render'lar; props, ref ve handler'ları birleştirir." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Butona iletilen ref." },
+]} />
+
+Trigger (`asChild` dahil), Title, Description ve Footer, [Dialog](/tr/docs/components/dialog#api-referansi)'daki karşılıklarıyla aynı prop'ları alır.
+
+## Stil verme
+
+AlertDialog, dialog sınıflarını yeniden kullanır (`.mrd-dialog__backdrop`, `.mrd-dialog`, `.mrd-dialog__title`, `.mrd-dialog__description`, `.mrd-dialog__footer`). Yüzey `data-kind="alert"` taşır, bu da genişliği 440px'e daraltır; DOM'dayken de `data-state="open"` taşır. Cancel, `data-variant="secondary"` ile `.mrd-button` olarak; Action ise `data-variant`'ı `tone`'dan gelen bir `.mrd-button` olarak render'lanır. AlertDialog.Content'in `size` prop'u yoktur.
+
+## Erişilebilirlik
+
+[WAI-ARIA Alert and Message Dialogs desenini](https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/) izler. Content `role="alertdialog"` ve `aria-modal="true"` taşır; Title ile etiketlenir, Description ile açıklanır.
+
+<KeyboardTable rows={[
+  { keys: ["Space", "Enter"], action: "Tetikleyicideyken dialog'u açar; focus Vazgeç butonuna gider." },
+  { keys: ["Tab"], action: "Vazgeç, Action ve diğer kontroller arasında gezer; dialog içinde başa döner." },
+  { keys: ["Shift", "Tab"], action: "Focus'u geriye taşır; dialog içinde sona döner." },
+  { keys: ["Esc"], action: "Vazgeç gibi dialog'u kapatır ve focus'u tetikleyiciye döndürür." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do="Tam olarak ne olacağını söyle ve Action'da fiili tekrarla: “Projeyi sil”."
+  dont="Evet ve Hayır butonlarıyla “Emin misin?” diye sormak."
+/>
+
+<DoDont
+  do="Alert dialog'ları yıkıcı ya da geri alınamaz işlemlere sakla."
+  dont="Geri alınabilen rutin işlemler için onay istemek; onun yerine Geri al seçenekli bir toast göster."
+/>
+
+## İlgili sayfalar
+
+- [Dialog](/tr/docs/components/dialog): onay olmayan işler için.
+- [Toast](/tr/docs/components/toast): geri alınabilen geri bildirimler için.

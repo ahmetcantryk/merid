@@ -1,0 +1,94 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { SeparatorDemo, SeparatorVertical, SeparatorSemantic } from "@/examples/tr/separator";
+
+export const metadata = docMetadata("tr", "/docs/components/separator", {
+  title: "Separator",
+  description: "İçeriği yatay ya da dikey olarak bölen 1px ince çizgi.",
+});
+
+# Separator
+
+İçeriği bölen, 1px'lik `--mrd-line` ince çizgisi. Önce boşluğa ya da yüzey değişikliğine başvur; ikisi de yetmediğinde separator kullan.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/separator">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Text weight="medium" tone="ink">Hesap</Text>
+<Separator />
+<Text size="sm">Profil, e-posta ve şifre.</Text>`}>
+  <SeparatorDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Separator } from "@merid/react";
+```
+
+## Örnekler
+
+### Dikey
+
+`orientation="vertical"`, flex kapsayıcısının yüksekliği boyunca uzanan dikey bir çizgi çizer.
+
+<ComponentPreview code={`<Stack direction="row" gap={3} align="center">
+  <Text size="sm" as="span">Dokümanlar</Text>
+  <Separator orientation="vertical" />
+  <Text size="sm" as="span">Sürüm notları</Text>
+  <Separator orientation="vertical" />
+  <Text size="sm" as="span">GitHub</Text>
+</Stack>`}>
+  <SeparatorVertical />
+</ComponentPreview>
+
+### Anlamsal separator
+
+Çizgi varsayılan olarak dekoratiftir (`role="none"`). Anlamlı grupları ayırıyorsa `decorative={false}` ver; böylece `role="separator"` olarak sunulur.
+
+<ComponentPreview code={`<Text size="sm">Son dosyalar</Text>
+<Separator decorative={false} />
+<Text size="sm">Seninle paylaşılanlar</Text>`}>
+  <SeparatorSemantic />
+</ComponentPreview>
+
+## API referansı
+
+Bir `div` render'lar; ref'ini iletir ve native attribute'ları olduğu gibi geçirir.
+
+<PropsTable rows={[
+  { name: "orientation", type: '"horizontal" | "vertical"', default: '"horizontal"', description: "İnce çizginin yönü." },
+  { name: "decorative", type: "boolean", default: "true", description: "true iken çizgi yalnızca görseldir (role=\"none\"). role=\"separator\" olarak sunmak için false ver." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-separator</code></td><td>Kök <code>{"<div>"}</code></td></tr>
+    <tr><td><code>data-orientation</code></td><td><code>horizontal</code> · <code>vertical</code></td></tr>
+  </tbody>
+</table>
+
+Separator'ın component değişkeni yoktur; rengi `--mrd-line`'dır. Boşluk için separator'a margin ya da üst elemana gap ver.
+
+## Erişilebilirlik
+
+- Dekoratif separator'lar erişilebilirlik ağacından çıkarılır.
+- `decorative={false}` verildiğinde eleman `role="separator"` alır; dikey separator'lara ayrıca `aria-orientation="vertical"` eklenir.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Grupları önce boşlukla ya da gri yüzeyle (tray) ayır; separator'ları yoğun listeler ve araç çubukları için sakla.</p>}
+  dont={<p>Her paragrafın arasına separator koymak ya da onları 1px <code>--mrd-line</code> çizgisinden kalın veya koyu yapmak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Stack](/tr/docs/components/stack): gap tabanlı boşluk, çoğu zaman daha iyi bir ayraç.
+- [Section](/tr/docs/components/section): sayfa bantlarını yüzeyle ayırır.

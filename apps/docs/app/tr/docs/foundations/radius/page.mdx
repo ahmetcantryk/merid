@@ -1,0 +1,28 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { RadiusScale } from "@/components/foundations";
+
+export const metadata = docMetadata("tr", "/docs/foundations/radius", {
+  title: "Köşe yuvarlaklığı",
+  description: "Köşe yuvarlaklığı token'ları ve yüzeyler iç içe geçtikçe yuvarlaklığın nasıl küçüldüğü.",
+});
+
+# Köşe yuvarlaklığı
+
+Merid'in köşeleri cömert ve tutarlıdır. Büyük yüzeyler daha büyük yuvarlaklık alır ve elemanlar iç içe geçtikçe yuvarlaklık küçülür; böylece iç köşeler dış köşelerle eş merkezli kalır.
+
+## Ölçek
+
+<RadiusScale locale="tr" />
+
+## İç içe kullanım
+
+Pratik kural **20 → 14 → 12 → 8**. Bir kart `--mrd-radius-card` (20px) kullanır; içindeki pencere çerçevesi `--mrd-radius-xl` (14px); onun içindeki buton `--mrd-radius-lg` (12px); butonun içindeki küçük bir kutu `--mrd-radius-sm` (8px).
+
+<DoDont
+  do={<p>İç içe geçtikçe yuvarlaklığı küçült; iki kenar arasındaki boşluk her yerde eşit görünsün.</p>}
+  dont={<p>İçteki elemana container'ıyla aynı yuvarlaklığı verme. İç köşe sıkışmış görünür.</p>}
+/>
+
+## Pill'ler
+
+`--mrd-radius-full`, şekli yüksekliğiyle belirlenen elemanlar içindir: pill'ler, badge'ler, switch'ler ve avatar'lar. Metinli butonlarda kullanma; Merid butonları `--mrd-radius-lg` kullanır.

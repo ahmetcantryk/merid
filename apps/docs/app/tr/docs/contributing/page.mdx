@@ -1,0 +1,31 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/contributing", {
+  title: "Katkıda bulunma",
+  description: "Repoyu nasıl kurarsın, değişiklik nasıl önerirsin ve pull request'in nasıl merge edilir.",
+});
+
+# Katkıda bulunma
+
+Hata bildirimleri, doküman düzeltmeleri ve component'ler, her türlü katkıya açığız. Rehberin tamamı `CONTRIBUTING.md` dosyasında; bu sayfa kısa özeti.
+
+## Kurulum
+
+```bash
+git clone https://github.com/ahmetcantryk/merid.git
+cd merid
+npm install
+npm run dev
+```
+
+Doküman sitesi `http://localhost:3210` adresinde çalışır. Kütüphane `packages/react`, site `apps/docs` içindedir.
+
+## Pull request açmadan önce
+
+- [Tasarım sözleşmesini](/tr/docs/foundations/principles) oku. Token'ların dışında renk, köşe yuvarlaklığı ya da gölge ekleyen değişiklikler merge edilmez.
+- `npm run lint`, `npm run typecheck` ve `npm test` çalıştır.
+- Yayınlanan paketi etkileyen her değişiklik için `npx changeset` ile bir changeset ekle.
+- Yeni component'ler için önce bir issue aç. Böylece kod yazmadan önce API üzerinde anlaşılabilir.
+
+## Davranış kuralları
+
+Katılan herkesin Contributor Covenant'a uyması beklenir. Bildirimler, `CODE_OF_CONDUCT.md` dosyasında anlatılan GitHub'ın özel kanalları üzerinden yapılır.

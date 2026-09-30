@@ -1,0 +1,135 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { SwitchDemo, SwitchControlled, SwitchLabelPosition, SwitchStates, SwitchForm } from "@/examples/tr/switch";
+
+export const metadata = docMetadata("tr", "/docs/components/switch", {
+  title: "Switch",
+  description: "Değiştiği anda uygulanan ayarlar için açık/kapalı anahtarı.",
+});
+
+# Switch
+
+Değiştiği anda uygulanan ayarlar için 34×20'lik bir açık/kapalı anahtarı. Bir checkbox değil, `<button role="switch">`'tir.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/switch">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Switch defaultChecked>Koyu tema</Switch>`}>
+  <SwitchDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Switch } from "@merid/react";
+```
+
+## Örnekler
+
+### Controlled
+
+`defaultChecked` state'i switch'in içinde tutar. Controlled kullanım için `checked` ve bir sonraki boolean değeri alan `onCheckedChange` ver.
+
+<ComponentPreview code={`const [on, setOn] = useState(false);
+
+<Switch checked={on} onCheckedChange={setOn}>
+  Taslakları otomatik kaydet
+</Switch>`}>
+  <SwitchControlled />
+</ComponentPreview>
+
+### Etiket konumu
+
+<ComponentPreview code={`<Switch labelPosition="start">Etiket başta</Switch>
+<Switch labelPosition="end">Etiket sonda</Switch>`}>
+  <SwitchLabelPosition />
+</ComponentPreview>
+
+### Devre dışı ve etiketsiz
+
+Children vermiyorsan switch'e bir `aria-label` ver.
+
+<ComponentPreview code={`<Switch disabled>Devre dışı, kapalı</Switch>
+<Switch disabled defaultChecked>Devre dışı, açık</Switch>
+<Switch aria-label="Bildirimler" />`}>
+  <SwitchStates />
+</ComponentPreview>
+
+### Form içinde
+
+Bir buton kendi başına değer göndermez. `name` verirsen switch gizli bir input render'lar; bu input switch açıkken `value` değerini gönderir (varsayılanı `"on"`). Kapalıyken hiçbir şey gönderilmez.
+
+<ComponentPreview code={`<form>
+  <Switch name="newsletter" value="yes" defaultChecked>
+    Bültene abone ol
+  </Switch>
+</form>`}>
+  <SwitchForm />
+</ComponentPreview>
+
+## API referansı
+
+Ref ve kalan buton attribute'ları track `<button>`'ına gider; `className` dıştaki sarmalayıcıya gider.
+
+<PropsTable rows={[
+  { name: "checked", type: "boolean", description: "Açık state'i (controlled)." },
+  { name: "defaultChecked", type: "boolean", default: "false", description: "Başlangıçtaki açık state'i (uncontrolled)." },
+  { name: "onCheckedChange", type: "(checked: boolean) => void", description: "Değiştirildiğinde yeni state ile çağrılır." },
+  { name: "children", type: "ReactNode", description: "Görünür etiket; erişilebilir ad olur. Yoksa aria-label ver." },
+  { name: "labelPosition", type: '"start" | "end"', default: '"end"', description: "Etiketin hangi tarafta duracağı." },
+  { name: "name", type: "string", description: "Verildiğinde bu adla gizli bir input, switch açıkken value'yu gönderir." },
+  { name: "value", type: "string", default: '"on"', description: "Açıkken gönderilen değer." },
+  { name: "disabled", type: "boolean", description: "Switch'i devre dışı bırakır ve etiketi soluklaştırır. Bir `Field` içindeyse ondan devralınır." },
+  { name: "invalid", type: "boolean", description: "Geçersiz stilini (`data-invalid`) ve `aria-invalid`'i zorlar. Bir `Field` içindeyse onun `error`'ından türetilir." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-switch</code></td><td>Sarmalayıcı; <code>className</code> buraya gelir</td></tr>
+    <tr><td><code>.mrd-switch__track</code></td><td>{"<button role=\"switch\">"} elemanı</td></tr>
+    <tr><td><code>.mrd-switch__thumb</code></td><td>Hareket eden topuz</td></tr>
+    <tr><td><code>.mrd-switch__label</code></td><td>Görünür etiket</td></tr>
+    <tr><td><code>data-state</code></td><td><code>on</code> · <code>off</code> (sarmalayıcı ve track)</td></tr>
+    <tr><td><code>data-label-position</code></td><td><code>start</code> · <code>end</code></td></tr>
+    <tr><td><code>data-disabled</code></td><td>Devre dışıyken sarmalayıcıda</td></tr>
+    <tr><td><code>data-invalid</code></td><td>Geçersizken track'te; danger halkasını çizer</td></tr>
+  </tbody>
+</table>
+
+Switch'in component değişkeni yok; kapalı track `--mrd-control-off`, açık track `--mrd-accent` kullanır.
+
+## Erişilebilirlik
+
+- `aria-checked` ile birlikte `role="switch"` olarak sunulur, ekran okuyucular “açık” / “kapalı” diye okur.
+- Görünür etiket `aria-labelledby` ile bağlanır; etikete tıklamak da switch'i değiştirir.
+- Bir `Field` içinde switch, Field'ın id'sini alır (böylece adını Field etiketinden alır); `aria-describedby`, `aria-invalid` ve `disabled` değerlerini de ondan alır.
+- Geçersizlik anlamını `aria-invalid` taşır; stili `data-invalid` belirler.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Focus'u switch'e taşır." },
+  { keys: ["Space"], action: "Switch'i açar ya da kapatır." },
+  { keys: ["Enter"], action: "Switch'i açar ya da kapatır." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Switch'i anında uygulanan ayarlar için kullan ve ayarın adıyla etiketle: “Koyu tema”.</p>}
+  dont={<p>Kaydet butonu gerektiren bir formda switch kullanmak; orada <a href="/tr/docs/components/checkbox">Checkbox</a> kullan.</p>}
+/>
+
+<DoDont
+  do={<p>Etiketi sabit tut; state'i switch'in kendisi gösterir.</p>}
+  dont={<p>Etiketi “Açık” ve “Kapalı” arasında değiştirmek; state'i tekrarlar ve ekran okuyucu kullanıcılarının kafasını karıştırır.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Checkbox](/tr/docs/components/checkbox): gönderimde uygulanan seçimler.
+- [SegmentedControl](/tr/docs/components/segmented-control): adlandırılmış modlar arasında seçim.
