@@ -17,18 +17,22 @@ export interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
    * Props, ref, handlers and className merge onto the child.
    */
   asChild?: boolean;
+  /** Visually hidden hint appended to `external` links. Defaults to `"(opens in a new tab)"`. */
+  externalLabel?: string;
 }
 
-const EXTERNAL_HINT = (
-  <>
-    {" "}
-    <span className="mrd-visually-hidden">(opens in a new tab)</span>
-  </>
-);
+function externalHint(label: string) {
+  return (
+    <>
+      {" "}
+      <span className="mrd-visually-hidden">{label}</span>
+    </>
+  );
+}
 
 /** Styled anchor. Pass `asChild` to style a client-side router's link. */
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
-  { tone = "accent", underline = "hover", external = false, asChild = false, className, children, target, rel, ...props },
+  { tone = "accent", underline = "hover", external = false, asChild = false, externalLabel = "(opens in a new tab)", className, children, target, rel, ...props },
   ref,
 ) {
   const shared = {
@@ -51,7 +55,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
               undefined,
               <>
                 {element.props.children}
-                {EXTERNAL_HINT}
+                {externalHint(externalLabel)}
               </>,
             )
           : element}
@@ -62,7 +66,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
   return (
     <a ref={ref} {...shared} {...props}>
       {children}
-      {external ? EXTERNAL_HINT : null}
+      {external ? externalHint(externalLabel) : null}
     </a>
   );
 });

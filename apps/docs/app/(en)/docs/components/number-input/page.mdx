@@ -1,0 +1,96 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { NumberInputBasic, NumberInputFormats, NumberInputStates } from "@/examples/number-input";
+
+export const metadata = docMetadata("en", "/docs/components/number-input", {
+  title: "NumberInput",
+  description: "A numeric field with increment and decrement buttons, min, max, step and Intl.NumberFormat.",
+});
+
+# NumberInput
+
+A numeric field with increment and decrement buttons. Values are formatted with `Intl.NumberFormat` and typed text is parsed in the same locale, so `1.234,5` works in `tr-TR` and `1,234.5` in `en-US`.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/number-input">Source</a>
+</div>
+
+<ComponentPreview code={`const [seats, setSeats] = useState<number | null>(1);
+
+<Field label="Seats">
+  <NumberInput value={seats} onValueChange={setSeats} min={1} max={50} name="seats" />
+</Field>`}>
+  <NumberInputBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { NumberInput } from "@meridui/react";
+```
+
+## Examples
+
+### Currency, percent and units
+
+`formatOptions` is passed to `Intl.NumberFormat`. For percent, the value is the fraction (`0.15` shows as `15%`).
+
+<ComponentPreview code={`<NumberInput defaultValue={1499.9} step={0.5} locale="en-US" formatOptions={{ style: "currency", currency: "USD" }} />
+<NumberInput defaultValue={0.15} step={0.01} min={0} max={1} formatOptions={{ style: "percent" }} />
+<NumberInput defaultValue={2.5} step={0.1} locale="de-DE" formatOptions={{ style: "unit", unit: "kilogram" }} />`}>
+  <NumberInputFormats />
+</ComponentPreview>
+
+### Sizes and states
+
+<ComponentPreview code={`<NumberInput aria-label="Small" size="sm" defaultValue={3} />
+<NumberInput aria-label="No stepper" hideStepper defaultValue={10} />
+<NumberInput aria-label="Invalid" invalid defaultValue={-1} />
+<NumberInput aria-label="Disabled" disabled defaultValue={5} />`}>
+  <NumberInputStates />
+</ComponentPreview>
+
+## API reference
+
+Accepts every `<input>` attribute except `type`, `value`, `defaultValue`, `onChange`, `size`, `min`, `max` and `step`; the ref goes to the `<input>`. `className` and `style` go on the wrapper. Picks up [Field](/docs/components/field) wiring like [Input](/docs/components/input).
+
+<PropsTable rows={[
+  { name: "value", type: "number | null", description: "Controlled value; null is empty." },
+  { name: "defaultValue", type: "number | null", default: "null", description: "Initial value when uncontrolled." },
+  { name: "onValueChange", type: "(value: number | null) => void", description: "Called with the committed value (on step, Enter or blur)." },
+  { name: "min / max", type: "number", description: "Limits. Values are clamped; the matching button disables at a limit." },
+  { name: "step", type: "number", default: "1", description: "Amount added by buttons and arrow keys." },
+  { name: "largeStep", type: "number", default: "step * 10", description: "Amount added by Page Up / Page Down." },
+  { name: "locale", type: "string", default: "runtime locale", description: "Locale for formatting and parsing." },
+  { name: "formatOptions", type: "Intl.NumberFormatOptions", description: "Currency, percent, unit, fraction digits…" },
+  { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Height." },
+  { name: "invalid", type: "boolean", description: "aria-invalid and the danger border." },
+  { name: "hideStepper", type: "boolean", default: "false", description: "Hide the buttons." },
+  { name: "incrementLabel", type: "string", default: "\"Increase\"", description: "Accessible name of the + button." },
+  { name: "decrementLabel", type: "string", default: "\"Decrease\"", description: "Accessible name of the − button." },
+  { name: "name", type: "string", description: "Hidden input with the raw number (no formatting)." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-number-input` | Wrapper (`data-size`, `data-invalid`, `data-disabled`) |
+| `.mrd-number-input__field` | The `<input role="spinbutton">` |
+| `.mrd-number-input__stepper`, `.mrd-number-input__step` | Button group and each button |
+
+## Accessibility
+
+The field is a `role="spinbutton"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and a formatted `aria-valuetext`. The buttons are not tab stops (`tabindex="-1"`): the keyboard path is the arrow keys, following the [APG spinbutton pattern](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/). Each button is at least 24×24px.
+
+<KeyboardTable rows={[
+  { keys: ["ArrowUp", "ArrowDown"], action: "Increase / decrease by step." },
+  { keys: ["PageUp", "PageDown"], action: "Increase / decrease by largeStep." },
+  { keys: ["Home", "End"], action: "Set to min / max (when set)." },
+  { keys: ["Enter"], action: "Commit the typed text." },
+]} />
+
+## Related
+
+- [Slider](/docs/components/slider) — when an approximate value is enough.
+- [Input](/docs/components/input) — for free text.

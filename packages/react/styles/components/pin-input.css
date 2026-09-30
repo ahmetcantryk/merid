@@ -1,0 +1,72 @@
+@layer merid.components {
+  .mrd-pin-input {
+    --mrd-pin-size: var(--mrd-input-md);
+
+    display: inline-flex;
+    gap: var(--mrd-space-2);
+  }
+
+  .mrd-pin-input[data-size="sm"] {
+    --mrd-pin-size: var(--mrd-input-sm);
+  }
+
+  .mrd-pin-input[data-size="lg"] {
+    --mrd-pin-size: var(--mrd-input-lg);
+  }
+
+  .mrd-pin-input__cell {
+    width: calc(var(--mrd-pin-size) + 4px);
+    height: calc(var(--mrd-pin-size) + 4px);
+    padding: 0;
+    border: 1px solid var(--mrd-line);
+    border-radius: var(--mrd-radius-lg);
+    background: var(--mrd-surface);
+    color: var(--mrd-ink);
+    font-family: var(--mrd-font-mono);
+    font-size: var(--mrd-text-md);
+    font-weight: var(--mrd-weight-medium);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    caret-color: var(--mrd-accent);
+    transition:
+      border-color var(--mrd-duration) var(--mrd-ease),
+      box-shadow var(--mrd-duration) var(--mrd-ease);
+  }
+
+  .mrd-pin-input__cell::placeholder {
+    color: var(--mrd-placeholder);
+    opacity: 1;
+  }
+
+  .mrd-pin-input__cell:hover:not(:disabled, :focus) {
+    border-color: var(--mrd-line-strong);
+  }
+
+  .mrd-pin-input__cell:focus {
+    outline: none;
+    border-color: var(--mrd-accent);
+    box-shadow: var(--mrd-focus-ring);
+  }
+
+  .mrd-pin-input[data-invalid] .mrd-pin-input__cell {
+    border-color: var(--mrd-danger);
+  }
+
+  .mrd-pin-input__cell:disabled {
+    background: var(--mrd-tray);
+    color: var(--mrd-muted);
+    cursor: not-allowed;
+  }
+
+  @media (pointer: coarse) {
+    .mrd-pin-input {
+      --mrd-pin-size: 40px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-pin-input__cell {
+      transition: none;
+    }
+  }
+}

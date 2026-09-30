@@ -26,6 +26,15 @@ describe("Link", () => {
     expect(link).toHaveClass("mrd-link", "c");
   });
 
+  it("localises the external hint with externalLabel", () => {
+    render(
+      <Link href="https://x.dev" external externalLabel="(yeni sekmede açılır)">
+        Site
+      </Link>,
+    );
+    expect(screen.getByRole("link")).toHaveAccessibleName("Site (yeni sekmede açılır)");
+  });
+
   it("is reachable by keyboard", async () => {
     render(<Link href="#a">A</Link>);
     await userEvent.tab();

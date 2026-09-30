@@ -1,0 +1,92 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { PinInputBasic, PinInputVariants } from "@/examples/tr/pin-input";
+
+export const metadata = docMetadata("tr", "/docs/components/pin-input", {
+  title: "PinInput",
+  description: "Her karakter için bir hücreyle tek kullanımlık kod ve PIN girişi; yapıştırma ve otomatik doldurma.",
+});
+
+# PinInput
+
+Her karakter için bir hücreyle tek kullanımlık kod ve PIN girişi. Yazdıkça ileri, Backspace ile geri gider; yapıştırma ya da SMS otomatik doldurma tüm hücreleri doldurur.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/pin-input">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Field label="Doğrulama kodu" description="Telefonuna 6 haneli bir kod gönderdik.">
+  <PinInput
+    value={code}
+    onValueChange={setCode}
+    onComplete={verify}
+    getCellLabel={(i, n) => n + " karakterden " + i + "."}
+    name="otp"
+  />
+</Field>`}>
+  <PinInputBasic />
+</ComponentPreview>
+
+<Callout tone="success">
+  Hücrelerin ekran okuyucu adı varsayılan olarak İngilizcedir (“Character 1 of 6”). Türkçe arayüzde `getCellLabel` ile Türkçe ver.
+</Callout>
+
+## Import
+
+```tsx
+import { PinInput } from "@meridui/react";
+```
+
+## Örnekler
+
+### Uzunluk, maske ve karakterler
+
+<ComponentPreview code={`<PinInput aria-label="PIN" length={4} mask size="lg" />
+<PinInput aria-label="Davet kodu" length={5} type="alphanumeric" placeholder="·" />
+<PinInput aria-label="Geçersiz kod" length={4} defaultValue="1234" invalid />`}>
+  <PinInputVariants />
+</ComponentPreview>
+
+## API referansı
+
+Bir `div role="group"` render'lar; `aria-label`, `aria-labelledby` ya da bir [Field](/tr/docs/components/field) ile ad ver. Ref gruba gider.
+
+<PropsTable rows={[
+  { name: "length", type: "number", default: "6", description: "Hücre sayısı." },
+  { name: "value", type: "string", description: "Controlled kod." },
+  { name: "defaultValue", type: "string", default: "\"\"", description: "Uncontrolled kullanımda başlangıç kodu." },
+  { name: "onValueChange", type: "(value: string) => void", description: "Her değişimde çağrılır." },
+  { name: "onComplete", type: "(value: string) => void", description: "Tüm hücreler dolunca bir kez çağrılır." },
+  { name: "type", type: "\"numeric\" | \"alphanumeric\"", default: "\"numeric\"", description: "Kabul edilen karakterler; numeric mobilde sayı klavyesini açar." },
+  { name: "mask", type: "boolean", default: "false", description: "Karakterleri şifre gibi gizler." },
+  { name: "placeholder", type: "string", description: "Boş hücrelerin placeholder'ı." },
+  { name: "getCellLabel", type: "(index: number, length: number) => string", default: "Character {i} of {n}", description: "Her hücrenin erişilebilir adı." },
+  { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Hücre boyutu." },
+  { name: "invalid / disabled / required", type: "boolean", description: "Durumlar; Field içinde ondan gelir." },
+  { name: "autoFocus", type: "boolean", default: "false", description: "Mount'ta ilk boş hücreye focus verir." },
+  { name: "name", type: "string", description: "Kodun tamamını taşıyan gizli input." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-pin-input` | Grup (`data-size`, `data-invalid`, `data-disabled`) |
+| `.mrd-pin-input__cell` | Her `<input>` (`data-filled`) |
+
+## Erişilebilirlik
+
+Her hücre, adı olan bir grubun içinde etiketli bir metin alanıdır. İlk hücrede `autocomplete="one-time-code"` vardır; tarayıcı SMS kodunu önerebilir. Kodda boşluk kalmaz: kodun sonundan ötesine yazılan karakter ilk boş hücreye gider.
+
+<KeyboardTable rows={[
+  { keys: ["0–9", "A–Z"], action: "Hücreyi doldurur ve sonrakine geçer." },
+  { keys: ["Backspace"], action: "Hücreyi (boşsa bir öncekini) temizler ve geri gider." },
+  { keys: ["Delete"], action: "Hücredeki karakteri siler; sonraki karakterler geri kayar." },
+  { keys: ["ArrowLeft", "ArrowRight"], action: "Önceki / sonraki hücre (RTL'de ters)." },
+  { keys: ["Home", "End"], action: "İlk hücre / son dolu hücre." },
+]} />
+
+## İlgili sayfalar
+
+- [Input](/tr/docs/components/input) — kullanıcıların yazmak yerine kopyaladığı kodlar için.
+- [Kimlik doğrulama deseni](/tr/docs/patterns/authentication).

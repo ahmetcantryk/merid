@@ -15,7 +15,7 @@ function SaveButton() {
 
 export function App() {
   return (
-    <ToastProvider label="Bildirimler">
+    <ToastProvider label="Bildirimler" dismissLabel="Bildirimi kapat">
       <SaveButton />
     </ToastProvider>
   );

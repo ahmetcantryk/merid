@@ -1,0 +1,157 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ComboboxBasic, ComboboxMultiple, ComboboxAsync, ComboboxStates } from "@/examples/combobox";
+
+export const metadata = docMetadata("en", "/docs/components/combobox", {
+  title: "Combobox",
+  description: "A searchable select: type to filter, pick one or many, load options asynchronously.",
+});
+
+# Combobox
+
+A searchable select: type to filter, pick one or many, or load options from a server as the user types.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/combobox">Source</a>
+</div>
+
+<ComponentPreview code={`const frameworks = [
+  { value: "next", label: "Next.js" },
+  { value: "remix", label: "Remix" },
+  { value: "gatsby", label: "Gatsby", disabled: true },
+  { value: "nuxt", label: "Nuxt", description: "Vue" },
+];
+
+<Field label="Framework">
+  <Combobox options={frameworks} placeholder="Search frameworks…" name="framework" />
+</Field>`}>
+  <ComboboxBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Combobox, type ComboboxOption } from "@meridui/react";
+```
+
+## Examples
+
+### Multiple
+
+`multiple` keeps the list open after each pick and shows the selection as chips. `value` becomes a `string[]`. Backspace in an empty field removes the last chip.
+
+<ComponentPreview code={`const [value, setValue] = useState<string[]>(["next", "vite"]);
+
+<Field label="Stack" description="Pick any number.">
+  <Combobox multiple options={frameworks} value={value} onValueChange={setValue} placeholder="Add…" />
+</Field>`}>
+  <ComboboxMultiple />
+</ComponentPreview>
+
+### Async options
+
+Fetch from `onInputValueChange`, pass the results as `options`, set `filter={false}` so the component does not filter again, and toggle `loading` while the request runs. Labels of chosen options are remembered, so chips and the field keep their text when the results change.
+
+<ComponentPreview code={`const [text, setText] = useState("");
+const [options, setOptions] = useState<ComboboxOption[]>([]);
+const [loading, setLoading] = useState(false);
+
+useEffect(() => {
+  if (!text.trim()) return;
+  setLoading(true);
+  const timer = setTimeout(async () => {
+    setOptions(await searchCities(text));
+    setLoading(false);
+  }, 200);
+  return () => clearTimeout(timer);
+}, [text]);
+
+<Combobox
+  options={options}
+  filter={false}
+  loading={loading}
+  onInputValueChange={setText}
+  emptyMessage="No cities found"
+/>`}>
+  <ComboboxAsync />
+</ComponentPreview>
+
+### Sizes and states
+
+<ComponentPreview code={`<Combobox aria-label="Small" size="sm" options={frameworks} />
+<Combobox aria-label="Invalid" invalid options={frameworks} />
+<Combobox aria-label="Disabled" disabled options={frameworks} defaultValue="astro" />`}>
+  <ComboboxStates />
+</ComponentPreview>
+
+## API reference
+
+Renders a `div` wrapper; other `div` attributes go on it. `aria-label` and `aria-labelledby` go on the text field. Inside a [Field](/docs/components/field) the field picks up the id, label, description, error, `required` and `disabled`.
+
+<PropsTable rows={[
+  { name: "options", type: "ComboboxOption[]", required: true, description: "{ value, label, description?, disabled? }. Replace them as async results arrive." },
+  { name: "multiple", type: "boolean", default: "false", description: "Select many values, shown as chips." },
+  { name: "value", type: "string | string[]", description: "Controlled value: a string (\"\" for none), or string[] with multiple." },
+  { name: "defaultValue", type: "string | string[]", description: "Initial value when uncontrolled." },
+  { name: "onValueChange", type: "(value) => void", description: "Called with the new value." },
+  { name: "inputValue", type: "string", description: "Controlled text in the field." },
+  { name: "defaultInputValue", type: "string", description: "Initial text. Defaults to the selected label." },
+  { name: "onInputValueChange", type: "(text: string) => void", description: "Called on every keystroke; fetch async options here." },
+  { name: "open / defaultOpen / onOpenChange", type: "boolean / boolean / (open) => void", description: "Controlled or initial open state of the list." },
+  { name: "filter", type: "((option, text) => boolean) | false", default: "label contains text", description: "Client-side filter. false when options are already filtered." },
+  { name: "locale", type: "string", description: "Locale for case-insensitive matching, e.g. \"tr-TR\" so İ and i match." },
+  { name: "loading", type: "boolean", default: "false", description: "Shows loadingMessage and sets aria-busy on the list." },
+  { name: "placeholder", type: "string", description: "Placeholder of the text field." },
+  { name: "emptyMessage", type: "ReactNode", default: "\"No results\"", description: "Shown when nothing matches." },
+  { name: "loadingMessage", type: "ReactNode", default: "\"Loading…\"", description: "Shown while loading." },
+  { name: "toggleLabel", type: "string", default: "\"Show options\"", description: "Accessible name of the chevron button." },
+  { name: "getRemoveLabel", type: "(label: string) => string", default: "Remove {label}", description: "Accessible name of a chip's remove button." },
+  { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Control size." },
+  { name: "invalid", type: "boolean", description: "aria-invalid and the danger border. Inside a Field, derived from its error." },
+  { name: "disabled", type: "boolean", description: "Disables the combobox." },
+  { name: "required", type: "boolean", description: "Marks the field required." },
+  { name: "name", type: "string", description: "Form name. Renders one hidden input per selected value." },
+  { name: "inputId", type: "string", description: "id of the text field, for a <label htmlFor>." },
+  { name: "placement", type: "Placement", default: "\"bottom-start\"", description: "Preferred list placement." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal target of the list." },
+  { name: "inputRef", type: "Ref<HTMLInputElement>", description: "Ref to the text field." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Ref to the wrapper." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-combobox` | Wrapper (`data-size`, `data-state`, `data-multiple`, `data-invalid`, `data-disabled`) |
+| `.mrd-combobox__control` | Bordered field holding chips, input and toggle |
+| `.mrd-combobox__input`, `.mrd-combobox__toggle` | Text field, chevron button |
+| `.mrd-combobox__chip`, `.mrd-combobox__chip-remove` | Selected value chip (multiple) |
+| `.mrd-combobox__content`, `.mrd-combobox__listbox` | Portalled popup and its listbox |
+| `.mrd-combobox__item` | Option (`data-active`, `data-disabled`, `aria-selected`) |
+| `.mrd-combobox__status` | Loading / empty message |
+
+## Accessibility
+
+Follows the WAI-ARIA [Combobox pattern with a listbox popup](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) and list autocomplete. Focus stays in the text field; the highlighted option is exposed with `aria-activedescendant`. The loading and empty messages are a `role="status"` region, so they are announced. Chip remove buttons are skipped by Tab; use Backspace in the empty field, or the pointer.
+
+<KeyboardTable rows={[
+  { keys: ["ArrowDown"], action: "Open the list, or highlight the next option (wraps)." },
+  { keys: ["ArrowUp"], action: "Open the list at the last option, or highlight the previous option (wraps)." },
+  { keys: ["Alt", "ArrowDown"], action: "Open without moving the highlight." },
+  { keys: ["Enter"], action: "Select the highlighted option. Single: closes. Multiple: toggles and stays open." },
+  { keys: ["Escape"], action: "Close the list; single mode restores the selected label." },
+  { keys: ["Backspace"], action: "Multiple, empty field: remove the last chip." },
+  { keys: ["Tab"], action: "Close and move on." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Use Combobox when the list is long (20+ items) or comes from a server, and people know what they are looking for.</p>}
+  dont={<p>Use it for a handful of options; a <a href="/docs/components/select">Select</a> or <a href="/docs/components/radio">Radio</a> is faster to scan.</p>}
+/>
+
+## Related
+
+- [Select](/docs/components/select) — pick one from a short, fixed list.
+- [Field](/docs/components/field) — label, hint and error around a control.

@@ -6,6 +6,36 @@ import {
   Select, Separator, SidebarNav, SidebarNavItem, Skeleton, Spinner, Stack, Stepper, Switch, Table, TableBody,
   TableCell, TableHead, TableHeader, TableRow, Tabs, Text, Textarea, ToastProvider, Tooltip, VisuallyHidden,
 } from "../src";
+import {
+  Calendar, Combobox, DatePicker, FileUpload, NumberInput, PinInput, Slider, Toggle, ToggleGroup, ToggleGroupItem,
+} from "../src";
+
+const FIXED_DAY = new Date(2026, 8, 30);
+
+/** Batch 1 form and input components; merged into componentCases below. */
+const formInputCases: Record<string, () => ReactElement> = {
+  Calendar: () => <Calendar defaultValue={FIXED_DAY} locale="tr-TR" />,
+  "Calendar (range)": () => <Calendar mode="range" defaultValue={{ start: FIXED_DAY, end: null }} />,
+  Combobox: () => (
+    <Combobox aria-label="Fruit" name="fruit" defaultValue="a" options={[{ value: "a", label: "Apple" }]} />
+  ),
+  "Combobox (multiple, open)": () => (
+    <Combobox multiple defaultOpen aria-label="Fruit" defaultValue={["a"]} options={[{ value: "a", label: "Apple" }]} />
+  ),
+  DatePicker: () => <DatePicker aria-label="Due" name="due" defaultValue={FIXED_DAY} />,
+  "DatePicker (range, open)": () => <DatePicker mode="range" aria-label="Stay" open onOpenChange={() => undefined} />,
+  FileUpload: () => <FileUpload multiple description="PNG" />,
+  NumberInput: () => <NumberInput aria-label="Qty" defaultValue={2} locale="tr-TR" name="qty" />,
+  PinInput: () => <PinInput aria-label="Code" defaultValue="12" name="otp" />,
+  Slider: () => <Slider defaultValue={[20, 80]} name="range" />,
+  Toggle: () => <Toggle defaultPressed>Bold</Toggle>,
+  ToggleGroup: () => (
+    <ToggleGroup type="single" aria-label="Align" defaultValue="a">
+      <ToggleGroupItem value="a">A</ToggleGroupItem>
+      <ToggleGroupItem value="b">B</ToggleGroupItem>
+    </ToggleGroup>
+  ),
+};
 
 /** One render case per exported component; overlays appear both closed and open. */
 export const componentCases: Record<string, () => ReactElement> = {
@@ -214,6 +244,7 @@ export const componentCases: Record<string, () => ReactElement> = {
     </Tooltip>
   ),
   VisuallyHidden: () => <VisuallyHidden>Hidden</VisuallyHidden>,
+  ...formInputCases,
 };
 
 /** Exports that are not standalone components (helpers, hooks, members covered by a parent case). */
@@ -230,4 +261,6 @@ export const nonComponentExports: ReadonlySet<string> = new Set([
   "TableHeader",
   "TableRow",
   "SidebarNavItem",
+  "ToggleGroupItem",
+  "toISODate",
 ]);

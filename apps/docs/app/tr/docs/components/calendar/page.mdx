@@ -1,0 +1,118 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { CalendarBasic, CalendarRange, CalendarConstraints, CalendarLocale } from "@/examples/tr/calendar";
+
+export const metadata = docMetadata("tr", "/docs/components/calendar", {
+  title: "Calendar",
+  description: "Gün ya da aralık seçmek için klavyeyle gezilebilen, Intl ile yerelleşen ay grid'i.",
+});
+
+# Calendar
+
+Gün ya da aralık seçmek için bir ay grid'i. Ay, gün ve hafta günü adları verdiğin `locale` için `Intl`'den gelir; hafta da o locale'in ilk gününden başlar. `tr-TR` için hafta pazartesi başlar.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/calendar">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`const [date, setDate] = useState<Date | null>(null);
+
+<Calendar
+  locale="tr-TR"
+  previousMonthLabel="Önceki ay"
+  nextMonthLabel="Sonraki ay"
+  value={date}
+  onValueChange={setDate}
+/>`}>
+  <CalendarBasic />
+</ComponentPreview>
+
+<Callout tone="success">
+  `locale` varsayılan olarak `"en-US"`dir; ay ve gün adları, günlerin ekran okuyucu etiketleri ve haftanın ilk günü ondan gelir. Türkçe arayüzde `locale="tr-TR"` ver. Ay değiştirme butonlarının adları varsayılan olarak İngilizcedir (“Previous month”, “Next month”); `previousMonthLabel` ve `nextMonthLabel` ile Türkçe ver.
+</Callout>
+
+## Import
+
+```tsx
+import { Calendar, type DateRange } from "@meridui/react";
+```
+
+## Örnekler
+
+### Aralık
+
+`mode="range"`: ilk seçim `start`'ı, ikinci seçim `end`'i belirler (ikinci gün daha erkense yer değiştirirler). Hover aralığı önizler.
+
+<ComponentPreview code={`const [range, setRange] = useState<DateRange>({ start: null, end: null });
+
+<Calendar locale="tr-TR" mode="range" value={range} onValueChange={setRange} />`}>
+  <CalendarRange />
+</ComponentPreview>
+
+### En erken, en geç ve devre dışı günler
+
+`min`/`max` dışındaki ya da `isDateDisabled`'ın eşleştirdiği günler `aria-disabled` alır ve seçilemez; ama grid doğal okunsun diye klavyeyle erişilebilir kalır.
+
+<ComponentPreview code={`const isWeekend = (d: Date) => d.getDay() === 0 || d.getDay() === 6;
+
+<Calendar locale="tr-TR" min={today} max={inTwoMonths} isDateDisabled={isWeekend} />`}>
+  <CalendarConstraints />
+</ComponentPreview>
+
+### Locale ve yön
+
+`locale` grid'in gösterdiği ya da okuttuğu her adı yerelleştirir. `weekStartsOn` ilk kolonu ezer (0 = pazar). `dir="rtl"` altında grid ve ok tuşları okuma yönünü izler.
+
+<ComponentPreview code={`<Calendar locale="en-US" />
+<Calendar locale="ar-EG" dir="rtl" />`}>
+  <CalendarLocale />
+</ComponentPreview>
+
+## API referansı
+
+Bir `div` render'lar; diğer `div` attribute'ları ve ref ona gider. Tarihler yerel saatte takvim gününe göre karşılaştırılır.
+
+<PropsTable rows={[
+  { name: "mode", type: "\"single\" | \"range\"", default: "\"single\"", description: "Tek gün ya da başlangıç ve bitiş günü seçtirir." },
+  { name: "value", type: "Date | null | DateRange", description: "Controlled seçim: Date (tekli) ya da { start, end } (aralık)." },
+  { name: "defaultValue", type: "Date | null | DateRange", description: "Uncontrolled kullanımda başlangıç seçimi." },
+  { name: "onValueChange", type: "(value) => void", description: "Her seçimden sonra çağrılır. Aralıkta önce { start, end: null }, sonra iki gün." },
+  { name: "month / defaultMonth / onMonthChange", type: "Date / Date / (month: Date) => void", description: "Gösterilen ay, controlled ya da başlangıç. Varsayılanı seçili gün ya da bugün." },
+  { name: "min", type: "Date", description: "Seçilebilen en erken gün." },
+  { name: "max", type: "Date", description: "Seçilebilen en geç gün." },
+  { name: "isDateDisabled", type: "(date: Date) => boolean", description: "Tek tek günleri kullanılamaz işaretler." },
+  { name: "locale", type: "string", default: "\"en-US\"", description: "Adlar ve haftanın ilk günü için BCP 47 locale'i. Türkçe arayüzde \"tr-TR\"." },
+  { name: "weekStartsOn", type: "0 – 6", description: "İlk kolon (0 = pazar). Varsayılanı locale'in hafta başı: tr-TR → pazartesi, en-US → pazar." },
+  { name: "previousMonthLabel", type: "string", default: "\"Previous month\"", description: "Önceki ay butonunun erişilebilir adı. Türkçe arayüzde \"Önceki ay\"." },
+  { name: "nextMonthLabel", type: "string", default: "\"Next month\"", description: "Sonraki ay butonunun erişilebilir adı. Türkçe arayüzde \"Sonraki ay\"." },
+  { name: "autoFocus", type: "boolean", default: "false", description: "Mount'ta seçili güne (ya da bugüne) focus verir." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-calendar` | Kök (`data-mode`) |
+| `.mrd-calendar__header`, `.mrd-calendar__caption`, `.mrd-calendar__nav` | Ay başlığı satırı ve butonları |
+| `.mrd-calendar__grid`, `.mrd-calendar__weekday` | `role="grid"` tablo ve kolon başlıkları |
+| `.mrd-calendar__cell` | Grid hücresi (`aria-selected`, `data-in-range`, `data-range-start`, `data-range-end`) |
+| `.mrd-calendar__day` | Gün butonu (`data-selected`, `data-today`, `data-outside`, `data-disabled`) |
+
+Hücre boyutu `--mrd-calendar-cell` (36px; dokunmatik ekranlarda 44px).
+
+## Erişilebilirlik
+
+WAI-ARIA [Date Picker Dialog örneğindeki](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/) tarih grid'ine uyar. Grid ay başlığıyla etiketlenir; başlık polite bir live region'dır, yani ay değişimi okunur. Her gün butonunun adı `locale`'deki tam tarihtir (“30 Eylül 2026 Çarşamba”); bugün `aria-current="date"` taşır. Grid tek bir tab durağıdır.
+
+<KeyboardTable rows={[
+  { keys: ["ArrowLeft", "ArrowRight"], action: "Önceki / sonraki gün (RTL'de ters). Ay sınırını geçer." },
+  { keys: ["ArrowUp", "ArrowDown"], action: "Önceki / sonraki haftanın aynı günü." },
+  { keys: ["Home", "End"], action: "Haftanın ilk / son günü." },
+  { keys: ["PageUp", "PageDown"], action: "Önceki / sonraki ayın aynı günü." },
+  { keys: ["Shift", "PageUp"], action: "Önceki yılın aynı günü (PageDown: sonraki yıl)." },
+  { keys: ["Enter"], action: "Focus'taki günü seçer (Space de çalışır)." },
+]} />
+
+## İlgili sayfalar
+
+- [DatePicker](/tr/docs/components/date-picker) — bu takvimi popover içinde açan tarih alanı.

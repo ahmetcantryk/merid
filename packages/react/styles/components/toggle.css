@@ -1,0 +1,112 @@
+@layer merid.components {
+  .mrd-toggle {
+    --mrd-toggle-height: var(--mrd-control-md);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: var(--mrd-toggle-height);
+    height: var(--mrd-toggle-height);
+    padding: 0 var(--mrd-space-2);
+    border: 0;
+    border-radius: var(--mrd-radius-md);
+    background: transparent;
+    color: var(--mrd-body);
+    font-family: inherit;
+    font-size: var(--mrd-text-sm);
+    font-weight: var(--mrd-weight-medium);
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color var(--mrd-duration) var(--mrd-ease),
+      color var(--mrd-duration) var(--mrd-ease),
+      transform var(--mrd-duration-fast) var(--mrd-ease);
+  }
+
+  .mrd-toggle[data-size="sm"] {
+    --mrd-toggle-height: var(--mrd-control-sm);
+
+    font-size: var(--mrd-text-xs);
+  }
+
+  .mrd-toggle[data-size="lg"] {
+    --mrd-toggle-height: var(--mrd-control-lg);
+
+    padding: 0 var(--mrd-space-3);
+  }
+
+  .mrd-toggle:hover:not(:disabled) {
+    background: var(--mrd-tray);
+    color: var(--mrd-ink);
+  }
+
+  .mrd-toggle:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  .mrd-toggle[data-state="on"] {
+    background: var(--mrd-accent-soft);
+    color: var(--mrd-accent-strong);
+  }
+
+  .mrd-toggle:focus-visible {
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 2px;
+  }
+
+  .mrd-toggle:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .mrd-toggle > svg {
+    flex: none;
+    width: 16px;
+    height: 16px;
+  }
+
+  .mrd-toggle-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px;
+    border: 1px solid var(--mrd-line);
+    border-radius: var(--mrd-radius-lg);
+    background: var(--mrd-surface);
+  }
+
+  .mrd-toggle-group[data-orientation="vertical"] {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mrd-toggle-group .mrd-toggle {
+    --mrd-toggle-height: calc(var(--mrd-control-md) - 6px);
+  }
+
+  .mrd-toggle-group .mrd-toggle[data-size="sm"] {
+    --mrd-toggle-height: max(24px, calc(var(--mrd-control-sm) - 4px));
+  }
+
+  .mrd-toggle-group .mrd-toggle[data-size="lg"] {
+    --mrd-toggle-height: calc(var(--mrd-control-lg) - 6px);
+  }
+
+  @media (pointer: coarse) {
+    .mrd-toggle,
+    .mrd-toggle-group .mrd-toggle {
+      --mrd-toggle-height: 40px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-toggle {
+      transition: none;
+    }
+
+    .mrd-toggle:active:not(:disabled) {
+      transform: none;
+    }
+  }
+}

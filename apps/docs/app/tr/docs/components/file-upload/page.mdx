@@ -1,0 +1,116 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { FileUploadBasic, FileUploadSingle, FileUploadDisabled } from "@/examples/tr/file-upload";
+
+export const metadata = docMetadata("tr", "/docs/components/file-upload", {
+  title: "FileUpload",
+  description: "Sürükle-bırak alanı, doğrulama ve dosya listesiyle erişilebilir dosya seçici.",
+});
+
+# FileUpload
+
+Sürükle-bırak alanlı bir dosya seçici. Klavye ve ekran okuyucu yolu içindeki “Dosya seç” butonudur; sürükleyip bırakmak fare için bir kısayoldur. Dosyalar tutulmadan önce `accept`, boyut ve sayı açısından kontrol edilir.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/file-upload">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Field label="Ekler" error={error}>
+  <FileUpload
+    label="Dosyaları buraya sürükle"
+    buttonLabel="Dosya seç"
+    getRemoveLabel={(file) => file.name + " dosyasını kaldır"}
+    getStatusText={(count) => count + " dosya seçildi"}
+    locale="tr-TR"
+    multiple
+    maxFiles={3}
+    maxSize={2_000_000}
+    accept="image/*,.pdf"
+    description="PNG, JPG ya da PDF; her biri en fazla 2 MB. En fazla üç dosya."
+    value={files}
+    onValueChange={setFiles}
+    onReject={(rejections) => setError(describe(rejections))}
+    name="attachments"
+  />
+</Field>`}>
+  <FileUploadBasic />
+</ComponentPreview>
+
+<Callout tone="success">
+  Görünen metinler ve ekran okuyucu metinleri varsayılan olarak İngilizcedir (“Drag and drop files here”, “Browse files”, “Remove …”, “N files selected”). Türkçe arayüzde `label`, `buttonLabel`, `getRemoveLabel` ve `getStatusText` ver; dosya boyutları için `locale="tr-TR"` ver.
+</Callout>
+
+## Import
+
+```tsx
+import { FileUpload, type FileRejection } from "@meridui/react";
+```
+
+## Örnekler
+
+### Tek dosya
+
+`multiple` olmadan yeni dosya eskisinin yerine geçer.
+
+<ComponentPreview code={`<Field label="Profil fotoğrafı">
+  <FileUpload accept="image/*" label="Bir görsel sürükle" buttonLabel="Görsel seç" onValueChange={(files) => setFile(files[0] ?? null)} />
+</Field>`}>
+  <FileUploadSingle />
+</ComponentPreview>
+
+### Devre dışı
+
+<ComponentPreview code={`<FileUpload disabled description="Yüklemeler duraklatıldı." />`}>
+  <FileUploadDisabled />
+</ComponentPreview>
+
+### Yükleme
+
+FileUpload yalnızca dosya seçtirir. Dosyaları `onValueChange` içinden gönder (ya da form submit'inde: `name` verildiğinde tutulan dosyalar gerçek `<input type="file">`'a yansıtılır) ve ilerlemeyi [Progress](/tr/docs/components/progress) ile göster.
+
+## API referansı
+
+Bir `div` render'lar; diğer `div` attribute'ları ve ref ona gider.
+
+<PropsTable rows={[
+  { name: "value / defaultValue", type: "File[]", description: "Controlled ya da başlangıç dosyaları." },
+  { name: "onValueChange", type: "(files: File[]) => void", description: "Her ekleme ya da kaldırmadan sonra tutulan tüm dosyalarla çağrılır." },
+  { name: "onReject", type: "(rejections: FileRejection[]) => void", description: "Kontrolden geçemeyen dosyalar ve nedenleri: file-invalid-type, file-too-large, file-too-small, too-many-files." },
+  { name: "accept", type: "string", description: "<input type=\"file\">'daki gibi: \"image/*,.pdf\". Bırakılan dosyalarda da kontrol edilir." },
+  { name: "multiple", type: "boolean", default: "false", description: "Birden çok dosya tutar." },
+  { name: "maxSize / minSize", type: "number", description: "Byte cinsinden boyut sınırları." },
+  { name: "maxFiles", type: "number", description: "multiple ile tutulan en fazla dosya sayısı." },
+  { name: "label", type: "ReactNode", default: "\"Drag and drop files here\"", description: "Alandaki ana satır. Türkçe arayüzde \"Dosyaları buraya sürükle\"." },
+  { name: "buttonLabel", type: "ReactNode", default: "\"Browse files\"", description: "Butonun metni. Türkçe arayüzde \"Dosya seç\"." },
+  { name: "description", type: "ReactNode", description: "Etiketin altındaki ipucu; butonu açıklar." },
+  { name: "showFileList", type: "boolean", default: "true", description: "Kaldır butonlu dosya listesini render'lar." },
+  { name: "getRemoveLabel", type: "(file: File) => string", default: "Remove {name}", description: "Kaldır butonunun erişilebilir adı." },
+  { name: "getStatusText", type: "(count: number) => string", default: "\"N file(s) selected\"", description: "Seçim değişince okunan metin." },
+  { name: "locale", type: "string", description: "Dosya boyutları için locale (Intl birimleri)." },
+  { name: "icon", type: "ReactNode", description: "Etiketin üstündeki ikon." },
+  { name: "invalid / disabled / required", type: "boolean", description: "Durumlar; Field içinde ondan gelir." },
+  { name: "name", type: "string", description: "Native form submit için dosya input'unun adı." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-file-upload` | Kök (`data-dragging`, `data-invalid`, `data-disabled`) |
+| `.mrd-file-upload__dropzone` | Kesikli bırakma alanı |
+| `.mrd-file-upload__icon`, `__label`, `__description`, `__button` | Alanın içeriği |
+| `.mrd-file-upload__list`, `__item`, `__name`, `__size`, `__remove` | Dosya listesi |
+
+## Erişilebilirlik
+
+Sürükle-bırakın klavye karşılığı yoktur; bu yüzden bırakma alanı focus almaz, içindeki buton alır. Buton `description` ile açıklanır ve Field içinde önce kendi görünen metni, sonra alan etiketiyle adlandırılır. Dosya eklemek ya da kaldırmak görsel olarak gizli bir `role="status"` bölgesini günceller (“2 dosya seçildi”). Bir dosyayı kaldırmak focus'u “Dosya seç” butonuna döndürür.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Önce buton, sonra her kaldır butonu." },
+  { keys: ["Enter", "Space"], action: "Butonda: dosya seçiciyi açar. Kaldır butonunda: o dosyayı kaldırır." },
+]} />
+
+## İlgili sayfalar
+
+- [Field](/tr/docs/components/field) — bir kontrolün etrafında etiket, yardım metni ve hata.
+- [Progress](/tr/docs/components/progress) — yükleme ilerlemesi.

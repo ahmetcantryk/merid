@@ -54,10 +54,10 @@ import { Link } from "@meridui/react";
 `external` linki yeni bir tab'da açar, `rel="noopener noreferrer"` ekler ve ekran okuyucu kullanıcıları uyarılsın diye görsel olarak gizli bir “(opens in a new tab)” metni ekler.
 
 <Callout tone="warning">
-  Bu gizli metin şimdilik İngilizce ve bir prop ile değiştirilemiyor. Türkçe arayüzde ekran okuyucular uyarıyı İngilizce okur.
+  Bu gizli metin varsayılan olarak İngilizcedir (“(opens in a new tab)”). Türkçe arayüzde `externalLabel` ile Türkçe ver; yoksa ekran okuyucular uyarıyı İngilizce okur.
 </Callout>
 
-<ComponentPreview code={`<Link href="https://github.com/ahmetcantryk/merid" external>
+<ComponentPreview code={`<Link href="https://github.com/ahmetcantryk/merid" external externalLabel="(yeni sekmede açılır)">
   GitHub reposu
 </Link>`}>
   <LinkExternal />
@@ -83,6 +83,7 @@ Ref'ini `<a>`'ya iletir ve tüm native anchor attribute'larını olduğu gibi ge
   { name: "tone", type: '"accent" | "ink" | "muted"', default: '"accent"', description: "Metin rengi." },
   { name: "underline", type: '"hover" | "always" | "none"', default: '"hover"', description: "Alt çizginin ne zaman görüneceği." },
   { name: "external", type: "boolean", default: "false", description: "Linki rel=\"noopener noreferrer\" ile yeni bir tab'da açar ve görsel olarak gizli bir uyarı metni ekler." },
+  { name: "externalLabel", type: "string", default: "\"(opens in a new tab)\"", description: "`external` linklere eklenen görsel olarak gizli uyarı. Türkçe arayüzde örneğin \"(yeni sekmede açılır)\"." },
   { name: "href", type: "string", description: "Native link hedefi." },
   { name: "asChild", type: "boolean", default: "false", description: "Bir `<a>` yerine tek child elemanı (örneğin bir router linki) link stiliyle render'lar." },
 ]} />
