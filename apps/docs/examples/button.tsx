@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@merid/react";
+import { Button } from "@meridui/react";
 import { ArrowRightIcon, PlusIcon, TrashIcon } from "./icons";
 
 export function ButtonDemo() {

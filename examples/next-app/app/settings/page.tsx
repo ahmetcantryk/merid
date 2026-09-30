@@ -1,4 +1,4 @@
-import { Avatar, Card, Stack, Text } from "@merid/react";
+import { Avatar, Card, Stack, Text } from "@meridui/react";
 import { ProfileForm } from "./ProfileForm";
 
 export default function ProfilePage() {

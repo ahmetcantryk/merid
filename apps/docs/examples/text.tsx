@@ -1,6 +1,6 @@
 "use client";
 
-import { Text } from "@merid/react";
+import { Text } from "@meridui/react";
 
 export function TextDemo() {
   return (

@@ -1,4 +1,4 @@
-// Bilerek server component: React kullanmayan bir sayfa da tam olarak bu markup'ı gönderir. @merid/react JS'i kullanılmaz.
+// Bilerek server component: React kullanmayan bir sayfa da tam olarak bu markup'ı gönderir. @meridui/react JS'i kullanılmaz.
 
 export function PlainHtmlPreview() {
   return (

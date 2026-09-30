@@ -14,7 +14,7 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
-    "@merid/react": "*",
+    "@meridui/react": "*",
     "lucide-react": "^1.48.0",
     "next": "^16.3.6",
     "react": "^19.3.0",

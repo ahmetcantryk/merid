@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Badge, Button, Card, Stack, Switch, Text } from "@merid/react";
+import { Badge, Button, Card, Stack, Switch, Text } from "@meridui/react";
 
 function Panel({ title }: { readonly title: string }) {
   return (

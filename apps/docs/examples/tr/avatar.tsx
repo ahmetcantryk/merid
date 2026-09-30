@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarGroup } from "@merid/react";
+import { Avatar, AvatarGroup } from "@meridui/react";
 
 export function AvatarDemo() {
   return (

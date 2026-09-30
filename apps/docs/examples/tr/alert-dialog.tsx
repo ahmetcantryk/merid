@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertDialog, Button } from "@merid/react";
+import { AlertDialog, Button } from "@meridui/react";
 
 export function AlertDialogDemo() {
   return (

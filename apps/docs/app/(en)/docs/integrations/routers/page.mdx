@@ -19,7 +19,7 @@ Merid's navigation parts render an `<a>` by default and accept an `as` prop for 
 
 ```tsx
 import { Link as RouterLink, NavLink, useLocation } from "react-router";
-import { Breadcrumb, SidebarNav } from "@merid/react";
+import { Breadcrumb, SidebarNav } from "@meridui/react";
 
 function AppNav() {
   const { pathname } = useLocation();
@@ -42,7 +42,7 @@ React Router's `Link` takes `to`; passing `href` as well keeps TypeScript happy 
 
 ```tsx
 import { Link, useMatchRoute } from "@tanstack/react-router";
-import { SidebarNav } from "@merid/react";
+import { SidebarNav } from "@meridui/react";
 
 function AppNav() {
   const matchRoute = useMatchRoute();
@@ -60,7 +60,7 @@ TanStack's `Link` renders an `<a href>` itself, so `to` is enough. Its typed rou
 
 ```tsx
 import { createLink } from "@tanstack/react-router";
-import { SidebarNavItem } from "@merid/react";
+import { SidebarNavItem } from "@meridui/react";
 
 export const NavItem = createLink(SidebarNavItem);
 // <NavItem to="/projects/$id" params={{ id }} active={…}>Northwind</NavItem>

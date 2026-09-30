@@ -1,7 +1,7 @@
 /*
  * Merid tokens.
  * Geist and Geist Mono (SIL OFL 1.1, (c) Vercel) ship in the package at
- * `@merid/react/fonts/Geist-Variable.woff2` and `GeistMono-Variable.woff2`.
+ * `@meridui/react/fonts/Geist-Variable.woff2` and `GeistMono-Variable.woff2`.
  * The @font-face rules resolve them relative to dist/ (`../fonts/...`).
  * The fonts are opt-out: set `--mrd-font-sans` / `--mrd-font-mono` to your own
  * stack and the bundled faces are never requested (browsers only fetch faces that are actually used).

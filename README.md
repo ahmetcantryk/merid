@@ -53,7 +53,7 @@ Merid is an accessible React component library written in **plain CSS** and a sm
   <tr>
     <td width="50%" valign="top">
       <h4>Tokens all the way down</h4>
-      Every value is a <code>--mrd-*</code> custom property with light and dark values — ship as CSS or JS via <code>@merid/tokens</code>.
+      Every value is a <code>--mrd-*</code> custom property with light and dark values — ship as CSS or JS via <code>@meridui/tokens</code>.
     </td>
     <td width="50%" valign="top">
       <h4>Server-component friendly</h4>
@@ -77,12 +77,12 @@ Merid is an accessible React component library written in **plain CSS** and a sm
 ## Install
 
 ```bash
-npm i @merid/react
+npm i @meridui/react
 ```
 
 ```tsx
-import "@merid/react/styles.css";
-import { AlertDialog, Button } from "@merid/react";
+import "@meridui/react/styles.css";
+import { AlertDialog, Button } from "@meridui/react";
 
 export function DeleteProject({ onDelete }: { onDelete: () => void }) {
   return (
@@ -210,8 +210,8 @@ Need to go deeper? Override tokens in your own CSS — it always wins over Merid
 
 | Package | Description |
 | :-- | :-- |
-| [`@merid/react`](packages/react) | React components, stylesheet and bundled Geist fonts |
-| [`@merid/tokens`](packages/tokens) | Design tokens as CSS custom properties and typed JS |
+| [`@meridui/react`](packages/react) | React components, stylesheet and bundled Geist fonts |
+| [`@meridui/tokens`](packages/tokens) | Design tokens as CSS custom properties and typed JS |
 
 <br>
 

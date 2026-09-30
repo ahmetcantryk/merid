@@ -8,7 +8,7 @@ export const site = {
   docsSourcePath: "apps/docs/app",
   version: "0.1.0",
   releaseDate: "2026-09-28",
-  install: "npm i @merid/react",
+  install: "npm i @meridui/react",
 } as const;
 
 /**

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Drawer, type DrawerSide, type DrawerSize } from "@merid/react";
+import { Button, Drawer, type DrawerSide, type DrawerSize } from "@meridui/react";
 
 const SIDE_LABELS: Record<DrawerSide, string> = { left: "Soldan aç", right: "Sağdan aç" };
 

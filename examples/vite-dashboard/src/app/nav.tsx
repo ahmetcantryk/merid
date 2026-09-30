@@ -1,4 +1,4 @@
-import { SidebarNav } from "@merid/react";
+import { SidebarNav } from "@meridui/react";
 import { FolderKanban, LayoutDashboard, Settings } from "lucide-react";
 import { hrefFor, type Route } from "../lib/router";
 

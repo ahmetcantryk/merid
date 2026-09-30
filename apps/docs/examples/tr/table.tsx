@@ -10,7 +10,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@merid/react";
+} from "@meridui/react";
 
 const wrap = { width: "100%" } as const;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Breadcrumb } from "@merid/react";
+import { Breadcrumb } from "@meridui/react";
 
 export function BreadcrumbBasic() {
   return (

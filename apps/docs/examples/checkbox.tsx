@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Checkbox } from "@merid/react";
+import { Checkbox } from "@meridui/react";
 
 const col = { display: "grid", gap: 14 } as const;
 

@@ -1,6 +1,6 @@
 /**
  * Turkish sidebar titles, keyed by the English group title and the locale-neutral href.
- * Component names stay as they are exported from @merid/react (Button, Dialog, ...).
+ * Component names stay as they are exported from @meridui/react (Button, Dialog, ...).
  */
 export const navGroupTitlesTr: Readonly<Record<string, string>> = {
   "Getting started": "Başlarken",

@@ -1,6 +1,6 @@
 "use client";
 
-import { Separator, Stack, Text } from "@merid/react";
+import { Separator, Stack, Text } from "@meridui/react";
 
 export function SeparatorDemo() {
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Alert, Button, Card, Checkbox, Field, Heading, Input, Link, Separator, Stack, Text } from "@merid/react";
+import { Alert, Button, Card, Checkbox, Field, Heading, Input, Link, Separator, Stack, Text } from "@meridui/react";
 
 type Status = "idle" | "submitting" | "error";
 

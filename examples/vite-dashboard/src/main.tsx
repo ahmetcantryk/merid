@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "@merid/react/styles.css";
+import "@meridui/react/styles.css";
 import "./app.css";
 import { App } from "./app/App";
 

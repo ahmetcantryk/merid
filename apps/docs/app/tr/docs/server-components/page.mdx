@@ -39,7 +39,7 @@ Bir component, sınırın öbür tarafına prop olarak geçirilemez. Bu yüzden 
 
 ```tsx
 import Link from "next/link";
-import { Button, BreadcrumbLink } from "@merid/react";
+import { Button, BreadcrumbLink } from "@meridui/react";
 
 <Button asChild variant="primary">
   <Link href="/signup">Ücretsiz başla</Link>
@@ -55,7 +55,7 @@ Bir server component'ten client component'e geçirilen prop'lar serileştirilebi
 
 ```tsx
 // app/settings/page.tsx: bir server component
-import { Button, Card, DialogContent, DialogDescription, DialogRoot, DialogTitle, DialogTrigger } from "@merid/react";
+import { Button, Card, DialogContent, DialogDescription, DialogRoot, DialogTitle, DialogTrigger } from "@meridui/react";
 import { DeleteAccount } from "./delete-account"; // içinde "use client" var: onClick geçiriyor
 
 export default function Settings() {

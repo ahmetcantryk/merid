@@ -1,4 +1,4 @@
-export const accordionBasicCode = `import { Accordion } from "@merid/react";
+export const accordionBasicCode = `import { Accordion } from "@meridui/react";
 
 export function Example() {
   return (

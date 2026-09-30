@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Progress } from "@merid/react";
+import { Progress } from "@meridui/react";
 
 const wrap = { width: "100%", maxWidth: 360, display: "grid", gap: 16 } as const;
 

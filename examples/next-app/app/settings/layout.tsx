@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbRoot, Container, Heading, Section, Stack, Text } from "@merid/react";
+import { BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbRoot, Container, Heading, Section, Stack, Text } from "@meridui/react";
 import { SettingsTabs } from "./SettingsTabs";
 
 export const metadata: Metadata = { title: "Settings" };

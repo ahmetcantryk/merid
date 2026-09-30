@@ -1,4 +1,4 @@
-export const toastBasicCode = `import { Button, ToastProvider, useToast } from "@merid/react";
+export const toastBasicCode = `import { Button, ToastProvider, useToast } from "@meridui/react";
 
 function SaveButton() {
   const { toast } = useToast();

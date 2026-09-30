@@ -1,6 +1,6 @@
 // Doküman kod sekmelerinde gösterilen kaynak metinler. Server component'ler okuyabilsin diye client modülünün dışında tutulur.
 
-export const stepperBasicCode = `import { Stepper } from "@merid/react";
+export const stepperBasicCode = `import { Stepper } from "@meridui/react";
 
 const STATUS_LABELS = { complete: "Tamamlandı", current: "Geçerli adım", upcoming: "Başlanmadı" };
 

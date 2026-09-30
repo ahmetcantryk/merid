@@ -1,6 +1,6 @@
 "use client";
 
-import { Link, Text } from "@merid/react";
+import { Link, Text } from "@meridui/react";
 
 export function LinkDemo() {
   return (

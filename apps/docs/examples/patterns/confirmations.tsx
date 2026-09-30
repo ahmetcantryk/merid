@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AlertDialog, Button, Field, Input, Stack, Text, ToastProvider, useToast } from "@merid/react";
+import { AlertDialog, Button, Field, Input, Stack, Text, ToastProvider, useToast } from "@meridui/react";
 
 const PROJECT = "northwind";
 

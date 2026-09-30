@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Pagination } from "@merid/react";
+import { Pagination } from "@meridui/react";
 
 export function PaginationBasic() {
   return <Pagination pageCount={12} defaultPage={5} />;

@@ -1,4 +1,4 @@
-// Server component on purpose: this markup is what a non-React page would ship. No @merid/react JS is used.
+// Server component on purpose: this markup is what a non-React page would ship. No @meridui/react JS is used.
 
 export function PlainHtmlPreview() {
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@merid/react";
+import { Badge } from "@meridui/react";
 
 export function BadgeDemo() {
   return (

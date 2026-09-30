@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Heading, Text } from "@merid/react";
+import { Heading, Text } from "@meridui/react";
 
 export function PageHeader({ title, description, actions }: { title: string; description?: string; actions?: ReactNode }) {
   return (

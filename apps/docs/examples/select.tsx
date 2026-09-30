@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Select } from "@merid/react";
+import { Select } from "@meridui/react";
 
 const stack = { display: "grid", gap: 8, width: 260 } as const;
 const labelStyle = { fontSize: 14, fontWeight: 500, color: "var(--mrd-ink)" } as const;

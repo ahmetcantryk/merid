@@ -1,4 +1,4 @@
-import { Badge, Card, Grid, Text } from "@merid/react";
+import { Badge, Card, Grid, Text } from "@meridui/react";
 import { formatNumber } from "../../lib/data";
 import { useProjects } from "../../lib/projects-store";
 

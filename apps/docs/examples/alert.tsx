@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Button, IconButton } from "@merid/react";
+import { Alert, Button, IconButton } from "@meridui/react";
 import { CloseIcon } from "./icons";
 
 const wrap = { width: "100%", maxWidth: 560, display: "grid", gap: 12 } as const;

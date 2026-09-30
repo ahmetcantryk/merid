@@ -1,4 +1,4 @@
-// Public entry for @merid/react. Styles: import "@merid/react/styles.css" once.
+// Public entry for @meridui/react. Styles: import "@meridui/react/styles.css" once.
 
 // primitives
 export * from "./components/button";

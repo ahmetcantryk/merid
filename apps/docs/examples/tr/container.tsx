@@ -1,6 +1,6 @@
 "use client";
 
-import { Container } from "@merid/react";
+import { Container } from "@meridui/react";
 import { Box } from "../layout-box";
 
 const frame = { width: "100%", background: "var(--mrd-tray)", paddingBlock: 16, borderRadius: 8 } as const;

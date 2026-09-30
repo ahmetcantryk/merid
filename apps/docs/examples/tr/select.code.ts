@@ -1,4 +1,4 @@
-export const selectBasicCode = `import { Select } from "@merid/react";
+export const selectBasicCode = `import { Select } from "@meridui/react";
 
 export function Example() {
   return (

@@ -17,7 +17,7 @@ Merid puts everything in `merid.tokens`, `merid.base` and `merid.components`. Ta
 @layer theme, base, merid, components, utilities;
 
 @import "tailwindcss";
-@import "@merid/react/styles.css";
+@import "@meridui/react/styles.css";
 ```
 
 With this order:
@@ -26,7 +26,7 @@ With this order:
 - Tailwind utilities come last, so `className="mt-4 w-full"` on a Merid component overrides the component's own spacing and width — without `!important`.
 - Your own unlayered CSS still beats both.
 
-If you import Merid from JavaScript instead (`import "@merid/react/styles.css"`), keep the `@layer` statement at the top of the CSS file that Tailwind processes, and make sure that file loads first.
+If you import Merid from JavaScript instead (`import "@meridui/react/styles.css"`), keep the `@layer` statement at the top of the CSS file that Tailwind processes, and make sure that file loads first.
 
 ## Preflight
 
@@ -68,7 +68,7 @@ Map Merid's CSS variables into Tailwind with `@theme inline`, so utilities follo
 </div>
 ```
 
-`inline` makes Tailwind emit `var(--mrd-…)` in each utility instead of copying the value, which is what keeps dark mode working. The `@merid/tokens` package exports the same list as `cssVar` if you generate the theme from JavaScript.
+`inline` makes Tailwind emit `var(--mrd-…)` in each utility instead of copying the value, which is what keeps dark mode working. The `@meridui/tokens` package exports the same list as `cssVar` if you generate the theme from JavaScript.
 
 ## Dark mode variant
 

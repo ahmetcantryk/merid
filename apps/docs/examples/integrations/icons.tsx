@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight, Download, Mail, MoreHorizontal, Plus, Search, Settings, Trash2 } from "lucide-react";
-import { Alert, Badge, Button, IconButton, Input, SidebarNav, Stack } from "@merid/react";
+import { Alert, Badge, Button, IconButton, Input, SidebarNav, Stack } from "@meridui/react";
 
 /** Merid's control scale: 16px in buttons and nav rows, 14px inside compact inputs and badges. */
 const ICON = { size: 16, strokeWidth: 1.75, "aria-hidden": true } as const;

@@ -19,7 +19,7 @@ Merid'in navigasyon parçaları varsayılan olarak bir `<a>` render'lar ve route
 
 ```tsx
 import { Link as RouterLink, NavLink, useLocation } from "react-router";
-import { Breadcrumb, SidebarNav } from "@merid/react";
+import { Breadcrumb, SidebarNav } from "@meridui/react";
 
 function AppNav() {
   const { pathname } = useLocation();
@@ -42,7 +42,7 @@ React Router'ın `Link`'i `to` alır; yanına `href` de vermek, Merid'in anchor 
 
 ```tsx
 import { Link, useMatchRoute } from "@tanstack/react-router";
-import { SidebarNav } from "@merid/react";
+import { SidebarNav } from "@meridui/react";
 
 function AppNav() {
   const matchRoute = useMatchRoute();
@@ -60,7 +60,7 @@ TanStack'in `Link`'i `<a href>`'i kendisi render'lar, yani `to` yeterli. Tipli r
 
 ```tsx
 import { createLink } from "@tanstack/react-router";
-import { SidebarNavItem } from "@merid/react";
+import { SidebarNavItem } from "@meridui/react";
 
 export const NavItem = createLink(SidebarNavItem);
 // <NavItem to="/projects/$id" params={{ id }} active={…}>Northwind</NavItem>

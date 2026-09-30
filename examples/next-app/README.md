@@ -1,14 +1,14 @@
 # Northwind Cloud site (Next.js App Router + Merid)
 
-A marketing-lite site, auth screens, settings, billing and an onboarding wizard for the fictional **Northwind Cloud**, built with `@merid/react` on Next.js 16 (App Router, React 19). Pages are **server components by default**; client files exist only where there is state or an event handler.
+A marketing-lite site, auth screens, settings, billing and an onboarding wizard for the fictional **Northwind Cloud**, built with `@meridui/react` on Next.js 16 (App Router, React 19). Pages are **server components by default**; client files exist only where there is state or an event handler.
 
 ## Run
 
-From the repository root (npm workspaces link `@merid/react` automatically):
+From the repository root (npm workspaces link `@meridui/react` automatically):
 
 ```bash
 npm install
-npm run build -w @merid/react                 # the example consumes the built package
+npm run build -w @meridui/react                 # the example consumes the built package
 npm run dev -w merid-example-next-app         # http://localhost:3230
 ```
 

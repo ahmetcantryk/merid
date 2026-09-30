@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertDialog, Button, Card, Field, Heading, Input, Separator, Stack, Switch, Text, useToast } from "@merid/react";
+import { AlertDialog, Button, Card, Field, Heading, Input, Separator, Stack, Switch, Text, useToast } from "@meridui/react";
 
 const PREFERENCES = [
   { id: "deploys", label: "Deployment emails", description: "A summary after every production deploy." },

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Alert, Button, Checkbox, Field, Input, Stack, Text } from "@merid/react";
+import { Alert, Button, Checkbox, Field, Input, Stack, Text } from "@meridui/react";
 import { signupAction } from "@/lib/auth-actions";
 import { applyServerErrors } from "@/lib/form-errors";
 import { signupSchema, type SignupInput } from "@/lib/schemas";

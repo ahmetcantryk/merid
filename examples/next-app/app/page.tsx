@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Badge, Button, Card, Container, Grid, Heading, Section, Stack, Text, Tooltip } from "@merid/react";
+import { Badge, Button, Card, Container, Grid, Heading, Section, Stack, Text, Tooltip } from "@meridui/react";
 import { Activity, Globe2, Lock, Rocket } from "lucide-react";
 
 const FEATURES = [

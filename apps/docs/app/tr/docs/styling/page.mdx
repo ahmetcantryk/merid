@@ -15,7 +15,7 @@ Merid sade CSS'tir. Her kural adlandırılmış bir cascade layer içinde durur.
 ```
 
 - **`merid.tokens`** custom property'leri, koyu değerlerini ve font tanımını içerir.
-- **`merid.base`** dokümana (`:root`) ve `.mrd-root` ile işaretlenmiş her alt ağaca uygulanır: `box-sizing: border-box`, font, metin rengi, başlık kalınlığı ve focus halkası (azaltılmış hareket desteği `.mrd-root` altında isteğe bağlı kalır). Her seçici `:where()` içine alınmıştır, yani specificity'si sıfırdır ve senin kuralların kazanır. Bu layer'ı istemiyorsan `@merid/react/components.css` dosyasını import et. Bu dosya, bu layer olmadan `styles.css`'in aynısıdır.
+- **`merid.base`** dokümana (`:root`) ve `.mrd-root` ile işaretlenmiş her alt ağaca uygulanır: `box-sizing: border-box`, font, metin rengi, başlık kalınlığı ve focus halkası (azaltılmış hareket desteği `.mrd-root` altında isteğe bağlı kalır). Her seçici `:where()` içine alınmıştır, yani specificity'si sıfırdır ve senin kuralların kazanır. Bu layer'ı istemiyorsan `@meridui/react/components.css` dosyasını import et. Bu dosya, bu layer olmadan `styles.css`'in aynısıdır.
 - **`merid.components`** her component'in kurallarını tutar. Kurallar `.mrd-` sınıflarına ve data attribute'larına bağlıdır.
 
 Layer dışındaki stiller layer içindekileri her zaman yener. Uygulama CSS'in, CSS Modules ve utility sınıfların, sen onları bir layer'a koymadıkça layer dışındadır. Bu yüzden Merid'i `!important` kullanmadan override ederler.

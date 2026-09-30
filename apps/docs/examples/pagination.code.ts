@@ -1,6 +1,6 @@
 // Source strings shown in the docs code tabs. Kept out of the client module so server components can read them.
 
-export const paginationBasicCode = `import { Pagination } from "@merid/react";
+export const paginationBasicCode = `import { Pagination } from "@meridui/react";
 
 export function Example() {
   return <Pagination pageCount={12} defaultPage={5} />;
@@ -8,7 +8,7 @@ export function Example() {
 
 
 export const paginationControlledCode = `import { useState } from "react";
-import { Pagination } from "@merid/react";
+import { Pagination } from "@meridui/react";
 
 export function Example() {
   const [page, setPage] = useState(1);

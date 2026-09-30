@@ -1,23 +1,23 @@
 import { docMetadata } from "@/lib/i18n/metadata";
 export const metadata = docMetadata("tr", "/docs/integrations/design-tokens", {
   title: "Figma ve Style Dictionary",
-  description: "Merid'in design token'larını @merid/tokens ile Figma'ya (Tokens Studio), Style Dictionary'ye ve JavaScript'e taşı.",
+  description: "Merid'in design token'larını @meridui/tokens ile Figma'ya (Tokens Studio), Style Dictionary'ye ve JavaScript'e taşı.",
 });
 
 # Figma ve Style Dictionary
 
-`@merid/tokens`, Merid'in token'larını başka araçların okuyabildiği formatlarda yayımlar. `@merid/react`'in içinde gelen `tokens.css`'ten üretilir; ikisi birbirini tutmazsa bir test build'i kırar.
+`@meridui/tokens`, Merid'in token'larını başka araçların okuyabildiği formatlarda yayımlar. `@meridui/react`'in içinde gelen `tokens.css`'ten üretilir; ikisi birbirini tutmazsa bir test build'i kırar.
 
 ```bash
-npm i @merid/tokens
+npm i @meridui/tokens
 ```
 
 | Import | Format | Ne için |
 |---|---|---|
-| `@merid/tokens/tokens.json` | [W3C Design Tokens](https://www.designtokens.org/tr/drafts/format/) (`$value`, `$type`) | Style Dictionary v4+, Terrazzo, diğer DTCG araçları |
-| `@merid/tokens/figma-tokens.json` | Tokens Studio for Figma | Figma'da değişkenleri ve stilleri senkronlamak |
-| `@merid/tokens` | ES module + tipler | JS'te ham değerler ve `var()` referansları |
-| `@merid/tokens/tokens.css` | CSS | React kullanmayan stack'ler için kaynağın bir kopyası |
+| `@meridui/tokens/tokens.json` | [W3C Design Tokens](https://www.designtokens.org/tr/drafts/format/) (`$value`, `$type`) | Style Dictionary v4+, Terrazzo, diğer DTCG araçları |
+| `@meridui/tokens/figma-tokens.json` | Tokens Studio for Figma | Figma'da değişkenleri ve stilleri senkronlamak |
+| `@meridui/tokens` | ES module + tipler | JS'te ham değerler ve `var()` referansları |
+| `@meridui/tokens/tokens.css` | CSS | React kullanmayan stack'ler için kaynağın bir kopyası |
 
 ## Token grupları
 
@@ -52,7 +52,7 @@ Style Dictionary v4 DTCG'yi doğrudan okur. Merid'in hedeflemediği platformlar,
 import StyleDictionary from "style-dictionary";
 
 const sd = new StyleDictionary({
-  source: ["node_modules/@merid/tokens/dist/tokens.json"],
+  source: ["node_modules/@meridui/tokens/dist/tokens.json"],
   platforms: {
     ios: { transformGroup: "ios-swift", buildPath: "ios/", files: [{ destination: "Merid.swift", format: "ios-swift/class.swift" }] },
     scss: { transformGroup: "scss", buildPath: "scss/", files: [{ destination: "_merid.scss", format: "scss/variables" }] },
@@ -67,7 +67,7 @@ Koyu tema build'i için, varsa `$value`'yu `$extensions["com.merid"].modes.dark`
 ## JavaScript
 
 ```ts
-import { tokens, cssVar } from "@merid/tokens";
+import { tokens, cssVar } from "@meridui/tokens";
 
 tokens.light.accent; // "#3f63f5"
 tokens.dark.accent; // "#6b8aff"
@@ -78,4 +78,4 @@ Tarayıcıda `cssVar`'ı tercih et: aktif temayı izler. Ham `tokens`'a yalnızc
 
 ## Token'ları değiştirmek
 
-Token'lar tek bir yerde, `packages/react/styles/tokens.css` içinde tanımlanır. Orada düzenle, sonra `npm run build -w @merid/tokens` çalıştır. `[data-theme="dark"]` bloğu ile `prefers-color-scheme: dark` bloğu birbirinden ayrışırsa build kırılır.
+Token'lar tek bir yerde, `packages/react/styles/tokens.css` içinde tanımlanır. Orada düzenle, sonra `npm run build -w @meridui/tokens` çalıştır. `[data-theme="dark"]` bloğu ile `prefers-color-scheme: dark` bloğu birbirinden ayrışırsa build kırılır.

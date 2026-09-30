@@ -1,16 +1,16 @@
 "use client";
 
-import { Code, Text } from "@merid/react";
+import { Code, Text } from "@meridui/react";
 
 export function CodeDemo() {
   return (
     <Text>
-      <Code>@merid/react/styles.css</Code> stil dosyasını bir kez import et.
+      <Code>@meridui/react/styles.css</Code> stil dosyasını bir kez import et.
     </Text>
   );
 }
 
-const SNIPPET = 'npm i @merid/react\nimport "@merid/react/styles.css";';
+const SNIPPET = 'npm i @meridui/react\nimport "@meridui/react/styles.css";';
 
 export function CodeBlockDemo() {
   return (

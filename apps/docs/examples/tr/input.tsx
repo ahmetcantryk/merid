@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Input, Text } from "@merid/react";
+import { Input, Text } from "@meridui/react";
 import { SearchIcon } from "../icons";
 
 const col = { display: "grid", gap: 12, width: "100%", maxWidth: 360 } as const;

@@ -1,6 +1,6 @@
 "use client";
 
-import { Stack } from "@merid/react";
+import { Stack } from "@meridui/react";
 import { Box } from "../layout-box";
 
 export function StackDemo() {

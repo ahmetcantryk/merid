@@ -1,6 +1,6 @@
 "use client";
 
-import { IconButton, Text, VisuallyHidden } from "@merid/react";
+import { IconButton, Text, VisuallyHidden } from "@meridui/react";
 import { SettingsIcon } from "./icons";
 
 export function VisuallyHiddenDemo() {

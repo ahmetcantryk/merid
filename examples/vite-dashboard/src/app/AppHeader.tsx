@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Drawer, IconButton, Input, Kbd, Tooltip } from "@merid/react";
+import { Drawer, IconButton, Input, Kbd, Tooltip } from "@meridui/react";
 import { Menu, Moon, Search, Sun } from "lucide-react";
 import { useTheme } from "../lib/theme";
 import { hrefFor, type Route } from "../lib/router";

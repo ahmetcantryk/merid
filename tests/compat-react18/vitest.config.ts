@@ -5,7 +5,7 @@ import { defineConfig } from "vitest/config";
 const here = dirname(fileURLToPath(import.meta.url));
 const local = (id: string) => join(here, "node_modules", id);
 
-// @merid/react is a file: symlink into the monorepo, whose root installs React 19.
+// @meridui/react is a file: symlink into the monorepo, whose root installs React 19.
 // Pin every React import, including those inside the built package and its
 // @floating-ui dependency, to this folder's React 18.
 export default defineConfig({

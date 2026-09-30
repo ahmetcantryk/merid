@@ -15,7 +15,7 @@ import {
   SegmentedControl,
   Switch,
   Tabs,
-} from "@merid/react";
+} from "@meridui/react";
 import { readTheme, type Theme } from "@/components/ThemeToggle";
 import { useDictionary } from "@/lib/i18n/client";
 import { ACCENTS, DENSITIES, type AccentId, type DensityId } from "./playground-presets";

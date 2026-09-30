@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from "react";
-import { Text } from "@merid/react";
+import { Text } from "@meridui/react";
 import type { Route } from "../lib/router";
 import { AppHeader } from "./AppHeader";
 import { AppNav } from "./nav";

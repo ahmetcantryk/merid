@@ -1,4 +1,4 @@
-import { Button, Card, Heading, Progress, Stack, Text } from "@merid/react";
+import { Button, Card, Heading, Progress, Stack, Text } from "@meridui/react";
 import { hrefFor } from "../../lib/router";
 
 const METERS = [

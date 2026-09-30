@@ -17,7 +17,7 @@ Merid her şeyi `merid.tokens`, `merid.base` ve `merid.components` içine koyar.
 @layer theme, base, merid, components, utilities;
 
 @import "tailwindcss";
-@import "@merid/react/styles.css";
+@import "@meridui/react/styles.css";
 ```
 
 Bu sırayla:
@@ -26,7 +26,7 @@ Bu sırayla:
 - Tailwind utility'leri en son gelir; bir Merid component'indeki `className="mt-4 w-full"`, `!important` olmadan component'in kendi boşluğunu ve genişliğini ezer.
 - Layer dışındaki kendi CSS'in yine ikisini de ezer.
 
-Merid'i bunun yerine JavaScript'ten import ediyorsan (`import "@merid/react/styles.css"`), `@layer` satırını Tailwind'in işlediği CSS dosyasının en üstünde tut ve o dosyanın ilk yüklendiğinden emin ol.
+Merid'i bunun yerine JavaScript'ten import ediyorsan (`import "@meridui/react/styles.css"`), `@layer` satırını Tailwind'in işlediği CSS dosyasının en üstünde tut ve o dosyanın ilk yüklendiğinden emin ol.
 
 ## Preflight
 
@@ -68,7 +68,7 @@ Merid'in CSS değişkenlerini `@theme inline` ile Tailwind'e eşle; utility'ler 
 </div>
 ```
 
-`inline`, Tailwind'in değeri kopyalamak yerine her utility'de `var(--mrd-…)` üretmesini sağlar; dark mode'un çalışmaya devam etmesini sağlayan da bu. Temayı JavaScript'ten üretiyorsan `@merid/tokens` paketi aynı listeyi `cssVar` olarak export eder.
+`inline`, Tailwind'in değeri kopyalamak yerine her utility'de `var(--mrd-…)` üretmesini sağlar; dark mode'un çalışmaya devam etmesini sağlayan da bu. Temayı JavaScript'ten üretiyorsan `@meridui/tokens` paketi aynı listeyi `cssVar` olarak export eder.
 
 ## Dark mode varyantı
 

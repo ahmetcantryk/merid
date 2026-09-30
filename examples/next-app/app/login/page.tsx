@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import NextLink from "next/link";
-import { Link } from "@merid/react";
+import { Link } from "@meridui/react";
 import { AuthCard } from "@/components/AuthCard";
 import { LoginForm } from "./LoginForm";
 

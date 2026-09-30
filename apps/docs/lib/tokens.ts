@@ -1,4 +1,4 @@
-/** Token values mirrored from DESIGN.md for documentation tables. The CSS in @merid/react is the source of truth. */
+/** Token values mirrored from DESIGN.md for documentation tables. The CSS in @meridui/react is the source of truth. */
 
 export interface ColorToken {
   readonly name: string;

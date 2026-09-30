@@ -1,4 +1,4 @@
-import { Avatar, Badge, Card, Stack, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Text } from "@merid/react";
+import { Avatar, Badge, Card, Stack, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Text } from "@meridui/react";
 import { MEMBERS } from "../../lib/data";
 
 export function MembersTab() {

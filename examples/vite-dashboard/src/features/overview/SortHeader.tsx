@@ -1,4 +1,4 @@
-import { TableHeader } from "@merid/react";
+import { TableHeader } from "@meridui/react";
 import type { Sort, SortKey } from "./useTableState";
 
 interface SortHeaderProps {

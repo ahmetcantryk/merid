@@ -11,7 +11,7 @@ Thank you for helping. This guide explains how the repository is organised and w
 ## Repository layout
 
 ```
-packages/react   @merid/react — components, CSS, tokens, font
+packages/react   @meridui/react — components, CSS, tokens, font
 apps/docs        documentation site (Next.js + MDX), port 3210
 .changeset       pending release notes
 ```

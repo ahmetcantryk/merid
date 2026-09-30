@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Field, Input, NativeSelect, Stack, Text } from "@merid/react";
+import { Button, Field, Input, NativeSelect, Stack, Text } from "@meridui/react";
 
 export function ProfileForm() {
   const [saved, setSaved] = useState(false);

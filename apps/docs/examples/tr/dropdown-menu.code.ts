@@ -1,4 +1,4 @@
-export const dropdownMenuBasicCode = `import { Button, DropdownMenu } from "@merid/react";
+export const dropdownMenuBasicCode = `import { Button, DropdownMenu } from "@meridui/react";
 
 export function Example() {
   return (

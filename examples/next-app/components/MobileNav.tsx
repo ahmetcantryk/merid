@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button, Drawer, IconButton, SidebarNav, Stack } from "@merid/react";
+import { Button, Drawer, IconButton, SidebarNav, Stack } from "@meridui/react";
 import { Menu } from "lucide-react";
 import { NAV_LINKS } from "./nav-links";
 

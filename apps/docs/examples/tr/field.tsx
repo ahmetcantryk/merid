@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Field, Input, NativeSelect, Textarea } from "@merid/react";
+import { Field, Input, NativeSelect, Textarea } from "@meridui/react";
 
 const wrap = { width: "100%", maxWidth: 360, display: "grid", gap: 20 } as const;
 

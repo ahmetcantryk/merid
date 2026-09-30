@@ -20,7 +20,7 @@ npm i zod @hookform/resolvers react-hook-form
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button, Field, Input, Select, Stack, Switch } from "@merid/react";
+import { Button, Field, Input, Select, Stack, Switch } from "@meridui/react";
 
 const schema = z.object({
   name: z.string().trim().min(2, "Use at least 2 characters."),

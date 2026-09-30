@@ -46,7 +46,7 @@ main { flex: 1; }
   :root:not([data-theme="light"]) :is(.logo, .logo-mark) { --logo-shadow: #1a2a6e; }
 }
 
-/* Buttons (docs chrome only; component docs use @merid/react) */
+/* Buttons (docs chrome only; component docs use @meridui/react) */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   height: var(--mrd-control-md); padding: 0 12px; border-radius: var(--mrd-radius-md);

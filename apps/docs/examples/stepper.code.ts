@@ -1,6 +1,6 @@
 // Source strings shown in the docs code tabs. Kept out of the client module so server components can read them.
 
-export const stepperBasicCode = `import { Stepper } from "@merid/react";
+export const stepperBasicCode = `import { Stepper } from "@meridui/react";
 
 export function Example() {
   return (

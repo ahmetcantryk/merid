@@ -1,4 +1,4 @@
-import { Card, EmptyState, Grid, Heading, Stack, Text } from "@merid/react";
+import { Card, EmptyState, Grid, Heading, Stack, Text } from "@meridui/react";
 import { ShieldCheck } from "lucide-react";
 import { DeploymentsTable } from "../features/overview/DeploymentsTable";
 import { StatTiles } from "../features/overview/StatTiles";

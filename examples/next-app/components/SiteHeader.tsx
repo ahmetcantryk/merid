@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button, Link as MeridLink, Stack } from "@merid/react";
+import { Button, Link as MeridLink, Stack } from "@meridui/react";
 import { MobileNav } from "./MobileNav";
 import { NAV_LINKS } from "./nav-links";
 import { ThemeToggle } from "./ThemeToggle";

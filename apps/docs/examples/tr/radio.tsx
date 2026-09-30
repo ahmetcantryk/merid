@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Radio, RadioGroup } from "@merid/react";
+import { Radio, RadioGroup } from "@meridui/react";
 
 export function RadioDemo() {
   return (

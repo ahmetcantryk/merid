@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { IconButton, Tooltip } from "@merid/react";
+import { IconButton, Tooltip } from "@meridui/react";
 import { Moon, Sun } from "lucide-react";
 
 type Theme = "light" | "dark";

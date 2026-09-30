@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Button, EmptyState, Grid, Input, SegmentedControl, Select, Stack } from "@merid/react";
+import { Button, EmptyState, Grid, Input, SegmentedControl, Select, Stack } from "@meridui/react";
 import { FolderSearch, Search } from "lucide-react";
 import { REGIONS, type ProjectStatus, type Region } from "../lib/data";
 import { useProjects } from "../lib/projects-store";

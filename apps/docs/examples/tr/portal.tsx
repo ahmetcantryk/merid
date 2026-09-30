@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Portal } from "@merid/react";
+import { Button, Portal } from "@meridui/react";
 
 const bannerStyle = {
   position: "fixed",

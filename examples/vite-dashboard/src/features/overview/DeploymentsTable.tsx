@@ -1,7 +1,7 @@
 import {
   Avatar, Badge, Button, Checkbox, Pagination, Stack, Table, TableBody, TableCell,
   TableHead, TableHeader, TableRow, Text, useToast,
-} from "@merid/react";
+} from "@meridui/react";
 import { REGIONS, STATUS_LABEL, STATUS_TONE, formatDate, formatNumber } from "../../lib/data";
 import { useProjects } from "../../lib/projects-store";
 import { SortHeader } from "./SortHeader";

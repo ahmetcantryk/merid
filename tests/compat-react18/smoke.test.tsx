@@ -6,7 +6,7 @@ import {
   Accordion, Alert, Avatar, Badge, Button, Checkbox, Dialog, DropdownMenu, Field, IconButton, Input,
   Pagination, Popover, Radio, RadioGroup, SegmentedControl, Select, Switch, Tabs, Textarea, ToastProvider,
   Tooltip, useToast,
-} from "@merid/react";
+} from "@meridui/react";
 
 describe("environment", () => {
   it("runs React 18", () => {
