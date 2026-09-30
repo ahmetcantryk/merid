@@ -1,0 +1,151 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { NavigationMenuBasic } from "@/examples/navigation-menu";
+import { navigationMenuBasicCode } from "@/examples/navigation-menu.code";
+
+export const metadata = docMetadata("en", "/docs/components/navigation-menu", {
+  title: "NavigationMenu",
+  description: "A site's top navigation with drop-down and mega-menu panels of links.",
+});
+
+# NavigationMenu
+
+A site's top navigation: links and buttons that reveal panels of links, from a short list to a full-width mega menu.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/navigation-menu">Source</a>
+</div>
+
+<ComponentPreview code={navigationMenuBasicCode}>
+  <NavigationMenuBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { NavigationMenu } from "@meridui/react";
+```
+
+## Anatomy
+
+```tsx
+<NavigationMenu.Root>
+  <NavigationMenu.List>
+    <NavigationMenu.Item value="products">
+      <NavigationMenu.Trigger />
+      <NavigationMenu.Content>
+        <NavigationMenu.Link />
+      </NavigationMenu.Content>
+    </NavigationMenu.Item>
+    <NavigationMenu.Item>
+      <NavigationMenu.Link />
+    </NavigationMenu.Item>
+  </NavigationMenu.List>
+</NavigationMenu.Root>
+```
+
+- **Root** is the `<nav>` landmark and holds which panel is open (one at a time).
+- **List** and **Item** are the `<ul>` and `<li>` of the bar.
+- **Trigger** is a disclosure `<button>`; **Content** is its panel of links. `fullWidth` spans the bar for a mega menu.
+- **Link** is an `<a>`, directly in an Item (a top-level link) or inside Content. `description` adds a second line.
+
+## Examples
+
+### Router links
+
+`asChild` renders your router's link with the same styling and behaviour; `active` sets `aria-current="page"`.
+
+```tsx
+import NextLink from "next/link";
+
+<NavigationMenu.Link asChild active={pathname === "/pricing"}>
+  <NextLink href="/pricing">Pricing</NextLink>
+</NavigationMenu.Link>
+```
+
+### Mega menu
+
+Pass `fullWidth` to Content: the panel spans the whole bar and lays links out in a responsive grid. Below 640px every panel spans the bar.
+
+## API reference
+
+### Root
+
+Accepts every `<nav>` attribute.
+
+<PropsTable rows={[
+  { name: "value", type: "string", description: "Controlled open item (\"\" when none)." },
+  { name: "defaultValue", type: "string", default: "\"\"", description: "Initially open item when uncontrolled." },
+  { name: "onValueChange", type: "(value: string) => void", description: "Called with the open item value." },
+  { name: "openDelay", type: "number", default: "150", description: "Hover delay before a panel opens, in ms. Clicks and keys open at once." },
+  { name: "closeDelay", type: "number", default: "250", description: "Delay before a panel closes after the pointer leaves, in ms." },
+  { name: "aria-label", type: "string", default: "\"Main\"", description: "Accessible name of the navigation landmark." },
+  { name: "ref", type: "Ref<HTMLElement>", description: "Forwarded ref to the <nav>." },
+]} />
+
+### Item
+
+<PropsTable rows={[
+  { name: "value", type: "string", description: "Unique value; needed for controlled use. Defaults to a generated id." },
+]} />
+
+### Trigger, Content
+
+Trigger accepts every `<button>` attribute; Content every `<div>` attribute.
+
+<PropsTable rows={[
+  { name: "Content fullWidth", type: "boolean", default: "false", description: "Span the full width of the bar (a mega menu)." },
+]} />
+
+### Link
+
+Accepts every `<a>` attribute.
+
+<PropsTable rows={[
+  { name: "active", type: "boolean", default: "false", description: "Marks the current page (aria-current=\"page\")." },
+  { name: "description", type: "string", description: "Second line under the label, for links inside a panel." },
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element (a router link) instead of an <a>." },
+  { name: "ref", type: "Ref<HTMLAnchorElement>", description: "Forwarded ref." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-navmenu` | Root |
+| `.mrd-navmenu__list`, `.mrd-navmenu__item` | List and Item |
+| `.mrd-navmenu__trigger`, `.mrd-navmenu__chevron` | Trigger and its icon |
+| `.mrd-navmenu__content` | Content |
+| `.mrd-navmenu__link`, `.mrd-navmenu__link-title`, `.mrd-navmenu__link-description` | Link parts |
+
+| Attribute | On | Values |
+|---|---|---|
+| `data-state` | Root, Item, Trigger, Content | `open`, `closed` |
+| `data-full` | Content | present with `fullWidth` |
+| `data-active` | Link | present when `active` |
+
+## Accessibility
+
+Follows the WAI-ARIA [Disclosure navigation menu](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) example rather than `role="menubar"`: site navigation is a list of links, and every trigger and link stays in the Tab order. Panels stay in the DOM while closed (`hidden`), so their links are crawlable. Focus leaving the nav, Escape or an outside press close the open panel.
+
+<KeyboardTable rows={[
+  { keys: ["Enter", "Space"], action: "On a trigger: open or close its panel." },
+  { keys: ["ArrowDown"], action: "On a trigger: open and focus the first link. In a panel: next link." },
+  { keys: ["ArrowUp"], action: "In a panel: previous link." },
+  { keys: ["ArrowRight", "ArrowLeft"], action: "Next / previous trigger or top-level link (mirrored in RTL)." },
+  { keys: ["Home", "End"], action: "First / last trigger or top-level link." },
+  { keys: ["Escape"], action: "Close the panel and return focus to its trigger." },
+  { keys: ["Tab"], action: "Move through triggers and links in order." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Keep top-level labels short and put the most-visited destinations first.</p>}
+  dont={<p>Use NavigationMenu for app commands. Actions belong in a <a href="/docs/components/dropdown-menu">DropdownMenu</a> or <a href="/docs/components/toolbar">Toolbar</a>.</p>}
+/>
+
+## Related
+
+- [SidebarNav](/docs/components/sidebar-nav): vertical navigation for app sidebars.
+- [Breadcrumb](/docs/components/breadcrumb): where the current page sits.

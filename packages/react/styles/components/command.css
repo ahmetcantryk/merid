@@ -1,0 +1,165 @@
+@layer merid.components {
+  .mrd-command {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    background: var(--mrd-surface);
+    color: var(--mrd-ink);
+    border: 1px solid var(--mrd-line);
+    border-radius: var(--mrd-radius-2xl);
+    font-size: var(--mrd-text-sm);
+    line-height: var(--mrd-leading-sm);
+  }
+
+  .mrd-command__input-wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--mrd-space-2);
+    padding-inline: var(--mrd-space-3);
+    border-bottom: 1px solid var(--mrd-line);
+  }
+
+  .mrd-command__search-icon {
+    flex: none;
+    color: var(--mrd-muted);
+  }
+
+  .mrd-command__input {
+    flex: 1;
+    min-width: 0;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--mrd-ink);
+    font: inherit;
+    font-size: var(--mrd-text-sm);
+  }
+
+  .mrd-command__input::placeholder {
+    color: var(--mrd-placeholder);
+  }
+
+  .mrd-command__input-wrap:focus-within {
+    box-shadow: inset 0 -1.5px 0 var(--mrd-accent);
+  }
+
+  .mrd-command__list {
+    max-height: min(360px, calc(100dvh - 160px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--mrd-space-1);
+    scroll-padding-block: var(--mrd-space-1);
+  }
+
+  .mrd-command__empty {
+    padding: var(--mrd-space-6) var(--mrd-space-3);
+    color: var(--mrd-muted);
+    text-align: center;
+  }
+
+  .mrd-command__heading {
+    padding: 8px 8px 4px;
+    color: var(--mrd-muted);
+    font-size: var(--mrd-text-3xs);
+    line-height: var(--mrd-leading-3xs);
+    font-weight: var(--mrd-weight-medium);
+  }
+
+  .mrd-command__item {
+    display: flex;
+    align-items: center;
+    gap: var(--mrd-space-2);
+    min-height: 32px;
+    padding: 6px 8px;
+    border-radius: var(--mrd-radius-md);
+    color: var(--mrd-ink);
+    font-weight: var(--mrd-weight-medium);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .mrd-command__item[data-active] {
+    background: var(--mrd-tray);
+  }
+
+  /* Keyboard users see the active option with the menu's focus ring while the input has focus. */
+  .mrd-command:has(.mrd-command__input:focus-visible) .mrd-command__item[data-active] {
+    box-shadow: inset 0 0 0 1.5px var(--mrd-accent);
+  }
+
+  .mrd-command__item[data-disabled] {
+    color: var(--mrd-muted);
+    cursor: not-allowed;
+  }
+
+  .mrd-command__leading {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    color: var(--mrd-muted);
+  }
+
+  .mrd-command__label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mrd-command__shortcut {
+    margin-inline-start: auto;
+  }
+
+  .mrd-command__separator {
+    height: 1px;
+    margin: 4px calc(var(--mrd-space-1) * -1);
+    background: var(--mrd-line);
+  }
+
+  .mrd-command__group[hidden] {
+    display: none;
+  }
+
+  /* Inside Command.Dialog the dialog is the surface. */
+  .mrd-dialog.mrd-command-dialog {
+    align-self: flex-start;
+    max-width: 640px;
+    margin-block-start: 12vh;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .mrd-command-dialog > .mrd-command {
+    border: 0;
+    border-radius: 0;
+  }
+
+  @media (pointer: coarse) {
+    .mrd-command__item {
+      min-height: 44px;
+    }
+  }
+
+  @media (width <= 640px) {
+    .mrd-dialog.mrd-command-dialog {
+      margin-block-start: 0;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .mrd-command {
+      border: 1px solid CanvasText;
+    }
+
+    .mrd-command__item[data-active] {
+      outline: 2px solid Highlight;
+      outline-offset: -2px;
+    }
+  }
+}

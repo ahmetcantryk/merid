@@ -67,6 +67,17 @@ export { Pagination, getPageRange, type PaginationProps, type PaginationLinkProp
 export { Stepper, type StepperRootProps, type StepperStepProps, type StepState } from "./components/stepper";
 export { SidebarNav, SidebarNavItem, type SidebarNavProps, type SidebarNavGroupProps, type SidebarNavItemProps } from "./components/sidebar-nav";
 
+// navigation, overlay and data (batch 2), A-Z
+export * from "./components/collapsible";
+export * from "./components/command";
+export * from "./components/context-menu";
+export * from "./components/data-table";
+export * from "./components/hover-card";
+export * from "./components/navigation-menu";
+export * from "./components/scroll-area";
+export * from "./components/shortcut";
+export * from "./components/toolbar";
+
 // Flat names for every compound part (required in React Server Component files).
 export * from "./flat";
 export type { Placement } from "./internal/ovl-floating";

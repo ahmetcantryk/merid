@@ -1,0 +1,114 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { HoverCardBasic, HoverCardDelays } from "@/examples/tr/hover-card";
+import { hoverCardBasicCode, hoverCardDelaysCode } from "@/examples/tr/hover-card.code";
+
+export const metadata = docMetadata("tr", "/docs/components/hover-card", {
+  title: "HoverCard",
+  description: "Bir link'in üzerine gelince ya da focus verince görünen önizleme kartı.",
+});
+
+# HoverCard
+
+Bir link'in üzerine gelince ya da ona focus verince kısa bir gecikmeden sonra görünen önizleme kartı: bir profil, bir repository, bir sayfa özeti.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/hover-card">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={hoverCardBasicCode}>
+  <HoverCardBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { HoverCard } from "@meridui/react";
+```
+
+## Anatomi
+
+```tsx
+<HoverCard.Root>
+  <HoverCard.Trigger />
+  <HoverCard.Content />
+</HoverCard.Root>
+```
+
+- **Root** açık/kapalı state'ini ve gecikmeleri tutar. Kendisi bir eleman render'lamaz.
+- **Trigger** bir `<a>`'dır; `asChild` ile kendi [Link](/tr/docs/components/link)'ine ya da router link'ine birleşir.
+- **Content**, tetikleyiciye göre konumlanan ve portal'lanan karttır. Yalnızca açıkken mount edilir.
+
+## Örnekler
+
+### Gecikmeler ve konum
+
+`openDelay` (varsayılan 500ms) imleç üzerinden geçerken kartların yanıp sönmesini önler; `closeDelay` (varsayılan 300ms) imlecin link'ten karta geçmesine izin verir, kart hover'dayken açık kalır.
+
+<ComponentPreview code={hoverCardDelaysCode}>
+  <HoverCardDelays />
+</ComponentPreview>
+
+## API referansı
+
+### Root
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled açık/kapalı state'i." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Uncontrolled kullanımda başlangıç state'i." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Açık/kapalı state'i değişmesi gerektiğinde çağrılır." },
+  { name: "openDelay", type: "number", default: "500", description: "Hover ya da focus'ta açılmadan önceki gecikme, ms." },
+  { name: "closeDelay", type: "number", default: "300", description: "İmleç ayrıldıktan sonra kapanmadan önceki gecikme, ms." },
+]} />
+
+### Trigger
+
+Tüm `<a>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "<a> yerine tek child elemanı (örneğin kendi Link'ini) render'lar; props, ref ve handler'ları birleştirir." },
+  { name: "ref", type: "Ref<HTMLAnchorElement>", description: "İletilen ref." },
+]} />
+
+### Content
+
+Tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "placement", type: "Placement", default: "\"bottom\"", description: "Tetikleyiciye göre tercih edilen konum." },
+  { name: "sideOffset", type: "number", default: "8", description: "Tetikleyiciye px cinsinden uzaklık." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal hedefi." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Karta iletilen ref." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-hover-card` | Content |
+
+| Attribute | Nerede | Değerler |
+|---|---|---|
+| `data-state` | Trigger | `open`, `closed` |
+| `data-state` | Content | `open` |
+
+## Erişilebilirlik
+
+Hover card tamamlayıcıdır: hover'da ve klavye focus'unda açılır ama ekran okuyuculara bildirilmez ve içeriği Tab sırasında değildir. Tetikleyici tek başına anlamlı olmalı (link tam profile gider); kritik ya da etkileşimli hiçbir şey yalnızca kartta durmamalı. Dokunmatik hover yok sayılır. Etkileşimli içerik için [Popover](/tr/docs/components/popover) kullan.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Tetikleyiciye focus vermek kartı openDelay sonra açar; ayrılmak kapatır." },
+  { keys: ["Escape"], action: "Kartı kapatır." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Link'in gösterdiği şeyi önizle: bir kişinin kim olduğu, bir repository'nin içinde ne olduğu.</p>}
+  dont={<p>Hover card'a buton, form ya da bilginin tek kopyasını koymak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Tooltip](/tr/docs/components/tooltip): bir kontrol için kısa metin etiketi.
+- [Popover](/tr/docs/components/popover): tıklamayla açılan, etkileşimli içerik taşıyabilen panel.

@@ -1,0 +1,65 @@
+@layer merid.components {
+  .mrd-scroll-area {
+    --mrd-scroll-thumb: var(--mrd-line-strong);
+
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--mrd-scroll-thumb) transparent;
+    scrollbar-gutter: stable;
+  }
+
+  .mrd-scroll-area[data-orientation="vertical"] {
+    overflow-x: hidden;
+  }
+
+  .mrd-scroll-area[data-orientation="horizontal"] {
+    overflow-y: hidden;
+    scrollbar-gutter: auto;
+  }
+
+  .mrd-scroll-area:focus-visible {
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 3px;
+    border-radius: var(--mrd-radius-xs);
+  }
+
+  .mrd-scroll-area::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .mrd-scroll-area::-webkit-scrollbar-thumb {
+    border-radius: var(--mrd-radius-full);
+    background: var(--mrd-scroll-thumb);
+  }
+
+  .mrd-scroll-area::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .mrd-scroll-area[data-autohide] {
+      --mrd-scroll-thumb: transparent;
+
+      transition: scrollbar-color var(--mrd-duration) var(--mrd-ease);
+    }
+
+    .mrd-scroll-area[data-autohide]:hover,
+    .mrd-scroll-area[data-autohide]:focus-within {
+      --mrd-scroll-thumb: var(--mrd-line-strong);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .mrd-scroll-area {
+      scrollbar-color: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-scroll-area {
+      transition: none;
+    }
+  }
+}

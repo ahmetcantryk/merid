@@ -1,0 +1,22 @@
+@layer merid.components {
+  .mrd-hover-card {
+    z-index: var(--mrd-z-popover);
+    width: max-content;
+    max-width: min(320px, calc(100vw - 16px));
+    padding: var(--mrd-space-4);
+    background: var(--mrd-surface);
+    color: var(--mrd-body);
+    border: 1px solid var(--mrd-line);
+    border-radius: var(--mrd-radius-xl);
+    box-shadow: var(--mrd-shadow-lg);
+    font-size: var(--mrd-text-sm);
+    line-height: var(--mrd-leading-sm);
+    animation: mrd-floating-in var(--mrd-duration) var(--mrd-ease) both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-hover-card {
+      animation: none;
+    }
+  }
+}

@@ -65,6 +65,7 @@
     .mrd-card,
     .mrd-dialog,
     .mrd-drawer,
+    .mrd-hover-card,
     .mrd-popover,
     .mrd-menu,
     .mrd-select__content,
@@ -86,6 +87,7 @@
     .mrd-drawer__backdrop,
     .mrd-toast-region,
     .mrd-tooltip,
+    .mrd-hover-card,
     .mrd-popover,
     .mrd-menu,
     .mrd-select__content {
