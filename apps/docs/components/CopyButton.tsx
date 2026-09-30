@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useDictionary } from "@/lib/i18n/client";
 
 interface CopyButtonProps {
   readonly value: string;
@@ -8,7 +9,8 @@ interface CopyButtonProps {
   readonly className?: string;
 }
 
-export function CopyButton({ value, label = "Copy", className = "copy-btn" }: CopyButtonProps) {
+export function CopyButton({ value, label, className = "copy-btn" }: CopyButtonProps) {
+  const t = useDictionary().copy;
   const [state, setState] = useState<"idle" | "copied" | "failed">("idle");
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -26,7 +28,7 @@ export function CopyButton({ value, label = "Copy", className = "copy-btn" }: Co
     timer.current = setTimeout(() => setState("idle"), 1600);
   }
 
-  const text = state === "copied" ? "Copied" : state === "failed" ? "Copy failed" : label;
+  const text = state === "copied" ? t.copied : state === "failed" ? t.failed : (label ?? t.copy);
 
   return (
     <button type="button" className={className} onClick={copy}>

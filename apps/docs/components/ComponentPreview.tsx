@@ -12,7 +12,6 @@ interface ComponentPreviewProps {
 
 export async function ComponentPreview({ children, code, lang = "tsx", align = "center" }: ComponentPreviewProps) {
   const html = await highlight(code, lang);
-  // TODO(component-pages): pass the live example as children once @merid/react exports the component.
-  const preview = children ?? <p className="preview-pending">Live preview is added when this component ships.</p>;
-  return <PreviewTabs preview={preview} codeHtml={html} code={code} align={align} />;
+
+  return <PreviewTabs preview={children} codeHtml={html} code={code} align={align} />;
 }

@@ -1,0 +1,67 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/styling", {
+  title: "Stil ve CSS layer'ları",
+  description: "Merid'in cascade layer'ları nasıl çalışır, token'ları ve component'leri !important kullanmadan nasıl override edersin.",
+});
+
+# Stil ve CSS layer'ları
+
+Merid sade CSS'tir. Her kural adlandırılmış bir cascade layer içinde durur. Bu yüzden bu layer'ların dışında yazdığın her CSS, seçici specificity'sinden ve import sırasından bağımsız olarak kazanır.
+
+## Üç layer
+
+```css
+@layer merid.tokens, merid.base, merid.components;
+```
+
+- **`merid.tokens`** custom property'leri, koyu değerlerini ve font tanımını içerir.
+- **`merid.base`** dokümana (`:root`) ve `.mrd-root` ile işaretlenmiş her alt ağaca uygulanır: `box-sizing: border-box`, font, metin rengi, başlık kalınlığı ve focus halkası (azaltılmış hareket desteği `.mrd-root` altında isteğe bağlı kalır). Her seçici `:where()` içine alınmıştır, yani specificity'si sıfırdır ve senin kuralların kazanır. Bu layer'ı istemiyorsan `@merid/react/components.css` dosyasını import et. Bu dosya, bu layer olmadan `styles.css`'in aynısıdır.
+- **`merid.components`** her component'in kurallarını tutar. Kurallar `.mrd-` sınıflarına ve data attribute'larına bağlıdır.
+
+Layer dışındaki stiller layer içindekileri her zaman yener. Uygulama CSS'in, CSS Modules ve utility sınıfların, sen onları bir layer'a koymadıkça layer dışındadır. Bu yüzden Merid'i `!important` kullanmadan override ederler.
+
+## Bir token'ı override et
+
+Görünümü değiştirmenin tercih edilen yolu token'lardır. Tüm uygulamayı değiştirmek için onları `:root` üzerinde, bir alt ağacı değiştirmek için herhangi bir eleman üzerinde tanımla.
+
+```css
+:root {
+  --mrd-accent: #0f7b6c;
+  --mrd-accent-hover: #0b6358;
+  --mrd-radius-lg: 8px;
+}
+
+.compact-panel {
+  --mrd-control-md: 38px;
+}
+```
+
+Accent'i değiştirdiğinde `--mrd-accent-soft`, `--mrd-accent-strong` ve `--mrd-focus-ring` token'larını da aynı adımda değiştir ve kontrastı iki temada da kontrol et.
+
+## Bir component'i override et
+
+Component sınıfını ve data attribute'larını hedefle. Sade bir sınıf seçici yeterli: layer dışında olduğu için kazanır.
+
+```css
+.mrd-button[data-variant="primary"] {
+  box-shadow: none;
+}
+```
+
+Tek bir örneğe stil vermek için `className` ver. Component sınıfıyla birleştirilir.
+
+## Kendi CSS'ini bir layer'a koy
+
+Uygulaman zaten layer kullanıyorsa, sırayı bir kez tanımla ki Merid senin component'lerinin altında kalsın:
+
+```css
+@layer reset, merid.tokens, merid.base, merid.components, app;
+```
+
+<Callout tone="warning" title="Tailwind CSS">
+  Tailwind v4 utility'lerini `utilities` layer'ına yazar. Utility'lerin yine kazanması için Merid'in layer'larını Tailwind'inkilerden önce tanımla: `@layer theme, base, merid.tokens, merid.base, merid.components, components, utilities;`
+</Callout>
+
+## Sınıf adları public API'dir
+
+`.mrd-` sınıf adları, `.mrd-dialog__title` gibi parça adları ve her component sayfasında belgelenen data attribute'ları semantic versioning kapsamındadır. Belgelenmemiş iç sarmalayıcı elemanlar minor bir release'te değişebilir.

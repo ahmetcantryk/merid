@@ -1,0 +1,132 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { sidebarNavBasicCode, sidebarNavRouterCode } from "@/examples/sidebar-nav.code";
+import { SidebarNavBasic } from "@/examples/sidebar-nav";
+
+export const metadata = docMetadata("en", "/docs/components/sidebar-nav", {
+  title: "SidebarNav",
+  description: "Vertical navigation for application sidebars, with groups, icons and trailing counts.",
+});
+
+# SidebarNav
+
+Vertical navigation for application sidebars, with groups, icons and trailing counts.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/sidebar-nav">Source</a>
+</div>
+
+<ComponentPreview code={sidebarNavBasicCode}>
+  <SidebarNavBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { SidebarNav } from "@merid/react";
+```
+
+`SidebarNavItem` is also exported on its own and is the same component as `SidebarNav.Item`.
+
+## Anatomy
+
+```tsx
+<SidebarNav aria-label="…">
+  <SidebarNav.Item href="…" icon={…} trailing={…} active />
+  <SidebarNav.Group label="…">
+    <SidebarNav.Item href="…" />
+  </SidebarNav.Group>
+</SidebarNav>
+```
+
+- `SidebarNav` (also `SidebarNav.Root`) — a `<nav>` with a list.
+- `SidebarNav.Item` — a link wrapped in its own `<li>`, with optional icon and trailing element.
+- `SidebarNav.Group` — an `<li>` with a visible label that names a nested list.
+
+## Examples
+
+### With a router
+
+Pass your router's link component through `as`. Extra props are forwarded to it.
+
+<CodeBlock code={sidebarNavRouterCode} lang="tsx" />
+
+## API reference
+
+### SidebarNav
+
+Renders `<nav>` and accepts all its HTML attributes.
+
+<PropsTable
+  rows={[
+    { name: "aria-label", type: "string", description: "Accessible name of the landmark (required when a page has several navs)." },
+    { name: "ref", type: "Ref<HTMLElement>", description: "Forwarded ref to the nav element." },
+  ]}
+/>
+
+### SidebarNav.Item
+
+Renders `<a>` (or `as`) inside an `<li>` and accepts all anchor attributes plus any props for `as`.
+
+<PropsTable
+  rows={[
+    { name: "active", type: "boolean", default: "false", description: "Marks the current page: sets aria-current=\"page\" and the selected style." },
+    { name: "icon", type: "ReactNode", description: "Icon shown before the label (decorative)." },
+    { name: "trailing", type: "ReactNode", description: "Trailing element such as a count Badge." },
+    { name: "as", type: "ElementType", default: '"a"', description: "Element or component to render instead of <a>, e.g. a router Link." },
+    { name: "ref", type: "Ref<HTMLAnchorElement>", description: "Forwarded ref to the link." },
+  ]}
+/>
+
+### SidebarNav.Group
+
+Renders `<li>` and accepts its HTML attributes except `title`.
+
+<PropsTable
+  rows={[
+    { name: "label", type: "ReactNode", required: true, description: "Visible group heading; also labels the nested list." },
+  ]}
+/>
+
+## Styling
+
+- `.mrd-sidebar-nav`, `.mrd-sidebar-nav__list` — root and each list, 2px gap between items.
+- `.mrd-sidebar-nav__item` — the link: 36px min height (44px on coarse pointers), `--mrd-radius-md`.
+- `.mrd-sidebar-nav__item[aria-current="page"]` (also `data-state="active"`) — `--mrd-accent-soft` fill with `--mrd-accent-strong` text.
+- `.mrd-sidebar-nav__icon`, `.mrd-sidebar-nav__label`, `.mrd-sidebar-nav__trailing` — icon slot, truncating label, trailing slot.
+- `.mrd-sidebar-nav__group`, `.mrd-sidebar-nav__group-label` — group spacing and its muted label.
+
+## Accessibility
+
+Follows the [APG landmark regions guidance](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/) for a `navigation` landmark; there is no widget pattern because items are plain links.
+
+- Name the landmark with `aria-label` when the page has more than one `nav`.
+- The active link has `aria-current="page"`.
+- Each group's nested list is labelled by its visible heading via `aria-labelledby`.
+- Icons are `aria-hidden`; the label must carry the meaning.
+
+<KeyboardTable
+  rows={[
+    { keys: ["Tab"], action: "Moves focus to the next link." },
+    { keys: ["Shift", "Tab"], action: "Moves focus to the previous link." },
+    { keys: ["Enter"], action: "Follows the focused link." },
+  ]}
+/>
+
+## Guidelines
+
+<DoDont
+  do="Keep labels to one or two words and mark exactly one item active."
+  dont="Put actions such as “New project” buttons in the list; they are not destinations."
+/>
+
+<DoDont
+  do="Use trailing for counts people act on, like unread items."
+  dont="Rely on the icon alone; the label is always required."
+/>
+
+## Related
+
+- [Breadcrumb](/docs/components/breadcrumb)
+- [Tabs](/docs/components/tabs)
+- [Badge](/docs/components/badge)

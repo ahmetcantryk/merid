@@ -1,0 +1,87 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/server-components", {
+  title: "Server component'ler",
+  description: "Hangi Merid component'leri sunucuda render'lanır, etkileşimli component'ler App Router'da nasıl davranır.",
+});
+
+# Server component'ler
+
+Merid, Next.js App Router gibi React Server Components ortamlarında herhangi bir sarmalayıcıya gerek kalmadan çalışır.
+
+## Paket nasıl ayrılıyor
+
+- **Statik component'ler** (layout, tipografi yardımcıları, badge'ler, kartlar, skeleton'lar) state ya da effect içermez. Sunucuda render'lanırlar ve tarayıcıya hiç JavaScript göndermezler.
+- **Etkileşimli component'ler** (dialog'lar, menüler, tab'lar, kendi state'ini tutan form kontrolleri): her etkileşimli modül `"use client"` direktifiyle başlar. Onları doğrudan bir server component'e import et, sarmalayıcı dosyaya gerek yok. Client sınırını React senin için component'in olduğu yere koyar. Yalnızca kendi event handler'ların için bir client component gerekir.
+
+## Compound component'ler: düz adları kullan
+
+Compound component'ler namespace nesneleridir (`Dialog.Root`, `Tabs.List`, `Stepper.Step`). Bir **server component dosyasında** import bir client reference'tır ve üzerindeki property erişimi sunucuda `undefined` döner. React bu durumda "Element type is invalid" hatası fırlatır. Bu yüzden her parçanın her yerde çalışan bir **düz export'u** da vardır:
+
+| Namespace | Düz adlar |
+|---|---|
+| `Accordion` | `AccordionRoot`, `AccordionItem`, `AccordionTrigger`, `AccordionContent` |
+| `AlertDialog` | `AlertDialogRoot`, `AlertDialogTrigger`, `AlertDialogContent`, `AlertDialogTitle`, `AlertDialogDescription`, `AlertDialogFooter`, `AlertDialogAction`, `AlertDialogCancel` |
+| `Breadcrumb` | `BreadcrumbRoot`, `BreadcrumbItem`, `BreadcrumbLink`, `BreadcrumbPage` |
+| `Dialog` | `DialogRoot`, `DialogTrigger`, `DialogContent`, `DialogTitle`, `DialogDescription`, `DialogClose`, `DialogFooter` |
+| `Drawer` | `DrawerRoot`, `DrawerTrigger`, `DrawerContent`, `DrawerTitle`, `DrawerDescription`, `DrawerClose`, `DrawerFooter` |
+| `DropdownMenu` | `DropdownMenuRoot`, `DropdownMenuTrigger`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuGroup`, `DropdownMenuLabel`, `DropdownMenuSeparator` |
+| `Popover` | `PopoverRoot`, `PopoverTrigger`, `PopoverContent`, `PopoverClose` |
+| `Select` | `SelectRoot`, `SelectTrigger`, `SelectContent`, `SelectItem` |
+| `SidebarNav` | `SidebarNavRoot`, `SidebarNavGroup`, `SidebarNavItem` |
+| `Stepper` | `StepperRoot`, `StepperStep` |
+| `Tabs` | `TabsRoot`, `TabsList`, `TabsTrigger`, `TabsPanel` |
+
+**Kural:** `"use client"` içermeyen dosyalarda her zaman düz adları kullan. Client component'ler iki biçimi de kullanabilir.
+
+## Sunucudan router link'leri
+
+Bir component, sınırın öbür tarafına prop olarak geçirilemez. Bu yüzden `as={Link}` bir server component'te çalışmaz. Onun yerine `asChild` kullan: router link'ini child eleman olarak alır. `Button`, `Link` ve `BreadcrumbLink` bunu destekler.
+
+```tsx
+import Link from "next/link";
+import { Button, BreadcrumbLink } from "@merid/react";
+
+<Button asChild variant="primary">
+  <Link href="/signup">Ücretsiz başla</Link>
+</Button>
+<BreadcrumbLink asChild>
+  <Link href="/">Ana sayfa</Link>
+</BreadcrumbLink>
+```
+
+## Sınırdan prop geçirmek
+
+Bir server component'ten client component'e geçirilen prop'lar serileştirilebilir olmalıdır. String'ler, sayılar, düz nesneler ve React elemanları sorun değil. Fonksiyonlar geçirilemez, bu yüzden `onOpenChange` gibi event handler'lar bir client component içinde tanımlanmalıdır.
+
+```tsx
+// app/settings/page.tsx: bir server component
+import { Button, Card, DialogContent, DialogDescription, DialogRoot, DialogTitle, DialogTrigger } from "@merid/react";
+import { DeleteAccount } from "./delete-account"; // içinde "use client" var: onClick geçiriyor
+
+export default function Settings() {
+  return (
+    <Card>
+      <h2>Tehlikeli bölge</h2>
+      {/* Etkileşimli Merid component'leri burada doğrudan çalışır, düz parça adlarıyla */}
+      <DialogRoot>
+        <DialogTrigger asChild>
+          <Button variant="secondary">Neler silinir?</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogTitle>Neler silinir</DialogTitle>
+          <DialogDescription>Projeler, dosyalar ve fatura geçmişi.</DialogDescription>
+        </DialogContent>
+      </DialogRoot>
+      <DeleteAccount />
+    </Card>
+  );
+}
+```
+
+## Stiller
+
+Stil dosyası statik CSS'tir. Build sırasında toplanır ve render'a hiç bağlı değildir. Runtime'da stil enjeksiyonu yoktur, streaming sırasında stilsiz içerik görünmez.
+
+## Portal'lar
+
+Overlay'ler hydration'dan sonra bir portal aracılığıyla `document.body` içine render'lanır. Sunucuda hiçbir şey render'lamazlar, bu da ilk HTML'i kapalı dialog'lardan ve menülerden temiz tutar. Portal'a taşınan içeriğin alt ağacının temasını, accent'ini, yoğunluğunu ve yönünü nasıl koruduğu için [Portal](/tr/docs/components/portal) sayfasına bak.

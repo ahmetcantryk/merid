@@ -1,0 +1,57 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("en", "/docs/usage", {
+  title: "Usage",
+  description: "Import components, pass variants through props, and compose them with your own markup.",
+});
+
+# Usage
+
+Components are named exports from `@merid/react`. Each one renders semantic HTML with a `mrd-` class and exposes its variants as props.
+
+## Your first component
+
+```tsx
+import { Button } from "@merid/react";
+
+export function SaveBar() {
+  return (
+    <div style={{ display: "flex", gap: 12 }}>
+      <Button variant="secondary">Cancel</Button>
+      <Button variant="primary">Save changes</Button>
+    </div>
+  );
+}
+```
+
+## Variants, sizes and state
+
+Variants and sizes are props. Under the hood they become data attributes — never modifier classes — which makes them easy to target from your own CSS.
+
+```tsx
+<Button variant="ghost" size="sm">Filter</Button>
+// renders <button class="mrd-button" data-variant="ghost" data-size="sm">
+```
+
+Open, checked, selected and similar states appear as `data-state` or the matching ARIA attribute, so a single selector covers both styling and accessibility.
+
+## Controlled and uncontrolled
+
+Every stateful component works both ways. Pass `defaultValue`, `defaultChecked` or `defaultOpen` to let the component own its state, or pass `value`, `checked` or `open` with the matching `on…Change` handler to own it yourself.
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<Dialog open={open} onOpenChange={setOpen}>…</Dialog>
+```
+
+## Refs and native props
+
+Components forward refs to their main DOM element and spread unknown props onto it. `className` is merged with the component class rather than replacing it, and `style` is passed through.
+
+## Composition
+
+Where a component has several parts, the parts are exported separately — for example a dialog's title and description. Use the parts you need; the component wires up `aria-labelledby` and `aria-describedby` for you.
+
+<Callout tone="success" title="Keep the contract">
+  When you build your own components next to Merid, reuse the tokens instead of copying values. A card with `background: var(--mrd-tray)` and `border-radius: var(--mrd-radius-card)` will follow dark mode and any overrides automatically.
+</Callout>

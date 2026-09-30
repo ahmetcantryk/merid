@@ -1,0 +1,144 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { DrawerDemo, DrawerSidesDemo, DrawerSizesDemo } from "@/examples/drawer";
+
+export const metadata = docMetadata("en", "/docs/components/drawer", {
+  title: "Drawer",
+  description: "A modal side sheet that slides in from the left or right edge.",
+});
+
+# Drawer
+
+A modal side sheet that slides in from an edge. Same behaviour and parts as Dialog, with `side` and `size` props on Content.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" /> <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/drawer">View source</a>
+</div>
+
+## Import
+
+```tsx
+import { Drawer } from "@merid/react";
+```
+
+<ComponentPreview code={`<Drawer.Root>
+  <Drawer.Trigger asChild>
+    <Button variant="secondary">Open right</Button>
+  </Drawer.Trigger>
+  <Drawer.Content side="right">
+    <Drawer.Title>Filters</Drawer.Title>
+    <Drawer.Description>Narrow the list of invoices.</Drawer.Description>
+    <Drawer.Footer>
+      <Drawer.Close>Reset</Drawer.Close>
+      <Drawer.Close asChild>
+        <Button variant="primary">Apply</Button>
+      </Drawer.Close>
+    </Drawer.Footer>
+  </Drawer.Content>
+</Drawer.Root>`}>
+  <DrawerDemo />
+</ComponentPreview>
+
+## Anatomy
+
+```tsx
+<Drawer.Root>
+  <Drawer.Trigger />
+  <Drawer.Content side="right">
+    <Drawer.Title />
+    <Drawer.Description />
+    <Drawer.Footer />
+  </Drawer.Content>
+</Drawer.Root>
+```
+
+Root, Trigger, Title, Description, Close and Footer are the [Dialog](/docs/components/dialog) parts. The Footer is pushed to the bottom of the sheet.
+
+## Examples
+
+### Sides
+
+<ComponentPreview code={`<Drawer.Content side="left">…</Drawer.Content>
+<Drawer.Content side="right">…</Drawer.Content>`}>
+  <DrawerSidesDemo />
+</ComponentPreview>
+
+### Sizes
+
+`size` sets the sheet width: `sm` 320px, `md` 420px (default), `lg` 560px, always capped to the viewport minus 48px.
+
+<ComponentPreview code={`<Drawer.Content size="sm">…</Drawer.Content>
+<Drawer.Content size="md">…</Drawer.Content>
+<Drawer.Content size="lg">…</Drawer.Content>`}>
+  <DrawerSizesDemo />
+</ComponentPreview>
+
+### Controlled
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<Drawer.Root open={open} onOpenChange={setOpen}>
+  <Drawer.Content>…</Drawer.Content>
+</Drawer.Root>
+```
+
+## API reference
+
+### Drawer.Root
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled open state." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Initial open state when uncontrolled." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Called when the open state should change." },
+  { name: "children", type: "ReactNode", description: "Trigger, Content and anything else sharing this drawer's state." },
+]} />
+
+### Drawer.Content
+
+Accepts every `<div>` attribute except `role`.
+
+<PropsTable rows={[
+  { name: "side", type: "\"left\" | \"right\"", default: "\"right\"", description: "Edge the sheet slides in from." },
+  { name: "size", type: "DrawerSize", default: "\"md\"", description: "Sheet width: `sm` 320px, `md` 420px, `lg` 560px, capped to the viewport minus 48px. `DrawerSize` is `\"sm\" | \"md\" | \"lg\"`." },
+  { name: "closeOnOutsidePress", type: "boolean", default: "true", description: "Close when the backdrop is pressed." },
+  { name: "closeOnEscape", type: "boolean", default: "true", description: "Close on Escape." },
+  { name: "initialFocus", type: "RefObject<HTMLElement | null>", description: "Element to focus when opened; defaults to [data-autofocus], then the first tabbable element." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal target. `undefined` uses `document.body`; `null` renders nothing until the target exists." },
+  { name: "showClose", type: "boolean", default: "true", description: "Render the standard top-right icon close button automatically. Skipped while you render your own icon `Close`." },
+  { name: "closeLabel", type: "string", default: '"Close"', description: "Accessible name of the automatic close button." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the drawer element." },
+]} />
+
+Trigger, Title, Description, Close and Footer take the same props as in [Dialog](/docs/components/dialog#api-reference).
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-drawer__backdrop` | Fixed backdrop; aligns the sheet to its side |
+| `.mrd-drawer` | The sheet: 320 / 420 / 560px by `data-size`, capped at `100vw - 48px`, full height |
+
+Both carry `data-side="left" | "right"` and `data-state="open"`; the sheet also carries `data-size`. Title, description, footer and close use the `.mrd-dialog__*` classes. Motion is removed under `prefers-reduced-motion`.
+
+## Accessibility
+
+Follows the [WAI-ARIA Dialog (Modal) pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/): `role="dialog"`, `aria-modal="true"`, focus trap, scroll lock and focus return.
+
+<KeyboardTable rows={[
+  { keys: ["Space", "Enter"], action: "On the trigger, opens the drawer." },
+  { keys: ["Tab"], action: "Moves focus forward, wrapping inside the drawer." },
+  { keys: ["Shift", "Tab"], action: "Moves focus backwards, wrapping inside the drawer." },
+  { keys: ["Esc"], action: "Closes the drawer and returns focus to the trigger." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do="Use a drawer for secondary content that benefits from keeping the page in view: filters, details, settings."
+  dont="Put a multi-step flow in a drawer; use a page."
+/>
+
+## Related
+
+- [Dialog](/docs/components/dialog)
+- [SidebarNav](/docs/components/sidebar-nav) for persistent navigation.

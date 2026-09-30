@@ -1,0 +1,79 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { SubtreeNested } from "@/examples/integrations/subtree";
+
+export const metadata = docMetadata("en", "/docs/integrations/subtree-attributes", {
+  title: "Subtree attributes",
+  description: "Theme, accent and density on any element with data-theme, data-accent and data-density. They nest.",
+});
+
+# Subtree attributes
+
+Three attributes switch Merid's tokens for an element and everything inside it. They work on `<html>` or on any element, need no provider, and nest in any combination.
+
+| Attribute | Values | Default |
+|---|---|---|
+| `data-theme` | `light`, `dark` | follows `prefers-color-scheme` |
+| `data-accent` | `blue`, `violet`, `green`, `graphite` | `blue` |
+| `data-density` | `compact`, `default`, `comfortable` | `default` |
+
+<ComponentPreview align="start" code={`<div data-theme="dark">
+  <Sample />
+  <div data-theme="light" data-accent="violet" data-density="compact">
+    <Sample />
+  </div>
+</div>`}>
+  <SubtreeNested />
+</ComponentPreview>
+
+## data-theme
+
+Sets every neutral and accent token for the subtree. A light panel inside a dark page, or a dark panel inside a light one, is correct in both directions — the inner attribute always wins.
+
+```html
+<html data-theme="dark">          <!-- whole page dark -->
+  <aside data-theme="light">…</aside> <!-- this subtree light -->
+</html>
+```
+
+Without any attribute, `:root` follows the operating system. The attribute sets tokens only: give the themed element a background (`background: var(--mrd-bg)` or `var(--mrd-tray)`) so its text sits on the right surface.
+
+## data-accent
+
+Swaps the whole accent family — `--mrd-accent`, `-hover`, `-soft`, `-strong`, `-solid`, `-solid-hover`, the focus ring and the primary button's contact shadow — in both themes. Each preset is contrast-checked in light and dark (solid fills carry white text at ≥ 4.5:1).
+
+```html
+<section data-accent="green">…</section>
+```
+
+`data-accent` and `data-theme` are independent: set them on the same element or on different ancestors. For a brand colour outside the four presets, override the tokens yourself — see [Theming a brand](/docs/integrations/theming).
+
+## data-density
+
+Changes control heights, control padding and the two small text sizes:
+
+| | `compact` | `default` | `comfortable` |
+|---|---|---|---|
+| Button / select (`md`) | 28px | 32px | 36px |
+| Input (`md`) | 28px | 32px | 36px |
+| Icon button (`md`) | 24px | 28px | 32px |
+| `--mrd-text-sm` | 13px | 14px | 14.5px |
+
+Density applies to fine pointers only. On touch screens (`pointer: coarse`) Merid always uses its larger touch sizes (40px controls, 44px inputs), so `compact` never produces targets that are too small to tap.
+
+## Reading the active values in JavaScript
+
+The attributes are plain CSS, so read the resolved value from the element:
+
+```ts
+const accent = getComputedStyle(element).getPropertyValue("--mrd-accent").trim();
+```
+
+For static values (charts rendered to images, emails, native apps) use [`@merid/tokens`](/docs/integrations/design-tokens), which exports every theme × accent and density combination.
+
+## Direction (RTL)
+
+The attributes combine with `dir="rtl"`. Component CSS uses logical properties only, the pagination chevrons and switch thumb mirror under `:dir(rtl)`, and arrow keys in RadioGroup and SegmentedControl follow the visual direction. See [Internationalization and RTL](/docs/integrations/rtl) for what is and is not covered.
+
+## Forced colours
+
+In Windows High Contrast and other forced-colour modes the attributes have no visible effect — the system palette replaces all colours, by design. Merid stays usable there: buttons, inputs, selects, segmented items and pagination get a 1px `ButtonText` border; checkboxes, radios and switches draw with `Canvas` / `ButtonText` and fill with `Highlight` when on; focus is a 2px `Highlight` outline; the selected tab, page and segment get a `Highlight` outline; and floating surfaces (card, dialog, drawer, popover, menu, select list, toast, tooltip) get a `CanvasText` border. Density still applies.

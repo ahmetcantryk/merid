@@ -4,6 +4,7 @@ import { isValidElement, type ComponentPropsWithoutRef, type ReactNode } from "r
 import { Callout } from "@/components/Callout";
 import { CodeBlock } from "@/components/CodeBlock";
 import { ComponentPreview } from "@/components/ComponentPreview";
+import { DocTable } from "@/components/DocTable";
 import { DoDont } from "@/components/DoDont";
 import { KeyboardTable } from "@/components/KeyboardTable";
 import { PropsTable } from "@/components/PropsTable";
@@ -45,11 +46,7 @@ const components: MDXComponents = {
   h3: ({ children }) => <Heading level={3}>{children}</Heading>,
   a: Anchor,
   pre: Pre,
-  table: (props) => (
-    <div className="table-wrap" tabIndex={0} role="region" aria-label="Table">
-      <table className="doc-table" {...props} />
-    </div>
-  ),
+  table: DocTable,
   Callout,
   CodeBlock,
   ComponentPreview,

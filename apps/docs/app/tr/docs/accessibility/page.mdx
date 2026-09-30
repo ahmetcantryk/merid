@@ -1,0 +1,31 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/accessibility", {
+  title: "Erişilebilirlik",
+  description: "Merid'in erişilebilirlik beyanı: hedeflediği standart, nasıl test edildiği ve bilinen sınırlamalar.",
+});
+
+# Erişilebilirlik
+
+Merid, **Web İçeriği Erişilebilirlik Yönergeleri (WCAG) 2.2, AA seviyesi** ile uyumluluğu hedefler. Erişilebilirlik sonradan yapılan bir düzeltme değil, her component'in "bitti" tanımının bir parçasıdır.
+
+## Her component neyi garanti eder
+
+- **Semantik.** Native bir eleman varsa o kullanılır. Olmadığında role'ler, state'ler ve property'ler WAI-ARIA Authoring Practices Guide'a uyar.
+- **Klavye.** Fareyle yapılabilen her şey klavyeyle de yapılabilir. Her component sayfası kendi tuşlarını belgeler.
+- **Focus.** Focus her zaman görünür: 3px aralıklı 2px accent outline, input'larda ise yumuşak bir halesi olan accent kenarlık. Overlay'ler açıkken focus'u içeride tutar, kapanınca tetikleyiciye geri döndürür.
+- **Hedef boyutu.** Etkileşimli hedefler en az 24 × 24 CSS pikseldir, kaba işaretçilerde (dokunmatik ekran gibi) kontroller büyür.
+- **Yakınlaştırma ve yeniden akış.** Layout'lar %200 yakınlaştırmada ve 320 CSS piksel genişlikte yatay kaydırma olmadan çalışır.
+- **Hareket.** `prefers-reduced-motion` açıkken skeleton parıltısı dahil tüm geçişler ve animasyonlar kaldırılır.
+- **Kontrast.** Gövde ve arayüz metinleri 4.5:1 oranını karşılar. Soluk ton 13px ve üstü meta metinlere ayrılmıştır. Ölçülmüş oranlar için [Renk](/tr/docs/foundations/color) sayfasına bak.
+
+## Nasıl test ediliyor
+
+Her component'in, render'lanmış state'leri üzerinde axe çalıştıran otomatik testleri ve onu klavyeyle kullanan etkileşim testleri vardır. Minor bir release'ten önce component'ler VoiceOver ve NVDA ile elle kontrol edilir.
+
+## Senin sorumlulukların
+
+Merid içeriğini senin yerine etiketleyemez. Yalnızca ikondan oluşan butonlara `aria-label` ver, her form alanına görünür bir etiket koy ve bağlamından koparıldığında da anlamlı olan link metinleri yaz.
+
+## Bilinen sınırlamalar
+
+Bilinen sorunlar repoda `accessibility` etiketiyle takip edilir. Bir engelle karşılaşırsan lütfen [bir issue aç](https://github.com/ahmetcantryk/merid/issues/new/choose). Erişilebilirlik hataları işlevsel hatalarla aynı öncelikte ele alınır.
