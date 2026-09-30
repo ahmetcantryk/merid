@@ -1,0 +1,184 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { CommandBasic, CommandDialogDemo } from "@/examples/tr/command";
+import { commandBasicCode, commandDialogCode } from "@/examples/tr/command.code";
+
+export const metadata = docMetadata("tr", "/docs/components/command", {
+  title: "Command",
+  description: "Gruplu, aranabilir, klavyeyle gezilen ve kısayolları olan komut menüsü; ⌘K paleti olarak açılır.",
+});
+
+# Command
+
+Gruplu, aranabilir ve klavyeyle gezilen bir komut listesi. Sayfa içinde kullanabilir ya da `Command.Dialog` ile ⌘K komut paleti olarak açabilirsin.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/command">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={commandBasicCode}>
+  <CommandBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Command } from "@meridui/react";
+```
+
+## Anatomi
+
+```tsx
+<Command.Root>
+  <Command.Input />
+  <Command.List>
+    <Command.Empty />
+    <Command.Group heading="…">
+      <Command.Item />
+    </Command.Group>
+    <Command.Separator />
+  </Command.List>
+</Command.Root>
+
+<Command.Dialog>{/* aynı parçalar */}</Command.Dialog>
+```
+
+- **Root** arama metnini ve aktif öğeyi tutar, öğeleri filtreler ve tuşları yönetir.
+- **Input** arama kutusudur (`role="combobox"`). Focus hep onda kalır; aktif öğe `aria-activedescendant` ile bildirilir.
+- **List** sonuçların `role="listbox"` elemanıdır. **Item** bir seçenektir; **Group** bir başlık ekler.
+- **Empty** yalnızca hiçbir öğe eşleşmediğinde render'lanır. **Separator** arama yazılırken gizlenir.
+- **Dialog** hepsini ⌘K / Ctrl+K ile açılan modal bir [Dialog](/tr/docs/components/dialog) içine koyar.
+
+## Örnekler
+
+### Komut paleti
+
+`Command.Dialog` global bir kısayol kaydeder (varsayılan `["mod", "k"]`; kapatmak için `shortcut={null}` ver), açılınca input'a focus verir ve bir öğe seçilince kapanır (`closeOnSelect`). Bu site ⌘K'yı kendi araması için kullandığından örnek ⌘J kullanıyor.
+
+<ComponentPreview code={commandDialogCode}>
+  <CommandDialogDemo />
+</ComponentPreview>
+
+### Filtreleme
+
+Varsayılan olarak aramadaki her kelime öğenin `value`'sunda ya da `keywords`'ünde geçmelidir; büyük/küçük harf ve aksanlar yok sayılır ("cafe", "Café"yi bulur). Farklı eşleştirmek için `filter` ver; filtrelemeyi sunucuda yapıp yalnızca eşleşen öğeleri render'lıyorsan `shouldFilter={false}` kullan.
+
+```tsx
+<Command.Root filter={(value, search) => value.toLowerCase().startsWith(search.toLowerCase())}>
+```
+
+### Öğe kısayolları
+
+`shortcut`, tuşları [Shortcut](/tr/docs/components/shortcut) ile gösterir; komut menüsünde focus varken bu tuşlara basmak öğeyi çalıştırır. Yazmanın engellenmemesi için kısayollarda bir değiştirici tuş (⌘, Ctrl ya da Alt) gerekir.
+
+## API referansı
+
+### Root
+
+`onSelect` dışındaki tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "search", type: "string", description: "Controlled arama metni." },
+  { name: "defaultSearch", type: "string", default: "\"\"", description: "Uncontrolled kullanımda başlangıç arama metni." },
+  { name: "onSearchChange", type: "(search: string) => void", description: "Arama metni değişince çağrılır." },
+  { name: "filter", type: "(value, search, keywords) => boolean", description: "Özel eşleştirme fonksiyonu. Varsayılanı büyük/küçük harf ve aksan duyarsız kelime eşleştirmesi." },
+  { name: "shouldFilter", type: "boolean", default: "true", description: "Öğeleri kendin filtrelemek için false ver." },
+  { name: "loop", type: "boolean", default: "true", description: "Ok tuşlarıyla sondan başa döner." },
+  { name: "onSelect", type: "(value: string) => void", description: "Seçilen her öğenin değeriyle, öğenin kendi onSelect'inden sonra çağrılır." },
+  { name: "label", type: "string", default: "\"Command menu\"", description: "Arama kutusunun erişilebilir adı." },
+  { name: "resultsLabel", type: "(count: number) => string", default: "\"N results\"", description: "Arama sırasında ekran okuyuculara bildirilen durum metni." },
+  { name: "shortcutLabels", type: "ShortcutKeyLabels", description: "Öğe kısayolları için okunan tuş adları; İngilizce varsayılanlarla birleştirilir." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Root elemanına iletilen ref." },
+]} />
+
+### Input
+
+`value`, `defaultValue`, `onChange` ve `type` dışındaki tüm `<input>` attribute'larını kabul eder; arama metni Root'ta tutulur.
+
+<PropsTable rows={[
+  { name: "placeholder", type: "string", default: "\"Type a command or search…\"", description: "Placeholder metni." },
+  { name: "onValueChange", type: "(search: string) => void", description: "Yeni arama metniyle çağrılır." },
+  { name: "ref", type: "Ref<HTMLInputElement>", description: "Input'a iletilen ref." },
+]} />
+
+### List, Empty, Group, Separator
+
+<PropsTable rows={[
+  { name: "List label", type: "string", default: "\"Suggestions\"", description: "Listbox'ın erişilebilir adı." },
+  { name: "Empty children", type: "ReactNode", default: "\"No results found.\"", description: "Hiçbir öğe eşleşmediğinde gösterilir." },
+  { name: "Group heading", type: "ReactNode", description: "Görünür başlık; grubun adı da olur." },
+  { name: "Separator alwaysRender", type: "boolean", default: "false", description: "Arama yazılırken de separator'ı gösterir." },
+]} />
+
+### Item
+
+`onSelect` dışındaki tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "value", type: "string", description: "Filtreleme ve onSelect için benzersiz değer. Children string ise varsayılanı o metindir." },
+  { name: "keywords", type: "string[]", description: "Eşleşen ek arama terimleri." },
+  { name: "onSelect", type: "(value: string) => void", description: "Öğe tıklama, Enter ya da kısayoluyla seçildiğinde çağrılır." },
+  { name: "disabled", type: "boolean", default: "false", description: "Ok tuşları atlar, tıklamalar yok sayılır." },
+  { name: "leading", type: "ReactNode", description: "Etiketten önce gösterilen ikon." },
+  { name: "shortcut", type: "string[]", description: "Etiketten sonra gösterilen tuşlar, örneğin [\"mod\", \"s\"]; öğeyi de çalıştırır." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Seçeneğe iletilen ref." },
+]} />
+
+### Dialog
+
+Root'un tüm prop'larını ve şunları alır:
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled açık/kapalı state'i." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Uncontrolled kullanımda başlangıç state'i." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Açık/kapalı state'i değişmesi gerektiğinde çağrılır." },
+  { name: "shortcut", type: "string[] | null", default: "[\"mod\", \"k\"]", description: "Dialog'u açıp kapatan global tuş kombinasyonu; null verirsen kapanır." },
+  { name: "closeOnSelect", type: "boolean", default: "true", description: "Bir öğe seçilince dialog'u kapatır." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal hedefi." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-command` | Root |
+| `.mrd-command__input-wrap`, `.mrd-command__input` | Arama satırı ve input |
+| `.mrd-command__list` | List |
+| `.mrd-command__group`, `.mrd-command__heading` | Group ve başlığı |
+| `.mrd-command__item` | Item |
+| `.mrd-command__leading`, `.mrd-command__label`, `.mrd-command__shortcut` | Item parçaları |
+| `.mrd-command__empty`, `.mrd-command__separator` | Empty ve Separator |
+| `.mrd-command-dialog` | Dialog yüzeyi |
+
+| Attribute | Nerede | Değerler |
+|---|---|---|
+| `data-active` | Item | aktif öğede bulunur |
+| `data-disabled` | Item | devre dışıyken bulunur |
+| `data-value` | Item | öğenin değeri |
+
+## Erişilebilirlik
+
+Listbox'ı hep görünen WAI-ARIA [Combobox desenini](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) izler. Focus input'tan hiç ayrılmaz; aktif seçenek `aria-activedescendant` ile bildirilir, sonuç sayısı polite bir live region'da okunur. Hiçbir şey eşleşmezse liste listbox olmaktan çıkar ve input `aria-expanded="false"` bildirir. Okunan her metin bir prop'tur.
+
+<KeyboardTable rows={[
+  { keys: ["ArrowDown"], action: "Sonraki öğe; sona gelince başa döner (devre dışı öğeleri atlar)." },
+  { keys: ["ArrowUp"], action: "Önceki öğe; başa gelince sona döner." },
+  { keys: ["PageUp"], action: "İlk öğe." },
+  { keys: ["PageDown"], action: "Son öğe." },
+  { keys: ["Enter"], action: "Aktif öğeyi çalıştırır." },
+  { keys: ["⌘ / Ctrl", "K"], action: "Command.Dialog: sayfanın her yerinden açar ya da kapatır." },
+  { keys: ["Escape"], action: "Command.Dialog: kapatır ve focus'u geri verir." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Öğeleri bir fiille ya da hedefle adlandır ("Yeni proje", "Faturalandırmaya git") ve türüne göre grupla.</p>}
+  dont={<p>Bir aksiyona ulaşmanın tek yolunu komut menüsü yapmak. Komut menüsü, ne istediğini bilenler için bir kısayoldur.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Shortcut](/tr/docs/components/shortcut): öğelerde gösterilen tuş kombinasyonları.
+- [Dialog](/tr/docs/components/dialog): `Command.Dialog`'un arkasındaki modal.
+- [Select](/tr/docs/components/select): bir form için tek değer seçmek.

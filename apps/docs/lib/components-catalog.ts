@@ -26,6 +26,7 @@ export const componentCatalog: readonly { readonly group: string; readonly items
       { name: "Radio", slug: "radio", description: "Choose one option from a small visible set.", status: "stable" },
       { name: "Switch", slug: "switch", description: "Turn a setting on or off immediately.", status: "stable" },
       { name: "SegmentedControl", slug: "segmented-control", description: "Switch between a few views or modes.", status: "stable" },
+      { name: "Toolbar", slug: "toolbar", description: "A row of related controls with one Tab stop.", status: "beta" },
     ],
   },
   {
@@ -37,6 +38,7 @@ export const componentCatalog: readonly { readonly group: string; readonly items
       { name: "Grid", slug: "grid", description: "Responsive column grid.", status: "stable" },
       { name: "Card", slug: "card", description: "Tray or elevated surface for grouped content.", status: "stable" },
       { name: "Separator", slug: "separator", description: "A 1px hairline between regions.", status: "stable" },
+      { name: "ScrollArea", slug: "scroll-area", description: "Native scrolling with thin, themed scrollbars.", status: "beta" },
     ],
   },
   {
@@ -47,6 +49,7 @@ export const componentCatalog: readonly { readonly group: string; readonly items
       { name: "Code", slug: "code", description: "Inline code.", status: "stable" },
       { name: "Kbd", slug: "kbd", description: "Keyboard key.", status: "stable" },
       { name: "VisuallyHidden", slug: "visually-hidden", description: "Content for assistive technology only.", status: "stable" },
+      { name: "Shortcut", slug: "shortcut", description: "Platform-aware key combination such as ⌘K.", status: "beta" },
     ],
   },
   {
@@ -58,6 +61,8 @@ export const componentCatalog: readonly { readonly group: string; readonly items
       { name: "Accordion", slug: "accordion", description: "Stacked disclosure sections.", status: "stable" },
       { name: "Tabs", slug: "tabs", description: "Line tabs for switching panels.", status: "stable" },
       { name: "EmptyState", slug: "empty-state", description: "Placeholder when there is nothing to show yet.", status: "stable" },
+      { name: "Collapsible", slug: "collapsible", description: "Show and hide one region.", status: "beta" },
+      { name: "DataTable", slug: "data-table", description: "Sorting, filtering, pagination and row selection on Table.", status: "beta" },
     ],
   },
   {
@@ -80,6 +85,9 @@ export const componentCatalog: readonly { readonly group: string; readonly items
       { name: "Tooltip", slug: "tooltip", description: "Short label on hover and focus.", status: "stable" },
       { name: "DropdownMenu", slug: "dropdown-menu", description: "List of actions opened from a button.", status: "stable" },
       { name: "Portal", slug: "portal", description: "Render children into document.body.", status: "stable" },
+      { name: "Command", slug: "command", description: "Searchable command menu and ⌘K palette.", status: "beta" },
+      { name: "ContextMenu", slug: "context-menu", description: "Right-click menu of actions.", status: "beta" },
+      { name: "HoverCard", slug: "hover-card", description: "Preview card on hover or focus of a link.", status: "beta" },
     ],
   },
   {
@@ -90,6 +98,7 @@ export const componentCatalog: readonly { readonly group: string; readonly items
       { name: "Pagination", slug: "pagination", description: "Move between pages of results.", status: "stable" },
       { name: "Stepper", slug: "stepper", description: "Progress through a multi-step flow.", status: "stable" },
       { name: "SidebarNav", slug: "sidebar-nav", description: "Grouped vertical navigation for app sidebars.", status: "stable" },
+      { name: "NavigationMenu", slug: "navigation-menu", description: "Top site navigation with drop-down and mega menus.", status: "beta" },
     ],
   },
 ];

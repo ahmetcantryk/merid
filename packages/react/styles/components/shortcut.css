@@ -1,0 +1,26 @@
+@layer merid.components {
+  .mrd-shortcut {
+    gap: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mrd-shortcut__keys {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+  }
+
+  .mrd-shortcut__key {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+  }
+
+  .mrd-shortcut[data-platform="other"] .mrd-shortcut__key + .mrd-shortcut__key::before {
+    content: "+";
+    margin-inline: 1px;
+    color: var(--mrd-muted);
+  }
+}

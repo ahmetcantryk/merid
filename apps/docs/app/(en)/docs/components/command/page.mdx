@@ -1,0 +1,184 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { CommandBasic, CommandDialogDemo } from "@/examples/command";
+import { commandBasicCode, commandDialogCode } from "@/examples/command.code";
+
+export const metadata = docMetadata("en", "/docs/components/command", {
+  title: "Command",
+  description: "A searchable command menu with groups, keyboard navigation and shortcuts; opens as a ⌘K palette.",
+});
+
+# Command
+
+A searchable list of commands with groups, keyboard navigation and shortcuts. Use it inline, or as a ⌘K command palette with `Command.Dialog`.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/command">Source</a>
+</div>
+
+<ComponentPreview code={commandBasicCode}>
+  <CommandBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Command } from "@meridui/react";
+```
+
+## Anatomy
+
+```tsx
+<Command.Root>
+  <Command.Input />
+  <Command.List>
+    <Command.Empty />
+    <Command.Group heading="…">
+      <Command.Item />
+    </Command.Group>
+    <Command.Separator />
+  </Command.List>
+</Command.Root>
+
+<Command.Dialog>{/* the same parts */}</Command.Dialog>
+```
+
+- **Root** holds the search text and the active item, filters items and handles the keys.
+- **Input** is the search box (`role="combobox"`). Focus stays in it; the active item is announced with `aria-activedescendant`.
+- **List** is the `role="listbox"` of results. **Item** is an option; **Group** adds a heading.
+- **Empty** renders only when nothing matches. **Separator** hides while a search is typed.
+- **Dialog** wraps everything in a modal [Dialog](/docs/components/dialog) that opens with ⌘K / Ctrl+K.
+
+## Examples
+
+### Command palette
+
+`Command.Dialog` registers a global shortcut (default `["mod", "k"]`; pass `shortcut={null}` to turn it off), focuses the input on open and closes after an item is chosen (`closeOnSelect`). This site already uses ⌘K for its own search, so the demo uses ⌘J.
+
+<ComponentPreview code={commandDialogCode}>
+  <CommandDialogDemo />
+</ComponentPreview>
+
+### Filtering
+
+By default every word of the search must appear in the item's `value` or its `keywords`, ignoring case and accents ("cafe" finds "Café"). Pass `filter` to match differently, or `shouldFilter={false}` when you filter on the server and render only the matching items.
+
+```tsx
+<Command.Root filter={(value, search) => value.toLowerCase().startsWith(search.toLowerCase())}>
+```
+
+### Item shortcuts
+
+`shortcut` shows the keys with [Shortcut](/docs/components/shortcut) and, while the command menu has focus, pressing them runs the item. Shortcuts need a modifier (⌘, Ctrl or Alt) so typing is never hijacked.
+
+## API reference
+
+### Root
+
+Accepts every `<div>` attribute except `onSelect`.
+
+<PropsTable rows={[
+  { name: "search", type: "string", description: "Controlled search text." },
+  { name: "defaultSearch", type: "string", default: "\"\"", description: "Initial search text when uncontrolled." },
+  { name: "onSearchChange", type: "(search: string) => void", description: "Called when the search text changes." },
+  { name: "filter", type: "(value, search, keywords) => boolean", description: "Custom match function. Defaults to case- and accent-insensitive word matching." },
+  { name: "shouldFilter", type: "boolean", default: "true", description: "Set to false to filter items yourself." },
+  { name: "loop", type: "boolean", default: "true", description: "Wrap from the last item to the first with the arrow keys." },
+  { name: "onSelect", type: "(value: string) => void", description: "Called with the value of any chosen item, after the item's own onSelect." },
+  { name: "label", type: "string", default: "\"Command menu\"", description: "Accessible name of the search box." },
+  { name: "resultsLabel", type: "(count: number) => string", default: "\"N results\"", description: "Status announced to screen readers while searching." },
+  { name: "shortcutLabels", type: "ShortcutKeyLabels", description: "Spoken key names for item shortcuts, merged over the English defaults." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the root element." },
+]} />
+
+### Input
+
+Accepts every `<input>` attribute except `value`, `defaultValue`, `onChange` and `type`: the search text lives on Root.
+
+<PropsTable rows={[
+  { name: "placeholder", type: "string", default: "\"Type a command or search…\"", description: "Placeholder text." },
+  { name: "onValueChange", type: "(search: string) => void", description: "Called with the new search text." },
+  { name: "ref", type: "Ref<HTMLInputElement>", description: "Forwarded ref to the input." },
+]} />
+
+### List, Empty, Group, Separator
+
+<PropsTable rows={[
+  { name: "List label", type: "string", default: "\"Suggestions\"", description: "Accessible name of the listbox." },
+  { name: "Empty children", type: "ReactNode", default: "\"No results found.\"", description: "Shown when no item matches." },
+  { name: "Group heading", type: "ReactNode", description: "Visible heading; also names the group." },
+  { name: "Separator alwaysRender", type: "boolean", default: "false", description: "Keep the separator while a search is typed." },
+]} />
+
+### Item
+
+Accepts every `<div>` attribute except `onSelect`.
+
+<PropsTable rows={[
+  { name: "value", type: "string", description: "Unique value used for filtering and onSelect. Defaults to the text when children is a string." },
+  { name: "keywords", type: "string[]", description: "Extra search terms that also match." },
+  { name: "onSelect", type: "(value: string) => void", description: "Called when the item is chosen by click, Enter or its shortcut." },
+  { name: "disabled", type: "boolean", default: "false", description: "Skipped by the arrow keys and ignores clicks." },
+  { name: "leading", type: "ReactNode", description: "Icon shown before the label." },
+  { name: "shortcut", type: "string[]", description: "Keys shown after the label, e.g. [\"mod\", \"s\"]; they also run the item." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the option." },
+]} />
+
+### Dialog
+
+Takes every Root prop plus:
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled open state." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Initial open state when uncontrolled." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Called when the open state should change." },
+  { name: "shortcut", type: "string[] | null", default: "[\"mod\", \"k\"]", description: "Global key combination that toggles the dialog; null disables it." },
+  { name: "closeOnSelect", type: "boolean", default: "true", description: "Close the dialog after an item is chosen." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal target." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-command` | Root |
+| `.mrd-command__input-wrap`, `.mrd-command__input` | Search row and input |
+| `.mrd-command__list` | List |
+| `.mrd-command__group`, `.mrd-command__heading` | Group and its heading |
+| `.mrd-command__item` | Item |
+| `.mrd-command__leading`, `.mrd-command__label`, `.mrd-command__shortcut` | Item parts |
+| `.mrd-command__empty`, `.mrd-command__separator` | Empty and Separator |
+| `.mrd-command-dialog` | Dialog surface |
+
+| Attribute | On | Values |
+|---|---|---|
+| `data-active` | Item | present on the active item |
+| `data-disabled` | Item | present when disabled |
+| `data-value` | Item | the item's value |
+
+## Accessibility
+
+Follows the WAI-ARIA [Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) with a listbox that is always shown. Focus never leaves the input; the active option is conveyed with `aria-activedescendant`, and the number of results is announced in a polite live region. When nothing matches, the list stops being a listbox and the input reports `aria-expanded="false"`. Every announced string is a prop.
+
+<KeyboardTable rows={[
+  { keys: ["ArrowDown"], action: "Next item, wrapping (skips disabled items)." },
+  { keys: ["ArrowUp"], action: "Previous item, wrapping." },
+  { keys: ["PageUp"], action: "First item." },
+  { keys: ["PageDown"], action: "Last item." },
+  { keys: ["Enter"], action: "Run the active item." },
+  { keys: ["⌘ / Ctrl", "K"], action: "Command.Dialog: open or close from anywhere." },
+  { keys: ["Escape"], action: "Command.Dialog: close and return focus." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Name items with a verb or a destination ("New project", "Go to billing") and group them by kind.</p>}
+  dont={<p>Make the command menu the only way to reach an action. It is a shortcut for people who know what they want.</p>}
+/>
+
+## Related
+
+- [Shortcut](/docs/components/shortcut): key combinations shown in items.
+- [Dialog](/docs/components/dialog): the modal behind `Command.Dialog`.
+- [Select](/docs/components/select): choose one value for a form.

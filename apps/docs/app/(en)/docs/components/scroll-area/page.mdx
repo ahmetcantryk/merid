@@ -1,0 +1,79 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ScrollAreaBasic, ScrollAreaHorizontal } from "@/examples/scroll-area";
+import { scrollAreaBasicCode, scrollAreaHorizontalCode } from "@/examples/scroll-area.code";
+
+export const metadata = docMetadata("en", "/docs/components/scroll-area", {
+  title: "ScrollArea",
+  description: "A native scroll container with thin, themed scrollbars.",
+});
+
+# ScrollArea
+
+A scroll container with thin, token-coloured scrollbars. Scrolling stays native: wheel, touch, keyboard, find-in-page and scroll anchoring all work, and nothing is re-implemented in JavaScript.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/scroll-area">Source</a>
+</div>
+
+<ComponentPreview code={scrollAreaBasicCode}>
+  <ScrollAreaBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { ScrollArea } from "@meridui/react";
+```
+
+## Examples
+
+### Horizontal, scrollbar on hover
+
+`orientation` picks the axis (`"vertical"`, `"horizontal"` or `"both"`). `autoHide` shows the scrollbar only while the area is hovered or has focus, on devices with a fine pointer.
+
+<ComponentPreview code={scrollAreaHorizontalCode}>
+  <ScrollAreaHorizontal />
+</ComponentPreview>
+
+## API reference
+
+Accepts every `<div>` attribute.
+
+<PropsTable rows={[
+  { name: "orientation", type: "\"vertical\" | \"horizontal\" | \"both\"", default: "\"vertical\"", description: "Which axes scroll." },
+  { name: "maxHeight", type: "CSSProperties[\"maxHeight\"]", description: "Maximum height before it scrolls, e.g. 240 or \"50vh\"." },
+  { name: "autoHide", type: "boolean", default: "false", description: "Show the scrollbar only while hovered or focused (fine pointers)." },
+  { name: "label", type: "string", default: "\"Scrollable content\"", description: "Accessible name used when the area becomes a focusable region." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the scrolling element." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-scroll-area` | The scrolling element |
+
+| Attribute / variable | Values |
+|---|---|
+| `data-orientation` | `vertical`, `horizontal`, `both` |
+| `data-autohide` | present with `autoHide` |
+| `--mrd-scroll-thumb` | thumb colour; defaults to `--mrd-line-strong` |
+
+The scrollbar uses `scrollbar-width: thin` and `scrollbar-color` (plus `::-webkit-scrollbar` for older Safari). In forced-colours mode the system scrollbar is used.
+
+## Accessibility
+
+When the content overflows and contains nothing focusable, the area becomes `role="region"` with `tabIndex={0}` and the `label` as its name, so keyboard users can reach it and scroll with the arrow keys (WCAG 2.1.1). When it holds links or buttons it stays out of the Tab order: focusing those scrolls the area.
+
+<KeyboardTable rows={[
+  { keys: ["ArrowUp", "ArrowDown"], action: "Scroll vertically (browser default, once the area has focus)." },
+  { keys: ["ArrowLeft", "ArrowRight"], action: "Scroll horizontally." },
+  { keys: ["PageUp", "PageDown"], action: "Scroll by a page." },
+  { keys: ["Home", "End"], action: "Scroll to the start or end." },
+]} />
+
+## Related
+
+- [Table](/docs/components/table): has its own horizontal scroll frame (`scrollLabel`).
+- [Command](/docs/components/command): its list scrolls natively in the same way.

@@ -1,0 +1,151 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { NavigationMenuBasic } from "@/examples/tr/navigation-menu";
+import { navigationMenuBasicCode } from "@/examples/tr/navigation-menu.code";
+
+export const metadata = docMetadata("tr", "/docs/components/navigation-menu", {
+  title: "NavigationMenu",
+  description: "Açılır ve mega menü link panelleri olan site üst navigasyonu.",
+});
+
+# NavigationMenu
+
+Bir sitenin üst navigasyonu: link'ler ve link panellerini açan butonlar; kısa bir listeden tam genişlikte mega menüye kadar.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/navigation-menu">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={navigationMenuBasicCode}>
+  <NavigationMenuBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { NavigationMenu } from "@meridui/react";
+```
+
+## Anatomi
+
+```tsx
+<NavigationMenu.Root>
+  <NavigationMenu.List>
+    <NavigationMenu.Item value="products">
+      <NavigationMenu.Trigger />
+      <NavigationMenu.Content>
+        <NavigationMenu.Link />
+      </NavigationMenu.Content>
+    </NavigationMenu.Item>
+    <NavigationMenu.Item>
+      <NavigationMenu.Link />
+    </NavigationMenu.Item>
+  </NavigationMenu.List>
+</NavigationMenu.Root>
+```
+
+- **Root** `<nav>` landmark'ıdır ve hangi panelin açık olduğunu tutar (aynı anda bir tane).
+- **List** ve **Item**, çubuğun `<ul>` ve `<li>` elemanlarıdır.
+- **Trigger** bir disclosure `<button>`'ıdır; **Content** onun link panelidir. `fullWidth` mega menü için paneli çubuk boyunca yayar.
+- **Link** bir `<a>`'dır; doğrudan bir Item içinde (üst seviye link) ya da Content içinde durur. `description` ikinci bir satır ekler.
+
+## Örnekler
+
+### Router link'leri
+
+`asChild` router'ının link'ini aynı stil ve davranışla render'lar; `active`, `aria-current="page"` atar.
+
+```tsx
+import NextLink from "next/link";
+
+<NavigationMenu.Link asChild active={pathname === "/pricing"}>
+  <NextLink href="/pricing">Fiyatlar</NextLink>
+</NavigationMenu.Link>
+```
+
+### Mega menü
+
+Content'e `fullWidth` ver: panel tüm çubuk boyunca yayılır ve link'leri responsive bir grid'e dizer. 640px'in altında her panel çubuk boyunca yayılır.
+
+## API referansı
+
+### Root
+
+Tüm `<nav>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "value", type: "string", description: "Controlled açık öğe (hiçbiri açık değilse \"\")." },
+  { name: "defaultValue", type: "string", default: "\"\"", description: "Uncontrolled kullanımda başlangıçta açık öğe." },
+  { name: "onValueChange", type: "(value: string) => void", description: "Açık öğenin değeriyle çağrılır." },
+  { name: "openDelay", type: "number", default: "150", description: "Hover'da panel açılmadan önceki gecikme, ms. Tıklama ve tuşlar hemen açar." },
+  { name: "closeDelay", type: "number", default: "250", description: "İmleç ayrıldıktan sonra panel kapanmadan önceki gecikme, ms." },
+  { name: "aria-label", type: "string", default: "\"Main\"", description: "Navigasyon landmark'ının erişilebilir adı." },
+  { name: "ref", type: "Ref<HTMLElement>", description: "<nav>'a iletilen ref." },
+]} />
+
+### Item
+
+<PropsTable rows={[
+  { name: "value", type: "string", description: "Benzersiz değer; controlled kullanım için gerekir. Varsayılanı üretilen bir id." },
+]} />
+
+### Trigger, Content
+
+Trigger tüm `<button>`, Content tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "Content fullWidth", type: "boolean", default: "false", description: "Çubuğun tam genişliğine yayılır (mega menü)." },
+]} />
+
+### Link
+
+Tüm `<a>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "active", type: "boolean", default: "false", description: "Geçerli sayfayı işaretler (aria-current=\"page\")." },
+  { name: "description", type: "string", description: "Panel içindeki link'ler için etiketin altındaki ikinci satır." },
+  { name: "asChild", type: "boolean", default: "false", description: "<a> yerine tek child elemanı (bir router link'i) render'lar." },
+  { name: "ref", type: "Ref<HTMLAnchorElement>", description: "İletilen ref." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-navmenu` | Root |
+| `.mrd-navmenu__list`, `.mrd-navmenu__item` | List ve Item |
+| `.mrd-navmenu__trigger`, `.mrd-navmenu__chevron` | Trigger ve ikonu |
+| `.mrd-navmenu__content` | Content |
+| `.mrd-navmenu__link`, `.mrd-navmenu__link-title`, `.mrd-navmenu__link-description` | Link parçaları |
+
+| Attribute | Nerede | Değerler |
+|---|---|---|
+| `data-state` | Root, Item, Trigger, Content | `open`, `closed` |
+| `data-full` | Content | `fullWidth` verildiğinde bulunur |
+| `data-active` | Link | `active` iken bulunur |
+
+## Erişilebilirlik
+
+`role="menubar"` yerine WAI-ARIA [Disclosure navigation menu](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) örneğini izler: site navigasyonu bir link listesidir ve her tetikleyici ile link Tab sırasında kalır. Paneller kapalıyken de DOM'da (`hidden`) durur; böylece link'leri taranabilir. Focus'un nav'dan çıkması, Escape ya da dışarıya tıklama açık paneli kapatır.
+
+<KeyboardTable rows={[
+  { keys: ["Enter", "Space"], action: "Tetikleyicide: panelini açar ya da kapatır." },
+  { keys: ["ArrowDown"], action: "Tetikleyicide: açar ve ilk link'e focus verir. Panelde: sonraki link." },
+  { keys: ["ArrowUp"], action: "Panelde: önceki link." },
+  { keys: ["ArrowRight", "ArrowLeft"], action: "Sonraki / önceki tetikleyici ya da üst seviye link (RTL'de ters)." },
+  { keys: ["Home", "End"], action: "İlk / son tetikleyici ya da üst seviye link." },
+  { keys: ["Escape"], action: "Paneli kapatır ve focus'u tetikleyicisine döndürür." },
+  { keys: ["Tab"], action: "Tetikleyiciler ve link'ler arasında sırayla ilerler." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Üst seviye etiketleri kısa tut ve en çok ziyaret edilen hedefleri başa koy.</p>}
+  dont={<p>NavigationMenu'yü uygulama komutları için kullanmak. Aksiyonların yeri <a href="/tr/docs/components/dropdown-menu">DropdownMenu</a> ya da <a href="/tr/docs/components/toolbar">Toolbar</a>.</p>}
+/>
+
+## İlgili sayfalar
+
+- [SidebarNav](/tr/docs/components/sidebar-nav): uygulama sidebar'ları için dikey navigasyon.
+- [Breadcrumb](/tr/docs/components/breadcrumb): geçerli sayfanın yeri.

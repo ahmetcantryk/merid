@@ -1,0 +1,162 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { DataTableBasic, DataTableFilters } from "@/examples/data-table";
+import { dataTableBasicCode, dataTableFiltersCode } from "@/examples/data-table.code";
+
+export const metadata = docMetadata("en", "/docs/components/data-table", {
+  title: "DataTable",
+  description: "Sorting, filtering, pagination, row selection and column visibility on top of Table.",
+});
+
+# DataTable
+
+Sorting, search and column filters, pagination, checkbox row selection and column visibility on top of [Table](/docs/components/table). `useDataTable` holds the state; `DataTable` renders it. No dependencies.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/data-table">Source</a>
+</div>
+
+<ComponentPreview code={dataTableBasicCode}>
+  <DataTableBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { DataTable, useDataTable, type DataTableColumn } from "@meridui/react";
+```
+
+## Anatomy
+
+```tsx
+const table = useDataTable({ data, columns });
+
+<DataTable table={table} caption="…" />
+```
+
+- **Columns** describe each field: `accessor` (a key or a function) feeds sorting, search and the default cell; `cell` renders anything else.
+- **useDataTable** is headless: it returns the current page of rows and every setter. Each piece of state works controlled or uncontrolled.
+- **DataTable** renders a toolbar (search, Columns menu, your `toolbar`), the Table with sortable headers and optional checkboxes, and a footer with the status line, a rows-per-page select and [Pagination](/docs/components/pagination).
+
+## Examples
+
+### Column filters, default sort and hidden columns
+
+Put your own filter controls in `toolbar` and drive them with `setColumnFilter`. A column's `filterFn` replaces the default "contains" match.
+
+<ComponentPreview code={dataTableFiltersCode}>
+  <DataTableFilters />
+</ComponentPreview>
+
+### Headless
+
+Render your own markup from the same state when DataTable's layout does not fit, for example a list of cards on mobile.
+
+```tsx
+const table = useDataTable({ data, columns });
+
+// Everything DataTable renders is available for your own markup:
+table.rows;              // current page, filtered and sorted
+table.toggleSort("name");
+table.setGlobalFilter("ada");
+table.setPage(2);
+table.toggleRow(table.getRowId(row));
+table.selectedRows;      // across pages
+table.toggleColumn("email", false);
+```
+
+The hook works on the rows you pass in. For server-side sorting or paging, fetch with your own state and render [Table](/docs/components/table) directly.
+
+## API reference
+
+### DataTableColumn
+
+<PropsTable rows={[
+  { name: "id", type: "string", description: "Unique column id." },
+  { name: "header", type: "ReactNode", description: "Header content." },
+  { name: "label", type: "string", description: "Plain-text name for the Columns menu. Defaults to header when it is a string." },
+  { name: "accessor", type: "keyof Row | (row) => unknown", description: "Value for sorting, search and the default cell." },
+  { name: "cell", type: "(row) => ReactNode", description: "Cell content. Defaults to the accessor value as text." },
+  { name: "sortable", type: "boolean", default: "false", description: "Allow sorting by this column." },
+  { name: "sortFn", type: "(a, b) => number", description: "Custom ascending compare. Defaults to numeric, date and natural text order; empty values last." },
+  { name: "searchable", type: "boolean", default: "true with an accessor", description: "Include the column in the global search." },
+  { name: "filterFn", type: "(row, filter: string) => boolean", description: "Custom per-column filter." },
+  { name: "hideable", type: "boolean", default: "true", description: "List the column in the Columns menu." },
+  { name: "align", type: "\"start\" | \"center\" | \"end\"", default: "\"start\"", description: "Text alignment; end for numbers." },
+]} />
+
+### useDataTable
+
+Every state has a controlled prop, a `default…` prop and an `on…Change` callback.
+
+<PropsTable rows={[
+  { name: "data", type: "Row[]", description: "All rows. Memoise it." },
+  { name: "columns", type: "DataTableColumn<Row>[]", description: "Column definitions." },
+  { name: "getRowId", type: "(row, index) => string", default: "row.id ?? index", description: "Stable id for selection." },
+  { name: "sort / defaultSort / onSortChange", type: "{ columnId, direction } | null", description: "One sorted column at a time." },
+  { name: "globalFilter / defaultGlobalFilter / onGlobalFilterChange", type: "string", description: "Search text; every word must match some searchable column." },
+  { name: "columnFilters / defaultColumnFilters / onColumnFiltersChange", type: "Record<string, string>", description: "Per-column filters." },
+  { name: "page / defaultPage / onPageChange", type: "number", default: "1", description: "Current page, 1-based." },
+  { name: "pageSize / defaultPageSize / onPageSizeChange", type: "number", default: "10", description: "Rows per page." },
+  { name: "selection / defaultSelection / onSelectionChange", type: "string[]", description: "Selected row ids." },
+  { name: "hiddenColumns / defaultHiddenColumns / onHiddenColumnsChange", type: "string[]", description: "Hidden column ids." },
+]} />
+
+It returns `rows`, `filteredRows`, `visibleColumns`, `page`, `pageCount`, `pageSelection` (`"all" | "some" | "none"`), `selectedRows` and the setters `toggleSort`, `setGlobalFilter`, `setColumnFilter`, `setPage`, `setPageSize`, `toggleRow`, `togglePage`, `clearSelection` and `toggleColumn`. Changing a filter or the page size returns to page 1.
+
+### DataTable
+
+Accepts every [Table](/docs/components/table#api-reference) prop.
+
+<PropsTable rows={[
+  { name: "table", type: "DataTableInstance<Row>", description: "State from useDataTable." },
+  { name: "caption", type: "ReactNode", description: "Names the table; visually hidden unless showCaption." },
+  { name: "showCaption", type: "boolean", default: "false", description: "Show the caption above the table." },
+  { name: "selectable", type: "boolean", default: "false", description: "Add a checkbox column." },
+  { name: "getRowLabel", type: "(row) => string", description: "Names a row in its checkbox label. Defaults to the first visible column." },
+  { name: "searchable", type: "boolean", default: "true", description: "Show the search box." },
+  { name: "columnToggle", type: "boolean", default: "true if any column is hideable", description: "Show the Columns menu." },
+  { name: "paginated", type: "boolean", default: "true with more than one page", description: "Show pagination." },
+  { name: "pageSizeOptions", type: "number[]", description: "Offer a rows-per-page select." },
+  { name: "toolbar", type: "ReactNode", description: "Extra controls in the toolbar." },
+  { name: "emptyState", type: "ReactNode", default: "labels.empty", description: "Shown when no row matches." },
+  { name: "labels", type: "Partial<DataTableLabels>", description: "Every visible and screen-reader string; defaults are English." },
+  { name: "rootClassName", type: "string", description: "Class name for the outer wrapper." },
+]} />
+
+`DataTableLabels`: `search`, `searchPlaceholder`, `columns`, `selectPage`, `selectRow(rowLabel)`, `selected(count, total)`, `results(count)`, `empty`, `rowsPerPage`, `pagination`, `previousPage`, `nextPage`, `page(n)`.
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-data-table` | Wrapper |
+| `.mrd-data-table__toolbar`, `.mrd-data-table__search`, `.mrd-data-table__columns` | Toolbar parts |
+| `.mrd-data-table__select` | Checkbox cells |
+| `.mrd-data-table__empty` | Empty row cell |
+| `.mrd-data-table__footer`, `.mrd-data-table__status`, `.mrd-data-table__page-size` | Footer parts |
+
+Rows, headers and cells are the Table's own (`.mrd-table__*`); selected rows get `data-selected`.
+
+## Accessibility
+
+The table keeps native table semantics with a `<caption>`. Sortable headers are buttons inside `<th aria-sort>`; every checkbox has a name ("Select Ada Lovelace", "Select all rows on this page") and the header checkbox shows the mixed state. The status line is a polite live region that announces the number of results after a search and the selection count; the search box is described by it.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Move through search, Columns, sort buttons, checkboxes and pagination." },
+  { keys: ["Enter", "Space"], action: "On a sort button: cycle ascending, descending, unsorted." },
+  { keys: ["Space"], action: "On a checkbox: select or clear the row (or the page)." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Right-align numbers (`align: "end"`) and keep the name column always visible (`hideable: false`).</p>}
+  dont={<p>Load thousands of rows into the hook. Page and sort on the server and render Table instead.</p>}
+/>
+
+## Related
+
+- [Table](/docs/components/table): the markup DataTable builds on.
+- [Data tables pattern](/docs/patterns/data-tables): layout and bulk actions.
+- [Pagination](/docs/components/pagination): the footer control.
