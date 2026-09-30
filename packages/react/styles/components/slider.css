@@ -1,0 +1,108 @@
+@layer merid.components {
+  .mrd-slider {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    height: 24px;
+    touch-action: none;
+    user-select: none;
+  }
+
+  .mrd-slider__track {
+    position: relative;
+    flex: 1;
+    height: 4px;
+    border-radius: var(--mrd-radius-full);
+    background: var(--mrd-tray-2);
+    cursor: pointer;
+  }
+
+  /* Enlarge the hit area to the full 24px height without changing the visual track. */
+  .mrd-slider__track::before {
+    content: "";
+    position: absolute;
+    inset: -10px 0;
+  }
+
+  .mrd-slider__range {
+    position: absolute;
+    inset-block: 0;
+    border-radius: inherit;
+    background: var(--mrd-accent);
+  }
+
+  .mrd-slider__thumb {
+    position: absolute;
+    inset-block-start: 50%;
+    width: 16px;
+    height: 16px;
+    margin-inline-start: -8px;
+    border: 1px solid var(--mrd-line-strong);
+    border-radius: var(--mrd-radius-full);
+    background: var(--mrd-surface);
+    box-shadow: var(--mrd-shadow-xs);
+    transform: translateY(-50%);
+    cursor: grab;
+    transition:
+      box-shadow var(--mrd-duration) var(--mrd-ease),
+      border-color var(--mrd-duration) var(--mrd-ease);
+  }
+
+  /* 24px touch target around the 16px thumb. */
+  .mrd-slider__thumb::before {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    border-radius: inherit;
+  }
+
+  .mrd-slider__thumb:hover {
+    border-color: var(--mrd-accent);
+  }
+
+  .mrd-slider__thumb:focus-visible {
+    outline: none;
+    border-color: var(--mrd-accent);
+    box-shadow: var(--mrd-focus-ring), var(--mrd-shadow-xs);
+  }
+
+  .mrd-slider__thumb:active {
+    cursor: grabbing;
+  }
+
+  .mrd-slider[data-disabled] {
+    opacity: 0.5;
+  }
+
+  .mrd-slider[data-disabled] .mrd-slider__track,
+  .mrd-slider[data-disabled] .mrd-slider__thumb {
+    cursor: not-allowed;
+  }
+
+  .mrd-slider[data-disabled] .mrd-slider__thumb:hover {
+    border-color: var(--mrd-line-strong);
+  }
+
+  @media (pointer: coarse) {
+    .mrd-slider {
+      height: 44px;
+    }
+
+    .mrd-slider__thumb {
+      width: 20px;
+      height: 20px;
+      margin-inline-start: -10px;
+    }
+
+    .mrd-slider__thumb::before {
+      inset: -12px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mrd-slider__thumb {
+      transition: none;
+    }
+  }
+}

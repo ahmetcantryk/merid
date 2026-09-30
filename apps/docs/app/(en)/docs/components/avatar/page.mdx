@@ -85,6 +85,7 @@ Renders a `div` with `role="group"`.
   { name: "label", type: "string", description: "Accessible name of the group, e.g. \"Project members\". Required unless you pass `aria-label` or `aria-labelledby`; a development warning is logged otherwise." },
   { name: "max", type: "number", description: "Maximum avatars shown; the rest collapse into a +N chip." },
   { name: "size", type: '"xs" | "sm" | "md" | "lg" | "xl"', default: '"md"', description: "Size of the overflow chip; match the avatars' size." },
+  { name: "formatOverflowLabel", type: "(count: number) => string", default: "(n) => `${n} more`", description: "Accessible name of the +N chip. Pass a translated formatter for other languages." },
   { name: "children", type: "ReactNode", description: "Avatar elements." },
 ]} />
 

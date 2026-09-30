@@ -1,0 +1,112 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { DatePickerBasic, DatePickerRange, DatePickerConstraints, DatePickerStates } from "@/examples/date-picker";
+
+export const metadata = docMetadata("en", "/docs/components/date-picker", {
+  title: "DatePicker",
+  description: "A date field you can type into, with a calendar popover for a single day or a range.",
+});
+
+# DatePicker
+
+A date field you can type into, with a [Calendar](/docs/components/calendar) in a popover. Typed text is read in the locale's numeric order (`09/30/2026` for `en-US`, `30.09.2026` for `tr-TR`) or as ISO `2026-09-30`.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/date-picker">Source</a>
+</div>
+
+<ComponentPreview code={`const [date, setDate] = useState<Date | null>(null);
+
+<Field label="Due date" description="Type MM/DD/YYYY or pick from the calendar.">
+  <DatePicker value={date} onValueChange={setDate} name="due" />
+</Field>`}>
+  <DatePickerBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { DatePicker } from "@meridui/react";
+```
+
+## Examples
+
+### Range
+
+`mode="range"` renders a start and an end field. The calendar closes once both days are picked.
+
+<ComponentPreview code={`const [range, setRange] = useState<DateRange>({ start: null, end: null });
+
+<DatePicker mode="range" value={range} onValueChange={setRange} startLabel="Check-in" endLabel="Check-out" />`}>
+  <DatePickerRange />
+</ComponentPreview>
+
+### Min, max and disabled days
+
+Typed dates outside the limits are rejected and the field reverts to the last valid value.
+
+<ComponentPreview code={`<DatePicker min={today} isDateDisabled={(d) => d.getDay() === 0 || d.getDay() === 6} />`}>
+  <DatePickerConstraints />
+</ComponentPreview>
+
+### Sizes and states
+
+<ComponentPreview code={`<DatePicker aria-label="Small" size="sm" />
+<DatePicker aria-label="Invalid" invalid />
+<DatePicker aria-label="Disabled" disabled defaultValue={today} />`}>
+  <DatePickerStates />
+</ComponentPreview>
+
+### In a form
+
+With `name`, a hidden input submits `yyyy-mm-dd`. A range submits two values under `name[]`. `toISODate(date)` gives the same string.
+
+## API reference
+
+Renders a `div`; other `div` attributes and the ref go on it. `aria-label` / `aria-labelledby` name the text field. Inside a [Field](/docs/components/field) the (first) field gets the id, description, error, `required` and `disabled`.
+
+<PropsTable rows={[
+  { name: "mode", type: "\"single\" | \"range\"", default: "\"single\"", description: "Pick one day or a start and end day." },
+  { name: "value / defaultValue", type: "Date | null | DateRange", description: "Controlled or initial selection." },
+  { name: "onValueChange", type: "(value) => void", description: "Called with the new day (or range); null when the field is cleared." },
+  { name: "locale", type: "string", default: "\"en-US\"", description: "Calendar names, week start and the typed numeric format." },
+  { name: "min / max", type: "Date", description: "Earliest and latest selectable day." },
+  { name: "isDateDisabled", type: "(date: Date) => boolean", description: "Marks individual days unavailable." },
+  { name: "weekStartsOn", type: "0 – 6", description: "First calendar column. Defaults to the locale's week start." },
+  { name: "open / onOpenChange", type: "boolean / (open) => void", description: "Controlled open state of the calendar." },
+  { name: "placeholder", type: "string", default: "locale pattern, e.g. MM/DD/YYYY", description: "Placeholder of the text field(s)." },
+  { name: "calendarLabel", type: "string", default: "\"Choose date\"", description: "Accessible name of the calendar button." },
+  { name: "dialogLabel", type: "string", default: "calendarLabel", description: "Accessible name of the calendar dialog." },
+  { name: "previousMonthLabel / nextMonthLabel", type: "string", default: "\"Previous month\" / \"Next month\"", description: "Calendar navigation button names." },
+  { name: "startLabel / endLabel", type: "string", default: "\"Start date\" / \"End date\"", description: "Range only: names of the two fields." },
+  { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Height of the field." },
+  { name: "invalid / disabled / required", type: "boolean", description: "States; inside a Field they come from it." },
+  { name: "name", type: "string", description: "Hidden input with yyyy-mm-dd; a range submits name[] twice." },
+  { name: "icon", type: "ReactNode", description: "Icon inside the calendar button." },
+  { name: "inputId", type: "string", description: "id of the (first) text field." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-date-picker` | Root (`data-size`, `data-mode`, `data-invalid`, `data-disabled`) |
+| `.mrd-date-picker__field` | Bordered field |
+| `.mrd-date-picker__input`, `.mrd-date-picker__separator` | Text field(s) and the range dash |
+| `.mrd-date-picker__trigger` | Calendar button (`data-state`) |
+| `.mrd-date-picker__content` | Popover holding the calendar |
+
+## Accessibility
+
+The text field is the primary input; the calendar button (`aria-haspopup="dialog"`) opens a non-modal dialog with focus on the selected day. Picking a day or pressing Escape closes it and returns focus to the button. See [Calendar](/docs/components/calendar#accessibility) for keys inside the grid.
+
+<KeyboardTable rows={[
+  { keys: ["Alt", "ArrowDown"], action: "In the text field: open the calendar." },
+  { keys: ["Enter"], action: "In the text field: read the typed date. In the calendar: pick the focused day." },
+  { keys: ["Escape"], action: "Close the calendar and return focus to the button." },
+]} />
+
+## Related
+
+- [Calendar](/docs/components/calendar) — the inline grid.
+- [Field](/docs/components/field) — label, hint and error around a control.

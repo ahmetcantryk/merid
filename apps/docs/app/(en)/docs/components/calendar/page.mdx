@@ -1,0 +1,108 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { CalendarBasic, CalendarRange, CalendarConstraints, CalendarLocale } from "@/examples/calendar";
+
+export const metadata = docMetadata("en", "/docs/components/calendar", {
+  title: "Calendar",
+  description: "A month grid for picking a day or a range, with keyboard navigation and Intl locales.",
+});
+
+# Calendar
+
+A month grid for picking a day or a range. Month, weekday and day names come from `Intl` for the `locale` you pass, and the week starts on the locale's first day.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/calendar">Source</a>
+</div>
+
+<ComponentPreview code={`const [date, setDate] = useState<Date | null>(null);
+
+<Calendar value={date} onValueChange={setDate} />`}>
+  <CalendarBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Calendar, type DateRange } from "@meridui/react";
+```
+
+## Examples
+
+### Range
+
+`mode="range"`: the first pick sets `start`, the second sets `end` (the two swap if the second is earlier). Hovering previews the range.
+
+<ComponentPreview code={`const [range, setRange] = useState<DateRange>({ start: null, end: null });
+
+<Calendar mode="range" value={range} onValueChange={setRange} />`}>
+  <CalendarRange />
+</ComponentPreview>
+
+### Min, max and disabled days
+
+Days outside `min`/`max` or matched by `isDateDisabled` get `aria-disabled` and cannot be picked, but stay reachable with the keyboard so the grid reads naturally.
+
+<ComponentPreview code={`const isWeekend = (d: Date) => d.getDay() === 0 || d.getDay() === 6;
+
+<Calendar min={today} max={inTwoMonths} isDateDisabled={isWeekend} />`}>
+  <CalendarConstraints />
+</ComponentPreview>
+
+### Locale and direction
+
+`locale` localises every name the grid shows or announces. `weekStartsOn` overrides the first column (0 = Sunday). Under `dir="rtl"` the grid and arrow keys follow the reading direction.
+
+<ComponentPreview code={`<Calendar locale="de-DE" previousMonthLabel="Vorheriger Monat" nextMonthLabel="Nächster Monat" />
+<Calendar locale="ar-EG" dir="rtl" />`}>
+  <CalendarLocale />
+</ComponentPreview>
+
+## API reference
+
+Renders a `div`; other `div` attributes and the ref go on it. Dates are compared by calendar day in local time.
+
+<PropsTable rows={[
+  { name: "mode", type: "\"single\" | \"range\"", default: "\"single\"", description: "Pick one day or a start and end day." },
+  { name: "value", type: "Date | null | DateRange", description: "Controlled selection: a Date (single) or { start, end } (range)." },
+  { name: "defaultValue", type: "Date | null | DateRange", description: "Initial selection when uncontrolled." },
+  { name: "onValueChange", type: "(value) => void", description: "Called after each pick. Range: first { start, end: null }, then both days." },
+  { name: "month / defaultMonth / onMonthChange", type: "Date / Date / (month: Date) => void", description: "Displayed month, controlled or initial. Defaults to the selected day or today." },
+  { name: "min", type: "Date", description: "Earliest selectable day." },
+  { name: "max", type: "Date", description: "Latest selectable day." },
+  { name: "isDateDisabled", type: "(date: Date) => boolean", description: "Marks individual days unavailable." },
+  { name: "locale", type: "string", default: "\"en-US\"", description: "BCP 47 locale for names and the week start." },
+  { name: "weekStartsOn", type: "0 – 6", description: "First column (0 = Sunday). Defaults to the locale's week start: tr-TR → Monday, en-US → Sunday." },
+  { name: "previousMonthLabel", type: "string", default: "\"Previous month\"", description: "Accessible name of the previous-month button." },
+  { name: "nextMonthLabel", type: "string", default: "\"Next month\"", description: "Accessible name of the next-month button." },
+  { name: "autoFocus", type: "boolean", default: "false", description: "Focus the selected day (or today) on mount." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-calendar` | Root (`data-mode`) |
+| `.mrd-calendar__header`, `.mrd-calendar__caption`, `.mrd-calendar__nav` | Month caption row and its buttons |
+| `.mrd-calendar__grid`, `.mrd-calendar__weekday` | The `role="grid"` table and its column headers |
+| `.mrd-calendar__cell` | Grid cell (`aria-selected`, `data-in-range`, `data-range-start`, `data-range-end`) |
+| `.mrd-calendar__day` | Day button (`data-selected`, `data-today`, `data-outside`, `data-disabled`) |
+
+The cell size is `--mrd-calendar-cell` (36px, 44px on coarse pointers).
+
+## Accessibility
+
+Follows the date grid in the WAI-ARIA [Date Picker Dialog example](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/). The grid is labelled by the month caption, which is a polite live region, so month changes are announced. Every day button has the full date as its name (in `locale`); today carries `aria-current="date"`. The grid is one tab stop.
+
+<KeyboardTable rows={[
+  { keys: ["ArrowLeft", "ArrowRight"], action: "Previous / next day (reversed in RTL). Crosses months." },
+  { keys: ["ArrowUp", "ArrowDown"], action: "Same day of the previous / next week." },
+  { keys: ["Home", "End"], action: "First / last day of the week." },
+  { keys: ["PageUp", "PageDown"], action: "Same day of the previous / next month." },
+  { keys: ["Shift", "PageUp"], action: "Same day of the previous year (PageDown: next year)." },
+  { keys: ["Enter"], action: "Select the focused day (Space also works)." },
+]} />
+
+## Related
+
+- [DatePicker](/docs/components/date-picker) — a date field with this calendar in a popover.

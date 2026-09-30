@@ -52,9 +52,14 @@ Fotoğraf için `src` ver. Görsel yoksa ya da yüklenemezse avatar, `name`'den 
 
 ### Grup
 
-`max` görünen avatar sayısını sınırlar; kalanlar bir “+N” çipine toplanır. Çip hizalı dursun diye grubun `size` değerini avatar'larınkiyle aynı yap.
+`max` görünen avatar sayısını sınırlar; kalanlar bir “+N” çipine toplanır. Çip hizalı dursun diye grubun `size` değerini avatar'larınkiyle aynı yap. Çipin erişilebilir adı varsayılan olarak “N more”dur; Türkçe arayüzde `formatOverflowLabel` ile Türkçe ver.
 
-<ComponentPreview code={`<AvatarGroup label="Proje üyeleri" max={3} size="sm">
+<ComponentPreview code={`<AvatarGroup
+  label="Proje üyeleri"
+  max={3}
+  size="sm"
+  formatOverflowLabel={(n) => \`\${n} kişi daha\`}
+>
   <Avatar name="Ada Lovelace" size="sm" />
   <Avatar name="Grace Hopper" size="sm" />
   <Avatar name="Alan Turing" size="sm" />
@@ -85,6 +90,7 @@ Bir `span` render'lar; ref ve diğer span attribute'ları iletilir.
   { name: "label", type: "string", description: "Grubun erişilebilir adı, örneğin \"Proje üyeleri\". `aria-label` ya da `aria-labelledby` vermiyorsan zorunlu; vermezsen geliştirme ortamında uyarı loglanır." },
   { name: "max", type: "number", description: "Gösterilecek en fazla avatar sayısı; kalanlar bir +N çipine toplanır." },
   { name: "size", type: '"xs" | "sm" | "md" | "lg" | "xl"', default: '"md"', description: "Taşma çipinin boyutu; avatar'ların boyutuyla aynı yap." },
+  { name: "formatOverflowLabel", type: "(count: number) => string", default: "(n) => `${n} more`", description: "+N çipinin ekran okuyucuya okunan adı. Türkçe arayüzde örneğin (n) => `${n} kişi daha`." },
   { name: "children", type: "ReactNode", description: "Avatar elemanları." },
 ]} />
 
@@ -113,7 +119,7 @@ Component değişkeni: `--mrd-avatar-size`, her boyut için ayarlanır.
 ## Erişilebilirlik
 
 - Her avatar, `name` ile adlandırılan bir `role="img"`'dir; içteki görselin `alt=""` değeri vardır ve baş harfler gizlidir, böylece ad yalnızca bir kez okunur.
-- Taşma çipi “N more” olarak okunur. Bu metin şu an sabit ve İngilizce; Türkçe arayüzde değiştirilemiyor.
+- Taşma çipi varsayılan olarak “N more” olarak okunur. Türkçe arayüzde ``formatOverflowLabel={(n) => `${n} kişi daha`}`` ver.
 - Grup `role="group"` taşır; listenin bağlamı olsun diye onu `label` ile adlandır (“Proje üyeleri”).
 - Avatar, kişinin görünen adının hemen yanında duruyorsa ad iki kez okunur; bu durumda avatar'a `aria-hidden` ver.
 

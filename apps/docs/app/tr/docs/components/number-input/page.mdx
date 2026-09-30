@@ -1,0 +1,109 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { NumberInputBasic, NumberInputFormats, NumberInputStates } from "@/examples/tr/number-input";
+
+export const metadata = docMetadata("tr", "/docs/components/number-input", {
+  title: "NumberInput",
+  description: "Artır/azalt butonlu; min, max, step ve Intl.NumberFormat destekli sayı alanı.",
+});
+
+# NumberInput
+
+Artır ve azalt butonlu bir sayı alanı. Değerler `Intl.NumberFormat` ile biçimlenir, yazılan metin aynı locale'de okunur: `tr-TR`'de `1.234,5`, `en-US`'de `1,234.5` çalışır.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/number-input">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`const [seats, setSeats] = useState<number | null>(1);
+
+<Field label="Koltuk sayısı">
+  <NumberInput
+    locale="tr-TR"
+    incrementLabel="Artır"
+    decrementLabel="Azalt"
+    value={seats}
+    onValueChange={setSeats}
+    min={1}
+    max={50}
+    name="seats"
+  />
+</Field>`}>
+  <NumberInputBasic />
+</ComponentPreview>
+
+<Callout tone="success">
+  Butonların adları varsayılan olarak İngilizcedir (“Increase”, “Decrease”). Türkçe arayüzde `incrementLabel` ve `decrementLabel` ver. `locale` verilmezse çalışma ortamının locale'i kullanılır; biçimin sunucu ile tarayıcıda aynı olması için `locale="tr-TR"` ver.
+</Callout>
+
+## Import
+
+```tsx
+import { NumberInput } from "@meridui/react";
+```
+
+## Örnekler
+
+### Para birimi, yüzde ve birim
+
+`formatOptions` doğrudan `Intl.NumberFormat`'a gider. Yüzdede değer kesirdir (`0.15`, `%15` olarak görünür).
+
+<ComponentPreview code={`<NumberInput locale="tr-TR" defaultValue={1499.9} step={0.5} formatOptions={{ style: "currency", currency: "TRY" }} />
+<NumberInput locale="tr-TR" defaultValue={0.15} step={0.01} min={0} max={1} formatOptions={{ style: "percent" }} />
+<NumberInput locale="tr-TR" defaultValue={2.5} step={0.1} formatOptions={{ style: "unit", unit: "kilogram" }} />`}>
+  <NumberInputFormats />
+</ComponentPreview>
+
+### Boyutlar ve durumlar
+
+<ComponentPreview code={`<NumberInput aria-label="Küçük" size="sm" defaultValue={3} />
+<NumberInput aria-label="Butonsuz" hideStepper defaultValue={10} />
+<NumberInput aria-label="Geçersiz" invalid defaultValue={-1} />
+<NumberInput aria-label="Devre dışı" disabled defaultValue={5} />`}>
+  <NumberInputStates />
+</ComponentPreview>
+
+## API referansı
+
+`type`, `value`, `defaultValue`, `onChange`, `size`, `min`, `max` ve `step` dışındaki tüm `<input>` attribute'larını kabul eder; ref `<input>`'a gider. `className` ve `style` sarmalayıcıya gider. [Field](/tr/docs/components/field) bağlantılarını [Input](/tr/docs/components/input) gibi alır.
+
+<PropsTable rows={[
+  { name: "value", type: "number | null", description: "Controlled değer; null boş demektir." },
+  { name: "defaultValue", type: "number | null", default: "null", description: "Uncontrolled kullanımda başlangıç değeri." },
+  { name: "onValueChange", type: "(value: number | null) => void", description: "Onaylanan değerle çağrılır (adımda, Enter'da ya da blur'da)." },
+  { name: "min / max", type: "number", description: "Sınırlar. Değer sınıra çekilir; sınırda ilgili buton devre dışı kalır." },
+  { name: "step", type: "number", default: "1", description: "Butonların ve ok tuşlarının eklediği miktar." },
+  { name: "largeStep", type: "number", default: "step * 10", description: "Page Up / Page Down'ın eklediği miktar." },
+  { name: "locale", type: "string", default: "çalışma ortamı", description: "Biçimleme ve okuma locale'i. Türkçe arayüzde \"tr-TR\"." },
+  { name: "formatOptions", type: "Intl.NumberFormatOptions", description: "Para birimi, yüzde, birim, ondalık hane sayısı…" },
+  { name: "size", type: "\"sm\" | \"md\" | \"lg\"", default: "\"md\"", description: "Yükseklik." },
+  { name: "invalid", type: "boolean", description: "aria-invalid ve danger kenarlık." },
+  { name: "hideStepper", type: "boolean", default: "false", description: "Butonları gizler." },
+  { name: "incrementLabel", type: "string", default: "\"Increase\"", description: "+ butonunun erişilebilir adı. Türkçe arayüzde \"Artır\"." },
+  { name: "decrementLabel", type: "string", default: "\"Decrease\"", description: "− butonunun erişilebilir adı. Türkçe arayüzde \"Azalt\"." },
+  { name: "name", type: "string", description: "Biçimlenmemiş sayıyı taşıyan gizli input." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-number-input` | Sarmalayıcı (`data-size`, `data-invalid`, `data-disabled`) |
+| `.mrd-number-input__field` | `<input role="spinbutton">` |
+| `.mrd-number-input__stepper`, `.mrd-number-input__step` | Buton grubu ve her buton |
+
+## Erişilebilirlik
+
+Alan `aria-valuenow`, `aria-valuemin`, `aria-valuemax` ve biçimlenmiş bir `aria-valuetext` taşıyan bir `role="spinbutton"`'dır. Butonlar tab durağı değildir (`tabindex="-1"`): klavye yolu ok tuşlarıdır; [APG spinbutton desenine](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/) uyar. Her buton en az 24×24px'tir.
+
+<KeyboardTable rows={[
+  { keys: ["ArrowUp", "ArrowDown"], action: "step kadar artırır / azaltır." },
+  { keys: ["PageUp", "PageDown"], action: "largeStep kadar artırır / azaltır." },
+  { keys: ["Home", "End"], action: "min / max'a gider (verildiyse)." },
+  { keys: ["Enter"], action: "Yazılan metni onaylar." },
+]} />
+
+## İlgili sayfalar
+
+- [Slider](/tr/docs/components/slider) — yaklaşık bir değer yetiyorsa.
+- [Input](/tr/docs/components/input) — serbest metin için.
