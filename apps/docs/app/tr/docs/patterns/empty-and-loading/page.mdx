@@ -1,0 +1,65 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { EmptyLoadingStates, InlineLoading } from "@/examples/tr/patterns/empty-and-loading";
+
+export const metadata = docMetadata("tr", "/docs/patterns/empty-and-loading", {
+  title: "Boş ve yükleniyor durumları",
+  description: "Listeler ve paneller için skeleton'lar, spinner'lar, boş durumlar ve hata durumları.",
+});
+
+# Boş ve yükleniyor durumları
+
+Veri yükleyen her görünümün dört durumu vardır: yükleniyor, boş, hata ve hazır. Dördünü de tasarla; aşağıda aralarında geçiş yapabilirsin.
+
+<ComponentPreview align="start" code={`<Card variant="outline" aria-busy={loading} aria-live="polite">
+  {loading ? (<><VisuallyHidden>Üyeler yükleniyor…</VisuallyHidden><ListSkeleton /></>) : null}
+  {empty ? (
+    <EmptyState variant="plain" icon={<PeopleIcon />} title="Henüz üye yok"
+      description="Projeleri paylaşmak ve değişiklikleri birlikte incelemek için ekip arkadaşlarını davet et."
+      action={<Button variant="primary">Kişi davet et</Button>} />
+  ) : null}
+  {error ? (
+    <Alert tone="danger" title="Üyeler yüklenemedi" action={<Button size="sm" onClick={retry}>Tekrar dene</Button>}>
+      Sunucu zamanında yanıt vermedi.
+    </Alert>
+  ) : null}
+  {ready ? <MemberList /> : null}
+</Card>`}>
+  <EmptyLoadingStates />
+</ComponentPreview>
+
+## Yükleniyor
+
+| Durum | Kullan |
+|---|---|
+| Şekli belli içerik (listeler, kartlar, tablolar) | Son layout'la eşleşen `Skeleton` blokları |
+| Kullanıcının az önce tetiklediği bir aksiyon | O butonda `Button loading` |
+| Korunacak bir layout'u olmayan arka plan işi | Kısa bir etiketle `Spinner size="sm"` |
+| Uzun ve ölçülebilir iş (yüklemeler, içe aktarmalar) | Değer verilmiş bir `Progress` |
+
+- Skeleton'ı gerçek içerikle eşleştir: aynı satır yüksekliği, avatar boyutu ve satır sayısı. Veri geldiğinde sayfa zıplamamalı.
+- Skeleton'lar dekoratiftir. Onları `aria-hidden` ile gizle; yüklemeyi bir `aria-live` bölgesi içindeki `VisuallyHidden` metinle ya da container'daki `aria-busy` ile bir kez duyur.
+- Hızlı isteklerde yükleme göstergesi yanıp sönmesin diye göstermeden önce yaklaşık 300ms bekle.
+
+<ComponentPreview code={`<Button variant="primary" loading={saving} onClick={save}>Değişiklikleri kaydet</Button>
+<Stack direction="row" gap={2} align="center">
+  <Spinner size="sm" label={null} />
+  <Text size="sm" tone="muted">3 dosya eşitleniyor…</Text>
+</Stack>`}>
+  <InlineLoading />
+</ComponentPreview>
+
+`Spinner`'ın yerleşik bir erişilebilir etiketi var (varsayılanı `"Loading"`; Türkçe arayüzde `label="Yükleniyor"` ver). Yanındaki görünür metin ne olduğunu zaten söylüyorsa `label={null}` ver.
+
+## Boş
+
+Boş durum, burada ne olacağını anlatır ve orayı dolduracak tek aksiyonu sunar.
+
+- **İlk kullanım:** ikon, şeyin adını koyan bir başlık ("Henüz üye yok"), değeri anlatan tek cümle, tek bir primary aksiyon.
+- **Sonuç yok:** ikon ya da aksiyon gerekmez. Aramayı tekrarla ve filtreleri temizlemeyi öner: "“fabrikam” ile eşleşen fatura yok."
+- **Temizlendi / bitti:** "Her şey yolunda, yapılacak bir şey yok". Aksiyon yok.
+
+Zaten bir yüzeyi olan kart veya panel içinde `variant="plain"`, boş durum bir sayfa bölgesini tek başına dolduruyorsa varsayılan `tray` varyantını kullan.
+
+## Hata
+
+İçeriğin yerine, Tekrar dene `action`'ı olan bir `Alert tone="danger"` kullan. Neyin başarısız olduğunu sade kelimelerle söyle; son kullanıcıya stack trace ya da durum kodu gösterme. Sayfanın bir kısmı yüklendiyse onu koru ve hatayı yalnızca verinin eksik olduğu yerde göster.

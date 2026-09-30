@@ -1,0 +1,165 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import {
+  AccordionBasic,
+  AccordionMultiple,
+  AccordionNonCollapsible,
+} from "@/examples/accordion";
+import { accordionBasicCode, accordionMultipleCode, accordionNonCollapsibleCode } from "@/examples/accordion.code";
+
+export const metadata = docMetadata("en", "/docs/components/accordion", {
+  title: "Accordion",
+  description: "Stacked disclosure sections that show one or more panels at a time.",
+});
+
+# Accordion
+
+Stacked disclosure sections that show one or more panels at a time.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/accordion">Source</a>
+</div>
+
+<ComponentPreview code={accordionBasicCode}>
+  <AccordionBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Accordion } from "@merid/react";
+```
+
+## Anatomy
+
+```tsx
+<Accordion.Root type="single">
+  <Accordion.Item value="a">
+    <Accordion.Trigger />
+    <Accordion.Content />
+  </Accordion.Item>
+</Accordion.Root>
+```
+
+- **Root** decides whether one (`type="single"`) or many (`type="multiple"`) items can be open.
+- **Item** groups a trigger and its content under a unique `value`.
+- **Trigger** is a `<button>` wrapped in a heading (`h3` by default) with a plus icon.
+- **Content** is a `role="region"` labelled by its trigger. Children only render while open.
+
+## Examples
+
+### Multiple, controlled
+
+With `type="multiple"`, `value` and `onValueChange` use a `string[]`. `headingLevel` sets the wrapping heading to fit the page outline.
+
+<ComponentPreview code={accordionMultipleCode}>
+  <AccordionMultiple />
+</ComponentPreview>
+
+### Always one open
+
+`collapsible={false}` on a single accordion prevents closing the open item.
+
+<ComponentPreview code={accordionNonCollapsibleCode}>
+  <AccordionNonCollapsible />
+</ComponentPreview>
+
+## API reference
+
+### Root (single)
+
+Accepts every `<div>` attribute except `defaultValue` and `onChange`.
+
+<PropsTable rows={[
+  { name: "type", type: "\"single\"", required: true, description: "One item open at a time." },
+  { name: "value", type: "string", description: "Controlled open item (\"\" for none)." },
+  { name: "defaultValue", type: "string", description: "Initially open item when uncontrolled." },
+  { name: "onValueChange", type: "(value: string) => void", description: "Called with the open item value (\"\" when all closed)." },
+  { name: "collapsible", type: "boolean", default: "true", description: "Allow closing the open item." },
+  { name: "headingLevel", type: "2 | 3 | 4 | 5 | 6", default: "3", description: "Heading level wrapping each trigger." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the root element." },
+]} />
+
+### Root (multiple)
+
+<PropsTable rows={[
+  { name: "type", type: "\"multiple\"", required: true, description: "Any number of items open." },
+  { name: "value", type: "string[]", description: "Controlled open items." },
+  { name: "defaultValue", type: "string[]", description: "Initially open items when uncontrolled." },
+  { name: "onValueChange", type: "(value: string[]) => void", description: "Called with the open item values." },
+  { name: "headingLevel", type: "2 | 3 | 4 | 5 | 6", default: "3", description: "Heading level wrapping each trigger." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the root element." },
+]} />
+
+### Item
+
+Accepts every `<div>` attribute.
+
+<PropsTable rows={[
+  { name: "value", type: "string", required: true, description: "Unique value of this item." },
+  { name: "disabled", type: "boolean", default: "false", description: "Prevent toggling." },
+]} />
+
+### Trigger
+
+Accepts every `<button>` attribute.
+
+<PropsTable rows={[
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the button." },
+]} />
+
+### Content
+
+Accepts every `<div>` attribute.
+
+<PropsTable rows={[
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the region." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-accordion` | Root |
+| `.mrd-accordion__item` | Item |
+| `.mrd-accordion__heading` | Heading wrapping the trigger |
+| `.mrd-accordion__trigger`, `.mrd-accordion__trigger-text` | Trigger and its text |
+| `.mrd-accordion__icon` | Plus icon (rotates when open) |
+| `.mrd-accordion__content` | Content region |
+
+| Attribute | On | Values |
+|---|---|---|
+| `data-state` | Item, Trigger, Content | `open`, `closed` |
+| `aria-expanded` | Trigger | `true`, `false` |
+| `aria-disabled="true"`, `data-disabled` | Trigger | when the item is disabled |
+
+## Accessibility
+
+Follows the WAI-ARIA [Accordion pattern](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/). Each trigger sits in a heading, carries `aria-expanded` and `aria-controls`, and its region is labelled by the trigger. Disabled triggers stay reachable with Tab (with `aria-disabled`) so they are still announced, but arrow keys, Home and End skip them.
+
+<KeyboardTable rows={[
+  { keys: ["Enter"], action: "Toggle the focused section." },
+  { keys: ["Space"], action: "Toggle the focused section." },
+  { keys: ["Tab"], action: "Move to the next focusable element, including inside open content." },
+  { keys: ["ArrowDown"], action: "Next enabled trigger, wrapping." },
+  { keys: ["ArrowUp"], action: "Previous enabled trigger, wrapping." },
+  { keys: ["Home"], action: "First enabled trigger." },
+  { keys: ["End"], action: "Last enabled trigger." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Use an accordion for secondary content people scan by heading — FAQs, settings groups, details.</p>}
+  dont={<p>Hide content everyone needs to read, or put a single item in an accordion.</p>}
+/>
+
+<DoDont
+  do={<p>Write triggers as the question or topic, so the page outline reads well.</p>}
+  dont={<p>Nest accordions inside accordions.</p>}
+/>
+
+## Related
+
+- [Tabs](/docs/components/tabs)
+- [Card](/docs/components/card)

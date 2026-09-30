@@ -1,0 +1,79 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { RhfInviteForm } from "@/examples/tr/integrations/react-hook-form";
+
+export const metadata = docMetadata("tr", "/docs/integrations/react-hook-form", {
+  title: "React Hook Form",
+  description: "Merid form kontrollerini React Hook Form ile kullan: native input'lar için register, Select, RadioGroup ve Switch için Controller.",
+});
+
+# React Hook Form
+
+Merid'in form kontrolleri native elemanların üzerine ince sarmalayıcılar olduğu için çoğu, [React Hook Form](https://react-hook-form.com)'un `register`'ıyla olduğu gibi çalışır. Kendi state'ini tutan üç kontrol, yani `Select`, `RadioGroup` ve `Switch`, `Controller` üzerinden bağlanır.
+
+<ComponentPreview align="start" code={`const { register, control, handleSubmit, formState: { errors, isSubmitting } } =
+  useForm<InviteValues>({ defaultValues: DEFAULTS, mode: "onTouched" });
+
+<form onSubmit={handleSubmit(onSubmit)} noValidate>
+  <Field label="E-posta" required error={errors.email?.message}>
+    <Input type="email" {...register("email", { required: "E-posta adresini gir." })} />
+  </Field>
+  <Controller control={control} name="region" rules={{ required: "Bir veri bölgesi seç." }}
+    render={({ field, fieldState }) => (
+      <Field id="rhf-region" label="Veri bölgesi" required error={fieldState.error?.message}>
+        <Select.Root value={field.value} onValueChange={field.onChange} name={field.name}>
+          <Select.Trigger id="rhf-region" ref={field.ref} invalid={fieldState.invalid} />
+          <Select.Content>…</Select.Content>
+        </Select.Root>
+      </Field>
+    )} />
+  <Button type="submit" variant="primary" loading={isSubmitting}>Davet gönder</Button>
+</form>`}>
+  <RhfInviteForm />
+</ComponentPreview>
+
+## Hangi kontrol için hangi API
+
+| Kontrol | Kullan | Neden |
+|---|---|---|
+| `Input`, `Textarea`, `NativeSelect` | `register` | `ref`, `name`, `onChange` ve `onBlur`'u native elemana iletirler. |
+| `Checkbox` | `register` | Gerçek bir `<input type="checkbox">` render'lar; değeri boolean'dır. |
+| `Select` | `Controller` | Özel bir listbox. Change event'i değil, `value` / `onValueChange` alır. |
+| `RadioGroup` + `Radio` | `Controller` | Seçili değeri ve gezici focus'u (roving focus) grup yönetir. |
+| `Switch` | `Controller` | Bir `<button role="switch">`; `checked` / `onCheckedChange` alır. |
+| `SegmentedControl` | `Controller` | `Select` ile aynı: `value` / `onValueChange`. |
+
+## Hatalar
+
+Mesajı `Field`'ın `error` prop'una ver. Field bu durumda kontrole `aria-invalid="true"` koyar, mesajı `aria-describedby`'a ekler ve geçersiz stilini gösterir. `error` `undefined` olduğunda bu bağlantılar yeniden kaldırılır, yani ek bir state gerekmez.
+
+```tsx
+<Field label="E-posta" required error={errors.email?.message}>
+  <Input type="email" {...register("email", { required: "E-posta adresini gir." })} />
+</Field>
+```
+
+`Checkbox`'ın kendi etiketini saran bir Field'ı yoktur; bu yüzden `invalid` ver ve mesajı kendin render'la (yukarıdaki örnekte olduğu gibi).
+
+## Field içinde Select
+
+`Select.Trigger` henüz Field'ın context'ini okumuyor. İkisine aynı `id`'yi ver: böylece Field etiketi tetikleyiciyi gösterir. `invalid`'i de `fieldState`'ten geçir. `mode: "onTouched"` doğru anda doğrulasın diye listbox kapanınca `field.onBlur`'u çağır.
+
+```tsx
+<Field id="plan" label="Plan" error={fieldState.error?.message}>
+  <Select.Root value={field.value} onValueChange={field.onChange}
+    onOpenChange={(open) => { if (!open) field.onBlur(); }}>
+    <Select.Trigger id="plan" ref={field.ref} invalid={fieldState.invalid} />
+    <Select.Content>…</Select.Content>
+  </Select.Root>
+</Field>
+```
+
+`ref={field.ref}` verirsen, gönderimde doğrulama başarısız olduğunda React Hook Form tetikleyiciye focus verebilir.
+
+## Gönderim state'i
+
+Butonun `loading` prop'u için `formState.isSubmitting`'i kullan. Yükleniyor durumundaki bir Button genişliğini korur, spinner gösterir, `aria-busy` koyar ve tıklamaları yok sayar; böylece ilk gönderim sürerken ikincisi tetiklenemez.
+
+## Şema ile doğrulama
+
+`rules` yerine bir şemayla doğrulamak için [Zod ile doğrulama](/tr/docs/integrations/zod) sayfasına bak.

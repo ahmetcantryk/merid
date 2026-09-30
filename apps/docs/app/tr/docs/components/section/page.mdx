@@ -1,0 +1,116 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { SectionDemo, SectionTones, SectionSpacing, SectionCards } from "@/examples/tr/section";
+
+export const metadata = docMetadata("tr", "/docs/components/section", {
+  title: "Section",
+  description: "Merid'in dikey ritmine sahip, isteğe bağlı gri yüzey (tray) arka planlı, tam genişlikte sayfa bandı.",
+});
+
+# Section
+
+Cömert dikey boşluğu olan, tam genişlikte bir sayfa bandı. Sayfanın bölgelerini kenarlıkla değil yüzeyle ayırmak için `default` ve `tray` section'ları sırayla kullan.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/section">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Section tone="tray" spacing="compact">
+  <Container>
+    <Heading level={2} size="h3">Fiyatlandırma</Heading>
+    <Text tone="muted">Tek paket, aylık faturalandırılır.</Text>
+  </Container>
+</Section>`}>
+  <SectionDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Section } from "@merid/react";
+```
+
+## Örnekler
+
+### Tonlar
+
+`default` sayfa arka planını kullanır; `tray` ise geride duran alternatif bant için `--mrd-tray` kullanır. Uzun bir sayfa, ayraç kullanmadan bu ikisini sırayla dizerek yapı kazanır.
+
+<ComponentPreview code={`<Section spacing="compact">
+  <Container><Text>default tonu: sayfa arka planı.</Text></Container>
+</Section>
+<Section tone="tray" spacing="compact">
+  <Container><Text>tray tonu: geride duran alternatif bant.</Text></Container>
+</Section>`}>
+  <SectionTones />
+</ComponentPreview>
+
+### Boşluk
+
+`default` boşluk `--mrd-section` değeridir (112px; küçük ekranlarda 80px ve 64px'e iner). `compact` bunu yarıya indirir; `none` ise bandı yalnızca arka planı için kullandığında boşluğu tamamen kaldırır.
+
+<ComponentPreview code={`<Section tone="tray" spacing="compact">…</Section>
+<Section spacing="none">…</Section>`}>
+  <SectionSpacing />
+</ComponentPreview>
+
+### Tray section üzerinde kartlar
+
+`tray` bir kart, tray section üzerinde kaybolurdu. Bu yüzden `Section tone="tray"` içinde Merid tray kartları yüzey rengine çevirir. Yükseltilmiş görünmesi gereken kartlar için `variant="elevated"` kullan.
+
+<ComponentPreview code={`<Section tone="tray">
+  <Container>
+    <Card variant="elevated">…</Card>
+  </Container>
+</Section>`}>
+  <SectionCards />
+</ComponentPreview>
+
+## API referansı
+
+`Section` varsayılan olarak bir `<section>` render'lar, ref'ini iletir ve diğer HTML attribute'larını olduğu gibi geçirir.
+
+<PropsTable rows={[
+  { name: "tone", type: '"default" | "tray"', default: '"default"', description: "Arka plan: sayfa arka planı ya da geride duran tray." },
+  { name: "spacing", type: '"default" | "compact" | "none"', default: '"default"', description: "Dikey boşluk: --mrd-section, yarısı ya da hiç." },
+  { name: "as", type: "ElementType", default: '"section"', description: "Yerine render'lanacak eleman ya da component." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-section</code></td><td>Kök eleman</td></tr>
+    <tr><td><code>data-tone</code></td><td><code>default</code> · <code>tray</code></td></tr>
+    <tr><td><code>data-spacing</code></td><td><code>default</code> · <code>compact</code> · <code>none</code></td></tr>
+  </tbody>
+</table>
+
+Boşluk global `--mrd-section` token'ından gelir; tek bir bandın ritmini değiştirmek için token'ı o elemanda ez.
+
+```css
+.hero.mrd-section {
+  --mrd-section: 160px;
+}
+```
+
+## Erişilebilirlik
+
+- Bir `<section>`, yalnızca erişilebilir bir adı olduğunda landmark olarak sunulur. Önemli bantlara, başlıklarını gösteren bir `aria-labelledby` ver.
+- Yeni bir konu başlatmayan, tamamen görsel bantlar için `as="div"` kullan.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Sayfa bölgelerini ayırmak için <code>default</code> ve <code>tray</code> section'ları sırayla kullan.</p>}
+  dont={<p>İki tray section'ı arka arkaya dizmek ya da section'ların arasına kenarlık eklemek.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Container](/tr/docs/components/container): section içindeki içeriğin genişliğini sınırlar.
+- [Card](/tr/docs/components/card): tray section'a uyum sağlayan yüzeyler.
+- [Stack](/tr/docs/components/stack): section içindeki bloklar arası boşluk.

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useDictionary } from "@/lib/i18n/client";
 
 export type Theme = "light" | "dark";
 const STORAGE_KEY = "merid-theme";
@@ -25,6 +26,7 @@ export function applyTheme(next: Theme): void {
 
 export function ThemeToggle() {
   const [theme, setTheme] = useState<Theme | null>(null);
+  const t = useDictionary().header;
 
   useEffect(() => {
     setTheme(readTheme());
@@ -37,7 +39,7 @@ export function ThemeToggle() {
     applyTheme(readTheme() === "dark" ? "light" : "dark");
   }
 
-  const label = theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
+  const label = theme === "dark" ? t.themeToLight : t.themeToDark;
 
   return (
     <button type="button" className="icon-btn" onClick={toggle} aria-label={label} title={label}>

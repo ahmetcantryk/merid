@@ -1,0 +1,96 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { TooltipDemo, TooltipPlacementDemo } from "@/examples/tr/tooltip";
+
+export const metadata = docMetadata("tr", "/docs/components/tooltip", {
+  title: "Tooltip",
+  description: "Hover ve focus'ta görünen kısa bir metin etiketi.",
+});
+
+# Tooltip
+
+Hover'da kısa bir gecikmeyle, focus'ta hemen görünen kısa bir etiket.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" /> <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/tooltip">Kaynak kodu gör</a>
+</div>
+
+## Import
+
+```tsx
+import { Tooltip } from "@merid/react";
+```
+
+<ComponentPreview code={`<Tooltip content="Linki panoya kopyalar">
+  <IconButton label="Linki kopyala" icon={<CopyIcon />} variant="secondary" />
+</Tooltip>`}>
+  <TooltipDemo />
+</ComponentPreview>
+
+## Anatomi
+
+Tooltip tek bir component'tir. Child'ı, ref'ini ileten tek bir focus alabilir eleman olmalıdır; örneğin `Button` ya da `IconButton`. Tooltip bu elemana `aria-describedby`'ı, işaretçi ve focus handler'larını ekler.
+
+```tsx
+<Tooltip content="…">
+  <Button />
+</Tooltip>
+```
+
+## Örnekler
+
+### Konum
+
+<ComponentPreview code={`<Tooltip content="Üstte" placement="top"><Button variant="secondary" size="sm">top</Button></Tooltip>
+<Tooltip content="Sağda" placement="right"><Button variant="secondary" size="sm">right</Button></Tooltip>
+<Tooltip content="Altta" placement="bottom"><Button variant="secondary" size="sm">bottom</Button></Tooltip>
+<Tooltip content="Solda" placement="left"><Button variant="secondary" size="sm">left</Button></Tooltip>`}>
+  <TooltipPlacementDemo />
+</ComponentPreview>
+
+### Gecikme ve devre dışı
+
+```tsx
+<Tooltip content="Kaydedildi" delay={0}>…</Tooltip>
+<Tooltip content="Çevrimdışıyken kullanılamaz" disabled={isOnline}>…</Tooltip>
+```
+
+## API referansı
+
+<PropsTable rows={[
+  { name: "content", type: "ReactNode", required: true, description: "Tooltip metni. Kısa ve etkileşimsiz tut." },
+  { name: "children", type: "ReactElement", required: true, description: "Tek bir focus alabilir eleman (örneğin ikonlu bir Button). aria-describedby bu elemana eklenir." },
+  { name: "open", type: "boolean", description: "Controlled açık state'i." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Uncontrolled kullanımda başlangıçtaki açık state." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Açık state'in değişmesi gerektiğinde çağrılır." },
+  { name: "delay", type: "number", default: "400", description: "Hover'da açılmadan önceki gecikme, ms cinsinden. Focus hemen açar." },
+  { name: "placement", type: "Placement", default: "\"top\"", description: "Tercih edilen konum." },
+  { name: "sideOffset", type: "number", default: "6", description: "Tetikleyiciye olan uzaklık, px cinsinden." },
+  { name: "className", type: "string", description: "Tooltip balonuna verilen sınıf adı." },
+  { name: "disabled", type: "boolean", default: "false", description: "Tooltip'i göstermez." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal hedefi. `undefined` `document.body` kullanır; `null` hedef oluşana kadar hiçbir şey render'lamaz." },
+]} />
+
+## Stil verme
+
+`.mrd-tooltip` balonun kendisidir: `--mrd-tooltip-bg` / `--mrd-tooltip-fg`, `--mrd-radius-sm`, `--mrd-shadow-lg`, en fazla 280px genişlik, `z-index: var(--mrd-z-tooltip)`. Üzerinde `data-state="open"` ve `pointer-events: none` bulunur.
+
+## Erişilebilirlik
+
+[WAI-ARIA Tooltip desenini](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/) izler. Balonun `role="tooltip"` rolü vardır ve açıkken tetikleyiciye `aria-describedby` ile bağlanır. Dokunmatik işaretçiler onu açmaz; bu yüzden temel bir bilgiyi asla yalnızca tooltip'e koyma. Yalnızca ikon içeren bir tetikleyicinin yine de kendi erişilebilir adı olmalıdır (`IconButton`'ın `label`'ı).
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Tetikleyici focus alınca tooltip hemen görünür; focus ayrılınca gizlenir." },
+  { keys: ["Esc"], action: "Tooltip'i gizler." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do="Yalnızca ikon içeren bir kontrole ad vermek ya da kısa bir ipucu eklemek için tooltip kullan."
+  dont="Tooltip'e link, buton ya da uzun metin koymak; bunun için Popover kullan."
+/>
+
+## İlgili sayfalar
+
+- Etkileşimli içerik için [Popover](/tr/docs/components/popover).
+- [IconButton](/tr/docs/components/icon-button)

@@ -1,0 +1,40 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { MotionDemo, MotionTable } from "@/components/foundations";
+
+export const metadata = docMetadata("tr", "/docs/foundations/motion", {
+  title: "Hareket",
+  description: "Süreler, easing ve bunları kullanan etkileşim desenleri.",
+});
+
+# Hareket
+
+Merid'de hareket sakindir. Bir şeyin olduğunu doğrular, izlenmeyi hiçbir zaman beklemez.
+
+## Token'lar
+
+<MotionTable locale="tr" />
+
+Giriş animasyonları 220ms'lik bir fade kullanır: eleman 4px yükselerek yerine otururken opaklık 0'dan 1'e çıkar.
+
+## Desenler
+
+- **Hover** arka planı renklendirir ya da elemanı 2–3px yükseltir.
+- **Basma** 100ms içinde `.97`'ye küçültür.
+- **Açılma** fade ile belirir ve yükselir; overlay'ler arka plan örtüsünü aynı anda fade ile getirir.
+- **Dönme** yalnızca açılır-kapanır ikonlar içindir; örneğin accordion'daki artı işaretinin 45° dönmesi.
+
+<MotionDemo locale="tr" />
+
+## Azaltılmış hareket
+
+Kullanıcı azaltılmış hareket istediğinde Merid, skeleton shimmer dahil tüm geçiş ve animasyonları tamamen kaldırır. State yine anında değişir, yani hiçbir şey kaybolmaz.
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .your-component {
+    transition: none;
+  }
+}
+```
+
+Merid'in base layer'ı bunu `.mrd-root` içindeki her şeye uygular; her component de azaltılmış harekette kendi hareketini bırakır.

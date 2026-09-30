@@ -1,0 +1,98 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { SkeletonDemo, SkeletonText, SkeletonShapes } from "@/examples/skeleton";
+
+export const metadata = docMetadata("en", "/docs/components/skeleton", {
+  title: "Skeleton",
+  description: "A shimmering placeholder that holds the shape of content while it loads.",
+});
+
+# Skeleton
+
+A placeholder that holds the shape of content while it loads, so the layout does not jump when data arrives. It shimmers every 1.4s and stays static under reduced motion.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/skeleton">Source</a>
+</div>
+
+<ComponentPreview code={`<Stack direction="row" gap={3} align="center" aria-busy="true">
+  <Skeleton circle width={40} height={40} />
+  <Stack gap={2} style={{ flex: 1 }}>
+    <Skeleton width="60%" />
+    <Skeleton width="90%" height={12} />
+  </Stack>
+</Stack>`}>
+  <SkeletonDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Skeleton } from "@merid/react";
+```
+
+## Examples
+
+### Text block
+
+Without sizing props a skeleton is full width and `1em` tall — one line of the surrounding text. Shorten the last line so the block reads as a paragraph.
+
+<ComponentPreview code={`<Stack gap={2} aria-busy="true">
+  <Skeleton height={24} width="50%" />
+  <Skeleton />
+  <Skeleton />
+  <Skeleton width="75%" />
+</Stack>`}>
+  <SkeletonText />
+</ComponentPreview>
+
+### Shapes
+
+Numbers are pixels, strings are any CSS length. `circle` rounds fully; set equal `width` and `height`.
+
+<ComponentPreview code={`<Skeleton width={120} height={80} />
+<Skeleton circle width={48} height={48} />
+<Skeleton width={96} height={36} />`}>
+  <SkeletonShapes />
+</ComponentPreview>
+
+## API reference
+
+Renders an `aria-hidden` `span`; forwards its ref. `style` is merged after the sizing props, so it can override them.
+
+<PropsTable rows={[
+  { name: "width", type: "number | string", default: '"100%"', description: "CSS width; a number is px." },
+  { name: "height", type: "number | string", default: '"1em"', description: "CSS height; a number is px." },
+  { name: "circle", type: "boolean", default: "false", description: "Renders a circle. Set width and height equal." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-skeleton</code></td><td>Root <code>{"<span>"}</code></td></tr>
+    <tr><td><code>data-shape</code></td><td><code>rect</code> · <code>circle</code></td></tr>
+  </tbody>
+</table>
+
+Skeleton has no component variables. The shimmer runs from `--mrd-tray` to `--mrd-tray-2` — the one gradient Merid allows.
+
+## Accessibility
+
+- Every skeleton is `aria-hidden`; it says nothing to assistive tech on its own.
+- Put `aria-busy="true"` on the region that is loading, and remove it when content arrives. For a spoken cue, add a visually hidden “Loading…” status.
+
+## Guidelines
+
+<DoDont
+  do={<p>Mirror the real layout closely — same avatar size, same number of lines — so nothing shifts when content loads.</p>}
+  dont={<p>Show skeletons for content that loads in under ~300ms, or for errors and empty results.</p>}
+/>
+
+## Related
+
+- [Spinner](/docs/components/spinner) — for actions rather than content.
+- [EmptyState](/docs/components/empty-state) — what to show once loading finds nothing.

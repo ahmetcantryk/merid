@@ -1,0 +1,123 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { CardDemo, CardVariants, CardElevated, CardPaddings, CardInteractive } from "@/examples/tr/card";
+
+export const metadata = docMetadata("tr", "/docs/components/card", {
+  title: "Card",
+  description: "İçeriği kenarlıkla değil, yüzey rengiyle ayıran bir kapsayıcı.",
+});
+
+# Card
+
+İlişkili bilgileri bir arada toplayan bir içerik kapsayıcısı. Card sayfadan kenarlıkla değil yüzey rengiyle ayrılır: sayfanın üzerinde içe gömük bir gri yüzey (tray), tray bir section'ın üzerinde ise yükseltilmiş bir yüzey.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/card">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Card>
+  <Heading level={3} size="lg">Kullanım</Heading>
+  <Text size="sm">Kullanım her ayın birinde sıfırlanır.</Text>
+</Card>`}>
+  <CardDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Card } from "@merid/react";
+```
+
+## Örnekler
+
+### Varyantlar
+
+`tray` (varsayılan), doğrudan sayfanın üzerinde kullanılan içe gömük card'dır. `outline` ise ince çizgili bir card'dır; tray'in çevresiyle çakışacağı yerlerde kullan.
+
+<ComponentPreview code={`<Card variant="tray">…</Card>
+<Card variant="outline">…</Card>`}>
+  <CardVariants />
+</ComponentPreview>
+
+### Elevated, tray bir section üzerinde
+
+`elevated`, yüzey rengine yumuşak bir gölge ekler. Card tray bir [Section](/tr/docs/components/section) üzerinde duruyorsa bunu kullan. Tray bir section içindeki `tray` card kendiliğinden bu görünüme geçer.
+
+<ComponentPreview code={`<Section tone="tray">
+  <Card variant="elevated">…</Card>
+</Section>`}>
+  <CardElevated />
+</ComponentPreview>
+
+### Padding
+
+`none` 0, `sm` 20px, `md` 28px (varsayılan), `lg` 32px. Card kenardan kenara bir görsel ya da tablo içeriyorsa `none` kullan.
+
+<ComponentPreview code={`<Card padding="sm">sm · 20px</Card>
+<Card padding="md">md · 28px</Card>
+<Card padding="lg">lg · 32px</Card>`}>
+  <CardPaddings />
+</ComponentPreview>
+
+### Etkileşimli ve seçili
+
+`interactive`, hover'da 3px yukarı kalkma efekti ve pointer imleci ekler. Card'ın tamamı bir link ya da buton olduğunda kullan ve `as` ile o eleman olarak render'la. `selected`, 1.5px'lik accent halkasını çizer.
+
+<ComponentPreview code={`<Card as="a" href="/plans/starter" interactive>…</Card>
+<Card as="a" href="/plans/pro" interactive selected aria-current="true">…</Card>`}>
+  <CardInteractive />
+</ComponentPreview>
+
+## API referansı
+
+`as` verilmedikçe bir `div` render'lar; ref'i iletir ve tüm HTML attribute'larını aktarır.
+
+<PropsTable rows={[
+  { name: "variant", type: '"tray" | "elevated" | "outline"', default: '"tray"', description: "Yüzey. tray sayfanın üzerinde, elevated tray bir section üzerinde kullanılır; outline ince çizgili bir card'dır." },
+  { name: "padding", type: '"none" | "sm" | "md" | "lg"', default: '"md"', description: "İç boşluk: 0, 20px, 28px, 32px." },
+  { name: "interactive", type: "boolean", default: "false", description: "Hover'da yukarı kalkma (3px) ve pointer imleci ekler. Card'ın tamamı bir link ya da buton olduğunda kullan." },
+  { name: "selected", type: "boolean", description: "1.5px'lik accent seçim halkasını çizer. `as=\"button\"` ile render'lanan `interactive` bir card'da `aria-pressed`'i de ayarlar; diğer durumlarda yalnızca görseldir." },
+  { name: "as", type: "ElementType", default: '"div"', description: "div yerine render'lanacak eleman ya da component." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-card</code></td><td>Kök eleman</td></tr>
+    <tr><td><code>data-variant</code></td><td><code>tray</code> · <code>elevated</code> · <code>outline</code></td></tr>
+    <tr><td><code>data-padding</code></td><td><code>none</code> · <code>sm</code> · <code>md</code> · <code>lg</code></td></tr>
+    <tr><td><code>data-interactive</code></td><td><code>interactive</code> verildiğinde bulunur</td></tr>
+    <tr><td><code>data-selected</code></td><td><code>selected</code> verildiğinde bulunur</td></tr>
+  </tbody>
+</table>
+
+Component değişkeni: `--mrd-card-padding`, her `data-padding` değeri için ayrı atanır.
+
+```css
+.pricing .mrd-card {
+  --mrd-card-padding: var(--mrd-space-10);
+}
+```
+
+## Erişilebilirlik
+
+- Card'ın kendine ait bir rolü yoktur. Bir grup card'a bir başlık ver ve her card'ı doğru seviyede bir başlıkla başlat.
+- Tıklanabilir bir card için bir `div`'i `onClick` ile sarmak yerine card'ı etkileşimli eleman olarak render'la (`as="a"` ya da `as="button"`).
+- `selected`, `aria-pressed`'i yalnızca card `interactive` olduğunda ve `as="button"` ile (bir toggle buton olarak) render'landığında ayarlar. Diğer durumlarda yalnızca görseldir: state'i bir link üzerinde `aria-current` ile ya da işaretli bir kontrolle ilet.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Yüzeyi arka plana göre seç: sayfada <code>tray</code> card, tray bir section üzerinde <code>elevated</code> card.</p>}
+  dont={<p>Tray bir card'ı öne çıkarmak için kenarlık ve gölge eklemek ya da card'ları birden fazla seviye iç içe koymak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Section](/tr/docs/components/section): card'ların görünümünü değiştiren tray bantlar.
+- [Grid](/tr/docs/components/grid): card satırlarını dizer.
+- [EmptyState](/tr/docs/components/empty-state): boş bir card listesi için yer tutucu.

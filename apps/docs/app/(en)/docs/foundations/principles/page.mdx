@@ -1,0 +1,49 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("en", "/docs/foundations/principles", {
+  title: "Principles",
+  description: "The ten rules every Merid component and page is held to.",
+});
+
+# Principles
+
+These ten rules are the design contract. Every component, doc page and example follows them. If a value is not defined by a token, it is derived from an existing one — never invented.
+
+## 1. One accent, used sparingly
+
+A single cool blue carries interactivity and selection. Everything else is ink-tinted neutrals.
+
+## 2. Separate by surface before border
+
+Cards sit on a tray over the page; on a tray section they flip to a white surface and a soft shadow. Borders are the last resort.
+
+## 3. Hairlines only
+
+Every border is 1px `--mrd-line`. Selection is a 1.5px accent ring. Never 2px, never dark borders.
+
+## 4. Soft, long, faint shadows
+
+Shadows are always tinted with ink, never black. The only saturated shadow is the primary button's glow.
+
+## 5. Generous rounding that steps down
+
+Radius steps down as surfaces nest: 20, then 14, then 12, then 8.
+
+## 6. Tight headings, relaxed body
+
+Headings are 600 with negative tracking and balanced wrapping; body text has a 1.6 line height. Weight 700 is never used.
+
+## 7. Three text tones
+
+Ink, body and muted. Hierarchy comes from tone and weight, not colour.
+
+## 8. Quiet interaction
+
+Hover is a background tint or a 2–3px lift; press is a `.97` scale; everything takes 150–200ms. Reduced motion removes all of it.
+
+## 9. Air
+
+Big section padding, wide gaps, content capped at 1160px and reading width at or below 720px.
+
+## 10. One filled block per page
+
+At most one filled colour block on a page. No gradients — the skeleton shimmer is the only exception.

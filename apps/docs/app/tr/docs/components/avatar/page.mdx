@@ -1,0 +1,130 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { AvatarDemo, AvatarSizes, AvatarFallback, AvatarGroupDemo } from "@/examples/tr/avatar";
+
+export const metadata = docMetadata("tr", "/docs/components/avatar", {
+  title: "Avatar",
+  description: "Bir kişiyi ya da kurumu temsil eden yuvarlak görsel veya baş harfler.",
+});
+
+# Avatar
+
+Bir kişiyi ya da kurumu temsil eden yuvarlak bir görsel, ya da gri yüzey (tray) üzerinde baş harfler. `AvatarGroup` birden çok avatar'ı üst üste dizer ve fazlasını bir sayıyla gösterir.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/avatar">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Avatar name="Ada Lovelace" />
+<Avatar name="Grace Hopper" />
+<Avatar name="Linus" />`}>
+  <AvatarDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Avatar, AvatarGroup, getInitials } from "@merid/react";
+```
+
+## Örnekler
+
+### Boyutlar
+
+`xs` 24px, `sm` 32px, `md` 40px (varsayılan), `lg` 48px, `xl` 64px.
+
+<ComponentPreview code={`<Avatar name="Ada Lovelace" size="xs" />
+<Avatar name="Ada Lovelace" size="sm" />
+<Avatar name="Ada Lovelace" size="md" />
+<Avatar name="Ada Lovelace" size="lg" />
+<Avatar name="Ada Lovelace" size="xl" />`}>
+  <AvatarSizes />
+</ComponentPreview>
+
+### Görsel ve fallback
+
+Fotoğraf için `src` ver. Görsel yoksa ya da yüklenemezse avatar, `name`'den türetilen baş harflere döner: ilk ve son kelimenin ilk harfi. `initials` bunları ezer (en fazla iki karakter gösterilir).
+
+<ComponentPreview code={`<Avatar name="Bozuk Görsel" src="/does-not-exist.png" />
+<Avatar name="Acme Corporation" initials="AC" />`}>
+  <AvatarFallback />
+</ComponentPreview>
+
+### Grup
+
+`max` görünen avatar sayısını sınırlar; kalanlar bir “+N” çipine toplanır. Çip hizalı dursun diye grubun `size` değerini avatar'larınkiyle aynı yap.
+
+<ComponentPreview code={`<AvatarGroup label="Proje üyeleri" max={3} size="sm">
+  <Avatar name="Ada Lovelace" size="sm" />
+  <Avatar name="Grace Hopper" size="sm" />
+  <Avatar name="Alan Turing" size="sm" />
+  <Avatar name="Katherine Johnson" size="sm" />
+  <Avatar name="Edsger Dijkstra" size="sm" />
+</AvatarGroup>`}>
+  <AvatarGroupDemo />
+</ComponentPreview>
+
+## API referansı
+
+### Avatar
+
+Bir `span` render'lar; ref ve diğer span attribute'ları iletilir.
+
+<PropsTable rows={[
+  { name: "name", type: "string", required: true, description: "Kişinin ya da kurumun adı. Hem erişilebilir ad hem de baş harflerin kaynağı." },
+  { name: "src", type: "string", description: "Görsel URL'i. Yoksa ya da yüklenemezse baş harflere döner." },
+  { name: "size", type: '"xs" | "sm" | "md" | "lg" | "xl"', default: '"md"', description: "Çap: 24, 32, 40, 48 ya da 64px." },
+  { name: "initials", type: "string", description: "Türetilen baş harfleri ezer (en fazla 2 karakter gösterilir)." },
+]} />
+
+### AvatarGroup
+
+`role="group"` taşıyan bir `div` render'lar.
+
+<PropsTable rows={[
+  { name: "label", type: "string", description: "Grubun erişilebilir adı, örneğin \"Proje üyeleri\". `aria-label` ya da `aria-labelledby` vermiyorsan zorunlu; vermezsen geliştirme ortamında uyarı loglanır." },
+  { name: "max", type: "number", description: "Gösterilecek en fazla avatar sayısı; kalanlar bir +N çipine toplanır." },
+  { name: "size", type: '"xs" | "sm" | "md" | "lg" | "xl"', default: '"md"', description: "Taşma çipinin boyutu; avatar'ların boyutuyla aynı yap." },
+  { name: "children", type: "ReactNode", description: "Avatar elemanları." },
+]} />
+
+### getInitials
+
+`getInitials(name: string): string` en fazla iki büyük harf döndürür: `getInitials("Ada Lovelace")` sonucu `"AL"`, `getInitials("Linus")` sonucu `"L"`.
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-avatar</code></td><td>Root daire</td></tr>
+    <tr><td><code>.mrd-avatar__image</code></td><td>{"<img>"} elemanı</td></tr>
+    <tr><td><code>.mrd-avatar__fallback</code></td><td>Baş harfler</td></tr>
+    <tr><td><code>.mrd-avatar-group</code>, <code>.mrd-avatar-group__overflow</code></td><td>Grup satırı ve +N çipi</td></tr>
+    <tr><td><code>data-size</code></td><td><code>xs</code> · <code>sm</code> · <code>md</code> · <code>lg</code> · <code>xl</code></td></tr>
+    <tr><td><code>data-status</code></td><td><code>image</code> · <code>fallback</code></td></tr>
+  </tbody>
+</table>
+
+Component değişkeni: `--mrd-avatar-size`, her boyut için ayarlanır.
+
+## Erişilebilirlik
+
+- Her avatar, `name` ile adlandırılan bir `role="img"`'dir; içteki görselin `alt=""` değeri vardır ve baş harfler gizlidir, böylece ad yalnızca bir kez okunur.
+- Taşma çipi “N more” olarak okunur. Bu metin şu an sabit ve İngilizce; Türkçe arayüzde değiştirilemiyor.
+- Grup `role="group"` taşır; listenin bağlamı olsun diye onu `label` ile adlandır (“Proje üyeleri”).
+- Avatar, kişinin görünen adının hemen yanında duruyorsa ad iki kez okunur; bu durumda avatar'a `aria-hidden` ver.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Görsel olsa bile her zaman gerçek <code>name</code>'i ver; hem fallback hem de erişilebilir ad odur.</p>}
+  dont={<p>“Kullanıcı” gibi yer tutucu bir ad vermek ya da baş harfleri bir e-posta adresinden tahmin ettirmek.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Badge](/tr/docs/components/badge): avatar'ın yanında durum göstermek için.
+- [Skeleton](/tr/docs/components/skeleton): profil yüklenirken daire şeklinde yer tutucu için.

@@ -1,0 +1,79 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { SubtreeNested } from "@/examples/tr/integrations/subtree";
+
+export const metadata = docMetadata("tr", "/docs/integrations/subtree-attributes", {
+  title: "Alt ağaç attribute'ları",
+  description: "data-theme, data-accent ve data-density ile herhangi bir elemanda tema, accent ve yoğunluk. İç içe kullanılabilirler.",
+});
+
+# Alt ağaç attribute'ları
+
+Üç attribute, bir elemanın ve içindeki her şeyin Merid token'larını değiştirir. `<html>`'de ya da herhangi bir elemanda çalışırlar, provider gerektirmezler ve her kombinasyonda iç içe kullanılabilirler.
+
+| Attribute | Değerler | Varsayılan |
+|---|---|---|
+| `data-theme` | `light`, `dark` | `prefers-color-scheme`'i izler |
+| `data-accent` | `blue`, `violet`, `green`, `graphite` | `blue` |
+| `data-density` | `compact`, `default`, `comfortable` | `default` |
+
+<ComponentPreview align="start" code={`<div data-theme="dark">
+  <Sample />
+  <div data-theme="light" data-accent="violet" data-density="compact">
+    <Sample />
+  </div>
+</div>`}>
+  <SubtreeNested />
+</ComponentPreview>
+
+## data-theme
+
+Alt ağaç için tüm nötr ve accent token'larını ayarlar. Koyu bir sayfadaki açık bir panel de, açık bir sayfadaki koyu bir panel de doğru görünür: içteki attribute her zaman kazanır.
+
+```html
+<html data-theme="dark">          <!-- tüm sayfa koyu -->
+  <aside data-theme="light">…</aside> <!-- bu alt ağaç açık -->
+</html>
+```
+
+Hiç attribute yoksa `:root` işletim sistemini izler. Attribute yalnızca token'ları ayarlar: metni doğru yüzeye otursun diye temalı elemana bir arka plan ver (`background: var(--mrd-bg)` ya da `var(--mrd-tray)`).
+
+## data-accent
+
+Accent ailesinin tamamını, yani `--mrd-accent`, `-hover`, `-soft`, `-strong`, `-solid`, `-solid-hover`, focus halkası ve primary butonun temas gölgesini iki temada birden değiştirir. Her preset açık ve koyu temada kontrast açısından kontrol edilmiştir (solid dolgular beyaz metni ≥ 4.5:1 ile taşır).
+
+```html
+<section data-accent="green">…</section>
+```
+
+`data-accent` ve `data-theme` birbirinden bağımsızdır: aynı elemana ya da farklı atalara koyabilirsin. Dört preset dışındaki bir marka rengi için token'ları kendin ez; bkz. [Markaya göre tema](/tr/docs/integrations/theming).
+
+## data-density
+
+Kontrol yüksekliklerini, kontrol iç boşluklarını ve iki küçük metin boyutunu değiştirir:
+
+| | `compact` | `default` | `comfortable` |
+|---|---|---|---|
+| Button / select (`md`) | 28px | 32px | 36px |
+| Input (`md`) | 28px | 32px | 36px |
+| İkon butonu (`md`) | 24px | 28px | 32px |
+| `--mrd-text-sm` | 13px | 14px | 14.5px |
+
+Yoğunluk yalnızca hassas işaretçilerde (fine pointer) uygulanır. Dokunmatik ekranlarda (`pointer: coarse`) Merid her zaman daha büyük dokunmatik boyutlarını kullanır (40px kontroller, 44px input'lar); böylece `compact` dokunulamayacak kadar küçük hedefler üretmez.
+
+## Aktif değerleri JavaScript'te okumak
+
+Attribute'lar düz CSS'tir; çözülmüş değeri elemandan oku:
+
+```ts
+const accent = getComputedStyle(element).getPropertyValue("--mrd-accent").trim();
+```
+
+Statik değerler için (görsele render'lanan grafikler, e-postalar, native uygulamalar) her tema × accent ve yoğunluk kombinasyonunu export eden [`@merid/tokens`](/tr/docs/integrations/design-tokens)'ı kullan.
+
+## Yön (RTL)
+
+Attribute'lar `dir="rtl"` ile birlikte çalışır. Component CSS'i yalnızca mantıksal özellikler (logical properties) kullanır, sayfalama okları ve switch'in topuzu `:dir(rtl)` altında aynalanır, RadioGroup ve SegmentedControl'de ok tuşları görsel yönü izler. Neyin kapsandığını ve neyin kapsanmadığını görmek için [Uluslararasılaştırma ve RTL](/tr/docs/integrations/rtl) sayfasına bak.
+
+## Zorunlu renkler
+
+Windows Yüksek Kontrast'ta ve diğer zorunlu renk (forced colors) modlarında attribute'ların görünür bir etkisi yoktur: sistem paleti tasarım gereği tüm renklerin yerini alır. Merid orada da kullanılabilir kalır: butonlar, input'lar, select'ler, segment öğeleri ve sayfalama 1px `ButtonText` kenarlık alır; checkbox, radio ve switch'ler `Canvas` / `ButtonText` ile çizilir ve açıkken `Highlight` ile dolar; focus 2px'lik bir `Highlight` outline'ıdır; seçili tab, sayfa ve segment bir `Highlight` outline'ı alır; yüzen yüzeyler (card, dialog, drawer, popover, menü, select listesi, toast, tooltip) `CanvasText` kenarlık alır. Yoğunluk yine uygulanır.

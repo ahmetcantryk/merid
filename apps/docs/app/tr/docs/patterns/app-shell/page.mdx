@@ -1,0 +1,98 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { AppShellExample } from "@/examples/tr/patterns/app-shell";
+
+export const metadata = docMetadata("tr", "/docs/patterns/app-shell", {
+  title: "Navigasyon layout'ları",
+  description: "Üst bar, breadcrumb ve hesap menüsü içeren, küçük ekranlarda bir drawer'a dönüşen sidebar'lı uygulama iskeleti.",
+});
+
+# Navigasyon layout'ları
+
+Standart uygulama iskeleti (app shell): gri yüzey (tray) üzerinde sabit bir sidebar, breadcrumb ve hesap menüsü içeren bir üst bar ve arka plan üzerinde sayfa içeriği. Dar ekranlarda sidebar, bir menü butonunun arkasındaki `Drawer`'a taşınır.
+
+<ComponentPreview align="start" code={`<div className="shell">
+  <aside className="shell__sidebar">
+    <SidebarNav aria-label="Ana menü">
+      <SidebarNav.Item as={RouterLink} href="/" icon={<Home {...ICON} />} active>Genel bakış</SidebarNav.Item>
+      <SidebarNav.Item href="/inbox" icon={<Inbox {...ICON} />} trailing={<Badge>4</Badge>}>Gelen kutusu</SidebarNav.Item>
+      <SidebarNav.Group label="Sabitlenenler">…</SidebarNav.Group>
+    </SidebarNav>
+  </aside>
+  <div className="shell__main">
+    <header className="shell__topbar">
+      <Drawer.Root open={open} onOpenChange={setOpen}>
+        <Drawer.Trigger asChild><IconButton label="Menüyü aç" icon={<Menu {...ICON} />} /></Drawer.Trigger>
+        <Drawer.Content side="left" size="sm" closeLabel="Kapat">…aynı SidebarNav…</Drawer.Content>
+      </Drawer.Root>
+      <Breadcrumb.Root aria-label="Sayfa konumu">…</Breadcrumb.Root>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger asChild><button aria-label="Hesap menüsü"><Avatar name="Ada Lovelace" size="sm" /></button></DropdownMenu.Trigger>
+        <DropdownMenu.Content placement="bottom-end">…</DropdownMenu.Content>
+      </DropdownMenu.Root>
+    </header>
+    <main className="shell__content">…</main>
+  </div>
+</div>`}>
+  <AppShellExample />
+</ComponentPreview>
+
+<Callout tone="success">
+  `Drawer.Content`'in otomatik kapatma butonu varsayılan olarak “Close”, `Breadcrumb.Root`'un etiketi de “Breadcrumb” olarak okunur. Türkçe arayüzde `closeLabel="Kapat"` ve `aria-label="Sayfa konumu"` ver.
+</Callout>
+
+## CSS
+
+İskelet bir layout'tur, dolayısıyla senin elindedir: Merid'in token'larını kullanan birkaç satırlık grid.
+
+```css
+.shell {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  min-height: 100dvh;
+}
+.shell__sidebar {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  overflow-y: auto;
+  padding: var(--mrd-space-4) var(--mrd-space-3);
+  background: var(--mrd-tray);
+  border-inline-end: 1px solid var(--mrd-line);
+}
+.shell__topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--mrd-z-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding-inline: var(--mrd-space-4);
+  background: var(--mrd-bg);
+  border-bottom: 1px solid var(--mrd-line);
+}
+.shell__content { padding: var(--mrd-space-8) var(--mrd-gutter); }
+.shell__menu { display: none; }
+
+@media (width < 720px) {
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .shell__sidebar { display: none; }
+  .shell__menu { display: inline-flex; }
+}
+```
+
+Önizleme, pencereye değil önizleme genişliğine tepki versin diye 520px'te bir container query kullanır; uygulamada media query kullan.
+
+## Kullanım ilkeleri
+
+- **Tek navigasyon, iki container.** Aynı `SidebarNav`'ı hem sidebar'da hem drawer'da render'la; böylece ikisi hiçbir zaman birbirinden kopmaz. Navigasyon olduğunda drawer'ı kapat.
+- **Aktif state route'tan gelir.** `active`'i mevcut path'e göre ver; bu `aria-current="page"` atar. Bir router kullanıyorsan onun link'ini `as` ile ver; bkz. [Next.js](/tr/docs/integrations/nextjs) ve [React Router ve TanStack](/tr/docs/integrations/routers).
+- **İç içe koyma, grupla.** Bölümler için `SidebarNav.Group` etiketlerini kullan. İki seviyeden derin navigasyon sidebar'a değil sayfaya (tab'lar) aittir.
+- **Üst bar bağlam ve hesap içindir**, ana navigasyon için değil: başta breadcrumb, sonda bildirimler ve hesap menüsü.
+- **Landmark'lar.** Sidebar'daki `nav`, `aria-label` ile etiketlenir; sayfa içeriğini `<main>` ile sar ve ilk focus alabilen eleman olarak bir "İçeriğe geç" linki ekle.
+- **İkonlar** 16px ve 1.75 çizgi kalınlığında; bkz. [İkonlar](/tr/docs/integrations/icons).
+
+## Varyasyonlar
+
+- **Yalnızca üst navigasyon**: altıdan az bölümü olan uygulamalarda sidebar'ı kaldır, üst bar'da `Tabs` ya da linkler kullan.
+- **Ayarlar alt navigasyonu**: içerik alanında ikinci bir `SidebarNav`; [Ayarlar sayfaları](/tr/docs/patterns/settings)'ndaki gibi.

@@ -1,0 +1,84 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { KbdDemo, KbdSizes, KbdChord } from "@/examples/tr/kbd";
+
+export const metadata = docMetadata("tr", "/docs/components/kbd", {
+  title: "Kbd",
+  description: "Klavye kısayollarını göstermek için bir tuş başlığı.",
+});
+
+# Kbd
+
+Metinde, menülerde ve tooltip'lerde klavye kısayollarını göstermek için bir tuş başlığı. Semantik bir `<kbd>` render'lar.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/kbd">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Text>
+  Aramak için <Kbd>Ctrl</Kbd> <Kbd>K</Kbd> tuşlarına bas.
+</Text>`}>
+  <KbdDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Kbd } from "@merid/react";
+```
+
+## Örnekler
+
+### Boyutlar
+
+`md` (varsayılan) gövde metninde durur; `sm` menü öğelerine, tooltip'lere ve yoğun satırlara sığar.
+
+<ComponentPreview code={`<Kbd size="sm">Esc</Kbd>
+<Kbd size="md">Esc</Kbd>`}>
+  <KbdSizes />
+</ComponentPreview>
+
+### Tuş kombinasyonları
+
+Her tuş için bir `Kbd` render'la, ayracı aralarına düz metin olarak koy.
+
+<ComponentPreview code={`<Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>P</Kbd>`}>
+  <KbdChord />
+</ComponentPreview>
+
+## API referansı
+
+`Kbd` ref'ini `<kbd>`'ye iletir ve diğer HTML attribute'larını olduğu gibi geçirir.
+
+<PropsTable rows={[
+  { name: "size", type: '"sm" | "md"', default: '"md"', description: "Tuş başlığının boyutu." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-kbd</code></td><td>Kök {"<kbd>"}</td></tr>
+    <tr><td><code>data-size</code></td><td><code>sm</code> · <code>md</code></td></tr>
+  </tbody>
+</table>
+
+## Erişilebilirlik
+
+- `<kbd>` metni olarak okunur. Ekran okuyucuların kötü seslendirdiği sembolleri yazıyla ver: “⌃” yerine “Ctrl”i tercih et ya da glifin yanına bir [VisuallyHidden](/tr/docs/components/visually-hidden) ad ekle.
+- Kbd etkileşimli değildir; bir kısayolu belgeler, onu bağlamaz.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Her tuş için bir başlık kullan; kullanıcıların klavyelerinde gördüğü tuş adlarını yaz.</p>}
+  dont={<p>“Ctrl+Shift+P” gibi bir kısayolun tamamını tek bir başlığa koymak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Code](/tr/docs/components/code): satır içi kod ve komutlar.
+- [Text](/tr/docs/components/text): Kbd'nin genellikle içinde durduğu metin.

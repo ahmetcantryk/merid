@@ -1,0 +1,98 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { SkeletonDemo, SkeletonText, SkeletonShapes } from "@/examples/tr/skeleton";
+
+export const metadata = docMetadata("tr", "/docs/components/skeleton", {
+  title: "Skeleton",
+  description: "İçerik yüklenirken onun şeklini koruyan, parıldayan bir yer tutucu.",
+});
+
+# Skeleton
+
+İçerik yüklenirken onun şeklini koruyan bir yer tutucu; veri geldiğinde layout zıplamaz. 1,4 saniyede bir parıldar, azaltılmış hareket açıkken sabit kalır.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/skeleton">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Stack direction="row" gap={3} align="center" aria-busy="true">
+  <Skeleton circle width={40} height={40} />
+  <Stack gap={2} style={{ flex: 1 }}>
+    <Skeleton width="60%" />
+    <Skeleton width="90%" height={12} />
+  </Stack>
+</Stack>`}>
+  <SkeletonDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Skeleton } from "@merid/react";
+```
+
+## Örnekler
+
+### Metin bloğu
+
+Boyut prop'u verilmezse skeleton tam genişlikte ve `1em` yüksekliğindedir, yani çevresindeki metnin bir satırı kadar. Bloğun paragraf gibi okunması için son satırı kısalt.
+
+<ComponentPreview code={`<Stack gap={2} aria-busy="true">
+  <Skeleton height={24} width="50%" />
+  <Skeleton />
+  <Skeleton />
+  <Skeleton width="75%" />
+</Stack>`}>
+  <SkeletonText />
+</ComponentPreview>
+
+### Şekiller
+
+Sayılar piksel, string'ler herhangi bir CSS uzunluğudur. `circle` tamamen yuvarlar; `width` ve `height`'ı eşit ver.
+
+<ComponentPreview code={`<Skeleton width={120} height={80} />
+<Skeleton circle width={48} height={48} />
+<Skeleton width={96} height={36} />`}>
+  <SkeletonShapes />
+</ComponentPreview>
+
+## API referansı
+
+`aria-hidden` bir `span` render'lar ve ref'ini iletir. `style` boyut prop'larından sonra birleştirilir, yani onları ezebilir.
+
+<PropsTable rows={[
+  { name: "width", type: "number | string", default: '"100%"', description: "CSS genişliği; sayı verilirse px." },
+  { name: "height", type: "number | string", default: '"1em"', description: "CSS yüksekliği; sayı verilirse px." },
+  { name: "circle", type: "boolean", default: "false", description: "Daire render'lar. width ve height'ı eşit ver." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-skeleton</code></td><td>Kök <code>{"<span>"}</code></td></tr>
+    <tr><td><code>data-shape</code></td><td><code>rect</code> · <code>circle</code></td></tr>
+  </tbody>
+</table>
+
+Skeleton'ın component değişkeni yok. Parıltı `--mrd-tray`'den `--mrd-tray-2`'ye gider; Merid'in izin verdiği tek gradyan bu.
+
+## Erişilebilirlik
+
+- Her skeleton `aria-hidden`'dır; tek başına yardımcı teknolojiye hiçbir şey söylemez.
+- Yüklenen bölgeye `aria-busy="true"` ver, içerik gelince kaldır. Sesli bir ipucu için görsel olarak gizli bir “Yükleniyor…” status'u ekle.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Gerçek layout'u yakından taklit et: aynı avatar boyutu, aynı satır sayısı. Böylece içerik yüklendiğinde hiçbir şey kaymaz.</p>}
+  dont={<p>Yaklaşık 300ms'den kısa sürede yüklenen içerik için ya da hata ve boş sonuçlar için skeleton göstermek.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Spinner](/tr/docs/components/spinner): içerik için değil, aksiyonlar için.
+- [EmptyState](/tr/docs/components/empty-state): yükleme sonunda hiçbir şey çıkmazsa ne gösterileceği.

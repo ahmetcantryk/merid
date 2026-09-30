@@ -1,0 +1,155 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import {
+  TabsBasic,
+  TabsControlled,
+  TabsVertical,
+} from "@/examples/tabs";
+import { tabsBasicCode, tabsControlledCode, tabsVerticalCode } from "@/examples/tabs.code";
+
+export const metadata = docMetadata("en", "/docs/components/tabs", {
+  title: "Tabs",
+  description: "Line tabs for switching between related panels.",
+});
+
+# Tabs
+
+Line tabs for switching between related panels.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/tabs">Source</a>
+</div>
+
+<ComponentPreview code={tabsBasicCode} align="start">
+  <TabsBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Tabs } from "@merid/react";
+```
+
+## Anatomy
+
+```tsx
+<Tabs.Root>
+  <Tabs.List>
+    <Tabs.Trigger value="a" />
+  </Tabs.List>
+  <Tabs.Panel value="a" />
+</Tabs.Root>
+```
+
+- **Root** holds the selected value and orientation.
+- **List** is the `role="tablist"`; give it an `aria-label`.
+- **Trigger** is one `role="tab"` button, linked to its panel by `value`.
+- **Panel** is the `role="tabpanel"`. Inactive panels unmount unless `forceMount` is set.
+
+## Examples
+
+### Controlled
+
+<ComponentPreview code={tabsControlledCode} align="start">
+  <TabsControlled />
+</ComponentPreview>
+
+### Vertical
+
+With `orientation="vertical"`, the list stacks and ArrowUp/ArrowDown move between tabs.
+
+<ComponentPreview code={tabsVerticalCode} align="start">
+  <TabsVertical />
+</ComponentPreview>
+
+## API reference
+
+### Root
+
+Accepts every `<div>` attribute except `defaultValue` and `onChange`.
+
+<PropsTable rows={[
+  { name: "value", type: "string", description: "Controlled selected tab value." },
+  { name: "defaultValue", type: "string", default: "\"\"", description: "Initially selected tab value when uncontrolled." },
+  { name: "onValueChange", type: "(value: string) => void", description: "Called when the selected tab changes." },
+  { name: "orientation", type: "\"horizontal\" | \"vertical\"", default: "\"horizontal\"", description: "Arrow-key axis." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the root element." },
+]} />
+
+### List
+
+Accepts every `<div>` attribute.
+
+<PropsTable rows={[
+  { name: "variant", type: "\"line\"", default: "\"line\"", description: "Visual style. Only \"line\" today." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the tablist." },
+]} />
+
+### Trigger
+
+Accepts every `<button>` attribute except `value`.
+
+<PropsTable rows={[
+  { name: "value", type: "string", required: true, description: "Value identifying this tab and its panel." },
+  { name: "disabled", type: "boolean", description: "Disable the tab; it is skipped by arrow keys." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the tab button." },
+]} />
+
+### Panel
+
+Accepts every `<div>` attribute.
+
+<PropsTable rows={[
+  { name: "value", type: "string", required: true, description: "Value of the tab that owns this panel." },
+  { name: "forceMount", type: "boolean", default: "false", description: "Keep the panel mounted (hidden) while inactive." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the panel." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-tabs` | Root |
+| `.mrd-tabs__list` | List |
+| `.mrd-tabs__trigger` | Trigger |
+| `.mrd-tabs__panel` | Panel |
+
+| Attribute | On | Values |
+|---|---|---|
+| `data-orientation` | Root | `horizontal`, `vertical` |
+| `data-variant` | List | `line` |
+| `data-state` | Trigger, Panel | `active`, `inactive` |
+| `data-disabled` | Trigger | present when disabled |
+| `aria-selected="true"` | Trigger | the selected tab (styled with the accent underline) |
+
+## Accessibility
+
+Follows the WAI-ARIA [Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) with automatic activation: moving focus selects the tab. Only the selected tab is in the tab order; the panel itself is focusable so keyboard users can reach content without interactive elements.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Move focus into the tab list (selected tab), then to the panel." },
+  { keys: ["ArrowRight"], action: "Horizontal: next tab, wrapping. Selects it." },
+  { keys: ["ArrowLeft"], action: "Horizontal: previous tab, wrapping. Selects it." },
+  { keys: ["ArrowDown"], action: "Vertical: next tab, wrapping. Selects it." },
+  { keys: ["ArrowUp"], action: "Vertical: previous tab, wrapping. Selects it." },
+  { keys: ["Home"], action: "First tab." },
+  { keys: ["End"], action: "Last tab." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Use tabs for peer views of the same object, with short one- or two-word labels.</p>}
+  dont={<p>Use tabs for sequential steps — use a <a href="/docs/components/stepper">Stepper</a> — or for switching a small control mode, which is a <a href="/docs/components/segmented-control">SegmentedControl</a>.</p>}
+/>
+
+<DoDont
+  do={<p>Keep the tab row on one line; move rarely used views into a menu.</p>}
+  dont={<p>Nest a second row of tabs inside a panel.</p>}
+/>
+
+## Related
+
+- [SegmentedControl](/docs/components/segmented-control)
+- [Accordion](/docs/components/accordion)
+- [SidebarNav](/docs/components/sidebar-nav)

@@ -1,0 +1,55 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/brand", {
+  title: "Logo ve kullanım",
+  description: "Merid işareti ve yazı logosu, boşluk alanı, renk versiyonları ve kaçınılması gerekenler.",
+});
+
+# Logo ve kullanım
+
+Merid işareti bir dalgadır. İki tepesi bir M oluşturur, çizgi ise onları geçip devam eder: meridyen boyunca ilerleyen bir sinyal gibi, yani kütüphanenin layout'larının dayandığı tek referans çizgisi boyunca. Çizginin kendi altından geçtiği yerde gölgeye düşer (açık modda mürekkep rengi, koyu modda koyu mavi). Bu da düz şekle gradyan kullanmadan derinlik verir. Accent'i dalga taşır; marka mavisini tam gücünde kullandığı tek yer burasıdır. İşaret, Geist SemiBold ile -0.035em harf aralığında dizilmiş küçük harfli bir yazı logosuyla eşleşir. Yazı logosu SVG dosyalarında path'e çevrilmiştir, böylece her yerde aynı render'lanır. Birleşik logoda dalga, yazı logosunun x yüksekliğine oturur ve biraz daha uzundur, böylece yuvarlak harflerde olduğu gibi tepeleri çizgiyi hafifçe aşar.
+
+## Versiyonlar
+
+<div className="brand-grid">
+  <figure className="brand-tile">
+    <div className="brand-tile__stage" data-bg="light"><img src="/brand/logo-light.svg" alt="Açık zemin üzerinde Merid logosu" /></div>
+    <figcaption><span>Açık</span><a href="/brand/logo-light.svg" download>SVG</a></figcaption>
+  </figure>
+  <figure className="brand-tile">
+    <div className="brand-tile__stage" data-bg="dark"><img src="/brand/logo-dark.svg" alt="Koyu zemin üzerinde Merid logosu" /></div>
+    <figcaption><span>Koyu</span><a href="/brand/logo-dark.svg" download>SVG</a></figcaption>
+  </figure>
+  <figure className="brand-tile">
+    <div className="brand-tile__stage" data-bg="tray"><img src="/brand/logo-mono.svg" alt="Tek renk Merid logosu" /></div>
+    <figcaption><span>Tek renk</span><a href="/brand/logo-mono.svg" download>SVG</a></figcaption>
+  </figure>
+</div>
+
+İşaretin tek başına hali [açık](/brand/mark-light.svg), [koyu](/brand/mark-dark.svg) ve [tek renk](/brand/mark-mono.svg) olarak mevcut. Beyaz tek renk logo [/brand/logo-mono-white.svg](/brand/logo-mono-white.svg), uygulama ikonu [/icon.svg](/icon.svg) adresinde.
+
+## Boşluk alanı
+
+Logonun çevresinde dalga yüksekliğinin yarısı kadar boşluk bırak. Diğer logolar ve çerçevenin kenarı dahil hiçbir şey bu alana girmemeli.
+
+<div className="clearspace"><img src="/brand/logo-light.svg" alt="Çevresinde boşluk alanı işaretlenmiş Merid logosu" /></div>
+
+## En küçük boyut
+
+Tam logo ekranda en az 72px genişlikte olmalı. Bunun altında yalnızca işareti, en az 10px yükseklikte kullan. Favicon boyutlarında uygulama ikonunu kullan: accent zemin üzerinde beyaz dalga, accent-strong gölgelerle.
+
+## Renk
+
+Açık versiyonu beyaz ya da `--mrd-tray` üzerinde, koyu versiyonu dark mode'da `--mrd-bg` üzerinde kullan. Renk kullanılamadığında (gravür, tek renk baskı, tek renkli bir rozet) tek renk versiyonu kullan. Dalga her zaman açık modda `#3f63f5`, koyu modda `#6b8aff`'tır; gölgeleri açık modda mürekkep rengi `#0f1219`, koyu modda `#1a2a6e`'dir.
+
+## Kaçınılacaklar
+
+<DoDont
+  doTitle="Yap"
+  dontTitle="Kaçın"
+  do={<ul><li>Verilen SVG dosyalarını olduğu gibi kullan.</li><li>Logoyu düz ve sakin zeminlere yerleştir.</li><li>Logoyu orantılı ölçekle.</li></ul>}
+  dont={<ul><li>Dalganın rengini değiştirme, gölgelerini kaldırma ya da yeniden renklendirme.</li><li>Tepeleri yeniden çizme ya da çizgiyi düzleştirme.</li><li>Gradyan, gölge, kontur ya da efekt ekleme.</li><li>Yazı logosunu döndürme, esnetme ya da başka bir font'la yeniden dizme.</li><li>Logoyu kalabalık fotoğrafların üzerine yerleştirme.</li></ul>}
+/>
+
+## Ad
+
+Metin içinde adı büyük M ile **Merid** olarak yaz. Yazı logosu bilerek küçük harflidir. Paket adı `@merid/react`.

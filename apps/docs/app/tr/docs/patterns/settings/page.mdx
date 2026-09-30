@@ -1,0 +1,63 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { SettingsPageExample, DangerZone } from "@/examples/tr/patterns/settings";
+
+export const metadata = docMetadata("tr", "/docs/patterns/settings", {
+  title: "Ayarlar sayfaları",
+  description: "Yan navigasyonlu bölümlere ayrılmış ayarlar, açık kaydetme, anında uygulanan switch'ler ve bir tehlikeli bölge.",
+});
+
+# Ayarlar sayfaları
+
+Bir ayarlar sayfası, kategorilerden oluşan bir `SidebarNav` ile bölümlerden oluşan bir kolondur. Her bölümün solunda bir başlık ve tek cümlelik açıklama, sağında kontroller durur; dar ekranlarda tek kolona iner.
+
+<ComponentPreview align="start" code={`<form onChange={() => setDirty(true)} onSubmit={save}>
+  <Stack gap={8}>
+    <Section title="Profil" description="Yorumlarda ve üye listesinde görünür.">
+      <Field label="Görünen ad"><Input name="name" defaultValue="Ada Lovelace" /></Field>
+      <Field label="Saat dilimi"><NativeSelect name="tz">…</NativeSelect></Field>
+    </Section>
+    <Separator />
+    <Section title="Bildirimler" description="E-posta en fazla saatte bir gönderilir.">
+      <Switch name="mentions" defaultChecked>Bahsetmeler ve yanıtlar</Switch>
+    </Section>
+    <Separator />
+    <Stack direction="row" justify="end" gap={2} align="center">
+      {dirty ? <Text size="sm" tone="muted">Kaydedilmemiş değişiklikler var</Text> : null}
+      <Button type="submit" variant="primary" disabled={!dirty} loading={saving}>Değişiklikleri kaydet</Button>
+    </Stack>
+  </Stack>
+</form>`}>
+  <SettingsPageExample />
+</ComponentPreview>
+
+## Kaydetme modeli
+
+Her sayfa için birini seç ve ona bağlı kal:
+
+- **Açık kaydetme** (yukarıdaki örnek): metin alanları ve başkalarını etkileyen her şey için. Sonda tek bir Kaydet butonu olur, bir şey değişene kadar devre dışı kalır, yanında "Kaydedilmemiş değişiklikler var" yazar. Kaydı bir toast ile onayla.
+- **Anında uygulama**: yalnızca switch'lerden oluşan sayfalar için (bildirim tercihleri, feature flag'ler). Her `Switch` değiştiğinde kaydeder; hata olursa bir toast gösterir ve switch'i eski haline döndürür. Kaydet butonu olmaz.
+
+İkisini asla aynı bölümde karıştırma: kullanıcı hangi değişikliklerin kaydedildiğini anlayamaz.
+
+## Yapı
+
+- Veri modeline göre değil, kullanıcıların aradığı şeye göre grupla: Hesap, Çalışma alanı, Faturalandırma, Güvenlik.
+- `SidebarNav` mevcut kategoriyi `active` ile işaretler; bu da `aria-current="page"` atar. Her kategori kendi route'udur.
+- Bölümler `Separator` ile ayrılır, başlıklar `Heading size="sm"`, açıklamalar soluk (muted) metin olur.
+- Etiketleri kısa tut; açıklamayı `Field`'ın `description`'ına ya da Switch'in etiketine koy.
+
+## Tehlikeli bölge
+
+Yıkıcı hesap aksiyonları en sona, kendi kenarlıklı kartına konur ve onay açan bir `danger` butonla tetiklenir; bkz. [Onaylar](/tr/docs/patterns/confirmations).
+
+<ComponentPreview code={`<Card variant="outline" padding="md">
+  <Stack direction="row" gap={4} justify="between" align="center" wrap>
+    <Stack gap={1}>
+      <Text weight="medium" tone="ink" size="sm">Hesabı sil</Text>
+      <Text size="sm" tone="muted">Profilini siler ve tüm çalışma alanlarından çıkarır.</Text>
+    </Stack>
+    <Button variant="danger" size="sm">Hesabı sil</Button>
+  </Stack>
+</Card>`}>
+  <DangerZone />
+</ComponentPreview>

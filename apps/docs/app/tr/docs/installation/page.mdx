@@ -1,0 +1,87 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/installation", {
+  title: "Kurulum",
+  description: "@merid/react'i npm, pnpm veya Yarn ile kur, Next.js ya da Vite projene ekle.",
+});
+
+# Kurulum
+
+Merid tek bir paket olarak yayınlanır: `@merid/react`. Component'ler, stil dosyası ve paketle gelen Geist ile Geist Mono variable font'ları bu pakettedir.
+
+## Gereksinimler
+
+- React 18 veya 19 ve ona uyan `react-dom`.
+- `node_modules` içinden CSS import edebilen bir bundler. Next.js, Vite, Remix, Parcel ve webpack'in hepsi bunu yapabilir.
+- Yerel geliştirme için Node.js 20 veya üstü.
+
+## Paketi kur
+
+```bash
+npm i @merid/react
+```
+
+Diğer paket yöneticileriyle:
+
+```bash
+pnpm add @merid/react
+yarn add @merid/react
+```
+
+## Stil dosyasını bir kez import et
+
+Bütün component'ler tek bir stil dosyasından beslenir. Onu bir kez, ağacın olabildiğince üst noktasında import et.
+
+```tsx
+import "@merid/react/styles.css";
+```
+
+Yalnızca design token'ları istiyorsan, örneğin renkleri ve boşlukları kendi component'lerinde kullanmak için, onun yerine `@merid/react/tokens.css` dosyasını import et. Bu dosyada custom property'ler ve font tanımı vardır, component kuralı yoktur.
+
+`styles.css` küçük bir base layer içerir: `box-sizing: border-box`, doküman font'u, renkler, başlık kalınlığı ve focus halkası. Bunlar `:root`'a sıfır specificity ile uygulanır, yani senin yazdığın her kural kazanır. Uygulaman kendi doküman stillerini getiriyorsa ve bunların hiçbirini istemiyorsan, onun yerine `@merid/react/components.css` dosyasını (token'lar + component'ler, base yok) import et. Component'ler `box-sizing`'i kendi elemanlarına kendileri verir, bu yüzden iki durumda da aynı görünürler.
+
+## Next.js (App Router)
+
+Stil dosyasını root layout'ta import et. Temel tipografi ve focus stilleri tüm sayfaya uygulanır, herhangi bir sınıf eklemen gerekmez.
+
+```tsx
+// app/layout.tsx
+import "@merid/react/styles.css";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+`transpilePackages` ayarı gerekmez: paket derlenmiş ES modülleri ve CommonJS olarak gelir. Etkileşimli component'ler kendi `"use client"` direktiflerini taşır, bu yüzden onları doğrudan server component'lere import edebilirsin.
+
+## Vite
+
+Stil dosyasını giriş dosyanda, kendi CSS'inden önce import et. Böylece kaynak sırasında senin kuralların Merid'inkilerden sonra gelir.
+
+```tsx
+// src/main.tsx
+import "@merid/react/styles.css";
+import "./app.css";
+import { createRoot } from "react-dom/client";
+import { App } from "./App";
+
+createRoot(document.getElementById("root")!).render(<App />);
+```
+
+## Font
+
+Inter Variable paketle birlikte gelir ve paketin içinden `@font-face` ile yüklenir. Tarayıcılar bir font'u yalnızca onu kullanan metin olduğunda indirir. Kendi font aileni tanımlarsan dosya hiç istenmez:
+
+```css
+:root {
+  --mrd-font-sans: "Your Sans", system-ui, sans-serif;
+}
+```
+
+<Callout title="Lisans">
+  Inter, SIL Open Font License 1.1 ile dağıtılır. Lisans metni pakette, font dosyasının yanında gelir.
+</Callout>

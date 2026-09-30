@@ -1,0 +1,106 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { TextareaDemo, TextareaResize, TextareaStates, TextareaControlled } from "@/examples/tr/textarea";
+
+export const metadata = docMetadata("tr", "/docs/components/textarea", {
+  title: "Textarea",
+  description: "Boyutlandırma kontrolü ve Field bağlantısı olan çok satırlı metin girişi.",
+});
+
+# Textarea
+
+Yorum, açıklama ve mesajlar için çok satırlı bir metin girişi. Bir [Field](/tr/docs/components/field) içinde kullanıldığında id'sini, açıklamasını, hatasını ve zorunlu state'ini oradan alır.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/textarea">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Textarea aria-label="Mesaj" placeholder="Bir mesaj yaz…" />`}>
+  <TextareaDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Textarea } from "@merid/react";
+```
+
+## Örnekler
+
+### Boyutlandırma
+
+Boyutlandırma tutamacı varsayılan olarak `vertical`'dır. Layout'un değişmemesi gerekiyorsa `none` kullan, `both`'u ise nadiren.
+
+<ComponentPreview code={`<Textarea rows={2} placeholder="resize vertical (varsayılan)" />
+<Textarea rows={2} resize="none" placeholder="resize none" />
+<Textarea rows={2} resize="both" placeholder="resize both" />`}>
+  <TextareaResize />
+</ComponentPreview>
+
+### Geçersiz ve devre dışı
+
+<ComponentPreview code={`<Textarea rows={2} invalid defaultValue="Çok kısa" />
+<Textarea rows={2} disabled defaultValue="Devre dışı" />`}>
+  <TextareaStates />
+</ComponentPreview>
+
+### Sayaçlı controlled kullanım
+
+<ComponentPreview code={`const [value, setValue] = useState("");
+
+<Textarea
+  aria-label="Durum"
+  value={value}
+  maxLength={140}
+  onChange={(event) => setValue(event.target.value)}
+/>
+<Text size="xs" tone="muted" numeric>{value.length} / 140</Text>`}>
+  <TextareaControlled />
+</ComponentPreview>
+
+## API referansı
+
+`Textarea` ref'ini `<textarea>`'ya iletir ve diğer tüm native attribute'ları olduğu gibi geçirir.
+
+<PropsTable rows={[
+  { name: "resize", type: '"none" | "vertical" | "both"', default: '"vertical"', description: "Kullanıcının boyutlandırma tutamacı." },
+  { name: "invalid", type: "boolean", description: "Geçersiz stilini (`data-invalid`) ve `aria-invalid`'i zorlar. Field içinde, Field'ın hatasından türetilir." },
+  { name: "rows", type: "number", default: "4", description: "Görünen metin satırı sayısı (native)." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-textarea</code></td><td>{"<textarea>"} elemanı</td></tr>
+    <tr><td><code>data-resize</code></td><td><code>none</code> · <code>vertical</code> · <code>both</code></td></tr>
+    <tr><td><code>data-invalid</code></td><td>Geçersizken bulunur; danger kenarlığını çizer (anlamı <code>aria-invalid</code> taşır)</td></tr>
+  </tbody>
+</table>
+
+Textarea, `input.css` içindeki Input stillerini paylaşır; boyut varyantı yoktur.
+
+## Erişilebilirlik
+
+- [Field](/tr/docs/components/field) ya da [Label](/tr/docs/components/label) ile görünür bir etiket ver.
+- Karakter sayacı gösteriyorsan `maxLength` ile görünen sayıyı senkron tut; sayacı `aria-describedby` ile bağlamayı düşün.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Focus'u textarea'ya taşır." },
+  { keys: ["Enter"], action: "Satır sonu ekler (formu göndermez)." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p><code>rows</code> değerini beklenen cevap uzunluğuna göre ayarla; kişi ne kadar yazacağını anlasın.</p>}
+  dont={<p>Ad ya da e-posta gibi tek satırlık değerler için Textarea kullanmak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Input](/tr/docs/components/input): tek satırlık metin.
+- [Field](/tr/docs/components/field): etiket, açıklama ve hata bağlantısı.

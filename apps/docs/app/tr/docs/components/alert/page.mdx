@@ -1,0 +1,130 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { AlertDemo, AlertTones, AlertAction, AlertNoIcon } from "@/examples/tr/alert";
+
+export const metadata = docMetadata("tr", "/docs/components/alert", {
+  title: "Alert",
+  description: "Bilgi, başarı, uyarı ve hata mesajları için renkli bir yüzey üzerinde satır içi bildirim.",
+});
+
+# Alert
+
+Yumuşak renkli bir yüzey üzerinde satır içi bildirim. Kullanıcıya bulunduğu sayfayı etkileyen bir şeyi söyler: başarısız bir senkronizasyon, biten bir deneme süresi, başarılı bir ödeme.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/alert">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Alert title="Yeni sürüm hazır">
+  En son özellikleri almak için sayfayı yenile.
+</Alert>`}>
+  <AlertDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Alert } from "@merid/react";
+```
+
+## Örnekler
+
+### Tonlar
+
+Her tonun kendi arka plan rengi, metin rengi ve ikonu vardır.
+
+<ComponentPreview code={`<Alert tone="info" title="Bilgin olsun">Bakım pazar günü 02:00 UTC'de yapılacak.</Alert>
+<Alert tone="success" title="Ödeme alındı">Faturan ödendi olarak işaretlendi.</Alert>
+<Alert tone="warning" title="Depolama alanı dolmak üzere">Kotanın %92'sini kullandın.</Alert>
+<Alert tone="danger" title="Senkronizasyon başarısız">Sunucuya ulaşılamadı. Bağlantını kontrol et.</Alert>`}>
+  <AlertTones />
+</ComponentPreview>
+
+### Aksiyonlu
+
+`action`, bir buton ya da kapatma için bir [IconButton](/tr/docs/components/icon-button) koyabileceğin sondaki slot'tur. Kapatma işi sende: alert'i kendi state'inden kaldır.
+
+<ComponentPreview code={`<Alert
+  tone="warning"
+  title="Deneme süren 3 gün sonra bitiyor"
+  action={<IconButton size="sm" label="Kapat" icon={<CloseIcon />} onClick={() => setOpen(false)} />}
+>
+  Çalışma alanını kaybetmemek için bir ödeme yöntemi ekle.
+</Alert>
+
+<Alert tone="info" action={<Button size="sm">İncele</Button>}>
+  2 üye onay bekliyor.
+</Alert>`}>
+  <AlertAction />
+</ComponentPreview>
+
+### İkonsuz ve live region'sız
+
+`icon={null}` ikonu gizler; herhangi bir node verirsen ikonun yerini alır. `live="off"` rolü olmayan sade bir not render'lar.
+
+<ComponentPreview code={`<Alert icon={null} live="off">
+  İkonu ve live region'ı olmayan sade bir not.
+</Alert>`}>
+  <AlertNoIcon />
+</ComponentPreview>
+
+## API referansı
+
+Bir `div` render'lar; ref ve diğer div attribute'ları iletilir (native `title` attribute'unun yerini `title` prop'u alır).
+
+<PropsTable rows={[
+  { name: "tone", type: '"info" | "success" | "warning" | "danger"', default: '"info"', description: "Renk tonu ve varsayılan ikon." },
+  { name: "title", type: "ReactNode", description: "Orta kalınlıkta ilk satır." },
+  { name: "icon", type: "ReactNode | null", description: "Baştaki ikon. Varsayılan olarak tona ait simge; null ikonu gizler." },
+  { name: "action", type: "ReactNode", description: "Sondaki slot; örneğin bir aksiyon butonu ya da kapatma için bir IconButton." },
+  { name: "live", type: '"polite" | "assertive" | "off"', description: "Live region davranışı. Varsayılan olarak info/success için polite, warning/danger için assertive." },
+  { name: "children", type: "ReactNode", description: "Gövde metni." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-alert</code></td><td>Root</td></tr>
+    <tr><td><code>.mrd-alert__icon</code></td><td>İkon slot'u</td></tr>
+    <tr><td><code>.mrd-alert__content</code>, <code>__title</code>, <code>__body</code></td><td>Metin kolonu</td></tr>
+    <tr><td><code>.mrd-alert__action</code></td><td>Sondaki aksiyon slot'u</td></tr>
+    <tr><td><code>data-tone</code></td><td><code>info</code> · <code>success</code> · <code>warning</code> · <code>danger</code></td></tr>
+  </tbody>
+</table>
+
+Component değişkenleri: `--mrd-alert-bg` ve `--mrd-alert-fg`; her ton için ilgili `-soft` ve `-strong` token'larına ayarlanır.
+
+```css
+.billing .mrd-alert[data-tone="info"] {
+  --mrd-alert-bg: var(--mrd-tray);
+  --mrd-alert-fg: var(--mrd-ink);
+}
+```
+
+## Erişilebilirlik
+
+- `polite`, `role="status"`; `assertive`, `role="alert"` render'lar. Live region'lar yalnızca mount olduktan sonra değişen içeriği okur; bu yüzden `hidden`'ı açıp kapatmak yerine alert'i olay gerçekleştiğinde render'la.
+- Sayfa yüklenirken zaten orada olan sabit notlar için `live="off"` kullan; ekran okuyucular araya girmesin.
+- İkon dekoratiftir; anlamı başlık ve gövde taşır, o yüzden yalnızca renge güvenme.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Ne olduğunu ve sırada ne yapılacağını bir iki cümlede söyle: “Senkronizasyon başarısız. Bağlantını kontrol et.”</p>}
+  dont={<p>Sayfanın üstüne birden çok alert yığmak ya da hata olmayan bir şey için <code>danger</code> kullanmak.</p>}
+/>
+
+<DoDont
+  do={<p>Alert'i mevcut sayfaya bağlı ve görünür kalması gereken mesajlar için kullan.</p>}
+  dont={<p>Kısa ömürlü onaylar için kullanmak; onlar bir <a href="/tr/docs/components/toast">Toast</a> işi.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Toast](/tr/docs/components/toast): geçici bildirimler için.
+- [AlertDialog](/tr/docs/components/alert-dialog): yanıt bekleyen onaylar için.
+- [Badge](/tr/docs/components/badge): kompakt durum etiketleri için.

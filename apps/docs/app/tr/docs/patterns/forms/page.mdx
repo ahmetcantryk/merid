@@ -1,0 +1,68 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { FormLayoutExample } from "@/examples/tr/patterns/forms";
+
+export const metadata = docMetadata("tr", "/docs/patterns/forms", {
+  title: "Formlar",
+  description: "Merid component'leriyle form layout'u, doğrulama zamanlaması, hata özetleri ve gönderim state'leri.",
+});
+
+# Formlar
+
+Bir form; bir `Card` (ya da düz bir bölüm), bir başlık, `Field`'lardan oluşan bir `Grid` veya `Stack` ve sonda tek bir primary aksiyondan oluşur. Doğrulamayı görmek için formu bir kez geçersiz bir e-postayla, sunucu hatasını görmek için de `@fail.test` ile biten bir adresle gönder.
+
+<ComponentPreview align="start" code={`<form onSubmit={onSubmit} noValidate aria-busy={busy}>
+  <Stack gap={6}>
+    {status === "error" ? <Alert tone="danger" title="Talebini gönderemedik" live="assertive">…</Alert> : null}
+    <Grid columns={2} gap={4} minItemWidth={200}>
+      <Field label="Ad soyad" required error={errors.name}><Input name="name" autoComplete="name" /></Field>
+      <Field label="İş e-postası" required error={errors.email}><Input name="email" type="email" /></Field>
+    </Grid>
+    <Field label="Ne geliştiriyorsun?" description="İsteğe bağlı."><Textarea name="notes" rows={3} /></Field>
+    <Separator />
+    <Stack direction="row" gap={2} justify="end">
+      <Button type="reset" variant="ghost">Temizle</Button>
+      <Button type="submit" variant="primary" loading={busy}>Talebi gönder</Button>
+    </Stack>
+  </Stack>
+</form>`}>
+  <FormLayoutExample />
+</ComponentPreview>
+
+## Layout
+
+- Varsayılan olarak **tek kolon**. Kısa ve birbiriyle ilgili iki alanı (ad ve soyad, şehir ve posta kodu) `Grid columns={2} minItemWidth={200}` ile yan yana koy; yer kalmadığında tek kolona düşer.
+- **Etiketler kontrollerin üstünde** ve her zaman görünür. Placeholder örnek içindir, asla etiketin yerini tutmaz.
+- **Gruplar arasında `gap={6}`, alanlar arasında `gap={4}`.** Aksiyonlardan önceki bir `Separator` formun bittiğini gösterir.
+- **Aksiyonlar sonda ve sona hizalı.** Primary en dışta, secondary (ghost) hemen yanında. Bir formda tek bir primary buton olur.
+- Zorunlu alanları `Field` üzerinde `required` ile işaretle. Alanların çoğu isteğe bağlıysa zorunlu olanları işaretle ve bunu en üstte bir kez belirt.
+
+## Doğrulama zamanlaması
+
+| Ne zaman | Ne yapılır |
+|---|---|
+| Yazarken | Hiçbir şey. Kullanıcının henüz bitirmediği bir alanı hatalı gösterme. |
+| Blur'da | Alanda bir değer varsa, çıkılan alanı doğrula. |
+| Gönderimde | Her şeyi doğrula, tüm hataları göster, focus'u ilk geçersiz alana taşı. |
+| Bir hatadan sonra | Mesaj düzeltilir düzeltilmez kaybolsun diye o alanı her değişiklikte yeniden doğrula. |
+
+`Field`'ın `error` prop'u ARIA bağlantısını kurar: kontrole `aria-invalid` ekler, mesajı `aria-describedby`'a bağlar. Focus'u ilk geçersiz kontrole taşırsan ekran okuyucu kullanıcıları hatayı hemen duyar:
+
+```tsx
+event.currentTarget.querySelector<HTMLElement>("[aria-invalid='true']")?.focus();
+```
+
+Tarayıcının kendi baloncukları Field'ın mesajlarıyla yarışmasın diye formda `noValidate` kullan; ama `type="email"`, `autoComplete` ve `inputMode`'u koru. Mobil klavyeleri ve otomatik doldurmayı bunlar yönetir.
+
+## Gönderim state'leri
+
+- **Gönderiliyor.** `Button loading` genişliğini korur, bir spinner gösterir, `aria-busy` atar ve tıklamaları yok sayar. Alanları da devre dışı bırak ve forma `aria-busy` ver.
+- **Sunucu hatası.** Formun en üstünde, `live="assertive"` ile bir `Alert tone="danger"`. Kullanıcının girdiklerini koru. Ne olduğunu ve bir şeyin kaydedilip kaydedilmediğini söyle.
+- **Başarı.** Ya başka bir sayfaya git ya da aynı yerde bir `Alert tone="success"` gösterip formu sıfırla. Küçük kayıtlar (ayarlar) için bir toast yeterli; bkz. [Ayarlar sayfaları](/tr/docs/patterns/settings).
+
+## Hata mesajları
+
+Neyin yanlış gittiğini değil, ne yapılması gerektiğini söyle: "Geçersiz giriş" değil, "Geçerli bir iş e-postası gir". Mesajları tek satırda tut. Bir alanı geçersiz diye asla temizleme.
+
+## Bir form kütüphanesiyle
+
+Aynı layout React Hook Form ve Zod ile de çalışır; bkz. [React Hook Form](/tr/docs/integrations/react-hook-form) ve [Zod ile doğrulama](/tr/docs/integrations/zod).

@@ -1,0 +1,113 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { IconButtonDemo, IconButtonVariants, IconButtonSizes, IconButtonDisabled } from "@/examples/icon-button";
+
+export const metadata = docMetadata("en", "/docs/components/icon-button", {
+  title: "IconButton",
+  description: "A square, icon-only button with a required accessible label.",
+});
+
+# IconButton
+
+A square, icon-only button for toolbars, dismiss actions and dense rows. Because there is no visible text, `label` is required and becomes the `aria-label`.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/icon-button">Source</a>
+</div>
+
+<ComponentPreview code={`<IconButton label="Settings" icon={<SettingsIcon />} />`}>
+  <IconButtonDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { IconButton } from "@merid/react";
+```
+
+## Examples
+
+### Variants
+
+`ghost` (the default) is transparent until hovered — right for toolbars and card corners. `secondary` gives the button a visible surface; `primary` uses the accent fill and should be as rare as a primary [Button](/docs/components/button).
+
+<ComponentPreview code={`<IconButton variant="ghost" label="Settings" icon={<SettingsIcon />} />
+<IconButton variant="secondary" label="Delete" icon={<TrashIcon />} />
+<IconButton variant="primary" label="Add item" icon={<PlusIcon />} />`}>
+  <IconButtonVariants />
+</ComponentPreview>
+
+### Sizes
+
+Squares of 32px (`sm`), 36px (`md`, default) and 40px (`lg`).
+
+<ComponentPreview code={`<IconButton size="sm" label="Close" icon={<CloseIcon />} />
+<IconButton size="md" label="Close" icon={<CloseIcon />} />
+<IconButton size="lg" label="Close" icon={<CloseIcon />} />`}>
+  <IconButtonSizes />
+</ComponentPreview>
+
+### Disabled
+
+<ComponentPreview code={`<IconButton variant="secondary" label="Delete" icon={<TrashIcon />} disabled />`}>
+  <IconButtonDisabled />
+</ComponentPreview>
+
+## API reference
+
+Forwards its ref to the `<button>` and passes native button attributes through, except `children` and `aria-label` (use `label`). `type` defaults to `"button"`.
+
+<PropsTable rows={[
+  { name: "label", type: "string", required: true, description: "Accessible name, rendered as aria-label." },
+  { name: "icon", type: "ReactNode", required: true, description: "The icon. Rendered inside an aria-hidden span." },
+  { name: "variant", type: '"ghost" | "secondary" | "primary"', default: '"ghost"', description: "Visual style." },
+  { name: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Square size: sm 32px, md 36px, lg 40px." },
+  { name: "type", type: '"button" | "submit" | "reset"', default: '"button"', description: "Native button type." },
+  { name: "disabled", type: "boolean", description: "Native disabled attribute." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-icon-button</code></td><td>Root <code>{"<button>"}</code></td></tr>
+    <tr><td><code>.mrd-icon-button__icon</code></td><td>Icon wrapper (aria-hidden)</td></tr>
+    <tr><td><code>data-variant</code></td><td><code>ghost</code> · <code>secondary</code> · <code>primary</code></td></tr>
+    <tr><td><code>data-size</code></td><td><code>sm</code> · <code>md</code> · <code>lg</code></td></tr>
+  </tbody>
+</table>
+
+Component variable: `--mrd-icon-button-size`, set per size from the `--mrd-icon-button-sm/md/lg` tokens.
+
+```css
+.toolbar .mrd-icon-button {
+  --mrd-icon-button-size: 28px;
+}
+```
+
+## Accessibility
+
+- `label` is required by the types and becomes `aria-label`; the icon is `aria-hidden`.
+- Write the label as the action (“Delete invoice”), not the icon's shape (“Trash can”).
+- Pair with [Tooltip](/docs/components/tooltip) so sighted mouse users can discover the label too.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Moves focus to the button." },
+  { keys: ["Enter"], action: "Activates the button." },
+  { keys: ["Space"], action: "Activates the button." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Use icon buttons for well-known actions — close, settings, more — where the icon is unambiguous.</p>}
+  dont={<p>Use an icon button for a primary or unfamiliar action. If people must guess, use a <code>Button</code> with a label.</p>}
+/>
+
+## Related
+
+- [Button](/docs/components/button) — actions with a visible label.
+- [Tooltip](/docs/components/tooltip) — shows the label on hover and focus.

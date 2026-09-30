@@ -1,0 +1,137 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { FieldDemo, FieldError, FieldControlled, FieldUncontrolled, FieldDisabled } from "@/examples/tr/field";
+
+export const metadata = docMetadata("tr", "/docs/components/field", {
+  title: "Field",
+  description: "Etiket, kontrol, yardım metni ve hata mesajını id'ler ve ARIA ile birbirine bağlar.",
+});
+
+# Field
+
+Tek bir kontrolü etiketi, yardım metni ve hata mesajıyla birlikte sarar ve bunları context üzerinden birbirine bağlar: `htmlFor`, `aria-describedby`, `aria-invalid`, `required` ve `disabled`.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/field">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Field label="E-posta" description="Yalnızca makbuzlar için kullanıyoruz.">
+  <Input type="email" placeholder="sen@sirket.com" />
+</Field>`}>
+  <FieldDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Field } from "@merid/react";
+```
+
+## Örnekler
+
+### Hata
+
+`error` verildiğinde kontrol `aria-invalid="true"` ve geçersiz stilini alır, mesaj da `aria-describedby`'ına eklenir. Temizlemek için `undefined`, `null` ya da `false` ver.
+
+<ComponentPreview code={`<Field label="Kullanıcı adı" error="Bu kullanıcı adı alınmış." required>
+  <Input defaultValue="ahmet" />
+</Field>`}>
+  <FieldError />
+</ComponentPreview>
+
+### Controlled input
+
+Değeri Field tutmaz. Child'ı her zamanki gibi kontrol et, `error`'u da kendi state'inden türet.
+
+<ComponentPreview code={`const [name, setName] = useState("");
+const error = name.length > 0 && name.length < 3 ? "En az 3 karakter kullan." : undefined;
+
+<Field label="Proje adı" description="Kenar çubuğunda görünür." error={error}>
+  <Input value={name} onChange={(event) => setName(event.target.value)} />
+</Field>`}>
+  <FieldControlled />
+</ComponentPreview>
+
+### Uncontrolled input
+
+`defaultValue` ve `name` ile kontrol kendi state'ini tutar ve formla birlikte gönderilir.
+
+<ComponentPreview code={`<Field label="Hakkında">
+  <Textarea name="bio" defaultValue="İstanbul'da tasarımcı." />
+</Field>`}>
+  <FieldUncontrolled />
+</ComponentPreview>
+
+### Devre dışı
+
+`disabled` kontrolü devre dışı bırakır ve etiketi soluklaştırır.
+
+<ComponentPreview code={`<Field label="Plan" disabled>
+  <NativeSelect defaultValue="team">
+    <option value="free">Ücretsiz</option>
+    <option value="team">Ekip</option>
+  </NativeSelect>
+</Field>`}>
+  <FieldDisabled />
+</ComponentPreview>
+
+### Field'ı hangi kontroller okur
+
+[Input](/tr/docs/components/input), [Textarea](/tr/docs/components/textarea) ve [NativeSelect](/tr/docs/components/native-select) bağlantıların tamamını okur. Kontrolün kendisine verilen prop'lar her zaman Field'ınkilerin önüne geçer.
+
+- [Checkbox](/tr/docs/components/checkbox) adını Field etiketinden alır. Kendi children'ı yine tıklanabilir bir etiket olarak render'lanır ama açıklamasına (`aria-describedby`) dönüşür; böylece hiçbir zaman iki kez etiketlenmez.
+- [Switch](/tr/docs/components/switch), Field id'sini (böylece Field etiketi onu adlandırır), `aria-describedby`, `aria-invalid` ve `disabled`'ı alır.
+- [RadioGroup](/tr/docs/components/radio) adını Field etiketinden alır (`aria-labelledby`); açıklamasını, hatasını, `required` ve `disabled`'ı da devralır.
+
+Her kontrol aynı kurala uyar: semantiği `aria-invalid` taşır, stili `data-invalid` yönetir.
+
+## API referansı
+
+`Field` bir `<div>` render'lar, ref'ini iletir ve diğer div attribute'larını olduğu gibi geçirir.
+
+<PropsTable rows={[
+  { name: "label", type: "ReactNode", required: true, description: "Görünen etiket, htmlFor ile kontrole bağlanır." },
+  { name: "children", type: "ReactNode", required: true, description: "Tek bir Merid kontrolü; bağlantıları context'ten alır." },
+  { name: "description", type: "ReactNode", description: "Kontrolün altındaki yardım metni, aria-describedby ile bağlanır." },
+  { name: "error", type: "ReactNode", description: "Hata mesajı. Kontrole aria-invalid atar ve mesajı bağlar." },
+  { name: "required", type: "boolean", default: "false", description: "Kontrolü zorunlu yapar ve görsel işareti gösterir." },
+  { name: "disabled", type: "boolean", default: "false", description: "Kontrolü devre dışı bırakır ve etiketi soluklaştırır." },
+  { name: "id", type: "string", description: "Kontrol için açık bir id. Verilmezse üretilir." },
+]} />
+
+Özel kontroller için `useFieldContext()` bağlantı bilgilerini (`controlId`, `labelId`, `descriptionId`, `errorId`, `invalid`, `required`, `disabled`) döndürür; Field dışında `null` döner.
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-field</code></td><td>Kök {"<div>"}</td></tr>
+    <tr><td><code>.mrd-field__description</code></td><td>Yardım metni</td></tr>
+    <tr><td><code>.mrd-field__error</code></td><td>Hata mesajı</td></tr>
+    <tr><td><code>data-invalid</code></td><td><code>error</code> verildiğinde bulunur</td></tr>
+    <tr><td><code>data-disabled</code></td><td><code>disabled</code> olduğunda bulunur</td></tr>
+  </tbody>
+</table>
+
+Etiket bir [Label](/tr/docs/components/label)'dır (`.mrd-label`).
+
+## Erişilebilirlik
+
+- Etiket kontrolü adlandırır; açıklama ve hata, `aria-describedby` üzerinden ondan sonra okunur.
+- Hata bir live region değildir. Gönderimde doğrulama yapıyorsan mesaj duyurulsun diye focus'u ilk geçersiz kontrole taşı.
+- `required` kontrolün kendisine atanır; böylece ekran okuyucu bunu duyurur ve native doğrulama devreye girer.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Sorunun nasıl düzeltileceğini söyleyen hata mesajları yaz: “En az 3 karakter kullan.”</p>}
+  dont={<p>“Geçersiz giriş” göstermek ya da bir Field'ın içine birden fazla kontrol koymak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Label](/tr/docs/components/label): Field'ın render'ladığı etiket.
+- [Input](/tr/docs/components/input), [Textarea](/tr/docs/components/textarea), [NativeSelect](/tr/docs/components/native-select), [Checkbox](/tr/docs/components/checkbox), [Switch](/tr/docs/components/switch), [RadioGroup](/tr/docs/components/radio): Field'ı okuyan kontroller.

@@ -1,0 +1,190 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import {
+  ButtonDemo,
+  ButtonVariants,
+  ButtonSizes,
+  ButtonIcons,
+  ButtonLoading,
+  ButtonDisabled,
+  ButtonFullWidth,
+} from "@/examples/tr/button";
+
+export const metadata = docMetadata("tr", "/docs/components/button", {
+  title: "Button",
+  description: "Bir aksiyonu tetikler: form göndermek, dialog açmak, bir değişikliği kaydetmek.",
+});
+
+# Button
+
+Bir aksiyonu tetikler: form göndermek, dialog açmak, bir değişikliği kaydetmek. Sonuç başka bir sayfaya gitmekse buton yerine link kullan.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/button">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Button variant="primary">Değişiklikleri kaydet</Button>
+<Button>Vazgeç</Button>`}>
+  <ButtonDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Button } from "@merid/react";
+```
+
+## Örnekler
+
+### Varyantlar
+
+`primary`, ekrandaki tek accent aksiyondur. `secondary` (varsayılan) geri kalan her şey içindir; `ghost` toolbar'larda ve yoğun satırlarda sessizce durur; `danger` geri alınamayan aksiyonları onaylar; `link` satır içi metin gibi görünür ama buton semantiğini korur.
+
+<ComponentPreview code={`<Button variant="primary">Primary</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="ghost">Ghost</Button>
+<Button variant="danger">Danger</Button>
+<Button variant="link">Link</Button>`}>
+  <ButtonVariants />
+</ComponentPreview>
+
+### Boyutlar
+
+`sm` 36px, `md` 44px (varsayılan), `lg` 50px yüksekliğindedir. Yan yana duran kontroller aynı taban çizgisini paylaşsın diye boyutu komşu input'larla eşleştir.
+
+<ComponentPreview code={`<Button size="sm">Küçük</Button>
+<Button size="md">Orta</Button>
+<Button size="lg">Büyük</Button>`}>
+  <ButtonSizes />
+</ComponentPreview>
+
+### İkonlu
+
+`leadingIcon` ve `trailingIcon` herhangi bir node alır. İkisi de `aria-hidden` span'lere sarılır; butonun adını yalnızca etiket belirler.
+
+<ComponentPreview code={`<Button variant="primary" leadingIcon={<PlusIcon />}>Yeni proje</Button>
+<Button trailingIcon={<ArrowRightIcon />}>Devam et</Button>
+<Button variant="danger" leadingIcon={<TrashIcon />}>Sil</Button>`}>
+  <ButtonIcons />
+</ComponentPreview>
+
+### Yükleniyor
+
+`loading` butonun üstüne bir spinner koyar, layout zıplamasın diye genişliği korur, `aria-busy` ve `aria-disabled` atar ve tıklamaları yutar. Buton focus alabilir kalır, yani istek sürerken klavye focus'u kaybolmaz.
+
+<ComponentPreview code={`const [saving, setSaving] = useState(false);
+
+<Button
+  variant="primary"
+  loading={saving}
+  onClick={() => {
+    setSaving(true);
+    window.setTimeout(() => setSaving(false), 1500);
+  }}
+>
+  Değişiklikleri kaydet
+</Button>`}>
+  <ButtonLoading />
+</ComponentPreview>
+
+### Devre dışı
+
+`disabled` native attribute'tur: buton tab sırasından çıkar ve tıklamaları yok sayar. Bir aksiyonu sessizce devre dışı bırakmak yerine neden kullanılamadığını açıklamayı tercih et.
+
+<ComponentPreview code={`<Button variant="primary" disabled>Yayınla</Button>
+<Button disabled>Dışa aktar</Button>`}>
+  <ButtonDisabled />
+</ComponentPreview>
+
+### Tam genişlik
+
+`fullWidth` butonu container'ı boyunca uzatır. Dar formlarda ve mobilde işe yarar.
+
+<ComponentPreview code={`<Button variant="primary" fullWidth>Hesap oluştur</Button>`}>
+  <ButtonFullWidth />
+</ComponentPreview>
+
+### Router link'i olarak
+
+Router'ının link'ini buton görünümüyle render'lamak için `asChild` kullan. Böylece navigasyon gerçek bir link olarak kalır:
+
+```tsx
+import Link from "next/link";
+
+<Button asChild variant="primary">
+  <Link href="/signup">Ücretsiz başla</Link>
+</Button>
+```
+
+## API referansı
+
+`Button` ref'ini `<button>`'a iletir, diğer tüm native buton attribute'larını olduğu gibi geçirir. `type` varsayılan olarak `"button"`'dır; form içindeki bir buton, `type="submit"` vermediğin sürece formu göndermez.
+
+<PropsTable rows={[
+  { name: "variant", type: '"primary" | "secondary" | "ghost" | "danger" | "link"', default: '"secondary"', description: "Görsel stil. primary, ekrandaki tek accent aksiyondur." },
+  { name: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Yükseklik ve padding: sm 36px, md 44px, lg 50px." },
+  { name: "loading", type: "boolean", default: "false", description: "Spinner gösterir, genişliği korur, aria-busy atar ve tıklamaları engeller." },
+  { name: "leadingIcon", type: "ReactNode", description: "Etiketten önceki ikon. Yardımcı teknolojilerden gizlenir." },
+  { name: "trailingIcon", type: "ReactNode", description: "Etiketten sonraki ikon. Yardımcı teknolojilerden gizlenir." },
+  { name: "fullWidth", type: "boolean", default: "false", description: "Butonu container'ının genişliğine uzatır." },
+  { name: "asChild", type: "boolean", default: "false", description: "`<button>` yerine tek child elemanı (örneğin bir router `<Link>`'i) bu butonun stiliyle render'lar. Props, ref, handler'lar ve className child'a birleştirilir; child'ın içeriği butonun içerik span'ine sarılır. `disabled`/`loading`, `aria-disabled`'a dönüşür ve tıklamaları engeller. Server component'lerde de çalışır." },
+  { name: "type", type: '"button" | "submit" | "reset"', default: '"button"', description: "Native buton tipi." },
+  { name: "disabled", type: "boolean", description: "Native disabled attribute'u." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-button</code></td><td>Kök <code>{"<button>"}</code></td></tr>
+    <tr><td><code>.mrd-button__content</code></td><td>İkonları ve etiketi saran eleman (yüklenirken gizlenir)</td></tr>
+    <tr><td><code>.mrd-button__icon</code></td><td>Baştaki / sondaki ikon slot'u</td></tr>
+    <tr><td><code>.mrd-button__spinner</code></td><td>Yüklenirken görünen spinner</td></tr>
+    <tr><td><code>data-variant</code></td><td><code>primary</code> · <code>secondary</code> · <code>ghost</code> · <code>danger</code> · <code>link</code></td></tr>
+    <tr><td><code>data-size</code></td><td><code>sm</code> · <code>md</code> · <code>lg</code></td></tr>
+    <tr><td><code>data-loading</code></td><td>Yüklenirken bulunur</td></tr>
+    <tr><td><code>data-full-width</code></td><td><code>fullWidth</code> verildiğinde bulunur</td></tr>
+  </tbody>
+</table>
+
+Boyuta göre atanan component değişkenleri: `--mrd-button-height`, `--mrd-button-padding`, `--mrd-button-font`.
+
+```css
+.toolbar .mrd-button {
+  --mrd-button-height: 32px;
+  --mrd-button-padding: 0 12px;
+}
+```
+
+## Erişilebilirlik
+
+- Native bir `<button>` render'lar; Enter ve Space ile tetiklenir, formlara katılır.
+- Görünen etiket, butonun erişilebilir adıdır. Yalnızca ikondan oluşan aksiyonlar için `label`'ı zorunlu olan [IconButton](/tr/docs/components/icon-button)'ı kullan.
+- `loading` sırasında buton `aria-busy="true"` ve `aria-disabled="true"` bildirir ama focus'u korur.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Focus'u butona taşır." },
+  { keys: ["Enter"], action: "Butonu tetikler." },
+  { keys: ["Space"], action: "Butonu tetikler." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Her görünümde tek bir <code>primary</code> buton kullan ve ne olacağını söyleyen bir fiille etiketle: “Değişiklikleri kaydet”, “Davet gönder”.</p>}
+  dont={<p>İki primary butonu yan yana koymak ya da “Tamam”, “Gönder” gibi belirsiz etiketler kullanmak.</p>}
+/>
+
+<DoDont
+  do={<p>İstek sürerken <code>loading</code> kullan; buton yerini ve focus'u korur.</p>}
+  dont={<p>Etiketi elle spinner'la değiştirmek ya da istek boyunca butonu devre dışı bırakmak. Focus kaybolur, genişlik zıplar.</p>}
+/>
+
+## İlgili sayfalar
+
+- [IconButton](/tr/docs/components/icon-button): kare, yalnızca ikonlu aksiyonlar.
+- [Link](/tr/docs/components/link): aksiyon değil, navigasyon için.
+- [Spinner](/tr/docs/components/spinner): `loading`'in kullandığı gösterge.

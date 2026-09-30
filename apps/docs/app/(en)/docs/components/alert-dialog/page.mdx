@@ -1,0 +1,166 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { AlertDialogDemo } from "@/examples/alert-dialog";
+
+export const metadata = docMetadata("en", "/docs/components/alert-dialog", {
+  title: "AlertDialog",
+  description: "A modal confirmation that interrupts and requires a response.",
+});
+
+# AlertDialog
+
+A modal confirmation that requires a response. It does not close on outside press and focuses Cancel first.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" /> <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/alert-dialog">View source</a>
+</div>
+
+## Import
+
+```tsx
+import { AlertDialog } from "@merid/react";
+```
+
+<ComponentPreview code={`<AlertDialog.Root>
+  <AlertDialog.Trigger asChild>
+    <Button variant="danger">Delete project</Button>
+  </AlertDialog.Trigger>
+  <AlertDialog.Content>
+    <AlertDialog.Title>Delete “Northwind”?</AlertDialog.Title>
+    <AlertDialog.Description>
+      The project and its 24 files are removed permanently. This cannot be undone.
+    </AlertDialog.Description>
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+      <AlertDialog.Action tone="danger">Delete project</AlertDialog.Action>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>`}>
+  <AlertDialogDemo />
+</ComponentPreview>
+
+## Anatomy
+
+```tsx
+<AlertDialog.Root>
+  <AlertDialog.Trigger />
+  <AlertDialog.Content>
+    <AlertDialog.Title />
+    <AlertDialog.Description />
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel />
+      <AlertDialog.Action />
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>
+```
+
+Root, Trigger, Title, Description and Footer are the same parts as [Dialog](/docs/components/dialog). **Cancel** is a secondary Button that dismisses and receives initial focus; **Action** is a primary (or `tone="danger"`) Button that confirms and closes. There is no icon close button.
+
+## Examples
+
+### Destructive confirmation
+
+The example above is the canonical use: name the object, state the consequence, and repeat the verb on the Action button.
+
+### Keeping the dialog open while working
+
+Call `event.preventDefault()` in the Action's `onClick` to keep the dialog open, then close it yourself with controlled state once the work finishes.
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<AlertDialog.Root open={open} onOpenChange={setOpen}>
+  <AlertDialog.Content>
+    <AlertDialog.Title>Delete project?</AlertDialog.Title>
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+      <AlertDialog.Action
+        onClick={async (event) => {
+          event.preventDefault();
+          await deleteProject();
+          setOpen(false);
+        }}
+      >
+        Delete
+      </AlertDialog.Action>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>
+```
+
+## API reference
+
+### AlertDialog.Root
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled open state." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Initial open state when uncontrolled." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Called when the open state should change." },
+  { name: "children", type: "ReactNode", description: "Trigger, Content and anything else sharing this dialog's state." },
+]} />
+
+### AlertDialog.Content
+
+Accepts every `<div>` attribute except `role`. Outside press never closes it.
+
+<PropsTable rows={[
+  { name: "closeOnEscape", type: "boolean", default: "true", description: "Close on Escape." },
+  { name: "initialFocus", type: "RefObject<HTMLElement | null>", description: "Element to focus when opened; defaults to [data-autofocus] (the Cancel button), then the first tabbable element." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal target. `undefined` uses `document.body`; `null` renders nothing until the target exists." },
+  { name: "showClose", type: "boolean", default: "false", description: "Render the standard top-right icon close button automatically. Skipped while you render your own icon `Close`." },
+  { name: "closeLabel", type: "string", default: '"Close"', description: "Accessible name of the automatic close button." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the dialog element." },
+]} />
+
+### AlertDialog.Action
+
+Accepts every `<button>` attribute. Renders a Button styled by `tone`. Closes on click unless the handler calls `event.preventDefault()`.
+
+<PropsTable rows={[
+  { name: "tone", type: "AlertDialogActionTone", default: "\"primary\"", description: "Button style: `primary`, or `danger` for destructive actions. `AlertDialogActionTone` is `\"primary\" | \"danger\"`." },
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element (e.g. your own `Button`) instead of a `<button>`, merging props, ref and handlers." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the button." },
+]} />
+
+### AlertDialog.Cancel
+
+Accepts every `<button>` attribute. Renders a secondary Button and carries `data-autofocus`, so it receives initial focus.
+
+<PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element (e.g. your own `Button`) instead of a `<button>`, merging props, ref and handlers." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the button." },
+]} />
+
+Trigger (including `asChild`), Title, Description and Footer take the same props as their [Dialog](/docs/components/dialog#api-reference) counterparts.
+
+## Styling
+
+AlertDialog reuses the dialog classes (`.mrd-dialog__backdrop`, `.mrd-dialog`, `.mrd-dialog__title`, `.mrd-dialog__description`, `.mrd-dialog__footer`). The surface carries `data-kind="alert"`, which narrows it to 440px, and `data-state="open"` while mounted. Cancel renders as `.mrd-button` with `data-variant="secondary"`; Action as `.mrd-button` with `data-variant` set from `tone`. AlertDialog.Content has no `size` prop.
+
+## Accessibility
+
+Follows the [WAI-ARIA Alert and Message Dialogs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/). Content has `role="alertdialog"`, `aria-modal="true"` and is labelled by the Title and described by the Description.
+
+<KeyboardTable rows={[
+  { keys: ["Space", "Enter"], action: "On the trigger, opens the dialog; focus moves to Cancel." },
+  { keys: ["Tab"], action: "Moves between Cancel, Action and other controls, wrapping inside the dialog." },
+  { keys: ["Shift", "Tab"], action: "Moves focus backwards, wrapping inside the dialog." },
+  { keys: ["Esc"], action: "Dismisses, like Cancel, and returns focus to the trigger." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do="Say exactly what will happen and repeat the verb on the Action: “Delete project”."
+  dont="Ask “Are you sure?” with Yes and No buttons."
+/>
+
+<DoDont
+  do="Reserve alert dialogs for destructive or irreversible actions."
+  dont="Confirm routine actions that can be undone; show a toast with Undo instead."
+/>
+
+## Related
+
+- [Dialog](/docs/components/dialog) for tasks that are not confirmations.
+- [Toast](/docs/components/toast) for undoable feedback.

@@ -1,0 +1,118 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { stepperBasicCode, stepperVerticalCode } from "@/examples/tr/stepper.code";
+import { StepperBasic, StepperVertical } from "@/examples/tr/stepper";
+
+export const metadata = docMetadata("tr", "/docs/components/stepper", {
+  title: "Stepper",
+  description: "Çok adımlı bir akıştaki ilerlemeyi gösteren, salt okunur bir gösterge.",
+});
+
+# Stepper
+
+Çok adımlı bir akıştaki ilerlemeyi gösteren, salt okunur bir gösterge.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/stepper">Kaynak kod</a>
+</div>
+
+<Callout tone="success">
+  `aria-label` ve `statusLabels` varsayılan olarak İngilizcedir. Türkçe arayüzlerde ikisini de Türkçe ver; örnekler bunu `STATUS_LABELS` sabitiyle yapıyor.
+</Callout>
+
+<ComponentPreview code={stepperBasicCode}>
+  <StepperBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Stepper } from "@merid/react";
+```
+
+## Anatomi
+
+```tsx
+<Stepper.Root current={0}>
+  <Stepper.Step title="…" description="…" />
+</Stepper.Root>
+```
+
+- `Stepper.Root`: sıralı bir liste. `current`, aktif adımın sıfırdan başlayan index'idir; önceki adımlar tamamlanmış, sonrakiler sırada bekliyor sayılır.
+- `Stepper.Step`: numaralı bir işaret (tamamlandığında onay işareti), bir başlık ve isteğe bağlı bir açıklamadan oluşan tek adım.
+
+## Örnekler
+
+### Açıklamalarla dikey
+
+<ComponentPreview code={stepperVerticalCode} align="start">
+  <StepperVertical />
+</ComponentPreview>
+
+### Responsive davranış
+
+Yatay yönde başlıklar ve açıklamalar tek satırda kalır, sığmayınca üç noktayla kısalır; string başlıklar tam metni bir `title` attribute'unda saklar. Stepper kendi genişliğini ölçer (viewport'u değil, bir CSS container query'si kullanır): 560px'in altında kompakt bir layout'a geçer; yalnızca geçerli adım başlığını gösterir, diğerleri numaralı ya da onaylı işaretlerine küçülür. Küçülen başlıklar erişilebilirlik ağacında kalır; ekran okuyucular her iki durumda da tüm adımları duyurur, dar kolonlar da JavaScript ya da yön değişikliği gerektirmez.
+
+## API referansı
+
+### Stepper.Root
+
+`<ol>` render'lar ve onun tüm HTML attribute'larını kabul eder.
+
+<PropsTable
+  rows={[
+    { name: "current", type: "number", required: true, description: "Geçerli adımın sıfırdan başlayan index'i. Ondan önceki adımlar tamamlanmış sayılır." },
+    { name: "orientation", type: '"horizontal" | "vertical"', default: '"horizontal"', description: "Layout yönü." },
+    { name: "aria-label", type: "string", default: '"Progress"', description: "Adım listesinin erişilebilir adı. Türkçe arayüzlerde Türkçe bir değer ver." },
+    { name: "ref", type: "Ref<HTMLOListElement>", description: "Listeye iletilen ref." },
+  ]}
+/>
+
+### Stepper.Step
+
+`<li>` render'lar ve `title` dışındaki HTML attribute'larını kabul eder. `Stepper.Root`'un doğrudan child'ı olmalı.
+
+<PropsTable
+  rows={[
+    { name: "title", type: "ReactNode", required: true, description: "Adımın adı." },
+    { name: "description", type: "ReactNode", description: "İsteğe bağlı açıklama satırı." },
+    { name: "statusLabels", type: 'Partial<Record<"complete" | "current" | "upcoming", string>>', default: '{ complete: "Completed", current: "Current step", upcoming: "Not started" }', description: "Her adımın sonuna eklenen, ekran okuyucuya yönelik durum kelimeleri. Türkçe arayüzlerde Türkçe değerler ver." },
+  ]}
+/>
+
+## Stil verme
+
+- `.mrd-stepper[data-orientation]`: kök liste, `horizontal` ya da `vertical`.
+- `.mrd-stepper__step[data-state]`: `complete`, `current` ya da `upcoming`.
+- `.mrd-stepper__marker`: 28px'lik daire; sıradaki adımda `--mrd-tray`, geçerli adımda 1,5px'lik `--mrd-accent` halka, tamamlanmış adımda `--mrd-accent-soft`.
+- `.mrd-stepper__title` / `.mrd-stepper__description`: metin; geçerli adımda başlık `--mrd-ink` rengine döner.
+- `.mrd-stepper__step::after`: adımlar arasındaki 1px'lik `--mrd-line` bağlayıcı.
+
+## Erişilebilirlik
+
+Stepper'lar için bir APG deseni yok. Stepper statik, sıralı bir listedir; [APG landmark ve liste rehberinin](https://www.w3.org/WAI/ARIA/apg/practices/structural-roles/) yapılandırılmış içerik için önerdiği yapının aynısı. Etkileşimli değildir.
+
+- Liste varsayılan olarak "Progress" adını alır; akışı anlatan bir `aria-label` ver.
+- Geçerli adım `aria-current="step"` taşır.
+- Her adım görsel olarak gizli bir durum kelimesiyle biter ("Completed", "Current step", "Not started"); yerelleştirme için `statusLabels` ile değiştirilebilir.
+- İşaretler `aria-hidden`'dır; numara listedeki sırayla aktarılır.
+
+Adımlar focus almaz, bu yüzden klavye etkileşimi yoktur. Kullanıcı bir adıma geri dönebiliyorsa adımın içeriğine link ya da buton koy.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do="Adım başlıklarını kısa ve isim gibi tut; adım sayısı üç ile altı arasında olsun."
+  dont="Stepper'ı tab yerine ya da adımlar arasında gezinmenin tek yolu olarak kullanmak."
+/>
+
+<DoDont
+  do="statusLabels'ı başlıklarla birlikte yerelleştir."
+  dont="Bir adımın verisi gerçekten kaydedilmeden onu tamamlandı olarak işaretlemek."
+/>
+
+## İlgili sayfalar
+
+- [Progress](/tr/docs/components/progress)
+- [Tabs](/tr/docs/components/tabs)
+- [Pagination](/tr/docs/components/pagination)

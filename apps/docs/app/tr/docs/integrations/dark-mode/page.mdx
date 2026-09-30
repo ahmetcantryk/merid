@@ -1,0 +1,89 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { DarkModeSubtree } from "@/examples/tr/integrations/dark-mode";
+
+export const metadata = docMetadata("tr", "/docs/integrations/dark-mode", {
+  title: "Dark mode stratejileri",
+  description: "Sistemi izle, yanıp sönmeyen bir tema değiştirici ekle ya da data-theme ile tek bir alt ağaca tema ver.",
+});
+
+# Dark mode stratejileri
+
+Merid'in token'larının bir açık bir de koyu değeri var. Hangisinin uygulanacağına tek bir attribute, `data-theme`, ve `prefers-color-scheme` media query'si karar verir. Token değerlerinin kendisi [Dark mode](/tr/docs/foundations/dark-mode) sayfasında listeleniyor.
+
+## 1. Sistemi izle
+
+Hiçbir şey yapma. `<html>`'de `data-theme` yoksa Merid işletim sistemini izler ve sistem ayarı değiştiğinde anında geçiş yapar. Kendi CSS'inde de sabit renkler yerine token'ları (`var(--mrd-bg)`, `var(--mrd-ink)`) kullanarak `color-scheme`'e uyum sağla.
+
+## 2. Tema değiştirici
+
+Seçimi sakla, ilk boyamadan önce `<html>`'e uygula ve hiçbir şey saklı değilse sisteme geri dön.
+
+```tsx
+// <head> içinde inline; CSS'e bağlı herhangi bir boyamadan önce.
+const themeInitScript = `
+try {
+  const t = localStorage.getItem("theme");
+  if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+} catch {}`;
+```
+
+```tsx
+"use client";
+import { SegmentedControl } from "@merid/react";
+
+type Choice = "system" | "light" | "dark";
+
+function apply(choice: Choice) {
+  const root = document.documentElement;
+  if (choice === "system") {
+    delete root.dataset.theme;
+    try { localStorage.removeItem("theme"); } catch {}
+  } else {
+    root.dataset.theme = choice;
+    try { localStorage.setItem("theme", choice); } catch {}
+  }
+}
+
+export function ThemeSwitcher() {
+  const [choice, setChoice] = useState<Choice>("system");
+  useEffect(() => {
+    const t = document.documentElement.dataset.theme;
+    setChoice(t === "light" || t === "dark" ? t : "system");
+  }, []);
+  return (
+    <SegmentedControl
+      aria-label="Tema"
+      value={choice}
+      onValueChange={(v) => { setChoice(v as Choice); apply(v as Choice); }}
+      options={[
+        { value: "system", label: "Sistem" },
+        { value: "light", label: "Açık" },
+        { value: "dark", label: "Koyu" },
+      ]}
+    />
+  );
+}
+```
+
+Next.js'te script'i root layout'un `<head>`'ine `dangerouslySetInnerHTML` ile koy ve `<html>`'e `suppressHydrationWarning` ekle. `localStorage` hata fırlatabilir (gizli mod, engellenmiş depolama); bu yüzden hem okumalar hem yazmalar try/catch içinde.
+
+Sekmeler arasında senkron tutmak için `storage` event'ini dinle ve temayı yeniden uygula.
+
+## 3. Alt ağaç bazında
+
+`data-theme` herhangi bir elemanda çalışır ve iki yönde de iç içe geçer: açık bir sayfada koyu bir panel ya da koyu bir sayfada açık bir kart.
+
+<ComponentPreview align="start" code={`<div data-theme="dark" style={{ background: "var(--mrd-bg)", padding: 16 }}>
+  <Card variant="outline">…</Card>
+</div>`}>
+  <DarkModeSubtree />
+</ComponentPreview>
+
+Attribute token'ları ayarlar, boyamaz. İçeriği doğru yüzeye otursun diye elemana token'lardan bir arka plan ver. Accent preset'leri ve yoğunluk da aynı şekilde iç içe geçer; bkz. [Alt ağaç attribute'ları](/tr/docs/integrations/subtree-attributes).
+
+Portal'lanan içerik (Dialog, Popover, DropdownMenu, Select, Tooltip, Toast) `document.body`'ye render'lanır; bu yüzden alt ağacın değil, sayfanın temasını alır. Bir overlay'i alt ağacın temasında tutmak için `container` ver (component destekliyorsa) ve alt ağacın içindeki bir elemanı göster.
+
+## Görseller ve grafikler
+
+- `<picture>`'ı `media="(prefers-color-scheme: dark)"` ile yalnızca sistemi izliyorsan kullan. Tema değiştirici varsa kaynakları CSS'te `[data-theme="dark"]` üzerinden değiştir.
+- Grafiklerde renkleri render anında CSS değişkenlerinden oku (`getComputedStyle(el).getPropertyValue("--mrd-accent")`) ve tema değiştiğinde yeniden render'la.

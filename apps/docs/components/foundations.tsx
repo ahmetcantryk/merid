@@ -1,4 +1,32 @@
 import { colorGroups, motion, radii, shadows, spacing, typeScale } from "@/lib/tokens";
+import type { Locale } from "@/lib/i18n/config";
+import { colorGroupTitlesTr, colorRolesTr, foundationsUiTr, tokenUsesTr, type FoundationsUi } from "@/lib/i18n/tokens.tr";
+
+interface LocaleProps {
+  readonly locale?: Locale;
+}
+
+const foundationsUiEn: FoundationsUi = {
+  token: "Token",
+  light: "Light",
+  dark: "Dark",
+  role: "Role",
+  value: "Value",
+  use: "Use",
+  groupTokens: (title: string) => `${title} tokens`,
+  motionTokens: "Motion tokens",
+  specimen: "Precise by default",
+  lift: "Hover to lift 3px",
+  press: "Press to scale .97",
+  tint: "Hover to tint",
+};
+
+const uiText = (locale: Locale) => (locale === "tr" ? foundationsUiTr : foundationsUiEn);
+
+/** Returns the Turkish text for `key` when the locale is Turkish, falling back to English. */
+function localized(locale: Locale, map: Readonly<Record<string, string>>, key: string, english: string): string {
+  return locale === "tr" ? (map[key] ?? english) : english;
+}
 
 function Swatch({ value, theme }: { readonly value: string; readonly theme: "light" | "dark" }) {
   return (
@@ -9,41 +37,46 @@ function Swatch({ value, theme }: { readonly value: string; readonly theme: "lig
   );
 }
 
-export function ColorTables() {
+export function ColorTables({ locale = "en" }: LocaleProps = {}) {
+  const ui = uiText(locale);
   return (
     <>
-      {colorGroups.map((group) => (
-        <section key={group.title} className="token-group">
-          <h3 id={`color-${group.title.toLowerCase()}`}>{group.title}</h3>
-          <div className="table-wrap" tabIndex={0} role="region" aria-label={`${group.title} tokens`}>
-            <table className="doc-table">
-              <thead>
-                <tr>
-                  <th scope="col">Token</th>
-                  <th scope="col">Light</th>
-                  <th scope="col">Dark</th>
-                  <th scope="col">Role</th>
-                </tr>
-              </thead>
-              <tbody>
-                {group.tokens.map((t) => (
-                  <tr key={t.name}>
-                    <td><code>{t.name}</code></td>
-                    <td><Swatch value={t.light} theme="light" /></td>
-                    <td><Swatch value={t.dark} theme="dark" /></td>
-                    <td>{t.role}</td>
+      {colorGroups.map((group) => {
+        const title = localized(locale, colorGroupTitlesTr, group.title, group.title);
+        return (
+          <section key={group.title} className="token-group">
+            <h3 id={`color-${group.title.toLowerCase()}`}>{title}</h3>
+            <div className="table-wrap" tabIndex={0} role="region" aria-label={ui.groupTokens(title)}>
+              <table className="doc-table">
+                <thead>
+                  <tr>
+                    <th scope="col">{ui.token}</th>
+                    <th scope="col">{ui.light}</th>
+                    <th scope="col">{ui.dark}</th>
+                    <th scope="col">{ui.role}</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      ))}
+                </thead>
+                <tbody>
+                  {group.tokens.map((t) => (
+                    <tr key={t.name}>
+                      <td><code>{t.name}</code></td>
+                      <td><Swatch value={t.light} theme="light" /></td>
+                      <td><Swatch value={t.dark} theme="dark" /></td>
+                      <td>{localized(locale, colorRolesTr, t.name, t.role)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        );
+      })}
     </>
   );
 }
 
-export function TypeSpecimen() {
+export function TypeSpecimen({ locale = "en" }: LocaleProps = {}) {
+  const ui = uiText(locale);
   return (
     <div className="type-specimen">
       {typeScale.map((t) => (
@@ -52,12 +85,12 @@ export function TypeSpecimen() {
             className="type-specimen__sample"
             style={{ fontSize: t.size, lineHeight: t.lh, letterSpacing: t.track, fontWeight: t.weight }}
           >
-            Precise by default
+            {ui.specimen}
           </p>
           <p className="type-specimen__meta">
             <code>{t.name}</code>
             <span>{t.spec}</span>
-            <span>{t.use}</span>
+            <span>{localized(locale, tokenUsesTr, t.name, t.use)}</span>
           </p>
         </div>
       ))}
@@ -65,7 +98,8 @@ export function TypeSpecimen() {
   );
 }
 
-export function SpacingScale() {
+/** Has no prose to translate; accepts `locale` for a uniform API. */
+export function SpacingScale(_props: LocaleProps = {}) {
   return (
     <div className="scale-list">
       {spacing.map(([name, px]) => (
@@ -79,7 +113,7 @@ export function SpacingScale() {
   );
 }
 
-export function RadiusScale() {
+export function RadiusScale({ locale = "en" }: LocaleProps = {}) {
   return (
     <div className="token-tiles">
       {radii.map((r) => (
@@ -87,7 +121,7 @@ export function RadiusScale() {
           <span className="token-tile__shape" style={{ borderRadius: r.value }} />
           <figcaption>
             <code>{r.name}</code>
-            <span>{r.value} · {r.use}</span>
+            <span>{r.value} · {localized(locale, tokenUsesTr, r.name, r.use)}</span>
           </figcaption>
         </figure>
       ))}
@@ -95,7 +129,7 @@ export function RadiusScale() {
   );
 }
 
-export function ShadowScale() {
+export function ShadowScale({ locale = "en" }: LocaleProps = {}) {
   return (
     <div className="token-tiles" data-surface="tray">
       {shadows.map((s) => (
@@ -103,7 +137,7 @@ export function ShadowScale() {
           <span className="token-tile__shape" data-shadow style={{ boxShadow: `var(${s.name})` }} />
           <figcaption>
             <code>{s.name}</code>
-            <span>{s.use}</span>
+            <span>{localized(locale, tokenUsesTr, s.name, s.use)}</span>
           </figcaption>
         </figure>
       ))}
@@ -111,15 +145,16 @@ export function ShadowScale() {
   );
 }
 
-export function MotionTable() {
+export function MotionTable({ locale = "en" }: LocaleProps = {}) {
+  const ui = uiText(locale);
   return (
-    <div className="table-wrap" tabIndex={0} role="region" aria-label="Motion tokens">
+    <div className="table-wrap" tabIndex={0} role="region" aria-label={ui.motionTokens}>
       <table className="doc-table">
         <thead>
           <tr>
-            <th scope="col">Token</th>
-            <th scope="col">Value</th>
-            <th scope="col">Use</th>
+            <th scope="col">{ui.token}</th>
+            <th scope="col">{ui.value}</th>
+            <th scope="col">{ui.use}</th>
           </tr>
         </thead>
         <tbody>
@@ -127,7 +162,7 @@ export function MotionTable() {
             <tr key={m.name}>
               <td><code>{m.name}</code></td>
               <td><code>{m.value}</code></td>
-              <td>{m.use}</td>
+              <td>{localized(locale, tokenUsesTr, m.name, m.use)}</td>
             </tr>
           ))}
         </tbody>
@@ -136,12 +171,13 @@ export function MotionTable() {
   );
 }
 
-export function MotionDemo() {
+export function MotionDemo({ locale = "en" }: LocaleProps = {}) {
+  const ui = uiText(locale);
   return (
     <div className="motion-demo">
-      <button type="button" className="motion-demo__target" data-kind="lift">Hover to lift 3px</button>
-      <button type="button" className="motion-demo__target" data-kind="press">Press to scale .97</button>
-      <button type="button" className="motion-demo__target" data-kind="tint">Hover to tint</button>
+      <button type="button" className="motion-demo__target" data-kind="lift">{ui.lift}</button>
+      <button type="button" className="motion-demo__target" data-kind="press">{ui.press}</button>
+      <button type="button" className="motion-demo__target" data-kind="tint">{ui.tint}</button>
     </div>
   );
 }

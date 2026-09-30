@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { THEMES, gotoThemed } from "./helpers";
-import { a11yRoutes } from "./routes";
+import { a11yRoutes, a11yRoutesTr } from "./routes";
 
 const BLOCKING = new Set(["serious", "critical"]);
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"];
@@ -20,7 +20,7 @@ function isComponentNode(html: string, target: string): boolean {
 
 for (const theme of THEMES) {
   test.describe(`axe (${theme})`, () => {
-    for (const route of a11yRoutes) {
+    for (const route of [...a11yRoutes, ...a11yRoutesTr]) {
       test(route, async ({ page }) => {
         await gotoThemed(page, route, theme);
         const results = await new AxeBuilder({ page }).withTags(TAGS).analyze();

@@ -1,4 +1,6 @@
 import type { ComponentStatus } from "@/components/StatusBadge";
+import { catalogDescriptionsTr } from "@/lib/i18n/catalog.tr";
+import { getDictionary, type Locale } from "@/lib/i18n";
 
 export interface CatalogEntry {
   readonly name: string;
@@ -91,3 +93,15 @@ export const componentCatalog: readonly { readonly group: string; readonly items
     ],
   },
 ];
+
+/** The catalog with group names and descriptions in one locale. Component names are never translated. */
+export function catalogFor(locale: Locale): typeof componentCatalog {
+  if (locale === "en") return componentCatalog;
+  const groups: Readonly<Record<string, string>> = getDictionary(locale).catalogGroups;
+  return componentCatalog.map((group) => ({
+    group: groups[group.group] ?? group.group,
+    items: group.items.map((item) => ({ ...item, description: catalogDescriptionsTr[item.slug] ?? item.description })),
+  }));
+}
+
+export const componentCount = componentCatalog.reduce((sum, group) => sum + group.items.length, 0);

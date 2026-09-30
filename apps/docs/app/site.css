@@ -67,6 +67,14 @@ main { flex: 1; }
   transition: background-color var(--mrd-duration) var(--mrd-ease), color var(--mrd-duration) var(--mrd-ease);
 }
 .icon-btn:hover { background: var(--mrd-tray); color: var(--mrd-ink); }
+.lang-switch {
+  display: inline-flex; align-items: center; gap: 6px; height: var(--mrd-icon-button-md); padding: 0 10px;
+  border-radius: var(--mrd-radius-md); color: var(--mrd-body); text-decoration: none;
+  font-family: var(--mrd-font-mono); font-size: 11.5px; font-weight: var(--mrd-weight-medium); letter-spacing: 0.02em;
+  transition: background-color var(--mrd-duration) var(--mrd-ease), color var(--mrd-duration) var(--mrd-ease);
+}
+.lang-switch:hover { background: var(--mrd-tray); color: var(--mrd-ink); }
+.lang-switch:focus-visible { outline: 2px solid var(--mrd-accent); outline-offset: 2px; }
 .icon-btn:focus-visible, .btn:focus-visible, .nav-link:focus-visible, .search-trigger:focus-visible { outline: 2px solid var(--mrd-accent); outline-offset: 2px; }
 
 .copy-btn {

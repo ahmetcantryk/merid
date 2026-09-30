@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useDictionary, useLocale } from "@/lib/i18n/client";
+import { localizePath } from "@/lib/i18n/config";
 import { searchIndex, type SearchEntry } from "@/lib/search";
 
 export function SearchDialog() {
@@ -14,20 +16,22 @@ export function SearchDialog() {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const [isMac, setIsMac] = useState(true);
+  const locale = useLocale();
+  const t = useDictionary().search;
 
   const results = useMemo(() => (entries ? searchIndex(entries, query) : []), [entries, query]);
 
   const load = useCallback(async () => {
     if (entries) return;
     try {
-      const response = await fetch("/search-index.json");
+      const response = await fetch(localizePath("/search-index.json", locale));
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       setEntries((await response.json()) as SearchEntry[]);
     } catch (err) {
       console.error("[docs] search index failed to load", err);
       setError(true);
     }
-  }, [entries]);
+  }, [entries, locale]);
 
   const open = useCallback(() => {
     const dialog = dialogRef.current;
@@ -72,18 +76,18 @@ export function SearchDialog() {
 
   return (
     <>
-      <button type="button" className="search-trigger" onClick={open} aria-haspopup="dialog" aria-label="Search">
+      <button type="button" className="search-trigger" onClick={open} aria-haspopup="dialog" aria-label={t.trigger}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.5" />
           <path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
-        <span className="search-trigger__label">Search</span>
+        <span className="search-trigger__label">{t.trigger}</span>
         <kbd className="search-trigger__kbd">{isMac ? "⌘K" : "Ctrl K"}</kbd>
       </button>
       <dialog
         ref={dialogRef}
         className="search-dialog"
-        aria-label="Search documentation"
+        aria-label={t.dialogLabel}
         onClick={(event) => {
           if (event.target === dialogRef.current) dialogRef.current.close();
         }}
@@ -101,7 +105,7 @@ export function SearchDialog() {
             aria-controls={listId}
             aria-activedescendant={results[active] ? `${listId}-${active}` : undefined}
             aria-autocomplete="list"
-            placeholder="Search pages and sections"
+            placeholder={t.placeholder}
             value={query}
             onChange={(event) => {
               setQuery(event.target.value);
@@ -111,7 +115,7 @@ export function SearchDialog() {
           />
           <kbd>Esc</kbd>
         </div>
-        <ul id={listId} role="listbox" className="search-dialog__list" aria-label="Results">
+        <ul id={listId} role="listbox" className="search-dialog__list" aria-label={t.results}>
           {results.map((entry, index) => (
             <li
               key={entry.href}
@@ -127,12 +131,12 @@ export function SearchDialog() {
             </li>
           ))}
         </ul>
-        {error ? <p className="search-dialog__empty">The search index could not be loaded. Try again after a refresh.</p> : null}
+        {error ? <p className="search-dialog__empty">{t.loadError}</p> : null}
         {!error && entries && query.trim() && results.length === 0 ? (
-          <p className="search-dialog__empty">No results for “{query.trim()}”.</p>
+          <p className="search-dialog__empty">{t.noResults(query.trim())}</p>
         ) : null}
         <p className="search-dialog__hint">
-          <kbd>↑</kbd> <kbd>↓</kbd> to move, <kbd>Enter</kbd> to open
+          <kbd>↑</kbd> <kbd>↓</kbd> {t.hintMove} <kbd>Enter</kbd> {t.hintOpen}
         </p>
       </dialog>
     </>
