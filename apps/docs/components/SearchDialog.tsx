@@ -55,6 +55,17 @@ export function SearchDialog() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // `?q=` (the WebSite SearchAction target) opens the dialog with the query filled in.
+  const queryHandled = useRef(false);
+  useEffect(() => {
+    if (queryHandled.current) return;
+    queryHandled.current = true;
+    const q = new URLSearchParams(window.location.search).get("q")?.trim();
+    if (!q) return;
+    open();
+    setQuery(q.slice(0, 100));
+  }, [open]);
+
   function go(entry: SearchEntry | undefined) {
     if (!entry) return;
     dialogRef.current?.close();
