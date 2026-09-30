@@ -1,0 +1,114 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { CollapsibleBasic, CollapsibleControlled } from "@/examples/tr/collapsible";
+import { collapsibleBasicCode, collapsibleControlledCode } from "@/examples/tr/collapsible.code";
+
+export const metadata = docMetadata("tr", "/docs/components/collapsible", {
+  title: "Collapsible",
+  description: "Tek bir bölgeyi gösterip gizleyen buton.",
+});
+
+# Collapsible
+
+Tek bir içerik bölgesini gösterip gizleyen buton. Başlıklı birden çok bölüm için [Accordion](/tr/docs/components/accordion) kullan.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/collapsible">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={collapsibleBasicCode}>
+  <CollapsibleBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Collapsible } from "@meridui/react";
+```
+
+## Anatomi
+
+```tsx
+<Collapsible.Root>
+  <Collapsible.Trigger />
+  <Collapsible.Content />
+</Collapsible.Root>
+```
+
+- **Root** açık/kapalı state'ini tutar ve bir `<div>` render'lar.
+- **Trigger**, `aria-expanded` ve `aria-controls` taşıyan bir `<button>`'dır. `asChild` ile kendi butonuna birleşir.
+- **Content** bölgenin kendisidir; kapalıyken `hidden`'dır ve `forceMount` verilmedikçe children'ı unmount eder.
+
+## Örnekler
+
+### Controlled, kendi butonunla
+
+<ComponentPreview code={collapsibleControlledCode}>
+  <CollapsibleControlled />
+</ComponentPreview>
+
+## API referansı
+
+### Root
+
+Tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled açık/kapalı state'i." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Uncontrolled kullanımda başlangıç state'i." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Açık/kapalı state'i değişmesi gerektiğinde çağrılır." },
+  { name: "disabled", type: "boolean", default: "false", description: "Açıp kapatmayı engeller; tetikleyici devre dışı kalır." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Root'a iletilen ref." },
+]} />
+
+### Trigger
+
+Tüm `<button>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "<button> yerine tek child elemanı render'lar; props, ref ve handler'ları birleştirir." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Butona iletilen ref." },
+]} />
+
+### Content
+
+Tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "forceMount", type: "boolean", default: "false", description: "Kapalıyken de children'ı (gizli olarak) mount'lu tutar; örneğin form state'ini korumak ya da sayfa içi aramaya izin vermek için." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Bölgeye iletilen ref." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-collapsible` | Root |
+| `.mrd-collapsible__trigger` | Trigger (`asChild` değilse) |
+| `.mrd-collapsible__content` | Content |
+
+| Attribute | Nerede | Değerler |
+|---|---|---|
+| `data-state` | Root, Trigger, Content | `open`, `closed` |
+| `data-disabled` | Root, Trigger | devre dışıyken bulunur |
+
+## Erişilebilirlik
+
+WAI-ARIA [Disclosure desenini](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/) izler. Tetikleyici gerçek bir buton olduğundan Enter ve Space ile çalışır ve açık/kapalı durumuyla birlikte okunur.
+
+<KeyboardTable rows={[
+  { keys: ["Enter"], action: "Bölgeyi açar ya da kapatır." },
+  { keys: ["Space"], action: "Bölgeyi açar ya da kapatır." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Neyin gösterileceğini söyle: "Build ayrıntılarını göster", "3 repository daha göster".</p>}
+  dont={<p>Zorunlu form alanlarını ya da hata mesajlarını kapalı bir bölgeye saklamak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Accordion](/tr/docs/components/accordion): başlıklı birden çok bölüm.
+- [Tabs](/tr/docs/components/tabs): eşit ağırlıktaki paneller arasında geçiş.

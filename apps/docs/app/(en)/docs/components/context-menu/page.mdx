@@ -1,0 +1,116 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ContextMenuBasic } from "@/examples/context-menu";
+import { contextMenuBasicCode } from "@/examples/context-menu.code";
+
+export const metadata = docMetadata("en", "/docs/components/context-menu", {
+  title: "ContextMenu",
+  description: "A menu of actions opened at the pointer with a right-click.",
+});
+
+# ContextMenu
+
+A menu of actions opened at the pointer with a right-click, or with the ContextMenu key / Shift+F10 on a focused element. It shares DropdownMenu's items, keyboard model and styles.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/context-menu">Source</a>
+</div>
+
+<ComponentPreview code={contextMenuBasicCode}>
+  <ContextMenuBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { ContextMenu } from "@meridui/react";
+```
+
+## Anatomy
+
+```tsx
+<ContextMenu.Root>
+  <ContextMenu.Trigger />
+  <ContextMenu.Content>
+    <ContextMenu.Label />
+    <ContextMenu.Group>
+      <ContextMenu.Item />
+      <ContextMenu.CheckboxItem />
+    </ContextMenu.Group>
+    <ContextMenu.Separator />
+  </ContextMenu.Content>
+</ContextMenu.Root>
+```
+
+- **Root** holds the open state and the menu's accessible name (`label`).
+- **Trigger** is the area that listens for `contextmenu`. It is a `<div>` (or your element with `asChild`) and is not focusable itself: put focusable content inside so keyboard users can open the menu with the ContextMenu key or Shift+F10.
+- **Content** and the items are the ones from [DropdownMenu](/docs/components/dropdown-menu), so everything you know there applies.
+
+## Examples
+
+### Positioning
+
+The menu opens at the pointer. When opened from the keyboard there is no pointer position, so it opens below the focused element. It flips and shifts to stay in the viewport.
+
+### Keeping the browser menu
+
+Set `disabled` on the Trigger to let the browser's own context menu show, for example inside a text field.
+
+## API reference
+
+### Root
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled open state." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Initial open state when uncontrolled." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Called when the open state should change." },
+  { name: "label", type: "string", default: "\"Context menu\"", description: "Accessible name of the menu." },
+  { name: "children", type: "ReactNode", description: "Trigger and Content." },
+]} />
+
+### Trigger
+
+Accepts every `<div>` attribute.
+
+<PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element as the right-click area." },
+  { name: "disabled", type: "boolean", default: "false", description: "Let the browser's own context menu show instead." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the area element." },
+]} />
+
+### Content, Item, CheckboxItem, Group, Label, Separator
+
+Same props as their [DropdownMenu](/docs/components/dropdown-menu#api-reference) counterparts. Content defaults to `placement="bottom-start"` and `sideOffset={2}` against the pointer.
+
+## Styling
+
+ContextMenu reuses the menu classes (`.mrd-menu`, `.mrd-menu__item`, …) listed on the DropdownMenu page. The trigger area has `.mrd-context-menu__trigger` (unless `asChild`) and `data-disabled` when disabled.
+
+## Accessibility
+
+Follows the WAI-ARIA [Menu pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/). The menu is named by `label`, focus moves to the first item on open and returns to the element that had it on Escape or selection.
+
+<KeyboardTable rows={[
+  { keys: ["Shift", "F10"], action: "On a focused element inside the trigger: open the menu." },
+  { keys: ["ContextMenu"], action: "Same as Shift+F10." },
+  { keys: ["ArrowDown"], action: "Next item, wrapping." },
+  { keys: ["ArrowUp"], action: "Previous item, wrapping." },
+  { keys: ["Home"], action: "First item." },
+  { keys: ["End"], action: "Last item." },
+  { keys: ["Enter"], action: "Activate the item." },
+  { keys: ["Space"], action: "Activate the item." },
+  { keys: ["A–Z"], action: "Typeahead to the next item starting with the typed text." },
+  { keys: ["Escape"], action: "Close and return focus." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Use a context menu as a shortcut for actions that are also reachable elsewhere (a toolbar, a row menu).</p>}
+  dont={<p>Hide actions only behind a right-click. Touch users and many keyboard users never find them.</p>}
+/>
+
+## Related
+
+- [DropdownMenu](/docs/components/dropdown-menu): the same menu opened from a button.
+- [Toolbar](/docs/components/toolbar): visible controls for the same actions.

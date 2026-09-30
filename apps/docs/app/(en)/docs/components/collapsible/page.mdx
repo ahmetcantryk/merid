@@ -1,0 +1,114 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { CollapsibleBasic, CollapsibleControlled } from "@/examples/collapsible";
+import { collapsibleBasicCode, collapsibleControlledCode } from "@/examples/collapsible.code";
+
+export const metadata = docMetadata("en", "/docs/components/collapsible", {
+  title: "Collapsible",
+  description: "A button that shows and hides one region.",
+});
+
+# Collapsible
+
+A button that shows and hides one region of content. For a set of headed sections, use [Accordion](/docs/components/accordion).
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/collapsible">Source</a>
+</div>
+
+<ComponentPreview code={collapsibleBasicCode}>
+  <CollapsibleBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Collapsible } from "@meridui/react";
+```
+
+## Anatomy
+
+```tsx
+<Collapsible.Root>
+  <Collapsible.Trigger />
+  <Collapsible.Content />
+</Collapsible.Root>
+```
+
+- **Root** holds the open state and renders a `<div>`.
+- **Trigger** is a `<button>` with `aria-expanded` and `aria-controls`. With `asChild` it merges onto your own button.
+- **Content** is the region; it is `hidden` while closed and unmounts its children unless `forceMount`.
+
+## Examples
+
+### Controlled, with your own button
+
+<ComponentPreview code={collapsibleControlledCode}>
+  <CollapsibleControlled />
+</ComponentPreview>
+
+## API reference
+
+### Root
+
+Accepts every `<div>` attribute.
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled open state." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Initial open state when uncontrolled." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Called when the open state should change." },
+  { name: "disabled", type: "boolean", default: "false", description: "Prevent toggling; the trigger is disabled." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the root." },
+]} />
+
+### Trigger
+
+Accepts every `<button>` attribute.
+
+<PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element instead of a <button>, merging props, ref and handlers." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Forwarded ref to the button." },
+]} />
+
+### Content
+
+Accepts every `<div>` attribute.
+
+<PropsTable rows={[
+  { name: "forceMount", type: "boolean", default: "false", description: "Keep children mounted (hidden) while closed, e.g. to keep form state or allow find-in-page." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the region." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-collapsible` | Root |
+| `.mrd-collapsible__trigger` | Trigger (unless `asChild`) |
+| `.mrd-collapsible__content` | Content |
+
+| Attribute | On | Values |
+|---|---|---|
+| `data-state` | Root, Trigger, Content | `open`, `closed` |
+| `data-disabled` | Root, Trigger | present when disabled |
+
+## Accessibility
+
+Follows the WAI-ARIA [Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/). The trigger is a real button, so it works with Enter and Space and is announced with its expanded state.
+
+<KeyboardTable rows={[
+  { keys: ["Enter"], action: "Toggle the region." },
+  { keys: ["Space"], action: "Toggle the region." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Say what will be shown: "Show build details", "Show 3 more repositories".</p>}
+  dont={<p>Hide required form fields or error messages in a collapsed region.</p>}
+/>
+
+## Related
+
+- [Accordion](/docs/components/accordion): several headed sections.
+- [Tabs](/docs/components/tabs): switch between panels of equal weight.

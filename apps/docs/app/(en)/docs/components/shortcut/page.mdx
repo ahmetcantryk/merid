@@ -1,0 +1,95 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ShortcutBasic, ShortcutPlatforms } from "@/examples/shortcut";
+
+export const metadata = docMetadata("en", "/docs/components/shortcut", {
+  title: "Shortcut",
+  description: "A platform-aware key combination built from Kbd key caps.",
+});
+
+# Shortcut
+
+A key combination such as ⌘K or Ctrl+K, built from [Kbd](/docs/components/kbd) key caps. `mod` becomes ⌘ on macOS and Ctrl elsewhere, and screen readers hear the full key names.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/shortcut">Source</a>
+</div>
+
+<ComponentPreview code={`<Text>
+  Press <Shortcut keys={["mod", "k"]} /> to search, or <Shortcut keys={["mod", "shift", "p"]} /> for commands.
+</Text>`}>
+  <ShortcutBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Shortcut, formatShortcut, matchesShortcut } from "@meridui/react";
+```
+
+## Examples
+
+### Platforms and sizes
+
+The platform is detected after hydration (the server renders the non-Mac form). Force it with `platform`. Keys: `mod`, `ctrl`, `meta`, `alt`, `shift`, `enter`, `escape`, `tab`, `backspace`, `delete`, `space`, the arrows (`arrowup`…) and any single character.
+
+<ComponentPreview code={`<Shortcut keys={["mod", "shift", "z"]} platform="mac" />
+<Shortcut keys={["mod", "shift", "z"]} platform="other" />
+<Shortcut keys={["alt", "arrowup"]} platform="mac" size="sm" />
+<Shortcut keys={["alt", "arrowup"]} platform="other" size="sm" />`}>
+  <ShortcutPlatforms />
+</ComponentPreview>
+
+### Matching key presses
+
+`matchesShortcut(event, keys)` uses the same rules, so what you show and what you handle never drift apart. Modifiers must match exactly.
+
+```tsx
+useEffect(() => {
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (matchesShortcut(event, ["mod", "s"])) {
+      event.preventDefault();
+      save();
+    }
+  };
+  document.addEventListener("keydown", onKeyDown);
+  return () => document.removeEventListener("keydown", onKeyDown);
+}, []);
+```
+
+`formatShortcut(["mod", "k"])` returns the plain string (`"⌘K"` or `"Ctrl+K"`) for places that only take text, like a `title` or an `aria-keyshortcuts` hint.
+
+## API reference
+
+Accepts every `<kbd>` attribute except `children`.
+
+<PropsTable rows={[
+  { name: "keys", type: "string[]", description: "Keys pressed together, e.g. [\"mod\", \"k\"]." },
+  { name: "platform", type: "\"auto\" | \"mac\" | \"other\"", default: "\"auto\"", description: "Force a platform; auto detects it after hydration." },
+  { name: "size", type: "\"sm\" | \"md\"", default: "\"md\"", description: "Key cap size." },
+  { name: "labels", type: "Record<string, string>", description: "Spoken key names merged over the English defaults, e.g. { shift: \"Üst karakter\" }. Keys ending in .mac or .other apply to one platform." },
+  { name: "joiner", type: "string", default: "\"+\"", description: "Word read between keys by screen readers." },
+  { name: "ref", type: "Ref<HTMLElement>", description: "Forwarded ref to the outer <kbd>." },
+]} />
+
+### Helpers
+
+| Function | Returns |
+|---|---|
+| `formatShortcut(keys, platform?)` | `"⌘K"` / `"Ctrl+K"` |
+| `matchesShortcut(event, keys, platform?)` | `true` when the event presses exactly `keys` |
+| `keySymbol(key, platform)`, `keyLabel(key, platform, labels?)` | One key's symbol or spoken name |
+| `detectPlatform()`, `usePlatform()` | `"mac"` or `"other"` |
+
+## Styling
+
+Shortcut is a `.mrd-kbd` with `.mrd-shortcut`; each key is a nested `<kbd class="mrd-shortcut__key">`. On non-Mac platforms a muted `+` is drawn between keys with CSS. `data-platform` and `data-size` are set on the outer element.
+
+## Accessibility
+
+Nested `<kbd>` elements are the HTML way to mark up a key combination. The visible symbols (⌘, ⇧, ⌥) are hidden from assistive technology and replaced by visually hidden names ("Command + Shift + P"), which you can translate with `labels`.
+
+## Related
+
+- [Kbd](/docs/components/kbd): a single key cap.
+- [Command](/docs/components/command): shows item shortcuts with this component.

@@ -179,4 +179,90 @@ test.describe("live preview interactions", () => {
     await expect(week).toBeChecked();
     await expect(week).toBeFocused();
   });
+
+  test("Command: filter, arrow keys and Enter run a command; the dialog opens from its shortcut", async ({ page }) => {
+    await gotoThemed(page, "/docs/components/command", "light");
+    const stage = preview(page);
+    const input = stage.getByRole("combobox", { name: "Command menu" });
+    await input.fill("proj");
+    await expect(stage.getByRole("option")).toHaveCount(2);
+    await page.keyboard.press("ArrowDown");
+    await expect(stage.getByRole("option", { name: /New project/ })).toHaveAttribute("aria-selected", "true");
+    await page.keyboard.press("Enter");
+    await expect(stage.getByText("Last command: New project")).toBeVisible();
+
+    await preview(page, 1).getByRole("button", { name: /Open command menu/ }).click();
+    const dialog = page.getByRole("dialog", { name: "Command menu" });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole("combobox")).toBeFocused();
+    await page.keyboard.type("dark");
+    await page.keyboard.press("Enter");
+    await expect(dialog).toBeHidden();
+    await expect(preview(page, 1).getByText("Last command: Dark theme")).toBeVisible();
+    await page.keyboard.press("ControlOrMeta+j");
+    await expect(dialog).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+  });
+
+  test("ContextMenu: right-click opens at the pointer; Escape closes and restores focus", async ({ page }) => {
+    await gotoThemed(page, "/docs/components/context-menu", "light");
+    const stage = preview(page);
+    await stage.getByText("Right-click here").click({ button: "right" });
+    const menu = page.getByRole("menu", { name: "File actions" });
+    await expect(menu).toBeVisible();
+    await expect(page.getByRole("menuitem", { name: /Open/ })).toBeFocused();
+    await page.keyboard.press("ArrowDown");
+    await page.keyboard.press("Enter");
+    await expect(menu).toBeHidden();
+    await expect(stage.getByText("Last action: Rename")).toBeVisible();
+
+    const file = stage.getByRole("button", { name: "quarterly-report.pdf" });
+    await file.click({ button: "right" });
+    await expect(menu).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(menu).toBeHidden();
+    // Focus returns to what had it before the menu opened: the right-clicked button.
+    await expect(file).toBeFocused();
+  });
+
+  test("NavigationMenu: ArrowDown opens a panel on its first link; Escape returns to the trigger", async ({ page }) => {
+    await gotoThemed(page, "/docs/components/navigation-menu", "light");
+    const stage = preview(page);
+    const trigger = stage.getByRole("button", { name: "Products" });
+    await trigger.focus();
+    await page.keyboard.press("ArrowDown");
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect(stage.getByRole("link", { name: /Analytics/ })).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(trigger).toBeFocused();
+    await page.keyboard.press("ArrowRight");
+    await expect(stage.getByRole("button", { name: "Resources" })).toBeFocused();
+  });
+
+  test("Toolbar: one Tab stop, arrow keys move between controls", async ({ page }) => {
+    await gotoThemed(page, "/docs/components/toolbar", "light");
+    const stage = preview(page);
+    await stage.getByRole("button", { name: "Bold" }).focus();
+    await page.keyboard.press("ArrowRight");
+    await expect(stage.getByRole("button", { name: "Italic" })).toBeFocused();
+    await page.keyboard.press("ArrowRight");
+    await expect(stage.getByRole("button", { name: /Align/ })).toBeFocused();
+    await page.keyboard.press("End");
+    await expect(stage.getByRole("link", { name: "Help" })).toBeFocused();
+    await expect(stage.locator('[role="toolbar"] [tabindex="0"]')).toHaveCount(1);
+  });
+
+  test("DataTable: sort, search and select rows", async ({ page }) => {
+    await gotoThemed(page, "/docs/components/data-table", "light");
+    const stage = preview(page);
+    const header = stage.getByRole("columnheader", { name: "Projects" });
+    await header.getByRole("button").click();
+    await expect(header).toHaveAttribute("aria-sort", "ascending");
+    await stage.getByRole("searchbox", { name: "Search" }).fill("admin");
+    await expect(stage.getByRole("status")).toHaveText("2 results");
+    await stage.getByRole("checkbox", { name: "Select all rows on this page" }).check();
+    await expect(stage.getByRole("status")).toHaveText("2 of 9 selected");
+  });
 });

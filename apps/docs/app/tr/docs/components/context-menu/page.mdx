@@ -1,0 +1,116 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ContextMenuBasic } from "@/examples/tr/context-menu";
+import { contextMenuBasicCode } from "@/examples/tr/context-menu.code";
+
+export const metadata = docMetadata("tr", "/docs/components/context-menu", {
+  title: "ContextMenu",
+  description: "Sağ tıkla imlecin olduğu yerde açılan aksiyon menüsü.",
+});
+
+# ContextMenu
+
+Sağ tıkla imlecin olduğu yerde, ya da focus'lu bir elemanda ContextMenu tuşu / Shift+F10 ile açılan aksiyon menüsü. DropdownMenu'nun öğelerini, klavye modelini ve stillerini paylaşır.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/context-menu">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={contextMenuBasicCode}>
+  <ContextMenuBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { ContextMenu } from "@meridui/react";
+```
+
+## Anatomi
+
+```tsx
+<ContextMenu.Root>
+  <ContextMenu.Trigger />
+  <ContextMenu.Content>
+    <ContextMenu.Label />
+    <ContextMenu.Group>
+      <ContextMenu.Item />
+      <ContextMenu.CheckboxItem />
+    </ContextMenu.Group>
+    <ContextMenu.Separator />
+  </ContextMenu.Content>
+</ContextMenu.Root>
+```
+
+- **Root** açık/kapalı state'ini ve menünün erişilebilir adını (`label`) tutar.
+- **Trigger** `contextmenu` event'ini dinleyen alandır. Bir `<div>`'dir (ya da `asChild` ile senin elemanın) ve kendisi focus almaz: klavye kullanıcılarının menüyü ContextMenu tuşu ya da Shift+F10 ile açabilmesi için içine focus alabilen içerik koy.
+- **Content** ve öğeler [DropdownMenu](/tr/docs/components/dropdown-menu)'dekilerin aynısıdır; orada bildiğin her şey burada da geçerli.
+
+## Örnekler
+
+### Konum
+
+Menü imlecin olduğu yerde açılır. Klavyeden açıldığında imleç konumu olmadığı için focus'lu elemanın altında açılır. Viewport içinde kalmak için yön değiştirir ve kayar.
+
+### Tarayıcı menüsünü korumak
+
+Tarayıcının kendi bağlam menüsünün görünmesi için Trigger'a `disabled` ver; örneğin bir metin alanının içinde.
+
+## API referansı
+
+### Root
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled açık/kapalı state'i." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Uncontrolled kullanımda başlangıç state'i." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Açık/kapalı state'i değişmesi gerektiğinde çağrılır." },
+  { name: "label", type: "string", default: "\"Context menu\"", description: "Menünün erişilebilir adı." },
+  { name: "children", type: "ReactNode", description: "Trigger ve Content." },
+]} />
+
+### Trigger
+
+Tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "Sağ tık alanı olarak tek child elemanı render'lar." },
+  { name: "disabled", type: "boolean", default: "false", description: "Onun yerine tarayıcının kendi bağlam menüsü görünür." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Alan elemanına iletilen ref." },
+]} />
+
+### Content, Item, CheckboxItem, Group, Label, Separator
+
+Prop'ları [DropdownMenu](/tr/docs/components/dropdown-menu#api-referansi)'deki karşılıklarıyla aynı. Content, imlece göre varsayılan olarak `placement="bottom-start"` ve `sideOffset={2}` kullanır.
+
+## Stil verme
+
+ContextMenu, DropdownMenu sayfasında listelenen menü sınıflarını (`.mrd-menu`, `.mrd-menu__item`, …) kullanır. Tetikleyici alanın sınıfı `.mrd-context-menu__trigger`'dır (`asChild` değilse); devre dışıyken `data-disabled` taşır.
+
+## Erişilebilirlik
+
+WAI-ARIA [Menu desenini](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/) izler. Menünün adı `label`'dan gelir; açılınca focus ilk öğeye geçer, Escape ile ya da bir seçim yapılınca önceki elemana döner.
+
+<KeyboardTable rows={[
+  { keys: ["Shift", "F10"], action: "Tetikleyicinin içindeki focus'lu bir elemanda: menüyü açar." },
+  { keys: ["ContextMenu"], action: "Shift+F10 ile aynı." },
+  { keys: ["ArrowDown"], action: "Sonraki öğe; sona gelince başa döner." },
+  { keys: ["ArrowUp"], action: "Önceki öğe; başa gelince sona döner." },
+  { keys: ["Home"], action: "İlk öğe." },
+  { keys: ["End"], action: "Son öğe." },
+  { keys: ["Enter"], action: "Öğeyi çalıştırır." },
+  { keys: ["Space"], action: "Öğeyi çalıştırır." },
+  { keys: ["A–Z"], action: "Yazılan metinle başlayan bir sonraki öğeye gider (typeahead)." },
+  { keys: ["Escape"], action: "Kapatır ve focus'u geri verir." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Bağlam menüsünü başka yerden de (bir toolbar, bir satır menüsü) ulaşılabilen aksiyonlar için kısayol olarak kullan.</p>}
+  dont={<p>Aksiyonları yalnızca sağ tıkın arkasına saklamak. Dokunmatik kullanıcılar ve pek çok klavye kullanıcısı onları hiç bulamaz.</p>}
+/>
+
+## İlgili sayfalar
+
+- [DropdownMenu](/tr/docs/components/dropdown-menu): aynı menü, bir butondan açılır.
+- [Toolbar](/tr/docs/components/toolbar): aynı aksiyonlar için görünür kontroller.

@@ -46,4 +46,13 @@ export const catalogDescriptionsTr: Readonly<Record<string, string>> = {
   pagination: "Sonuç sayfaları arasında gezinme.",
   stepper: "Çok adımlı bir akışta ilerleme.",
   "sidebar-nav": "Uygulama sidebar'ları için gruplu dikey navigasyon.",
+  collapsible: "Tek bir bölgeyi gösterir ve gizler.",
+  command: "Aranabilir komut menüsü ve ⌘K paleti.",
+  "context-menu": "Sağ tıkla açılan aksiyon menüsü.",
+  "data-table": "Table üzerinde sıralama, filtreleme, sayfalama ve satır seçimi.",
+  "hover-card": "Bir link'e hover ya da focus'ta önizleme kartı.",
+  "navigation-menu": "Açılır ve mega menülü üst site navigasyonu.",
+  "scroll-area": "İnce, temaya uyan scrollbar'larla native kaydırma.",
+  shortcut: "⌘K gibi platforma göre değişen tuş kombinasyonu.",
+  toolbar: "Tek Tab durağı olan ilişkili kontroller satırı.",
 };

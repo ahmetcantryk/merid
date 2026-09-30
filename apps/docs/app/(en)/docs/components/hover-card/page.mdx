@@ -1,0 +1,114 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { HoverCardBasic, HoverCardDelays } from "@/examples/hover-card";
+import { hoverCardBasicCode, hoverCardDelaysCode } from "@/examples/hover-card.code";
+
+export const metadata = docMetadata("en", "/docs/components/hover-card", {
+  title: "HoverCard",
+  description: "A preview card shown when pointing at or focusing a link.",
+});
+
+# HoverCard
+
+A preview card shown after a short delay when a link is hovered or focused: a profile, a repository, a page summary.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/hover-card">Source</a>
+</div>
+
+<ComponentPreview code={hoverCardBasicCode}>
+  <HoverCardBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { HoverCard } from "@meridui/react";
+```
+
+## Anatomy
+
+```tsx
+<HoverCard.Root>
+  <HoverCard.Trigger />
+  <HoverCard.Content />
+</HoverCard.Root>
+```
+
+- **Root** holds the open state and the delays. It renders no element.
+- **Trigger** is an `<a>`; with `asChild` it merges onto your own [Link](/docs/components/link) or router link.
+- **Content** is the portalled card, positioned against the trigger. It only mounts while open.
+
+## Examples
+
+### Delays and placement
+
+`openDelay` (default 500ms) avoids flashing cards while the pointer passes by; `closeDelay` (default 300ms) lets the pointer travel from the link onto the card, which stays open while hovered.
+
+<ComponentPreview code={hoverCardDelaysCode}>
+  <HoverCardDelays />
+</ComponentPreview>
+
+## API reference
+
+### Root
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled open state." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Initial open state when uncontrolled." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Called when the open state should change." },
+  { name: "openDelay", type: "number", default: "500", description: "Delay before opening on hover or focus, in ms." },
+  { name: "closeDelay", type: "number", default: "300", description: "Delay before closing after the pointer leaves, in ms." },
+]} />
+
+### Trigger
+
+Accepts every `<a>` attribute.
+
+<PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element (e.g. your own Link) instead of an <a>, merging props, ref and handlers." },
+  { name: "ref", type: "Ref<HTMLAnchorElement>", description: "Forwarded ref." },
+]} />
+
+### Content
+
+Accepts every `<div>` attribute.
+
+<PropsTable rows={[
+  { name: "placement", type: "Placement", default: "\"bottom\"", description: "Preferred placement relative to the trigger." },
+  { name: "sideOffset", type: "number", default: "8", description: "Distance from the trigger in px." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal target." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Forwarded ref to the card." },
+]} />
+
+## Styling
+
+| Class | Element |
+|---|---|
+| `.mrd-hover-card` | Content |
+
+| Attribute | On | Values |
+|---|---|---|
+| `data-state` | Trigger | `open`, `closed` |
+| `data-state` | Content | `open` |
+
+## Accessibility
+
+A hover card is supplementary: it opens on hover and on keyboard focus, but screen readers are not told about it and its content is not in the Tab order. The trigger must make sense on its own (the link goes to the full profile), and nothing essential or interactive should live only in the card. Touch hover is ignored. For interactive content, use a [Popover](/docs/components/popover).
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Focusing the trigger opens the card after openDelay; leaving closes it." },
+  { keys: ["Escape"], action: "Close the card." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Preview something the link points to: who a person is, what a repository contains.</p>}
+  dont={<p>Put buttons, forms or the only copy of information in a hover card.</p>}
+/>
+
+## Related
+
+- [Tooltip](/docs/components/tooltip): a short text label for a control.
+- [Popover](/docs/components/popover): a click-opened panel that can hold interactive content.

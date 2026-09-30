@@ -6,6 +6,24 @@ import {
   Select, Separator, SidebarNav, SidebarNavItem, Skeleton, Spinner, Stack, Stepper, Switch, Table, TableBody,
   TableCell, TableHead, TableHeader, TableRow, Tabs, Text, Textarea, ToastProvider, Tooltip, VisuallyHidden,
 } from "../src";
+import {
+  Collapsible, Command, ContextMenu, DataTable, type DataTableColumn, HoverCard, NavigationMenu, ScrollArea,
+  Shortcut, Toolbar, useDataTable,
+} from "../src";
+
+const dataTableRows = [
+  { id: "1", name: "Ada", age: 36 },
+  { id: "2", name: "Grace", age: 85 },
+];
+const dataTableColumns: DataTableColumn<(typeof dataTableRows)[number]>[] = [
+  { id: "name", header: "Name", accessor: "name", sortable: true },
+  { id: "age", header: "Age", accessor: "age", align: "end" },
+];
+
+function DataTableCase() {
+  const table = useDataTable({ data: dataTableRows, columns: dataTableColumns, defaultPageSize: 1 });
+  return <DataTable table={table} caption="People" selectable pageSizeOptions={[1, 10]} />;
+}
 
 /** One render case per exported component; overlays appear both closed and open. */
 export const componentCases: Record<string, () => ReactElement> = {
@@ -59,7 +77,43 @@ export const componentCases: Record<string, () => ReactElement> = {
   Card: () => <Card>Body</Card>,
   Checkbox: () => <Checkbox>Accept</Checkbox>,
   Code: () => <Code>npm i</Code>,
+  Collapsible: () => (
+    <Collapsible.Root defaultOpen>
+      <Collapsible.Trigger>Details</Collapsible.Trigger>
+      <Collapsible.Content>Body</Collapsible.Content>
+    </Collapsible.Root>
+  ),
+  Command: () => (
+    <Command.Root>
+      <Command.Input />
+      <Command.List>
+        <Command.Empty />
+        <Command.Group heading="Pages">
+          <Command.Item shortcut={["mod", "h"]}>Home</Command.Item>
+        </Command.Group>
+        <Command.Separator />
+        <Command.Item>Settings</Command.Item>
+      </Command.List>
+    </Command.Root>
+  ),
+  "Command dialog": () => (
+    <Command.Dialog defaultOpen>
+      <Command.Input />
+      <Command.List>
+        <Command.Item>Home</Command.Item>
+      </Command.List>
+    </Command.Dialog>
+  ),
+  ContextMenu: () => (
+    <ContextMenu.Root>
+      <ContextMenu.Trigger>Area</ContextMenu.Trigger>
+      <ContextMenu.Content>
+        <ContextMenu.Item>Open</ContextMenu.Item>
+      </ContextMenu.Content>
+    </ContextMenu.Root>
+  ),
   Container: () => <Container>Body</Container>,
+  DataTable: () => <DataTableCase />,
   Dialog: () => (
     <Dialog.Root>
       <Dialog.Trigger>Open</Dialog.Trigger>
@@ -109,6 +163,18 @@ export const componentCases: Record<string, () => ReactElement> = {
   ),
   Grid: () => <Grid>Body</Grid>,
   Heading: () => <Heading>Title</Heading>,
+  HoverCard: () => (
+    <HoverCard.Root>
+      <HoverCard.Trigger href="/ada">@ada</HoverCard.Trigger>
+      <HoverCard.Content>Ada</HoverCard.Content>
+    </HoverCard.Root>
+  ),
+  "HoverCard open": () => (
+    <HoverCard.Root defaultOpen>
+      <HoverCard.Trigger href="/ada">@ada</HoverCard.Trigger>
+      <HoverCard.Content>Ada</HoverCard.Content>
+    </HoverCard.Root>
+  ),
   IconButton: () => <IconButton label="Close" icon={<span>x</span>} />,
   Input: () => <Input aria-label="Name" />,
   Kbd: () => <Kbd>K</Kbd>,
@@ -118,6 +184,21 @@ export const componentCases: Record<string, () => ReactElement> = {
     <NativeSelect aria-label="Region" defaultValue="eu">
       <option value="eu">EU</option>
     </NativeSelect>
+  ),
+  NavigationMenu: () => (
+    <NavigationMenu.Root defaultValue="products">
+      <NavigationMenu.List>
+        <NavigationMenu.Item value="products">
+          <NavigationMenu.Trigger>Products</NavigationMenu.Trigger>
+          <NavigationMenu.Content>
+            <NavigationMenu.Link href="/a" description="Charts">Analytics</NavigationMenu.Link>
+          </NavigationMenu.Content>
+        </NavigationMenu.Item>
+        <NavigationMenu.Item>
+          <NavigationMenu.Link href="/pricing" active>Pricing</NavigationMenu.Link>
+        </NavigationMenu.Item>
+      </NavigationMenu.List>
+    </NavigationMenu.Root>
   ),
   Pagination: () => <Pagination pageCount={10} defaultPage={5} />,
   Popover: () => (
@@ -138,6 +219,7 @@ export const componentCases: Record<string, () => ReactElement> = {
       <Radio value="b">B</Radio>
     </RadioGroup>
   ),
+  ScrollArea: () => <ScrollArea maxHeight={120}>Body</ScrollArea>,
   Section: () => <Section>Body</Section>,
   SegmentedControl: () => (
     <SegmentedControl
@@ -157,6 +239,7 @@ export const componentCases: Record<string, () => ReactElement> = {
     </Select.Root>
   ),
   Separator: () => <Separator />,
+  Shortcut: () => <Shortcut keys={["mod", "k"]} />,
   SidebarNav: () => (
     <SidebarNav aria-label="Main">
       <SidebarNavItem href="/" active>
@@ -203,6 +286,15 @@ export const componentCases: Record<string, () => ReactElement> = {
   ),
   Text: () => <Text>Body</Text>,
   Textarea: () => <Textarea aria-label="Bio" />,
+  Toolbar: () => (
+    <Toolbar.Root aria-label="Formatting">
+      <Toolbar.Group aria-label="Style">
+        <Toolbar.Button>Bold</Toolbar.Button>
+      </Toolbar.Group>
+      <Toolbar.Separator />
+      <Toolbar.Link href="/help">Help</Toolbar.Link>
+    </Toolbar.Root>
+  ),
   ToastProvider: () => (
     <ToastProvider>
       <p>app</p>
@@ -218,7 +310,22 @@ export const componentCases: Record<string, () => ReactElement> = {
 
 /** Exports that are not standalone components (helpers, hooks, members covered by a parent case). */
 export const nonComponentExports: ReadonlySet<string> = new Set([
+  "compareValues",
   "cx",
+  "DEFAULT_SHORTCUT_LABELS",
+  "defaultCommandFilter",
+  "defaultDataTableLabels",
+  "detectPlatform",
+  "filterRows",
+  "formatShortcut",
+  "keyLabel",
+  "keySymbol",
+  "matchesShortcut",
+  "nextSort",
+  "paginate",
+  "sortRows",
+  "useDataTable",
+  "usePlatform",
   "getInitials",
   "getPageRange",
   "useFieldContext",

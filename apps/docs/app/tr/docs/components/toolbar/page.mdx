@@ -1,0 +1,120 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ToolbarBasic } from "@/examples/tr/toolbar";
+import { toolbarBasicCode } from "@/examples/tr/toolbar.code";
+
+export const metadata = docMetadata("tr", "/docs/components/toolbar", {
+  title: "Toolbar",
+  description: "Tek bir Tab durağı olan, ilişkili kontrollerden oluşan satır.",
+});
+
+# Toolbar
+
+İlişkili kontrollerden (biçimlendirme butonları, görünüm seçenekleri, bir menü) oluşan ve tek bir Tab durağı olan satır; kontroller arasında ok tuşlarıyla geçilir.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/toolbar">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={toolbarBasicCode}>
+  <ToolbarBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Toolbar } from "@meridui/react";
+```
+
+## Anatomi
+
+```tsx
+<Toolbar.Root aria-label="…">
+  <Toolbar.Group aria-label="…">
+    <Toolbar.Button />
+  </Toolbar.Group>
+  <Toolbar.Separator />
+  <Toolbar.Link />
+</Toolbar.Root>
+```
+
+- **Root**, `role="toolbar"` elemanıdır. Ona bir `aria-label` ver.
+- **Button** ve **Link**, ok tuşlarının arasında gezdiği öğelerdir. `asChild` ile her eleman katılabilir, örneğin bir `DropdownMenu.Trigger`.
+- **Group** (`role="group"`) ve **Separator** öğeleri düzenler.
+
+## Örnekler
+
+### Açılıp kapanan butonlar
+
+Bir biçimlendirme düğmesi, `aria-pressed` taşıyan bir Toolbar.Button'dır; basılı state accent-soft dolgu alır. Yalnızca birinin açık olabildiği bir set için state'i kendi component'inde tut.
+
+### Toolbar içinde menüler
+
+Yukarıdaki örnekteki gibi bir Toolbar.Button'ı `DropdownMenu.Trigger asChild` ile sar. Menü Enter, Space ya da ArrowDown ile açılır; kapanınca focus toolbar'a döner.
+
+## API referansı
+
+### Root
+
+Tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "aria-label", type: "string", description: "Erişilebilir ad; aria-labelledby vermiyorsan zorunlu." },
+  { name: "orientation", type: "\"horizontal\" | \"vertical\"", default: "\"horizontal\"", description: "Yerleşim ve ok tuşu ekseni." },
+  { name: "loop", type: "boolean", default: "true", description: "Son öğeden ilke döner." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "İletilen ref." },
+]} />
+
+### Button
+
+Tüm `<button>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "disabled", type: "boolean", default: "false", description: "aria-disabled atar ve tıklamaları engeller; ok tuşları atlar." },
+  { name: "asChild", type: "boolean", default: "false", description: "<button> yerine tek child elemanı render'lar." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "İletilen ref." },
+]} />
+
+### Link, Group, Separator
+
+Link tüm `<a>` attribute'larını ve `asChild`'ı kabul eder. Group ve Separator tüm `<div>` attribute'larını kabul eder; separator'ın `aria-orientation`'ı toolbar'a dik ayarlanır.
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-toolbar` | Root |
+| `.mrd-toolbar__group` | Group |
+| `.mrd-toolbar__button`, `.mrd-toolbar__link` | Button ve Link (`asChild` değilse) |
+| `.mrd-toolbar__separator` | Separator |
+
+| Attribute | Nerede | Değerler |
+|---|---|---|
+| `data-orientation` | Root | `horizontal`, `vertical` |
+| `aria-pressed` | Button | `true` basılı stili alır |
+| `data-disabled` | Button | devre dışıyken bulunur |
+
+## Erişilebilirlik
+
+Roving tabindex ile WAI-ARIA [Toolbar desenini](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) izler: Tab sırasında yalnızca bir öğe bulunur ve toolbar son focus alan öğeyi hatırlar. Sağ ve Sol oklar RTL'de okuma yönünü izler.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Toolbar'a (son focus alan öğeye) girer ya da çıkar." },
+  { keys: ["ArrowRight"], action: "Sonraki öğe; sona gelince başa döner (dikeyde ArrowDown)." },
+  { keys: ["ArrowLeft"], action: "Önceki öğe; başa gelince sona döner (dikeyde ArrowUp)." },
+  { keys: ["Home"], action: "İlk öğe." },
+  { keys: ["End"], action: "Son öğe." },
+  { keys: ["Enter", "Space"], action: "Focus'taki butonu çalıştırır." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Aynı şey üzerinde çalışan üç ya da daha fazla ilişkili kontrolü grupla; örneğin bir editördeki metin.</p>}
+  dont={<p>Bir sayfanın birbiriyle ilgisiz butonlarını görünüm için toolbar'a sarmak; her biri kendi Tab durağını kaybeder.</p>}
+/>
+
+## İlgili sayfalar
+
+- [DropdownMenu](/tr/docs/components/dropdown-menu): toolbar içindeki menüler.
+- [SegmentedControl](/tr/docs/components/segmented-control): birkaç görünüm arasında geçiş.

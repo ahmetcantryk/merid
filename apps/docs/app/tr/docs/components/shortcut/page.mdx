@@ -1,0 +1,95 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ShortcutBasic, ShortcutPlatforms } from "@/examples/tr/shortcut";
+
+export const metadata = docMetadata("tr", "/docs/components/shortcut", {
+  title: "Shortcut",
+  description: "Kbd tuşlarından oluşan, platforma göre değişen tuş kombinasyonu.",
+});
+
+# Shortcut
+
+⌘K ya da Ctrl+K gibi bir tuş kombinasyonu; [Kbd](/tr/docs/components/kbd) tuşlarından oluşur. `mod` macOS'ta ⌘, diğer platformlarda Ctrl olur; ekran okuyucular tuşların tam adlarını duyar.
+
+<div className="doc-meta">
+  <StatusBadge status="beta" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/shortcut">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Text>
+  Aramak için <Shortcut keys={["mod", "k"]} />, komutlar için <Shortcut keys={["mod", "shift", "p"]} /> tuşlarına bas.
+</Text>`}>
+  <ShortcutBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Shortcut, formatShortcut, matchesShortcut } from "@meridui/react";
+```
+
+## Örnekler
+
+### Platformlar ve boyutlar
+
+Platform hydration'dan sonra algılanır (sunucu Mac olmayan biçimi render'lar). `platform` ile sabitleyebilirsin. Tuşlar: `mod`, `ctrl`, `meta`, `alt`, `shift`, `enter`, `escape`, `tab`, `backspace`, `delete`, `space`, oklar (`arrowup`…) ve herhangi tek bir karakter.
+
+<ComponentPreview code={`<Shortcut keys={["mod", "shift", "z"]} platform="mac" />
+<Shortcut keys={["mod", "shift", "z"]} platform="other" />
+<Shortcut keys={["alt", "arrowup"]} platform="mac" size="sm" labels={{ arrowup: "Yukarı ok" }} />
+<Shortcut keys={["alt", "arrowup"]} platform="other" size="sm" labels={{ arrowup: "Yukarı ok" }} />`}>
+  <ShortcutPlatforms />
+</ComponentPreview>
+
+### Tuş basışlarını eşleştirmek
+
+`matchesShortcut(event, keys)` aynı kuralları kullanır; böylece gösterdiğin ile yakaladığın kombinasyon hiç ayrışmaz. Değiştirici tuşlar birebir eşleşmelidir.
+
+```tsx
+useEffect(() => {
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (matchesShortcut(event, ["mod", "s"])) {
+      event.preventDefault();
+      save();
+    }
+  };
+  document.addEventListener("keydown", onKeyDown);
+  return () => document.removeEventListener("keydown", onKeyDown);
+}, []);
+```
+
+`formatShortcut(["mod", "k"])`, yalnızca metin alan yerler (bir `title` ya da `aria-keyshortcuts` ipucu) için düz metni (`"⌘K"` ya da `"Ctrl+K"`) döndürür.
+
+## API referansı
+
+`children` dışındaki tüm `<kbd>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "keys", type: "string[]", description: "Birlikte basılan tuşlar, örneğin [\"mod\", \"k\"]." },
+  { name: "platform", type: "\"auto\" | \"mac\" | \"other\"", default: "\"auto\"", description: "Platformu sabitler; auto hydration'dan sonra algılar." },
+  { name: "size", type: "\"sm\" | \"md\"", default: "\"md\"", description: "Tuş boyutu." },
+  { name: "labels", type: "Record<string, string>", description: "İngilizce varsayılanlarla birleştirilen okunan tuş adları, örneğin { shift: \"Üst karakter\" }. .mac ya da .other ile biten anahtarlar tek platform için geçerlidir." },
+  { name: "joiner", type: "string", default: "\"+\"", description: "Ekran okuyucunun tuşlar arasında okuduğu kelime." },
+  { name: "ref", type: "Ref<HTMLElement>", description: "Dıştaki <kbd>'ye iletilen ref." },
+]} />
+
+### Yardımcı fonksiyonlar
+
+| Fonksiyon | Döndürdüğü |
+|---|---|
+| `formatShortcut(keys, platform?)` | `"⌘K"` / `"Ctrl+K"` |
+| `matchesShortcut(event, keys, platform?)` | event tam olarak `keys`'e basıyorsa `true` |
+| `keySymbol(key, platform)`, `keyLabel(key, platform, labels?)` | Tek bir tuşun sembolü ya da okunan adı |
+| `detectPlatform()`, `usePlatform()` | `"mac"` ya da `"other"` |
+
+## Stil verme
+
+Shortcut, `.mrd-shortcut` sınıflı bir `.mrd-kbd`'dir; her tuş iç içe bir `<kbd class="mrd-shortcut__key">`'dir. Mac olmayan platformlarda tuşların arasına CSS ile soluk bir `+` çizilir. Dıştaki elemanda `data-platform` ve `data-size` bulunur.
+
+## Erişilebilirlik
+
+İç içe `<kbd>` elemanları, bir tuş kombinasyonunu işaretlemenin HTML yoludur. Görünür semboller (⌘, ⇧, ⌥) yardımcı teknolojilerden gizlenir ve yerlerine görsel olarak gizli adlar ("Command + Shift + P") okunur; bunları `labels` ile çevirebilirsin.
+
+## İlgili sayfalar
+
+- [Kbd](/tr/docs/components/kbd): tek bir tuş.
+- [Command](/tr/docs/components/command): öğe kısayollarını bu component'le gösterir.
