@@ -1,0 +1,195 @@
+---
+title: "React Component Libraries Without Tailwind (2026)"
+description: "Want styled React components without adopting Tailwind? The real options, how cascade layers change overrides, and how to add Tailwind later if you want."
+slug: react-components-without-tailwind
+canonical: /blog/react-components-without-tailwind
+keywords:
+  - react component library without tailwind
+  - plain css react components
+  - shadcn without tailwind
+  - css modules react component library
+  - cascade layers react
+date: 2026-11-06
+updated: 2026-11-06
+lastReviewed: 2026-11-06
+tags:
+  - css
+  - comparisons
+author: Ahmet Can Tiryaki
+---
+
+# React component libraries without Tailwind
+
+Tailwind is the default styling layer for a large part of the React ecosystem right now. shadcn/ui requires it, HeroUI v3 is built on Tailwind v4, and most AI app builders emit utility classes by default. That is fine if you like Tailwind. It is a problem if you don't, or if you have an existing codebase with a stylesheet you are not going to rewrite.
+
+This post is for the second group. It covers why teams skip Tailwind, which libraries work without it, what "works without it" should actually mean, and how to keep the option of adding Tailwind later.
+
+Disclosure: we build Merid, one of the libraries below. We have tried to describe the others the way their own docs do, and we link those docs so you can check.
+
+## Why teams avoid Tailwind
+
+The reasons we hear most often are practical, not ideological:
+
+- **An existing CSS codebase.** You have CSS Modules, Sass, or a hand-rolled stylesheet with years of decisions in it. Adding a second styling system means two ways to do everything.
+- **Readability of markup.** Long class strings in JSX are a real cost for some teams, especially in code review.
+- **Tooling constraints.** Some build setups, CMS templates, or server-rendered HTML outside React cannot run the Tailwind compiler.
+- **Design ownership.** A design team that already maintains tokens may want components to read from those tokens, not from a Tailwind theme file.
+- **Preflight.** Tailwind's reset changes borders, buttons and images globally. On a legacy page that can break things you did not touch.
+
+None of these are arguments against Tailwind in general. They are arguments for a component library that does not force the choice.
+
+## What "without Tailwind" should mean
+
+A library can technically "not require Tailwind" and still make life hard. Three things to check:
+
+1. **How do you override it?** If the library's CSS has high specificity or injects styles at runtime after yours, overriding a padding means `!important` or a wrapper selector. That gets old fast.
+2. **Is there a runtime?** CSS-in-JS libraries style at runtime. That affects bundle size, server rendering, and whether components work in React Server Components without a client boundary.
+3. **Where do values live?** If colours and radii are hard-coded, theming means editing source. If they are CSS custom properties, theming is a few lines of CSS.
+
+## The options
+
+### MUI (Material UI)
+
+The largest ecosystem, and no Tailwind involved. Styling uses Emotion by default, with a `ThemeProvider` for custom themes. You get a huge component set plus MUI X (data grid, date pickers, some of it paid). The trade-off is a runtime styling engine and a Material look you will spend time customising away from if you do not want it. [MUI docs](https://mui.com/material-ui/).
+
+### Mantine
+
+More than 100 components, hooks, forms, dates and charts. Styles ship as CSS Modules, and the docs recommend a PostCSS preset. You wrap the app in `MantineProvider`. Mantine is probably the strongest "batteries included, no Tailwind" choice for app dashboards. [Mantine docs](https://mantine.dev/).
+
+### Radix Themes
+
+Plain CSS, a `<Theme>` wrapper, a thoughtful colour system, maintained by WorkOS. Philosophically the closest to Merid: quiet defaults, tokens as CSS variables. [Radix Themes docs](https://www.radix-ui.com/themes/docs).
+
+### Chakra UI
+
+Chakra v3 is built on Ark UI and Zag state machines and styles with Emotion at runtime, with a provider. The docs describe a long-term move towards zero runtime. [Chakra docs](https://chakra-ui.com/).
+
+### React Aria Components (plus your own CSS)
+
+If you want to own every pixel, React Aria gives you unstyled, carefully accessible components and you write the CSS yourself, in whatever system you already use. More work, total control. [React Aria docs](https://react-spectrum.adobe.com/react-aria/).
+
+### Merid
+
+Merid is a set of 46 styled components shipped as `@meridui/react`, with one plain-CSS stylesheet and no provider (only toasts need a `ToastProvider`). Every value is a `--mrd-*` custom property, and every rule sits in a cascade layer. It is version 0.1: there is no Combobox or Autocomplete, no date picker, no charts, and no Figma library yet.
+
+## Comparison
+
+| | Tailwind needed | Styling runtime | Provider | Override method |
+|---|---|---|---|---|
+| MUI | No | Emotion (default) | For custom themes | `sx`, `styled`, theme overrides |
+| Mantine | No | None (CSS Modules) | Yes | Styles API, CSS variables |
+| Radix Themes | No | None | `<Theme>` | CSS, CSS variables |
+| Chakra UI v3 | No | Emotion | Yes | Style props, recipes |
+| React Aria | No | None, unstyled | No | You write all CSS |
+| Merid | No | None | No | Plain CSS; layers let yours win |
+| shadcn/ui | Yes | None | No | Edit copied source |
+
+Check each project's docs before deciding; these libraries move quickly.
+
+## Cascade layers: why they matter here
+
+The reason overriding a component library is painful is specificity. A library selector like `.lib-button.lib-button--primary` beats your `.cta` class, so you escalate.
+
+CSS cascade layers (`@layer`) change the rule. Styles in a named layer lose to styles outside any layer, regardless of specificity. A library that puts all its rules in layers hands you the last word by default.
+
+Merid declares its layers like this:
+
+```css
+@layer merid.tokens, merid.base, merid.components;
+```
+
+So in your app:
+
+```css
+/* your unlayered CSS: wins over Merid without !important */
+.checkout .mrd-button {
+  min-inline-size: 12rem;
+}
+```
+
+Layers are supported in all current evergreen browsers. If you target very old browsers, check the [browser support page](https://meridui.dev/docs/browser-support).
+
+## Theming without a theme file
+
+Because values are custom properties, theming is ordinary CSS:
+
+```css
+:root {
+  --mrd-accent: #0f766e;
+}
+```
+
+And for sections of a page, Merid reads attributes on any element:
+
+```tsx
+<aside data-theme="dark" data-density="compact">
+  <SidebarNav.Root>{/* ... */}</SidebarNav.Root>
+</aside>
+```
+
+`data-accent` takes `blue`, `violet`, `green` or `graphite`. Portalled content like menus and dialogs keeps the scope it was opened from. See [subtree attributes](https://meridui.dev/docs/integrations/subtree-attributes).
+
+## Getting started without Tailwind
+
+```bash
+npm i @meridui/react
+```
+
+```tsx
+import "@meridui/react/styles.css";
+import { Button, Field, Input } from "@meridui/react";
+
+export function Signup() {
+  return (
+    <form>
+      <Field label="Email">
+        <Input type="email" name="email" />
+      </Field>
+      <Button variant="primary" type="submit">Create account</Button>
+    </form>
+  );
+}
+```
+
+(Check the [Field docs](https://meridui.dev/docs/components/field) for the exact props; the shape above is illustrative.)
+
+That is the whole setup: one CSS import, no PostCSS plugin, no config file.
+
+## If you want Tailwind later
+
+Skipping Tailwind today should not lock you out of it. Because Merid and Tailwind v4 both use cascade layers, you can declare their order once:
+
+```css
+/* app.css */
+@layer theme, base, merid, components, utilities;
+
+@import "tailwindcss";
+@import "@meridui/react/styles.css";
+```
+
+With that order, Preflight comes first, Merid's styles win over it, and Tailwind utilities come last, so `className="mt-4 w-full"` on a Merid component works without `!important`. You can map Merid tokens into the Tailwind theme with `@theme inline` so utilities follow dark mode. The details, including Tailwind v3 caveats, are in the [Tailwind integration guide](https://meridui.dev/docs/integrations/tailwind).
+
+Mantine and MUI also document Tailwind coexistence; read their guides, as layer ordering is where these setups usually break.
+
+## Which should you pick?
+
+- **You need breadth now** (date pickers, charts, rich forms): Mantine or MUI. Merid does not have those components.
+- **You want calm defaults and plain CSS with a mature team behind it**: Radix Themes.
+- **You want total control and will write the CSS**: React Aria Components.
+- **You want plain CSS, no provider, tokens you can override with one line, and server-component-friendly imports**, and you can live with a 0.1 library: try Merid.
+
+If you are coming from shadcn/ui specifically because of Tailwind, read [Merid vs shadcn/ui, side by side](https://meridui.dev/compare/shadcn-ui-vs-merid).
+
+## FAQ
+
+**Can I use shadcn/ui without Tailwind?**
+Not as designed. The copied components use Tailwind classes. You could rewrite them, but at that point you own a fork of every component.
+
+**Are CSS Modules enough on their own?**
+For your own components, often yes. For a library, the question is how the library's CSS and yours interact. Layers make that predictable.
+
+**Does plain CSS hurt performance?**
+Usually the reverse: a static stylesheet is cached and does not run JavaScript to style. The trade-off is that you load CSS for components you might not use; Merid ships one stylesheet (plus split `components.css` and `tokens.css` entries).
+
+**Is Merid production-ready?**
+It is 0.1 and independently maintained. It has an axe suite and visual regression tests in CI, but the API can change before 1.0. Pin versions.

@@ -12,7 +12,7 @@ async function openPlayground(page: Page) {
   await gotoThemed(page, "/", "light");
   const pg = page.locator(".pg");
   await pg.scrollIntoViewIfNeeded();
-  return { pg, stage: pg.locator(".pg__stage") };
+  return { pg, stage: pg.locator(".pg__stage[data-layer=\"main\"]") };
 }
 
 test.describe("landing playground", () => {
@@ -34,7 +34,7 @@ test.describe("landing playground", () => {
 
   test("accent swatches change --mrd-accent on the stage", async ({ page }) => {
     const { pg, stage } = await openPlayground(page);
-    const swatches = pg.locator(".pg__swatches").getByRole("radio");
+    const swatches = pg.locator(".studio-swatches").getByRole("radio");
     const count = await swatches.count();
     expect(count).toBeGreaterThan(1);
     const seen = new Set([await cssVar(stage, "--mrd-accent")]);
@@ -72,4 +72,29 @@ test.describe("landing playground", () => {
       expect(heights.size).toBe(await options.count());
     }
   });
+
+  test("radius and type scale write token overrides and the CSS diff", async ({ page }) => {
+    const { pg, stage } = await openPlayground(page);
+    await expect(pg.getByText(/Defaults./)).toBeVisible();
+    await pg.getByRole("radiogroup", { name: "Radius" }).getByRole("radio", { name: "None" }).click();
+    await expect.poll(() => cssVar(stage, "--mrd-radius-lg")).toBe("0px");
+    await pg.getByRole("radiogroup", { name: "Type scale" }).getByRole("radio", { name: "110%" }).click();
+    await expect.poll(() => cssVar(stage, "--mrd-text-md")).toBe("16.5px");
+    const diff = pg.locator(".studio-diff");
+    await expect(diff.locator('[data-sign="+"]', { hasText: "--mrd-radius-lg: 0px;" })).toBeVisible();
+    await expect(diff.getByRole("button", { name: "Copy CSS" })).toBeVisible();
+  });
+
+  test("split mode renders a dark copy behind a meridian and hides it from assistive tech", async ({ page }) => {
+    const { pg } = await openPlayground(page);
+    await pg.getByRole("radiogroup", { name: "Theme" }).getByRole("radio", { name: "Split" }).click();
+    const mirror = pg.locator('.pg__stage[data-layer="mirror"]');
+    await expect(mirror).toHaveAttribute("data-theme", "dark");
+    await expect(mirror.locator(".studio-app")).toHaveAttribute("aria-hidden", "true");
+    await expect(pg.locator(".studio-meridian")).toBeVisible();
+    const slider = pg.getByRole("slider", { name: /Meridian/ });
+    await slider.fill("30");
+    await expect.poll(() => pg.locator(".studio-window__viewport").evaluate((el) => (el as HTMLElement).style.getPropertyValue("--split"))).toBe("30%");
+  });
 });
+

@@ -1,0 +1,135 @@
+---
+title: "Merid vs shadcn/ui: An Honest Comparison"
+description: "Merid vs shadcn/ui: copied source vs a versioned package, Tailwind vs plain CSS tokens, and which keeps AI-generated React UI consistent."
+slug: merid-vs-shadcn-ui
+canonical: /compare/shadcn-ui-vs-merid
+keywords:
+  - merid vs shadcn
+  - shadcn vs component library
+  - shadcn/ui alternative
+  - shadcn without tailwind
+  - design tokens react
+date: 2026-09-30
+updated: 2026-09-30
+lastReviewed: 2026-09-30
+author: Ahmet Can Tiryaki
+---
+
+# Merid vs shadcn/ui: an honest comparison
+
+We build Merid, so read this with that in mind. We have tried to describe shadcn/ui the way its own users would, and to be specific about where Merid is behind.
+
+The short version: shadcn/ui gives you source code to own. Merid gives you a versioned package with a fixed design contract. Both produce calm, modern interfaces. They differ in who holds the design decisions: your repo, or the library.
+
+## At a glance
+
+| | shadcn/ui | Merid |
+|---|---|---|
+| What you install | A CLI that copies component source into your repo | `@meridui/react` from npm |
+| Styling | Tailwind CSS utility classes | One plain-CSS stylesheet in three cascade layers |
+| Tailwind required | Yes | No; works alongside Tailwind v4 |
+| Primitives | Radix UI or Base UI | Built in-house; Floating UI for positioning |
+| Tokens | Tailwind theme + CSS variables | Every value is a `--mrd-*` custom property; JS via `@meridui/tokens` |
+| Provider | None | None |
+| Theming scope | Class or attribute on root; per-component edits | `data-theme`, `data-accent`, `data-density`, `dir` on any subtree |
+| Updates | Re-run CLI, merge diffs | `npm update` |
+| Customisation | Edit the source | Override tokens or add CSS; source stays upstream |
+| Accessibility | Inherits Radix/Base UI behaviour | Targets WCAG 2.2 AA; axe suite in CI; forced colours |
+| RSC | Works; client components where needed | Static parts render on server; interactive modules ship `"use client"` |
+| AI tooling | Registry, MCP server, agent skills, native in v0 | Written design contract in repo; no registry or MCP server yet |
+| Components | Large base set + huge community registry | 46 |
+| Maturity | Widely adopted | 0.1, independently maintained |
+| Licence | MIT | MIT |
+
+Sources: [shadcn/ui docs](https://ui.shadcn.com/docs), [Merid README](https://github.com/ahmetcantryk/merid).
+
+## The core difference: who owns the design
+
+With shadcn/ui, `components/ui/button.tsx` is your file. That is the point. You can change the padding, add a variant, swap the focus ring. Nobody upstream can break it.
+
+The flip side is that every edit is a fork, and nothing stops the next edit. On a team this is manageable with review. With AI agents in the loop it gets harder: a model asked to "make this button fit the header" will often just change the button. After a few months, the button in your settings page and the button in your dashboard may not be the same button.
+
+With Merid, `Button` lives in `node_modules`. Its values come from tokens defined in a design contract: one accent, 1px hairline borders, a rounding scale of 16, 14, 12, 8 and 6px that steps down as components nest, three text tones, 32px default control height. You change the look by changing tokens, for example:
+
+```css
+:root {
+  --mrd-accent: #0f766e;
+}
+```
+
+or by setting attributes on a subtree:
+
+```html
+<aside data-theme="dark" data-density="compact">...</aside>
+```
+
+You cannot quietly fork a single component's padding from a call site. For some teams that is a limitation. For teams whose UI is increasingly written by agents, it is the feature.
+
+## Styling: Tailwind vs plain CSS
+
+shadcn/ui is built on Tailwind. If your team already thinks in utilities, this is a strength: components and pages share one language.
+
+Merid is plain CSS. Rules sit in `@layer merid.tokens, merid.base, merid.components`, which means any CSS you write outside those layers wins, without `!important`. There is no build plugin and no runtime.
+
+You do not have to choose. Merid's [Tailwind guide](https://meridui.dev/docs/integrations/tailwind) declares one layer order so Tailwind utilities override component spacing, and maps Merid tokens into Tailwind's `@theme`, so `bg-accent` and `<Button variant="primary">` use the same colour in light and dark mode.
+
+## Consistency in AI-generated UI
+
+The generic look of AI-made interfaces comes from small inconsistencies: arbitrary spacing, near-duplicate greys, mixed radii, focus rings that differ per component. Tailwind makes arbitrary values one bracket away (`p-[18px]`), and models use them.
+
+shadcn/ui's answer is tooling: a registry, an [MCP server](https://ui.shadcn.com/docs) and agent skills so models fetch the canonical component rather than inventing one. That works well, and models know shadcn/ui better than almost anything else.
+
+Merid's answer is constraint. Components do not accept free-form style props, variants are data attributes, and every value is a named token. There is less surface for a model to improvise on. We also keep the design contract as a plain Markdown file in the repo, which you can reference from Cursor rules or a `CLAUDE.md`.
+
+Honest gap: Merid has no registry, MCP server or `llms.txt` yet, and models have seen far less Merid code than shadcn/ui code. Expect to point your agent at the docs more often.
+
+## Theming and dark mode
+
+shadcn/ui themes through CSS variables on the root, typically toggled with a `dark` class. Per-section theming is possible but you wire it yourself.
+
+Merid themes are scoped by design. `data-theme="light"` inside a dark page gets every light token and `color-scheme: light`. Accent presets (blue, violet, green, graphite) and three densities work the same way, and portalled content like menus and dialogs inherits the scope of the element that opened it. RTL uses logical properties throughout, with mirrored keyboard navigation.
+
+## Accessibility
+
+shadcn/ui inherits keyboard and focus behaviour from Radix or Base UI, which are well tested. Because you own the markup, it is also possible to break it in an edit.
+
+Merid targets WCAG 2.2 AA, with visible focus, reduced-motion handling and Windows forced-colours support, and runs an axe suite on every change. `Field` wires `htmlFor`, `aria-describedby` and `aria-invalid` automatically. Merid is newer and has had less real-world testing than Radix.
+
+## Coverage
+
+This is where shadcn/ui is clearly ahead. Its base set, blocks and the community registry cover almost anything. Merid has 46 components focused on product UI: forms, overlays, navigation, feedback and layout. There is no combobox, date picker, chart or Figma kit today.
+
+## Which should you pick?
+
+**Choose shadcn/ui if** you want to own every line, your team is fluent in Tailwind, you need broad coverage now, or you rely on v0 and the registry ecosystem.
+
+**Choose Merid if** you want a versioned package you update with npm, plain CSS you can override without specificity fights, strict tokens that keep many contributors (human or AI) on one design, and scoped theming out of the box. And you are comfortable adopting a 0.x library.
+
+**Use both** if you like: Merid components with Tailwind utilities for layout is a supported setup.
+
+## Migrating from shadcn/ui to Merid
+
+If you decide to move, there is no need to do it in one go.
+
+1. **Install alongside.** Add `@meridui/react` and its stylesheet. Your shadcn/ui files stay where they are.
+2. **Align tokens first.** Set `--mrd-accent` and, if needed, radius tokens to match your current shadcn theme, so old and new screens look the same during the transition. If you keep Tailwind, map Merid tokens into `@theme` as the Tailwind guide shows.
+3. **Swap leaves.** Replace `Button`, `Input`, `Badge` and `Field`-style wrappers first. Merid's `Button` supports `asChild`, so router links keep working.
+4. **Then overlays.** Dialog, AlertDialog, Popover, DropdownMenu and Toast next; they carry the most accessibility logic, so test keyboard flows as you go.
+5. **Delete local files** once nothing imports them.
+
+Keep any shadcn/ui components Merid does not cover, such as a combobox or date picker, until there is a replacement.
+
+## Try it
+
+```bash
+npm i @meridui/react
+```
+
+```tsx
+import "@meridui/react/styles.css";
+import { Button } from "@meridui/react";
+```
+
+Source and issues on [GitHub](https://github.com/ahmetcantryk/merid). If we got something wrong about shadcn/ui, open an issue and we will fix this page.
+
+**Related:** [shadcn/ui alternatives](/blog/shadcn-ui-alternatives) · [Best React component libraries for AI coding](/blog/best-react-component-libraries-ai-coding-2026)

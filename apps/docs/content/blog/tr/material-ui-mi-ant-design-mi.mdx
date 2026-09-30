@@ -1,0 +1,136 @@
+---
+title: "Material UI mı Ant Design mı? 2026 Karşılaştırması"
+description: "MUI ve Ant Design'ı stil yaklaşımı, component kapsamı, tema, lisans ve kullanım alanına göre karşılaştırdık. Hangi proje için hangisi mantıklı?"
+slug: material-ui-mi-ant-design-mi
+lang: tr
+canonical: /tr/blog/material-ui-mi-ant-design-mi
+alternate:
+  en: /blog/ant-design-alternatives
+keywords:
+  - material ui mi ant design mı
+  - mui vs ant design
+  - react ui kütüphanesi karşılaştırma
+  - ant design alternatifi
+  - material ui alternatifi
+date: 2026-12-08
+updated: 2026-12-08
+lastReviewed: 2026-12-08
+tags:
+  - comparisons
+author: Ahmet Can Tiryaki
+---
+
+# Material UI mı Ant Design mı?
+
+Türkiye'de kurumsal React projelerinin büyük kısmı bu iki kütüphaneden biriyle başlıyor. Admin paneli, iç araç, B2B SaaS: masaya ilk gelen iki isim MUI ve Ant Design. Bu yazıda ikisini tarafsız şekilde karşılaştırıyorum. Sonda kısa bir "üçüncü seçenek" bölümü var; o bölümde kendi geliştirdiğim kütüphaneden bahsediyorum ve bunu baştan söylüyorum.
+
+Not: Sürüm bilgileri Aralık 2026 itibarıyla resmi dokümanlara göre. Karar vermeden önce [mui.com](https://mui.com) ve [ant.design](https://ant.design) üzerinden güncel sürümü kontrol et; iki proje de hızlı sürüm çıkarıyor.
+
+## Kısa cevap
+
+- **Veri yoğun, form ve tablo ağırlıklı bir admin paneli** yapıyorsan ve ücretsiz, kapsamlı bir set istiyorsan Ant Design genelde daha az ek iş çıkarır.
+- **Geniş ekosistem, çok sayıda üçüncü parti örnek ve ileride gelişmiş data grid/date picker ihtiyacı** varsa MUI mantıklı; ama gelişmiş özelliklerin bir kısmı ücretli MUI X planlarında.
+- **Görünüm senin için kritikse** ikisinin de güçlü bir görsel kimliği olduğunu hesaba kat. Onu değiştirmek, kütüphaneyi kurmaktan daha fazla iş.
+
+## Genel bakış
+
+| | MUI (Material UI) | Ant Design |
+|---|---|---|
+| Ana sürüm | v9 | v6 |
+| Kökeni | Google'ın Material Design'ı üzerine topluluk projesi, şimdi MUI şirketi | Alibaba'da doğdu (Ant Group) |
+| Stil motoru | Varsayılan olarak Emotion (`@emotion/react`, `@emotion/styled`) | CSS-in-JS; v6'da CSS variables modu varsayılan |
+| Tema | `ThemeProvider` + `createTheme` | `ConfigProvider` + design token'lar |
+| Görsel dil | Material Design | Ant Design'ın kendi dili, yoğun ve kurumsal |
+| Tablo | Temel `Table`; gelişmiş data grid MUI X'te | Güçlü `Table` ücretsiz |
+| Date picker | MUI X Date Pickers | Ücretsiz `DatePicker` |
+| Form | Form state için ayrı kütüphane (React Hook Form vb.) | Dahili `Form` component'i |
+| Lisans | Core MIT; MUI X Pro/Premium ücretli | MIT |
+
+Kaynaklar: [MUI dokümanları](https://mui.com/material-ui/), [MUI fiyatlandırma](https://mui.com/pricing/), [Ant Design dokümanları](https://ant.design/docs/react/introduce).
+
+## Stil yaklaşımı
+
+İkisi de stilini JavaScript tarafında üretir. Bu, iki konuda önemli:
+
+**React Server Components.** Next.js App Router kullanıyorsan runtime'da stil üreten kütüphaneler genelde client component içinde çalışır ve bir kurulum adımı gerektirir. MUI'nin Next.js entegrasyonu için resmi bir paketi ve rehberi var; Ant Design de App Router için SSR stil toplama rehberi sunuyor. İkisi de çalışıyor, ama kurulumu atlamamalısın.
+
+**Override.** MUI'de `sx` prop'u, `styled()` ve tema `components` override'ları var. Ant Design'da token sistemi ve component token'ları var; global token'larla (renk, radius, font) hızlıca marka rengini değiştirebilirsin.
+
+```tsx
+// MUI
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const theme = createTheme({
+  palette: { primary: { main: "#0f766e" } },
+  shape: { borderRadius: 8 },
+});
+
+export function App({ children }: { children: React.ReactNode }) {
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+}
+```
+
+```tsx
+// Ant Design
+import { ConfigProvider } from "antd";
+
+export function App({ children }: { children: React.ReactNode }) {
+  return (
+    <ConfigProvider theme={{ token: { colorPrimary: "#0f766e", borderRadius: 8 } }}>
+      {children}
+    </ConfigProvider>
+  );
+}
+```
+
+İlk bakışta benzer. Fark, derinleştikçe çıkar: Ant Design'ın token sistemi hem global hem component seviyesinde tasarlanmış; MUI'nin tema nesnesi ise daha esnek ama daha çok kod yazdırır.
+
+## Component kapsamı
+
+Ant Design kurumsal ekranlar için çok geniş bir set sunar: Table (sıralama, filtreleme, satır seçimi), Form, DatePicker, TreeSelect, Transfer, Cascader, Upload gibi component'ler ücretsiz ve aynı paket içinde.
+
+MUI'nin core paketi temel component'leri kapsar. Gelişmiş data grid (gruplama, pivot, Excel export vb.) ve bazı gelişmiş özellikler MUI X'in ücretli planlarında. Resmi fiyatlandırma sayfasına göre Pro ve Premium lisanslar geliştirici başına yıllık ücretli. Basit tablolar ve MUI X'in ücretsiz sürümü çoğu projede yeter; ama bütçeyi planlarken bunu bilmen iyi olur.
+
+## Görsel kimlik
+
+Bu, Türk ekiplerin en sık atladığı konu. İki kütüphane de "kendisine benzeyen" arayüz üretir. Kullanıcıların bir bakışta "bu Material" ya da "bu Ant" dediği ürünler bundan.
+
+Görünümü değiştirmek mümkün, ama iş yükü gerçek:
+- MUI'de Material'ın ripple efekti, yükselti gölgeleri ve tipografisi tema ve override'larla değişir.
+- Ant Design'da yoğun, bilgi odaklı düzen ve karakteristik bileşen şekilleri token'larla yumuşar ama tamamen kaybolmaz.
+
+İç araç yapıyorsan bu genelde sorun değil. Müşteriye dönük bir ürün yapıyorsan ve marka farklılığı önemliyse başta düşün.
+
+## Performans ve bundle
+
+İki kütüphane de tree-shaking destekler; sadece kullandığın component'ler paketlenir. Runtime CSS-in-JS'in bir maliyeti var (stil üretimi ve enjeksiyonu), ama çoğu admin panelinde darboğaz bu olmaz. Ölçmeden karar verme: kendi sayfanda Lighthouse ya da Next.js bundle analyzer ile bak.
+
+## Erişilebilirlik
+
+İkisi de ARIA ve klavye desteğine önem veriyor, ama kapsam component'ten component'e değişir. Hangisini seçersen seç, kendi ekranlarını axe ile test et ve klavyeyle bir tur at.
+
+## i18n ve Türkçe
+
+Ant Design'ın `ConfigProvider` üzerinden verilen locale paketleri arasında Türkçe (`tr_TR`) var; DatePicker, Pagination gibi component'lerin metinleri buradan gelir. MUI'de de core ve MUI X için locale nesneleri var, Türkçe dahil. Tarih formatı için iki tarafta da seçtiğin tarih kütüphanesinin (dayjs, date-fns vb.) Türkçe locale'ini ayrıca yüklemen gerekebilir.
+
+## Hangisini seçmeli
+
+**Ant Design seç, eğer:**
+- Ürünün ağırlıkla tablo, form ve filtrelerden oluşuyorsa.
+- Gelişmiş component'lere ek lisans ödemeden erişmek istiyorsan.
+- Ant Design'ın görsel dili seni rahatsız etmiyorsa.
+
+**MUI seç, eğer:**
+- Ekibin zaten MUI biliyorsa ya da geniş topluluk örneklerinden faydalanmak istiyorsan.
+- Material Design'a yakın bir görünüm uygunsa ya da temayı derinlemesine özelleştirmeye hazırsan.
+- İleride MUI X Pro/Premium özelliklerine ihtiyaç duyarsan bütçe varsa.
+
+## Üçüncü seçenek: runtime stil istemiyorsan
+
+Bu kısım kendi projemle ilgili, o yüzden kısa tutuyorum. Merid, düz CSS ve `--mrd-*` token'larıyla çalışan bir React kütüphanesi. Provider yok, runtime'da stil üretimi yok; statik parçalar server'da render ediliyor. Tailwind v4 ile birlikte de kullanılabiliyor.
+
+Ama MUI ya da Ant Design'ın yerine her durumda geçmez: 0.1 sürümünde, 46 component var; data grid, date picker, combobox ve grafik yok. Admin panelinin ağır kısımları için bugün hâlâ yukarıdaki iki kütüphane daha uygun. Sade, marka nötr bir görünüm ve server component uyumu öncelikse [server components](https://meridui.dev/docs/server-components) ve [theming](https://meridui.dev/docs/integrations/theming) sayfalarına göz atabilirsin.
+
+## Özet
+
+MUI ve Ant Design'ın ikisi de olgun, iyi dokümante edilmiş, geniş kullanıcı tabanına sahip kütüphaneler. Karar genelde üç soruya iner: tablo ve form ağırlığın ne kadar, gelişmiş component'ler için ödeme yapmaya hazır mısın, ve kütüphanenin görsel kimliği ürününe uyuyor mu? Bu üç soruya dürüst cevap verirsen seçim kendiliğinden netleşir.

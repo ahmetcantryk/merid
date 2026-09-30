@@ -1,0 +1,132 @@
+---
+title: "MUI Alternatives: 6 React Libraries Compared (2026)"
+description: "Looking past Material UI? Six MUI alternatives compared on styling, runtime cost, theming and accessibility, with clear advice on when MUI still wins."
+slug: mui-alternatives
+keywords:
+  - mui alternatives
+  - material ui alternative
+  - mui without emotion
+  - react component library
+  - mui vs mantine
+date: 2026-10-28
+updated: 2026-10-28
+tags:
+  - comparisons
+author: Ahmet Can Tiryaki
+---
+
+# MUI alternatives: six React libraries compared
+
+MUI is one of the most successful open-source projects in the React ecosystem. It has a huge component set, a commercial team behind it, the MUI X data grid and date pickers, and more than a decade of production use. Models have seen enormous amounts of MUI code, so Cursor and Claude Code write it fluently.
+
+So why do teams look for MUI alternatives? Usually for one of three reasons: they do not want their product to look like Material Design, they want to drop runtime CSS-in-JS, or they find the API surface too large to keep consistent across a team (or across an AI agent's output).
+
+This post covers what MUI still does best, the common reasons to move, and six alternatives. We maintain one of them, [Merid](https://github.com/ahmetcantryk/merid).
+
+## Where MUI still wins
+
+Be honest about this before switching.
+
+- **Heavy components.** The [MUI X](https://mui.com/x/) data grid, date and time pickers, charts and tree view are hard to replace. If your app is table-heavy, this alone may decide it.
+- **Breadth.** Almost any widget you need already exists.
+- **Stability and support.** A company, paid tiers, long-term support and a predictable release cadence (the current line is [v9](https://mui.com/material-ui/getting-started/installation/)).
+- **Hiring and familiarity.** Many developers already know it.
+
+If those points matter most, the right move might be better theming, not a new library.
+
+## Why teams move off MUI
+
+**The Material look.** MUI can be themed heavily, but getting it to not look like Material takes real effort, and the defaults leak back in on every new component.
+
+**Runtime styling.** The default install pulls in `@emotion/react` and `@emotion/styled`. Emotion generates styles at runtime, which adds JavaScript and complicates React Server Components, where styled components need client boundaries.
+
+**Too many ways to style.** `sx`, `styled()`, theme `components` overrides, `className` and component props all overlap. On a team, and especially with AI-generated code, the same screen ends up styled four different ways.
+
+## Comparison table
+
+| | MUI | Mantine | Chakra UI | Ant Design | Radix Themes | Merid | React Aria |
+|---|---|---|---|---|---|---|---|
+| Styling | Emotion (default) | CSS modules + PostCSS | Emotion at runtime | CSS-in-JS, CSS vars default | Plain CSS | Plain CSS, cascade layers | Unstyled |
+| Runtime CSS-in-JS | Yes (default) | No | Yes | Yes | No | No | No |
+| Provider | For custom theme | Required | Required | Optional | `<Theme>` | None | None |
+| Data grid | MUI X (free + paid) | Table; community grids | Table | Advanced Table | Table | Table (no grid) | Table |
+| Date pickers | Yes (MUI X) | Yes (`@mantine/dates`) | No first-party | Yes | No | No | Yes |
+| Look | Material | Neutral | Neutral | Enterprise | Neutral, polished | Restrained, hairline | Yours |
+| Maturity | Very high | High | High | Very high | High | Early (0.1) | High |
+
+## The alternatives
+
+### 1. Mantine: the closest like-for-like
+
+If you use MUI for breadth, [Mantine](https://mantine.dev/getting-started/) is the most direct replacement. It has over a hundred components, a hooks library, forms, dates, charts, notifications and a rich text editor, all MIT. It moved away from runtime CSS-in-JS to CSS modules with a PostCSS preset. You wrap the app in `MantineProvider`.
+
+Good for: teams that want one vendor for most of their UI, without Material.
+
+### 2. Ant Design: if you build admin tools
+
+[Ant Design v6](https://ant.design/docs/react/migration-v6/) is built for enterprise back-office work, with some of the most capable tables, forms and date components in open source. v6 enables CSS variables mode by default and requires React 18+. It trades one strong visual language (Material) for another (Ant), so it suits internal tools more than branded products.
+
+### 3. Chakra UI: faster authoring with style props
+
+[Chakra UI v3](https://chakra-ui.com/docs/get-started/installation) rebuilt its internals on Ark UI state machines. Its docs note it still uses Emotion at runtime today, so it does not solve the runtime concern. It does offer a friendlier authoring model than MUI's `sx` for many people.
+
+### 4. Radix Themes: polished, plain CSS
+
+[Radix Themes](https://www.radix-ui.com/themes/docs/overview/getting-started) is a styled layer over Radix primitives, shipped as plain CSS with CSS variables. It looks modern and neutral out of the box, has a good layout system, and no runtime styling. You wrap the app in `<Theme>`.
+
+### 5. Merid: plain CSS, tokens, no provider
+
+[Merid](https://github.com/ahmetcantryk/merid) is for teams leaving MUI for the design and runtime reasons, not for breadth. It has 46 accessible components in one plain-CSS stylesheet. Rules sit in three cascade layers, so your own CSS overrides without `!important` or specificity battles. Every value, from colour to radius to shadow, is a `--mrd-*` token with light and dark values, also available as JS through `@meridui/tokens`.
+
+There is no provider. You import the stylesheet once:
+
+```tsx
+import "@meridui/react/styles.css";
+import { Field, Input, Button } from "@meridui/react";
+```
+
+Theme, accent, density and text direction are HTML attributes that apply to any subtree, and portals inherit the scope they came from. That replaces most of what an MUI `ThemeProvider` does, without a context.
+
+Static components render in React Server Components; interactive ones carry `"use client"` themselves, so you can import them directly into a server component. There are integration guides for [React Hook Form](https://meridui.dev/docs/integrations/react-hook-form) and [Zod](https://meridui.dev/docs/integrations/zod), which cover most MUI form setups.
+
+What it does not have: a data grid, date pickers, charts or a combobox. It is version 0.1 and maintained independently. If those gaps block you, pair it with a dedicated grid or stay on MUI.
+
+### 6. React Aria Components: build your own, properly
+
+If the real goal is a custom design system, [React Aria](https://react-spectrum.adobe.com/react-aria/) gives you unstyled components with Adobe's accessibility and internationalisation work, including date pickers. You bring every pixel of styling.
+
+## Migration notes
+
+Moving off MUI is rarely a big-bang rewrite. A pattern that works:
+
+1. Freeze new MUI usage. New screens use the new library.
+2. Map MUI theme values to the new library's tokens first, so both look alike during the transition.
+3. Replace leaf components (Button, TextField, Chip) before layout and overlays.
+4. Keep MUI X for grids and pickers as long as you need them. Nothing forces an all-or-nothing switch.
+
+With Merid, step 2 means setting `--mrd-*` tokens (for example `--mrd-accent`) so MUI and Merid screens share a palette while both exist.
+
+## Summary
+
+- Need breadth without Material: **Mantine**.
+- Building admin tools: **Ant Design**.
+- Want a polished neutral look in plain CSS: **Radix Themes** or **Merid**.
+- Want no provider, cascade layers and every value as a token: **Merid**.
+- Building your own system: **React Aria**.
+- Need data grid and pickers above everything: **stay on MUI**.
+
+## FAQ
+
+**Is MUI still a good choice in 2026?**
+Yes, for many teams. It is actively developed, commercially supported and has the strongest data grid and date pickers in open source. The alternatives above matter when design freedom, runtime cost or API consistency outweigh breadth.
+
+**Can MUI run without Emotion?**
+MUI's installation docs list styled-components as an alternative engine, but the default and most documented path is Emotion. If avoiding runtime CSS-in-JS is the goal, check the current docs for your version before committing.
+
+**Which MUI alternative has a data grid?**
+Ant Design has a very capable table. Mantine has a table component, and community data grid packages build on it. Merid and Radix Themes ship table components for display, not full data grids. Many teams keep MUI X, or a headless grid like TanStack Table, alongside a different component library.
+
+**Does Merid work with MUI in the same app?**
+Yes. Merid is plain CSS in its own cascade layers and needs no provider, so it does not conflict with MUI's theme context. That makes gradual migration straightforward.
+
+**Related:** [Best React component libraries for AI coding](/blog/best-react-component-libraries-ai-coding-2026) · [Chakra UI alternatives](/blog/chakra-ui-alternatives) · [MUI vs Merid](/compare/mui-vs-merid)

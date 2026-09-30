@@ -1,0 +1,63 @@
+---
+title: "Chakra UI ve Merid: Style Props mu, Sıkı Token'lar mı?"
+description: "Chakra UI ve Merid: provider ve Emotion üzerinde style props mu, provider'sız sade CSS ve sabit token'lar mı? Tema, RSC, kapsam ve olgunluk."
+slug: chakra-ui-vs-merid
+lang: tr
+canonical: /tr/compare/chakra-ui-vs-merid
+keywords:
+  - chakra ui vs merid
+  - chakra ui alternatifi
+  - emotion olmadan react
+  - style props design token
+date: 2026-09-30
+updated: 2026-09-30
+lastReviewed: 2026-09-30
+author: Ahmet Can Tiryaki
+---
+
+# Chakra UI ve Merid
+
+Chakra UI, style props yaklaşımını popüler yaptı: `<Box p={4} bg="gray.50">` kolay okunur, hızlı yazılır. Sürüm 3 bu modeli korudu ve iç yapıyı Ark UI ile Zag.js state machine'leri üzerine yeniden kurdu. Merid tersini yapar: component'ler serbest stil değeri almaz, her değer adlandırılmış bir token'dan gelir.
+
+Merid'i biz geliştiriyoruz. Chakra'yı kendi dokümanlarına göre anlatıyor ve önde olduğu yerleri söylüyoruz.
+
+## Bir bakışta
+
+| | Chakra UI v3 | Merid |
+|---|---|---|
+| Paket | `@chakra-ui/react` | `@meridui/react` |
+| Stil | Runtime'da Emotion (Chakra dokümanlarına göre), recipe'ler ve semantic token'lar | Üç cascade layer'da tek sade CSS dosyası |
+| Style props | Her component'te var | Yok; token'lar, varyantlar ve kendi CSS'in |
+| Kök gereksinimi | Uygulamayı `Provider` sarar | Yok (yalnızca toast'lar `ToastProvider` ister) |
+| Davranış katmanı | Ark UI (Zag.js) | Kendi yazdığı; konumlandırma için Floating UI |
+| Tema kapsamı | Tema sistemi ve color mode | Herhangi bir elemanda `data-theme`, `data-accent`, `data-density`, `dir` |
+| Server component'ler | Stilli parçalar client sınırı ister | Statik parçalar sunucuda render olur |
+| Olgunluk | Yüksek; büyük topluluk | 0.1, bağımsız geliştiriliyor |
+| Lisans | MIT | MIT |
+
+Kaynaklar: [Chakra UI kurulum](https://chakra-ui.com/docs/get-started/installation), [Ark UI](https://ark-ui.com/), [Merid README](https://github.com/ahmetcantryk/merid).
+
+## Chakra UI'ın önde olduğu yerler
+
+- **Yazma hızı.** Style props hızlı öğrenilir, layout'u tek dosyada tutar.
+- **Davranış.** Ark UI ve Zag.js iyi tanımlanmış, iyi test edilmiş state mantığı sunar.
+- **Tema sistemi.** Recipe'ler, slot recipe'ler ve tipli semantic token'lar.
+- **Topluluk ve kapsam.** Yıllarca birikmiş örnek ve cevap; Merid'in 46 component'inden fazlası.
+
+## Merid'in farklı olduğu yerler
+
+**Runtime yok, provider yok.** Chakra'nın kurulum rehberi bugün runtime'da Emotion kullandığını ve kökte bir `Provider` gerektiğini söyler. Merid sarmalayıcısız statik CSS'tir; Next.js App Router layout'un server component olarak kalır.
+
+**Özgürlük yerine tutarlılık.** Style props tek seferlik değerleri kolaylaştırır; büyük bir kod tabanında ya da JSX'in çoğunu bir ajan yazdığında `mt={3}` ile `mt="14px"` yan yana düşer. Merid değerleri sabitler, çıktı tutarlı kalır.
+
+## Merid'de olmayanlar
+
+Style props ya da spacing props'lu layout primitive'leri yok; combobox, date picker ve grafik de yok. Kod tabanın her yerde `Box` kullanıyorsa daha çok CSS yazarsın ya da Merid'in yanında Tailwind kullanırsın ([Tailwind rehberi](/tr/docs/integrations/tailwind)).
+
+## Hangisini seçmeli?
+
+**Chakra UI'ı seç**: ekibin style props'u seviyorsa, zaten v3'teysen ya da Merid'de olmayan component'lere ihtiyacın varsa.
+
+**Merid'i seç**: runtime CSS-in-JS ve provider istemiyorsan, çağrı noktalarının sapabileceği yolların az olmasını ve temayı sade HTML attribute'larıyla kapsamlamayı istiyorsan.
+
+**İlgili:** [MUI ve Merid](/tr/compare/mui-vs-merid) · [Mantine ve Merid](/tr/compare/mantine-vs-merid)

@@ -1,0 +1,135 @@
+---
+title: "React UI Kütüphanesi Seçimi: 2026 İçin Pratik Rehber"
+description: "MUI, Ant Design, shadcn/ui, Mantine, Chakra, Radix: hangi React UI kütüphanesi senin projene uygun? Proje tipine göre karar tablosu ve kontrol listesi."
+slug: react-ui-kutuphanesi-secimi
+lang: tr
+canonical: /tr/blog/react-ui-kutuphanesi-secimi
+alternate: /blog/best-react-component-libraries-ai-coding-2026
+keywords:
+  - react ui kütüphanesi
+  - react component kütüphanesi
+  - en iyi react ui kütüphanesi
+  - material ui mi ant design mı
+  - react arayüz kütüphanesi
+date: 2026-11-03
+updated: 2026-11-03
+tags:
+  - comparisons
+  - ai-coding
+author: Ahmet Can Tiryaki
+---
+
+# React UI kütüphanesi seçerken neye bakmalısın?
+
+"En iyi React UI kütüphanesi hangisi?" diye aradığında karşına ya "React nedir" diye başlayan giriş yazıları ya da 15 kütüphaneyi alt alta sıralayan İngilizce listeler çıkıyor. İkisi de karar vermene pek yardım etmiyor.
+
+Bu yazıda farklı bir yol izliyorum: önce hangi soruları sorman gerektiğini, sonra proje tipine göre hangi kütüphanenin mantıklı olduğunu anlatıyorum. Merid'i biz geliştiriyoruz, o yüzden onu da listeye koydum ama nerede eksik kaldığını açıkça yazdım.
+
+## Önce üç soru
+
+### 1. Stil sistemin ne?
+
+Bu, çoğu zaman en belirleyici soru.
+
+- **Tailwind kullanıyorsan** shadcn/ui, HeroUI ve daisyUI doğal seçenekler.
+- **Tailwind kullanmıyorsan** ya da CSS'ini kendin yazmak istiyorsan Mantine (CSS modules), Radix Themes (düz CSS), MUI (Emotion) veya Merid (düz CSS) daha rahat.
+- **Runtime CSS-in-JS'ten kaçınmak istiyorsan** MUI ve Chakra'nın varsayılan kurulumunun Emotion kullandığını bil.
+
+### 2. Ne kadar çok component lazım?
+
+Bir yönetim paneli yazıyorsan tablo, tarih seçici, ağaç, upload gibi ağır component'ler lazım olacak. Burada Ant Design ve MUI (MUI X ile) açık ara önde. Bir SaaS ürünü ya da landing sayfası yazıyorsan 40-50 iyi yapılmış component çoğu zaman yeter.
+
+### 3. Kodun sahibi kim olsun?
+
+- **Paket olarak kurulan kütüphaneler** (MUI, Mantine, Chakra, Ant Design, Radix Themes, Merid): `npm update` ile güncellenir, component kodu `node_modules`'ta durur.
+- **Kopyalanan kaynak** (shadcn/ui): component dosyaları senin reponda. İstediğin gibi değiştirirsin ama güncellemeleri de sen birleştirirsin.
+
+İkisinin de doğru olduğu durumlar var. Ekibinde tasarım kararlarını sahiplenecek biri varsa kaynak kodu sahiplenmek iyi. Yoksa ya da kodun büyük kısmını yapay zeka araçları yazıyorsa, sabit bir paket arayüzün zamanla dağılmasını engeller.
+
+## Karşılaştırma tablosu
+
+Bilgiler Eylül 2026 itibarıyla her kütüphanenin kendi dokümantasyonundan.
+
+| Kütüphane | Stil | Provider | Component sayısı | Güçlü olduğu yer |
+|---|---|---|---|---|
+| MUI (v9) | Emotion | Tema için ThemeProvider | Çok geniş + MUI X | En büyük ekosistem, data grid, date picker |
+| Ant Design (v6) | CSS-in-JS, CSS değişkenleri | ConfigProvider (opsiyonel) | Çok geniş | Kurumsal paneller, tablo ve form |
+| shadcn/ui | Tailwind, kaynak kopyalanır | Yok | Geniş + topluluk registry'si | Tam kontrol, v0 ile uyum |
+| Mantine (v9) | CSS modules + PostCSS | MantineProvider | 100+ | Hook'lar, form, tarih, grafik |
+| Chakra UI (v3) | Emotion | Var | Geniş | Ark UI tabanlı, tema sistemi |
+| Radix Themes (3.x) | Düz CSS | `<Theme>` | ~45 | Sade görünüm, sağlam primitive'ler |
+| HeroUI (v3) | Tailwind v4 | Dokümana bak | Geniş | React Aria tabanlı, hareketli görünüm |
+| Merid (0.1) | Düz CSS, cascade layer | Yok | 46 | Token'lar, RSC uyumu, scoped tema |
+
+## Proje tipine göre öneri
+
+### Kurumsal yönetim paneli
+
+Ant Design ya da MUI. Tablo, filtre, form doğrulama, tarih aralığı seçici gibi ihtiyaçlar burada hızla birikir ve bu ikisi bunları hazır verir. Görsel dilleri belirgin olduğu için "hazır panel" görünümünden kurtulmak biraz uğraş ister.
+
+Merid burada doğru seçim değil: date picker ve combobox yok, data grid yok. Basit bir tablo ve data table pattern'i var, ama kurumsal bir grid'in yerini tutmaz.
+
+### SaaS ürünü, Next.js App Router
+
+Burada seçenek çok. Tailwind kullanıyorsan shadcn/ui. Kullanmıyorsan Radix Themes, Mantine ya da Merid.
+
+App Router'da dikkat etmen gereken şey server component'ler. Provider isteyen kütüphaneler bir client boundary gerektirir. Merid'de provider yok; statik component'ler server'da render olur ve JavaScript göndermez, etkileşimli olanlar `"use client"` ile gelir. Server component dosyalarında namespace yerine düz isimleri (`DialogRoot` gibi) kullanman gerekiyor. Ayrıntı: [meridui.dev/docs/server-components](https://meridui.dev/docs/server-components)
+
+### Yapay zeka araçlarıyla yazılan proje
+
+Cursor, Claude Code ya da v0 ile çalışıyorsan iki şey önemli: modelin kütüphaneyi iyi tanıması ve modelin keyfi karar vermesine az alan kalması.
+
+shadcn/ui birinci konuda çok güçlü: MCP sunucusu, registry ve v0'daki varsayılan çıktı. MUI, Chakra ve Mantine'in de MCP sunucuları var. Merid'in MCP sunucusu ya da registry'si yok; onun katkısı ikinci konuda: küçük, varyant tabanlı API, her değerin `--mrd-*` token'ı olması ve repoda yazılı bir tasarım sözleşmesi.
+
+### Kendi design system'ini kuracaksan
+
+Hazır görünüm istemiyorsan stilsiz (headless) primitive'lere bak: React Aria, Radix Primitives, Base UI, Headless UI. Erişilebilirlik davranışını onlardan alırsın, görünümü sıfırdan yazarsın. Emek ister ama sonuç tamamen senin olur.
+
+### Küçük proje, hızlı prototip
+
+Tailwind kullanıyorsan daisyUI ya da shadcn/ui. Kullanmıyorsan Mantine ya da Merid; ikisi de tek import ile ayağa kalkar.
+
+## Kütüphane değerlendirirken kontrol listesi
+
+Karar vermeden önce bir öğleden sonra ayırıp şunları dene:
+
+1. **Dialog aç, sadece klavyeyle kullan.** Tab focus'u içeride tutuyor mu, Escape kapatıyor mu, focus butona geri dönüyor mu?
+2. **Dark mode'a geç.** Tek bir attribute ya da sınıf yetiyor mu, yoksa her component için ayrı ayar mı gerekiyor?
+3. **Bir component'in rengini değiştir.** `!important` yazmak zorunda kaldın mı?
+4. **Server component içine koy.** Hata alıyor musun, provider için wrapper yazman gerekiyor mu?
+5. **Bundle'a bak.** Tek bir buton için ne kadar JavaScript geliyor?
+6. **Son sürüm notlarını oku.** Son iki büyük sürümde ne kadar kırıcı değişiklik olmuş?
+
+Bu listenin sonucunda iki kütüphane kalırsa, daha sıkıcı olanı seç. Uzun vadede genellikle o kazanır.
+
+## Merid'e kısa bakış
+
+Merid'i bu listeye neden koyduğumu açıklayayım: düz CSS ve token tabanlı bir kütüphane arayan, Tailwind'e bağlı kalmak istemeyen ve App Router kullanan ekipler için tasarlandı.
+
+```bash
+npm i @meridui/react
+```
+
+```tsx
+import "@meridui/react/styles.css";
+import { Button, Card, Field, Input } from "@meridui/react";
+```
+
+- 46 component, MIT lisanslı, React 18 ve 19 ile test ediliyor.
+- Tek stylesheet, üç cascade layer: kendi CSS'in `!important` olmadan kazanır.
+- `data-theme`, `data-accent`, `data-density` ve `dir="rtl"` herhangi bir alt ağaçta çalışır.
+- WCAG 2.2 AA hedefliyor, her component için axe testleri CI'da çalışıyor.
+- Tailwind v4 ile birlikte kullanılabiliyor: [meridui.dev/docs/integrations/tailwind](https://meridui.dev/docs/integrations/tailwind)
+
+Eksikler: 0.1 sürümünde, combobox, date picker ve grafik yok, Figma kütüphanesi yok, tek kişilik bağımsız bir proje. Dokümantasyon şimdilik İngilizce; Türkçe sürüm meridui.dev/tr altında hazırlanıyor.
+
+## Sık sorulan sorular
+
+**Material UI mi Ant Design mı?**
+Yoğun veri ekranları ve hazır gelişmiş component'ler istiyorsan Ant Design. Daha geniş ekosistem ve Material Design istiyorsan MUI. Date picker ve gelişmiş data grid için MUI X'in bazı özellikleri ücretli planlarda.
+
+**shadcn/ui bir kütüphane mi?**
+Klasik anlamda değil. Bir CLI ile component kaynak kodunu projene kopyalıyorsun ve Tailwind gerektiriyor. Ayrıntı için [shadcn alternatifi](/tr/blog/shadcn-alternatifi) yazısına bak.
+
+**Tek projede iki kütüphane kullanılır mı?**
+Kullanılır ama iki ayrı görsel dil ve iki ayrı tema sistemi yönetirsin. Genelde bir tanesini ana kütüphane yapıp eksik component'i headless bir primitive ile tamamlamak daha temiz.

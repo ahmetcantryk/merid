@@ -1,0 +1,128 @@
+---
+title: "Mantine vs Chakra UI: A Practical Comparison"
+description: "Mantine vs Chakra UI compared: styling runtime, providers, component breadth, forms, community and funding, plus migration notes for both directions."
+slug: mantine-vs-chakra-ui
+canonical: /blog/mantine-vs-chakra-ui
+keywords:
+  - mantine vs chakra
+  - chakra vs mantine
+  - chakra ui v3 vs mantine
+  - react component library comparison
+date: 2026-12-04
+updated: 2026-12-04
+lastReviewed: 2026-12-04
+tags:
+  - comparisons
+author: Ahmet Can Tiryaki
+---
+
+# Mantine vs Chakra UI: a practical comparison
+
+Mantine and Chakra UI sit in the same place on the map: styled, batteries-included React libraries with a provider, a theme object, good docs and a friendly API. For years they were the default pair people compared when they wanted something lighter in spirit than MUI.
+
+Both have changed a lot. Chakra UI v3 was a rewrite on top of Ark UI and Zag.js state machines. Mantine moved away from Emotion to CSS modules back in v7 and is now on v9. If your mental model of either is from 2023, parts of it are out of date.
+
+This post compares the current versions on the points that decide real projects. We build Merid, a different library, which gets a short mention at the end; otherwise we try to describe both the way their own users would. Every claim links to official docs.
+
+## At a glance
+
+| | Mantine | Chakra UI |
+|---|---|---|
+| Current line | v9.x | v3.x |
+| Styling | CSS modules + PostCSS preset (`postcss-preset-mantine`) | Emotion at runtime (`@emotion/react`), recipe-based style engine |
+| Provider | `MantineProvider` required | `Provider` (ChakraProvider + next-themes) generated into your project |
+| Colour mode | Built-in, `ColorSchemeScript` for SSR | Via `next-themes` |
+| Behaviour layer | In-house | Ark UI / Zag.js state machines |
+| Breadth | 100+ components, 70+ hooks, forms, dates, charts, notifications, rich text editor | Broad core set; snippets copied into your repo via CLI |
+| Forms | `@mantine/form` | Integrates with React Hook Form etc. |
+| Paid tier | None; donations | Chakra UI Pro (blocks and templates) |
+| AI tooling | `llms.txt`, `llms-full.txt`, per-page Markdown, MCP server | `llms.txt`, MCP server |
+| Licence | MIT | MIT |
+
+Sources: [Mantine getting started](https://mantine.dev/getting-started/), [Mantine LLM guide](https://mantine.dev/guides/llms/), [Chakra installation](https://chakra-ui.com/docs/get-started/installation), [Chakra v3 announcement](https://chakra-ui.com/blog/announcing-v3), [Chakra MCP](https://chakra-ui.com/blog/announcing-chakra-ui-mcp-server).
+
+## Styling and runtime
+
+This is the biggest technical difference today.
+
+**Mantine ships static CSS.** Components are styled with CSS modules. You import `@mantine/core/styles.css` and add `postcss-preset-mantine` (plus `postcss-simple-vars`) to your PostCSS config so you can use Mantine's mixins and functions in your own CSS. There is no style generation at runtime. Theme values become CSS variables, so overriding a component is ordinary CSS against Mantine's class names or `classNames`/`styles` props.
+
+**Chakra UI v3 still uses Emotion.** Installation adds `@emotion/react`, and styles are computed from recipes and style props at runtime. Chakra's team has written publicly about moving towards zero-runtime over time, but as of v3 the runtime is there. In return you keep Chakra's best-known feature: style props like `<Box p="4" bg="bg.muted" />` and a typed token system.
+
+What this means in practice:
+- If you care about avoiding CSS-in-JS runtime cost or want predictable RSC behaviour, Mantine is simpler.
+- If your team loves writing layout through style props, Chakra feels faster to build with.
+
+## Providers and server components
+
+Both need a provider at the root. Mantine's `MantineProvider` initialises the theme; for server rendering you add `ColorSchemeScript` in the document head to avoid a flash and hydration warnings. Chakra's CLI generates a `components/ui/provider.tsx` that composes `ChakraProvider` with `ThemeProvider` from `next-themes`.
+
+In the Next.js App Router, both libraries' components are client components in practice because they read theme context. Mantine's docs note that compound components (`Tabs.Tab` style) cannot be used through the dot syntax inside server components. Chakra's guidance similarly places its components inside client boundaries. Neither is a blocker; both mean more `"use client"` in your tree than a library that needs no context.
+
+## Component breadth
+
+Mantine is one of the widest libraries in React. Beyond the core set you get `@mantine/dates` (date pickers, calendars), `@mantine/charts` (built on Recharts), `@mantine/notifications`, `@mantine/spotlight` (command palette), `@mantine/tiptap` (rich text editor), `@mantine/dropzone`, `@mantine/carousel` and a large `@mantine/hooks` package that many people use even without the components.
+
+Chakra v3 covers the core product UI well: forms, overlays, menus, tabs, tables and more (check the [component list](https://chakra-ui.com/docs/components) for anything specialised such as date inputs). Some pieces arrive as "snippets" the CLI copies into your project (for example composed components like a password input or colour mode button), a nod to the shadcn model. For layout-heavy marketing and app shells, Chakra's primitives plus style props go a long way.
+
+If your requirement list includes a rich text editor, a command palette and charts, Mantine will get you there with fewer extra dependencies.
+
+## Forms
+
+Mantine has its own form library, `@mantine/form`, with validation, nested fields and list fields. It integrates cleanly with Mantine inputs and supports schema resolvers such as Zod.
+
+Chakra doesn't ship a form state library; its `Field` components pair with React Hook Form, Formik or whatever you use. That's more flexible if you already have a standard, and one more decision if you don't.
+
+## Behaviour and accessibility
+
+Chakra v3's interactive components are built on Ark UI, which uses Zag.js state machines. That gives consistent, well-specified behaviour for complex widgets and also powers Ark's Vue, Solid and Svelte versions, so the behaviour is shared across frameworks.
+
+Mantine builds behaviour in-house. Its components follow WAI-ARIA patterns and the docs list keyboard support and ARIA details per component.
+
+Both are strong starting points. Neither makes your app accessible by itself; test with axe and a screen reader.
+
+## Community, funding and pace
+
+Mantine is maintained by a small team led by its creator and funded by donations through Open Collective. It releases often and major versions arrive roughly yearly, each with a detailed migration guide. The docs are among the best in React, and its LLM support is the most thorough in this category: `llms.txt`, `llms-full.txt`, a Markdown version of every page and an MCP server.
+
+Chakra UI is founder-led with a core team and a wider ecosystem: Ark UI (headless, multi-framework), Zag.js, Panda CSS and Park UI. It funds itself partly through Chakra UI Pro, a paid set of blocks and templates. The v2 to v3 migration was large; teams still on v2 should budget real time for it.
+
+## Migration notes
+
+**Chakra to Mantine**
+- Replace style props with Mantine's style props (Mantine has `p`, `m`, `c`, `bg` etc. on many components) or with CSS modules for anything complex.
+- Move theme tokens into `createTheme`; colours need ten shades per colour in Mantine's palette.
+- Swap `next-themes` colour mode for Mantine's `useMantineColorScheme` and `ColorSchemeScript`.
+- Add the PostCSS preset early; it's the step people forget.
+
+**Mantine to Chakra v3**
+- Map `classNames` overrides to Chakra recipes or slot recipes.
+- Replace `@mantine/form` with React Hook Form or similar.
+- Check whether you depended on Mantine extensions (dates, charts, spotlight, tiptap); plan replacements for each.
+- Expect Emotion in your bundle again.
+
+Either way, migrate shared primitives (button, input, modal) first, then pages.
+
+## Who should pick which
+
+**Pick Mantine if:** you want the widest set of components and hooks from one source, prefer static CSS over runtime styling, or need forms, dates and charts without shopping around.
+
+**Pick Chakra UI if:** your team builds quickly with style props, you like the Ark/Zag behaviour model, or you may reuse the same headless layer in another framework.
+
+## A third option
+
+If you like Mantine's static CSS but don't want a provider or PostCSS step, or you want a smaller, fixed design language instead of a theme object, a few libraries ship plain CSS with no provider. Merid, which we build, is one: one stylesheet in cascade layers, `--mrd-*` tokens, scoped theming through `data-theme`, `data-accent` and `data-density` attributes, and static parts that render on the server. It is 0.1 with 46 components and has no date picker, combobox or charts, so it does not replace Mantine's breadth. See [Mantine vs Merid](https://meridui.dev/compare/mantine-vs-merid), plus the [React Hook Form](https://meridui.dev/docs/integrations/react-hook-form) and [dark mode](https://meridui.dev/docs/integrations/dark-mode) guides.
+
+## FAQ
+
+**Is Chakra UI v3 zero-runtime?**
+No. It installs and uses `@emotion/react`. The team has described zero-runtime as a longer-term direction.
+
+**Does Mantine still use Emotion?**
+No. Mantine moved to CSS modules in v7. An Emotion compatibility package existed for migration but is not the default.
+
+**Which has better TypeScript support?**
+Both are written in TypeScript with strong types. Chakra's token-typed style props are a highlight; Mantine's polymorphic component types are thorough.
+
+**Which is better for dashboards?**
+Mantine, mainly because of charts, dates and the hooks package.

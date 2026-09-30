@@ -1,0 +1,80 @@
+---
+title: "MUI vs Merid: Material UI or Plain-CSS Tokens?"
+description: "MUI vs Merid: a mature Material Design suite with MUI X, or a small plain-CSS library with strict tokens. Styling, theming, coverage and when to pick each."
+slug: mui-vs-merid
+canonical: /compare/mui-vs-merid
+keywords:
+  - mui vs merid
+  - material ui alternative
+  - mui without emotion
+  - plain css react component library
+date: 2026-09-30
+updated: 2026-09-30
+lastReviewed: 2026-09-30
+author: Ahmet Can Tiryaki
+---
+
+# MUI vs Merid
+
+MUI is one of the most successful open-source projects in React: a huge component set, a commercial team, the MUI X data grid and date pickers, and more than a decade of production use. Merid is a 0.1 library with 46 components and a fixed design contract. They are not the same size of tool, and this page tries to be clear about where that matters.
+
+We build Merid, so weigh this accordingly.
+
+## At a glance
+
+| | MUI (Material UI) | Merid |
+|---|---|---|
+| Package | `@mui/material`, plus `@mui/x-*` for grid, pickers, charts | `@meridui/react` |
+| Styling | Emotion by default (runtime CSS-in-JS) | One plain-CSS stylesheet in three cascade layers |
+| Default look | Material Design | Restrained: hairlines, one accent, grey trays |
+| Theming | `createTheme` + `ThemeProvider` | `--mrd-*` custom properties; `data-theme`, `data-accent`, `data-density` on any subtree |
+| Ways to style a component | `sx`, `styled()`, theme overrides, `className`, props | CSS (any selector wins over the library's layers), tokens, variants |
+| Data grid, date pickers | Yes, via MUI X (free and paid tiers) | No; `Table` for display only |
+| Server components | Styled components need client boundaries | Static parts render on the server; interactive modules ship `"use client"` |
+| Accessibility | Mature, widely tested | Targets WCAG 2.2 AA; axe suite in CI; newer and less battle-tested |
+| Maturity and support | Very high; company-backed, paid support available | 0.1, independently maintained |
+| Licence | MIT core; MUI X Pro/Premium are commercial | MIT |
+
+Sources: [MUI installation](https://mui.com/material-ui/getting-started/installation/), [MUI X](https://mui.com/x/), [Merid README](https://github.com/ahmetcantryk/merid).
+
+## Where MUI is clearly ahead
+
+- **Heavy components.** The MUI X data grid, date and time pickers, charts and tree view are hard to replace. If your product is table-heavy, this alone may decide it.
+- **Breadth.** Almost any widget you need already exists, with documented edge cases.
+- **Support and stability.** A company, paid tiers, long-term support and a predictable release cadence.
+- **Familiarity.** Many developers already know it, and AI coding tools have seen a great deal of MUI code.
+
+## Where Merid is different
+
+**No runtime styling.** MUI's default install pulls in Emotion, which generates styles at runtime and needs client boundaries in React Server Components. Merid is static CSS: import `@meridui/react/styles.css` once and there is nothing to configure.
+
+**One way to style.** In MUI, `sx`, `styled()`, theme `components` overrides, `className` and props overlap, so the same screen can end up styled four ways. In Merid, library rules live in `@layer merid.*`; your own CSS wins without `!important`, and values come from named tokens rather than one-off numbers.
+
+**Theming without a provider.** A dark sidebar in a light app is one attribute:
+
+```html
+<aside data-theme="dark" data-density="compact">...</aside>
+```
+
+Portalled overlays keep the theme, accent, density and direction of the element that opened them.
+
+**A different starting look.** MUI can be themed far away from Material, but it takes effort and new components bring the defaults back. Merid starts from a quiet look and keeps it through a written contract.
+
+## What Merid does not have
+
+No data grid, no date or time pickers, no charts and no combobox. It is 0.1, so the API may change before 1.0, and it has one maintainer. If you need those components, pair Merid with a dedicated grid such as TanStack Table, or stay on MUI.
+
+## Which should you pick?
+
+**Pick MUI if** you need MUI X, enterprise support, the broadest component set, or a team that already knows it well.
+
+**Pick Merid if** you want plain CSS with no runtime, a small API that humans and AI agents cannot easily drift from, scoped theming through HTML attributes, and you can live with 46 components.
+
+## Moving from MUI to Merid
+
+1. Freeze new MUI usage; new screens use Merid.
+2. Map your MUI theme to tokens first (for example `--mrd-accent`), so both libraries look alike during the move.
+3. Replace leaf components (Button, TextField, Chip) before layout and overlays.
+4. Keep MUI X for grids and pickers as long as you need them. Merid needs no provider, so the two coexist.
+
+**Related:** [MUI alternatives](/blog/mui-alternatives) · [shadcn/ui vs Merid](/compare/shadcn-ui-vs-merid)

@@ -1,0 +1,200 @@
+---
+title: "Why AI-Generated UI Looks Generic, and How to Fix It"
+description: "Make AI-generated UI look professional: the four tells of model-written interfaces and the constraints that remove them, with code you can copy."
+slug: why-ai-generated-ui-looks-generic
+canonical: /blog/why-ai-generated-ui-looks-generic
+keywords:
+  - make ai generated ui look professional
+  - v0 generic ui
+  - cursor ui consistency
+  - design system for ai coding
+date: 2026-10-16
+updated: 2026-10-16
+lastReviewed: 2026-10-16
+tags:
+  - ai-coding
+author: Ahmet Can Tiryaki
+---
+
+# Why AI-generated UI looks generic, and how to fix it
+
+You ask an agent for a settings page. It works. The form submits, the toggles toggle. And yet you can tell at a glance that nobody designed it. It looks like every other page generated this year.
+
+That feeling is not taste snobbery. It comes from a handful of concrete, measurable defects. Once you can name them, you can prevent them, and most of the prevention happens before the model writes a single line.
+
+We build Merid, a React component library, so some of the examples below use it. The techniques work with any stack.
+
+## The four tells
+
+Open any generated screen and look for these.
+
+**1. Arbitrary spacing.** The card has `p-5`, the one next to it `p-6`, the header `px-4 py-3`, the footer `pt-[18px]`. Each value was reasonable locally. Together they produce a layout with no rhythm. Your eye notices the misalignment before your brain can say why.
+
+**2. Near-duplicate greys.** Count the text colours. A typical generated page uses `gray-500`, `gray-600`, `slate-500`, `zinc-400` and `#6b7280`, often for the same job ("secondary text"). Five greys that are almost the same read as noise.
+
+**3. Mixed radii.** Buttons at 6px, inputs at 8px, cards at 12px, a dialog at 16px, and a badge that is fully round because that is what the last training example did. Nothing is wrong on its own. The set is incoherent.
+
+**4. Inconsistent focus and states.** One button gets `focus:ring-2`, another `focus-visible:outline`, a custom dropdown gets nothing. Hover sometimes darkens, sometimes lifts, sometimes changes border. Keyboard users find this first; everyone else feels it as "cheap".
+
+There are softer tells too: gradient hero sections, an emoji in every heading, three shadow styles on one page. But the four above are the ones that survive even when you tell the model "make it clean and minimal".
+
+## Why models do this
+
+A language model predicts plausible code. Plausible is an average over everything it has seen, and what it has seen is thousands of projects, each with its own spacing scale and palette. Ask for a card and you get the statistical centre of all cards: padding somewhere between 16 and 24, a grey border, a medium radius, a light shadow. Generic, by construction.
+
+The second cause is the API surface you hand it. If your styling system accepts any value, such as utility classes with arbitrary values or inline styles, the model will use any value. Every open parameter is a place to improvise, and improvisation across many prompts drifts.
+
+The third cause is memory. The agent that wrote your dashboard last Tuesday does not remember the decisions it made. Each session reinvents the button.
+
+So the fix is not a better prompt ("make it look professional" is itself averaged). The fix is to close the open parameters.
+
+## Fix 1: write a design contract and keep it in the repo
+
+A design contract is a short file that states the decisions: which colours exist, what the spacing scale is, how rounding works, what hover does. It lives next to the code so agents read it the same way they read your `tsconfig`.
+
+Merid keeps one at the root of its repository, `DESIGN.md`, and treats it as binding. A trimmed excerpt:
+
+```md
+## Principles
+
+1. One accent, used sparingly. Everything else is ink-tinted neutrals.
+3. Hairlines only. Every border is 1px --mrd-line. Never 2px, never dark borders.
+5. Compact, consistent rounding that steps down when nested:
+   16 (dialog) → 14 (card) → 12 (menu) → 8 (control) → 6 (item).
+7. Three text tones — ink, body, muted. Hierarchy from tone and weight, not colour.
+8. Quiet interaction. Hover = background tint or 2–3px lift; press = scale(.97) at 100ms.
+
+If a value is not here, derive it from an existing one —
+do not invent a new colour, radius or shadow.
+```
+
+That last line does most of the work. It turns "pick something reasonable" into "pick from this list".
+
+Your contract does not need to be long. One page that answers these questions is enough:
+
+- How many text colours, and what is each for?
+- What is the spacing scale? Which steps are allowed inside components vs between sections?
+- What radii exist, and which element gets which?
+- What do hover, press, focus and disabled look like?
+- What is banned? (Gradients, 2px borders, a second accent, emoji in headings.)
+
+Then point your agent at it. In Cursor that means a rule file; in Claude Code, a `CLAUDE.md` line such as "Read DESIGN.md before touching UI". We cover the rules-file side in [Cursor UI consistency](/blog/cursor-ui-consistency).
+
+## Fix 2: tokens instead of values, and lint the values
+
+A contract written in prose still leaves the model to translate "muted text" into a hex code, and it will sometimes translate differently. Tokens remove the translation step. The model writes `var(--mrd-muted)` and the value comes from one place.
+
+In Merid every value is a `--mrd-*` custom property with light and dark values:
+
+```css
+.billing-summary {
+  padding: var(--mrd-space-6);
+  border: 1px solid var(--mrd-line);
+  border-radius: var(--mrd-radius-card);
+  color: var(--mrd-body);
+}
+```
+
+The same tokens ship as JSON (W3C design token format) and JS through `@meridui/tokens`, so a script or an agent can list what exists instead of guessing. See [design tokens](/docs/integrations/design-tokens) for the full list.
+
+Then make deviations visible. A few cheap guards:
+
+- A lint rule or a grep in CI that fails on hex colours outside the token file: `rg '#[0-9a-fA-F]{3,6}\b' src --glob '!**/tokens.css'`.
+- If you use Tailwind, forbid arbitrary values (`p-[18px]`, `text-[#666]`) in review, or with a class-order lint plugin that flags them. Map your tokens into the Tailwind theme so the allowed utilities are the token utilities. Merid's [Tailwind guide](/docs/integrations/tailwind) shows the `@theme inline` mapping.
+- A stylelint rule that disallows raw `px` for `padding`, `margin` and `gap` outside token definitions.
+
+Agents respond well to failing checks. A red CI line saying "use a token" is a clearer instruction than any paragraph in a prompt.
+
+## Fix 3: pick components with a small, variant-based API
+
+The less a component lets you change, the less a model can get wrong. Compare two ways of asking for a destructive button:
+
+```tsx
+// Open API: every call site is a chance to drift
+<button className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">
+  Delete
+</button>
+
+// Closed API: one decision, made once
+<Button variant="danger">Delete</Button>
+```
+
+In the first version the model picks six values. In the second it picks one word from a fixed set. Merid's `Button` accepts `primary`, `secondary`, `ghost`, `danger` or `link`, and sizes `sm`, `md`, `lg`. There is no seventh variant to invent.
+
+This is also why component source that lives in your repo (the shadcn/ui model) can drift faster under agents: the file is editable, so "make this button fit" often becomes "edit the button". That model has real advantages; if you use it, protect the `components/ui` folder with review rules. We compare the two approaches in [Merid vs shadcn/ui](/compare/shadcn-ui-vs-merid).
+
+## Fix 4: put accessibility inside the components, and test it
+
+Focus rings, keyboard handling and ARIA are where generated UI fails most often, because they are invisible in a screenshot. Do not rely on the model to remember them per call site. Choose components that own them, then verify.
+
+Merid targets WCAG 2.2 AA. Every component has a visible focus style, documented keyboard behaviour, and an axe suite that runs in CI ([accessibility statement](/docs/accessibility)). Whatever you use, add the same check to your own app:
+
+```ts
+// e2e/a11y.spec.ts (Playwright + @axe-core/playwright)
+import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+
+test("settings page has no axe violations", async ({ page }) => {
+  await page.goto("/settings");
+  const results = await new AxeBuilder({ page }).analyze();
+  expect(results.violations).toEqual([]);
+});
+```
+
+Axe will not catch everything, but it catches the missing labels and contrast failures that agents produce most often.
+
+## Worked example: the same prompt, before and after
+
+Prompt, in Cursor, on an empty Next.js app:
+
+> Build a billing settings card with the current plan, next invoice date, and buttons to change plan or cancel.
+
+**Before constraints.** The result used Tailwind with `p-6` on the card, `px-4 py-2` on buttons, `text-gray-500` and `text-slate-600` for secondary text, `rounded-xl` on the card and `rounded-lg` on buttons, a red cancel button with no confirmation, and no focus style on a custom icon button. It looked fine. It also looked like every other billing card.
+
+**After constraints.** Same prompt, with three changes to the repo: a `DESIGN.md`, a rule telling the agent to read it and use only `@meridui/react` components and `--mrd-*` tokens, and the hex-colour grep in CI. The result:
+
+```tsx
+import { AlertDialog, Button, Card, Heading, Stack, Text } from "@meridui/react";
+
+export function BillingCard() {
+  return (
+    <Card>
+      <Stack gap="4">
+        <Heading level={2}>Billing</Heading>
+        <Text tone="muted">Pro plan · next invoice on 1 November</Text>
+        <Stack direction="row" gap="2">
+          <Button variant="primary">Change plan</Button>
+          <AlertDialog.Root>
+            <AlertDialog.Trigger asChild>
+              <Button variant="ghost">Cancel subscription</Button>
+            </AlertDialog.Trigger>
+            {/* content omitted */}
+          </AlertDialog.Root>
+        </Stack>
+      </Stack>
+    </Card>
+  );
+}
+```
+
+There are no colour values in the file. The radius, padding and focus styles come from the library. The destructive action got a confirmation because the contract says destructive actions confirm.
+
+The page still is not "designed" in the sense of a brand identity. It is consistent, which is what makes interfaces look professional in the first place.
+
+## What this does not fix
+
+Be realistic about the limits.
+
+- Constraints give you consistency, not distinctiveness. For a recognisable look you still need someone to make choices: accent colour, type, illustration. With tokens, those choices are one-line changes.
+- Layout judgement remains hard for models. Expect to review hierarchy and density by eye.
+- Merid specifically is at 0.1 and has gaps: no combobox, no date picker, no charts, no Figma library. If your screens need those, you will combine libraries, and the contract should say which one owns what.
+
+## A short checklist
+
+1. Write a one-page design contract. Commit it.
+2. Express every value as a token. Fail CI on raw values.
+3. Use components with closed, variant-based APIs.
+4. Keep accessibility inside components; run axe in CI.
+5. Tell the agent where all of this lives, in its own rules file.
+
+If you want a starting point that already has the contract, tokens and tests, install Merid with `npm i @meridui/react` and read `DESIGN.md` in the [repository](https://github.com/ahmetcantryk/merid).

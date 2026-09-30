@@ -1,0 +1,154 @@
+---
+title: "Mantine Alternatives: 5 React Libraries Compared"
+description: "Mantine alternatives for React in 2026: shadcn/ui, Radix Themes, Chakra UI, MUI and Merid. What each trades away, with a table and honest gaps."
+slug: mantine-alternatives
+canonical: /blog/mantine-alternatives
+keywords:
+  - mantine alternatives
+  - mantine alternative
+  - mantine vs shadcn
+  - react library without provider
+  - mantine without postcss
+date: 2026-11-27
+updated: 2026-11-27
+lastReviewed: 2026-11-27
+tags:
+  - comparisons
+author: Ahmet Can Tiryaki
+---
+
+# Mantine alternatives: five React libraries compared
+
+Mantine is one of the most complete React libraries you can install today. If you are reading a post called "Mantine alternatives", there is a fair chance Mantine is not the problem, and one specific thing about it is. This post tries to name those specific things, then point you at the library that fixes each one without taking away what you liked.
+
+We build Merid, one of the options below. We have kept it to one section and listed what it lacks.
+
+## What Mantine does well
+
+Be clear about what you would give up before you leave.
+
+- **Breadth.** `@mantine/core` covers the usual components, and separate packages add forms (`@mantine/form`), dates, charts, notifications, a rich text editor and more. See the [Mantine getting started page](https://mantine.dev/getting-started/).
+- **Hooks.** `@mantine/hooks` is useful even without the components: dozens of small, well-typed hooks for things like clipboard, media queries and intersection.
+- **Licence and funding.** All `@mantine/*` packages are MIT. The project is funded by donations through [Open Collective](https://opencollective.com/mantinedev), not by a paid tier.
+- **Docs for AI tools.** Mantine publishes `llms.txt`, `llms-full.txt` and Markdown for each page, plus an [LLM guide](https://mantine.dev/guides/llms/). Among the libraries in this post it has the most thorough setup for coding agents.
+
+If you need date pickers and charts from the same vendor as your buttons, Mantine is hard to beat. None of the alternatives below match its package count.
+
+## Why people look elsewhere
+
+In our reading of issues, forum threads and our own conversations, the reasons cluster into four.
+
+1. **The provider.** Mantine requires wrapping the app in `MantineProvider` ([docs](https://mantine.dev/getting-started/)). In a Next.js App Router project that means a client boundary near the root, and a theme object that lives in JavaScript.
+2. **The PostCSS preset.** Styling depends on `postcss-preset-mantine`. It is a small setup step, but it is a build-time dependency your stack must support, and it is one more thing to keep aligned on upgrades.
+3. **The look.** Mantine has a recognisable default style. You can theme it heavily, but some teams want a different starting point rather than a long override file.
+4. **Size of the surface.** A large API is great for humans who read docs and harder for AI agents, who will happily reach for a prop that exists but does not fit your design.
+
+Which of those bothers you decides which alternative fits.
+
+## The alternatives
+
+### 1. shadcn/ui: when you want to own the source
+
+[shadcn/ui](https://ui.shadcn.com/docs) is not a package. A CLI copies component source into your repo, styled with Tailwind CSS and built on Radix UI or Base UI primitives. There is no provider and no PostCSS preset beyond Tailwind itself.
+
+**Pick it if:** you already use Tailwind, you want to edit every component, and you like its ecosystem: a registry, an official MCP server and first-class support in v0.
+
+**Trade-off vs Mantine:** far fewer ready-made pieces for dates and forms (you assemble them from community blocks), and every edit is a fork you maintain.
+
+### 2. Radix Themes: when you want a styled package with plain CSS
+
+[Radix Themes](https://www.radix-ui.com/themes/docs/overview/getting-started) ships styled components in plain CSS on top of Radix Primitives, maintained by WorkOS. It needs a `<Theme>` wrapper component, but no PostCSS plugin.
+
+**Pick it if:** you liked Mantine's "install a package and get a finished look" model but want plain CSS and a more restrained aesthetic.
+
+**Trade-off:** smaller component set than Mantine, no forms or charts packages, and no official `llms.txt` when we checked.
+
+### 3. Chakra UI: when you want a similar all-in-one feel
+
+[Chakra UI v3](https://chakra-ui.com/docs/get-started/installation) is built on Ark UI and Zag.js state machines. It uses Emotion at runtime and needs a `Provider`, so it does not solve the provider concern. It does offer style props, recipes and an MCP server.
+
+**Pick it if:** your issue with Mantine is its look or its API style, not the runtime model.
+
+**Trade-off:** runtime CSS-in-JS, which adds work in React Server Components.
+
+### 4. MUI: when you need the largest ecosystem
+
+[MUI](https://mui.com/material-ui/getting-started/) has the biggest community of any React library and a commercial arm, MUI X, with an advanced data grid and date pickers. Material UI uses Emotion by default and a `ThemeProvider` for custom themes.
+
+**Pick it if:** you need an advanced data grid or enterprise support contracts.
+
+**Trade-off:** Material Design look by default, runtime styling, and the best parts of MUI X are paid.
+
+### 5. Merid: when the provider and the build step are the problem
+
+[Merid](https://meridui.dev) is a smaller library with a fixed design contract. It is one plain CSS stylesheet in three cascade layers (`merid.tokens`, `merid.base`, `merid.components`). Every value is a `--mrd-*` custom property. There is no theme provider; only toasts need a `ToastProvider`. No PostCSS plugin, no build step.
+
+```tsx
+import "@meridui/react/styles.css";
+import { Button, Field, Input } from "@meridui/react";
+```
+
+Theming happens on attributes, on `<html>` or on any subtree:
+
+```html
+<aside data-theme="dark" data-density="compact">...</aside>
+```
+
+Static components render on the server; interactive modules carry `"use client"`, so they import directly into a server component (see the [server components guide](https://meridui.dev/docs/server-components)). It targets WCAG 2.2 AA and runs an axe suite in CI.
+
+**Pick it if:** you want the "installed package with a finished look" model without a provider, a runtime or a build plugin, and you want your AI agent to work against a small, strict API.
+
+**What Merid does not have, stated plainly:**
+
+- 46 components, not 100+. No combobox or autocomplete, no date picker, no charts (charts are not planned), no rich text editor.
+- No hooks package and no form library. It works with React Hook Form and Zod ([guide](https://meridui.dev/docs/integrations/react-hook-form)), but it does not replace `@mantine/form`.
+- Version 0.1. The API can change before 1.0. It is an independent project with one maintainer.
+- No Figma library, no `llms.txt` or MCP server yet.
+
+If you use Mantine's dates or charts packages today, Merid cannot replace them. You could keep those and use something else for the rest, but that usually means two visual languages.
+
+## Comparison table
+
+| | Mantine | shadcn/ui | Radix Themes | Chakra UI | MUI | Merid |
+|---|---|---|---|---|---|---|
+| Delivery | npm packages | Copied source | npm package | npm package | npm packages | npm package |
+| Styling | CSS modules + PostCSS preset | Tailwind | Plain CSS | Emotion (runtime) | Emotion (default) | Plain CSS, cascade layers |
+| Root wrapper | `MantineProvider` | None | `<Theme>` | `Provider` | `ThemeProvider` for custom themes | None (toasts only) |
+| Forms package | Yes | No (community) | No | No | No | No (integrates with RHF/Zod) |
+| Date picker | Yes | Community blocks | No | Yes | MUI X | No |
+| Charts | Yes | Yes (Recharts-based) | No | Via Chakra ecosystem | MUI X | No, not planned |
+| AI tooling | llms.txt, MCP | Registry, MCP | None found | MCP | MCP | Design contract in repo |
+| Licence | MIT | MIT | MIT | MIT | MIT core, paid X tiers | MIT |
+
+Sources: each library's official documentation, linked above. Checked on the date at the top of this post.
+
+## How to decide in five minutes
+
+- **You depend on `@mantine/dates`, `@mantine/charts` or `@mantine/form`:** stay on Mantine, or move to MUI if you need a heavier data grid.
+- **You use Tailwind and want to edit components:** shadcn/ui.
+- **You want plain CSS and a quieter look, and a wrapper component is fine:** Radix Themes.
+- **You want no wrapper, no runtime, no build plugin and scoped themes per subtree, and can live with 46 components:** Merid. Compare the two side by side on [Merid vs Mantine](https://meridui.dev/compare/mantine-vs-merid).
+
+For a broader view of the field, see our [guide to React component libraries for AI-assisted coding](/blog/best-react-component-libraries-ai-coding-2026).
+
+## Migrating off Mantine: what to plan for
+
+Migrations fail on the small things. A short list:
+
+1. **Inventory first.** Grep your code for each `@mantine/*` import. Components with no equivalent in the target library (dates, charts, spotlight, rich text) decide whether a full migration is realistic.
+2. **Move the theme to tokens.** Mantine's theme object holds colours, radius and spacing. Write those decisions down as CSS custom properties first. Any target library can then consume them.
+3. **Replace hooks separately.** `@mantine/hooks` has no dependency on `@mantine/core`. You can keep it while you swap the components.
+4. **Forms last.** Form code is the most coupled. If you move to React Hook Form, do it screen by screen.
+5. **Remove the provider at the end**, once nothing inside it depends on Mantine context.
+
+## FAQ
+
+**Is Mantine still maintained?** Yes. The current line is v9 and releases are frequent ([getting started](https://mantine.dev/getting-started/)).
+
+**Can I use Mantine without PostCSS?** The official setup uses `postcss-preset-mantine`. Check the docs for your framework before trying to avoid it.
+
+**Which Mantine alternative has no provider?** shadcn/ui and Merid. Merid only needs `ToastProvider` if you use toasts.
+
+**Is there a Mantine alternative with a date picker?** Chakra UI, MUI (via MUI X) and shadcn/ui community blocks. Merid has none.
+
+**Does leaving Mantine help with AI coding tools?** Only if the new library gives the agent fewer ways to go wrong. A small API, tokens instead of raw values, and written rules in the repo matter more than which library you pick.

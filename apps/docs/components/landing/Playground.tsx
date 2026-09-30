@@ -1,64 +1,58 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  Avatar,
-  Badge,
-  Button,
-  Card,
-  Checkbox,
-  Field,
-  Input,
-  Kbd,
-  NativeSelect,
-  Progress,
-  SegmentedControl,
-  Switch,
-  Tabs,
-} from "@meridui/react";
-import { readTheme, type Theme } from "@/components/ThemeToggle";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
+import { track } from "@/lib/analytics";
 import { useDictionary } from "@/lib/i18n/client";
-import { ACCENTS, DENSITIES, type AccentId, type DensityId } from "./playground-presets";
-
-
-const MEMBERS = [
-  { name: "Ada Lovelace", role: "owner" },
-  { name: "Grace Hopper", role: "admin" },
-  { name: "Linus Pauling", role: "viewer" },
-] as const;
+import { INITIAL_APP, StudioApp, type AppState } from "./studio/StudioApp";
+import { StudioControls, type ControlName } from "./studio/StudioControls";
+import { StudioDiff } from "./studio/StudioDiff";
+import {
+  ACCENTS,
+  DEFAULT_TOKENS,
+  DENSITIES,
+  RADII,
+  THEMES,
+  stageStyle,
+  type StudioTokens,
+} from "./studio/tokens";
 
 function isTypingTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
   return target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName);
 }
 
-function stageMarkup(theme: Theme, accent: AccentId, density: DensityId): string {
-  return `<div\n  data-theme="${theme}"\n  data-accent="${accent}"\n  data-density="${density}"\n>\n  …\n</div>`;
+function next<T>(list: readonly T[], current: T): T {
+  return list[(list.indexOf(current) + 1) % list.length] ?? current;
 }
 
+function attributesFor(t: StudioTokens): string {
+  const theme = t.theme === "split" ? "light | dark" : t.theme;
+  return `data-theme="${theme}" data-accent="${t.accent}" data-density="${t.density}"`;
+}
+
+const SAME = (a: StudioTokens, b: StudioTokens) =>
+  a.theme === b.theme && a.accent === b.accent && a.density === b.density && a.radius === b.radius && a.scale === b.scale;
+
+/**
+ * Landing token studio: a token editor on the left, a full app screen built from the library on
+ * the right, and the CSS the settings amount to underneath. Theme, accent and density are the
+ * library's subtree attributes; radius and type scale are custom-property overrides on the stage.
+ * Split mode renders the screen twice (light, and an inert dark copy) divided by a 1px meridian.
+ */
 export function Playground() {
-  const rootRef = useRef<HTMLDivElement>(null);
   const t = useDictionary().playground;
-  const themeOptions = [
-    { value: "light", label: t.themeLight },
-    { value: "dark", label: t.themeDark },
-  ];
-  // Themes only the stage (nested data-theme); starts from the site theme.
-  const [theme, setTheme] = useState<Theme>("light");
-  const [accent, setAccent] = useState<AccentId>("blue");
-  const [density, setDensity] = useState<DensityId>("default");
+  const rootRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const visible = useRef(false);
-  const themeRef = useRef<Theme>("light");
+  const [tokens, setTokens] = useState<StudioTokens>(DEFAULT_TOKENS);
+  const [app, setApp] = useState<AppState>(INITIAL_APP);
+  const [split, setSplit] = useState(50);
+  const tokensRef = useRef(tokens);
+  tokensRef.current = tokens;
 
-  useEffect(() => {
-    const initial = readTheme();
-    themeRef.current = initial;
-    setTheme(initial);
-  }, []);
-
-  const changeTheme = useCallback((next: Theme) => {
-    themeRef.current = next;
-    setTheme(next);
+  const change = useCallback((control: ControlName, value: string, input: "pointer" | "keyboard" = "pointer") => {
+    setTokens((current) => ({ ...current, [control]: value }) as StudioTokens);
+    track("playground_change", { control, value, input });
   }, []);
 
   useEffect(() => {
@@ -72,137 +66,107 @@ export function Playground() {
     function onKey(event: KeyboardEvent) {
       if (!visible.current || event.metaKey || event.ctrlKey || event.altKey || isTypingTarget(event.target)) return;
       const key = event.key.toLowerCase();
-      const byKey = ACCENTS.find((a) => a.key === key);
-      if (byKey) setAccent(byKey.id);
-      else if (key === "t") changeTheme(themeRef.current === "dark" ? "light" : "dark");
-      else if (key === "d") {
-        setDensity((current) => {
-          const index = DENSITIES.findIndex((d) => d.id === current);
-          return DENSITIES[(index + 1) % DENSITIES.length]?.id ?? "default";
-        });
-      } else return;
+      const accent = ACCENTS.find((a) => a.key === key);
+      const current = tokensRef.current;
+      let control: ControlName | undefined;
+      let value: string | undefined;
+      if (accent) [control, value] = ["accent", accent.id];
+      else if (key === "t") [control, value] = ["theme", next(THEMES, current.theme)];
+      else if (key === "d") [control, value] = ["density", next(DENSITIES, current.density)];
+      else if (key === "r") [control, value] = ["radius", next(RADII, current.radius)];
+      if (!control || value === undefined) return;
       event.preventDefault();
+      change(control, value, "keyboard");
     }
     window.addEventListener("keydown", onKey);
     return () => {
       observer.disconnect();
       window.removeEventListener("keydown", onKey);
     };
-  }, [changeTheme]);
+  }, [change]);
+
+  const dragMeridian = useCallback((event: ReactPointerEvent<HTMLDivElement>) => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    event.preventDefault();
+    const rect = viewport.getBoundingClientRect();
+    const move = (e: PointerEvent) => setSplit(Math.round(Math.min(95, Math.max(5, ((e.clientX - rect.left) / rect.width) * 100))));
+    const stop = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", stop);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", stop);
+  }, []);
+
+  const isSplit = tokens.theme === "split";
+  const stage = stageStyle(tokens) as CSSProperties;
+  const layer = (theme: "light" | "dark", mirror: boolean) => (
+    <div
+      className="pg__stage studio-layer"
+      data-layer={mirror ? "mirror" : "main"}
+      data-theme={theme}
+      data-accent={tokens.accent}
+      data-density={tokens.density}
+      style={stage}
+    >
+      <StudioApp t={t} state={app} onChange={setApp} mirror={mirror} />
+    </div>
+  );
 
   return (
-    <div ref={rootRef} className="pg">
-      <div className="pg__toolbar" role="group" aria-label={t.settings}>
-        <div className="pg__control">
-          <span className="pg__label">
-            {t.theme} <Kbd size="sm">T</Kbd>
-          </span>
-          <SegmentedControl
-            aria-label={t.theme}
-            options={themeOptions}
-            value={theme}
-            onValueChange={(v) => changeTheme(v === "dark" ? "dark" : "light")}
-          />
-        </div>
-        <div className="pg__control">
-          <span className="pg__label" id="pg-accent-label">
-            {t.accent} <Kbd size="sm">1</Kbd>–<Kbd size="sm">4</Kbd>
-          </span>
-          <div className="pg__swatches" role="radiogroup" aria-labelledby="pg-accent-label">
-            {ACCENTS.map((a) => (
-              <button
-                key={a.id}
-                type="button"
-                role="radio"
-                aria-checked={accent === a.id}
-                aria-label={t.accents[a.id]}
-                title={t.accents[a.id]}
-                className="pg__swatch"
-                data-accent={a.id}
-                onClick={() => setAccent(a.id)}
+    <div ref={rootRef} className="pg studio">
+      <StudioControls
+        t={t}
+        tokens={tokens}
+        onChange={(control, value) => change(control, value)}
+        onReset={() => setTokens(DEFAULT_TOKENS)}
+        canReset={!SAME(tokens, DEFAULT_TOKENS)}
+      />
+
+      <div className="studio-window">
+        <div className="studio-window__bar">
+          <span className="studio-window__address">{t.address}</span>
+          {isSplit ? (
+            <label className="studio-window__split">
+              <span aria-hidden="true">{t.splitPosition}</span>
+              <input
+                type="range"
+                min={5}
+                max={95}
+                value={split}
+                onChange={(e) => setSplit(Number(e.target.value))}
+                aria-label={t.splitPosition}
+                aria-valuetext={`${t.splitLight} ${split}%, ${t.splitDark} ${100 - split}%`}
               />
-            ))}
-          </div>
+            </label>
+          ) : (
+            <code className="studio-window__attrs">{attributesFor(tokens)}</code>
+          )}
         </div>
-        <div className="pg__control">
-          <span className="pg__label">
-            {t.density} <Kbd size="sm">D</Kbd>
-          </span>
-          <SegmentedControl
-            aria-label={t.density}
-            options={DENSITIES.map((d) => ({ value: d.id, label: t.densities[d.id] }))}
-            value={density}
-            onValueChange={(v) => setDensity(DENSITIES.find((d) => d.id === v)?.id ?? "default")}
-          />
+        <div
+          ref={viewportRef}
+          className="studio-window__viewport"
+          data-split={isSplit || undefined}
+          style={{ "--split": `${split}%` } as CSSProperties}
+          role="region"
+          aria-label={t.previewLabel}
+        >
+          {layer(tokens.theme === "dark" ? "dark" : "light", false)}
+          {isSplit ? (
+            <>
+              {layer("dark", true)}
+              <div className="studio-meridian" aria-hidden="true">
+                <div className="studio-meridian__grip" onPointerDown={dragMeridian} />
+                <span className="studio-meridian__tag" data-side="light">{t.splitLight}</span>
+                <span className="studio-meridian__tag" data-side="dark">{t.splitDark}</span>
+              </div>
+            </>
+          ) : null}
         </div>
       </div>
 
-      <div className="pg__body">
-        <div className="pg__stage" data-theme={theme} data-accent={accent} data-density={density}>
-          <Card variant="elevated" padding="none" className="pg__card">
-            <div className="pg__card-head">
-              <div>
-                <p className="pg__card-title">northwind-web</p>
-                <p className="pg__card-meta">{t.projectMeta}</p>
-              </div>
-              <Badge tone="success" dot>
-                {t.healthy}
-              </Badge>
-            </div>
-            <Tabs.Root defaultValue="general">
-              <Tabs.List aria-label={t.projectTabs} className="pg__tabs">
-                <Tabs.Trigger value="general">{t.tabGeneral}</Tabs.Trigger>
-                <Tabs.Trigger value="members">{t.tabMembers}</Tabs.Trigger>
-                <Tabs.Trigger value="usage">{t.tabUsage}</Tabs.Trigger>
-              </Tabs.List>
-              <Tabs.Panel value="general" className="pg__panel">
-                <div className="pg__fields">
-                  <Field label={t.projectName}>
-                    <Input defaultValue="northwind-web" />
-                  </Field>
-                  <Field label={t.region}>
-                    <NativeSelect defaultValue="eu">
-                      <option value="eu">Frankfurt, eu-central</option>
-                      <option value="us">Virginia, us-east</option>
-                      <option value="ap">Tokyo, ap-northeast</option>
-                    </NativeSelect>
-                  </Field>
-                </div>
-                <Switch defaultChecked>{t.deployOnPush}</Switch>
-                <Checkbox>{t.requireReview}</Checkbox>
-              </Tabs.Panel>
-              <Tabs.Panel value="members" className="pg__panel">
-                <ul className="pg__members">
-                  {MEMBERS.map((m) => (
-                    <li key={m.name}>
-                      <Avatar name={m.name} size="sm" />
-                      <span className="pg__member-name">{m.name}</span>
-                      <Badge tone={m.role === "owner" ? "accent" : "neutral"}>{t.roles[m.role]}</Badge>
-                    </li>
-                  ))}
-                </ul>
-              </Tabs.Panel>
-              <Tabs.Panel value="usage" className="pg__panel">
-                <Progress aria-label={t.buildMinutes} value={64} />
-                <p className="pg__card-meta">{t.usage}</p>
-              </Tabs.Panel>
-            </Tabs.Root>
-            <div className="pg__card-foot">
-              <Button variant="ghost">{t.cancel}</Button>
-              <Button variant="primary">{t.save}</Button>
-            </div>
-          </Card>
-        </div>
-        <div className="pg__tokens">
-          <p className="pg__tokens-title">stage.html</p>
-          <pre aria-live="polite">
-            <code>{stageMarkup(theme, accent, density)}</code>
-          </pre>
-          <p className="pg__tokens-note">
-            {t.tokensNote}
-          </p>
-        </div>
-      </div>
+      <StudioDiff t={t} tokens={tokens} attrs={attributesFor(tokens)} />
     </div>
   );
 }

@@ -1,0 +1,126 @@
+---
+title: "Chakra UI Alternatives: 6 Options Compared (2026)"
+description: "Six Chakra UI alternatives for React, compared on runtime styling, providers, RSC support and theming. When Chakra v3 is still the right choice."
+slug: chakra-ui-alternatives
+keywords:
+  - chakra ui alternatives
+  - chakra ui v3 alternative
+  - chakra ui vs mantine
+  - react component library without emotion
+  - react server components ui library
+date: 2026-11-04
+updated: 2026-11-04
+tags:
+  - comparisons
+author: Ahmet Can Tiryaki
+---
+
+# Chakra UI alternatives: six options compared
+
+Chakra UI earned its following with a simple idea: style components with props. `<Box p={4} bg="gray.50">` reads well, writes fast and keeps you in one file. Version 3 kept that model and rebuilt the internals on Ark UI, a set of headless components driven by Zag.js state machines.
+
+The v3 upgrade was a major rewrite, and many teams used it as the moment to re-evaluate. The questions they ask are usually about runtime styling, React Server Components and how well style props hold up in a large codebase.
+
+This post covers six Chakra UI alternatives and when Chakra is still the right choice. We build one of the options, [Merid](https://github.com/ahmetcantryk/merid), and we will be upfront about where it is not ready.
+
+## What Chakra UI does well
+
+- **Authoring speed.** Style props are quick to learn and fast to write.
+- **Solid behaviour.** Ark UI and Zag.js give components well-tested state logic.
+- **Theming system.** Recipes, semantic tokens and a typed theme.
+- **Community.** Years of tutorials, templates and answers.
+
+## Why people look for alternatives
+
+**Runtime styling.** The [installation docs](https://chakra-ui.com/docs/get-started/installation) state that "Chakra UI uses Emotion at runtime" today, with a long-term direction toward zero-runtime styling. For teams moving to the Next.js App Router, runtime CSS-in-JS means more client components and more JavaScript.
+
+**A required provider.** The app must be wrapped in Chakra's `Provider`. That is normal for many libraries, but it is one more client boundary at the root.
+
+**Style props at scale.** Style props make one-off values easy. In a big team, or when an AI agent writes most of the JSX, you end up with `mt={3}` next to `mt="14px"` next to `marginTop="0.8rem"`. Tokens exist, but nothing forces their use.
+
+**Migration cost.** v2 to v3 required real work. If you are rewriting anyway, it is fair to compare options.
+
+## Comparison table
+
+| | Chakra UI v3 | Mantine | Park UI | Radix Themes | HeroUI | Merid |
+|---|---|---|---|---|---|---|
+| Styling | Emotion at runtime | CSS modules + PostCSS | Panda CSS or Tailwind | Plain CSS | Tailwind v4 | Plain CSS, cascade layers |
+| Style props | Yes | Yes (limited) | Via Panda | Layout props | No (classes) | No (tokens + data attributes) |
+| Provider | Required | Required | Depends on setup | `<Theme>` | See docs | None |
+| Behaviour layer | Ark UI | Own | Ark UI | Radix | React Aria | Own + Floating UI |
+| RSC | Client boundary for styled parts | Works with `"use client"` guidance | Build-time CSS | Works | Works | Static parts render on server |
+| Maturity | High | High | Medium | High | High | Early (0.1) |
+
+## The alternatives
+
+### 1. Mantine
+
+[Mantine](https://mantine.dev/getting-started/) is the most common destination for Chakra users. It keeps a props-friendly API, moved its styling to CSS modules (no runtime CSS-in-JS), and ships far more out of the box: hooks, forms, dates, charts, notifications, a spotlight search and a rich text editor. It needs `MantineProvider`.
+
+Pick it if you want the Chakra experience with more components and no Emotion.
+
+### 2. Park UI
+
+[Park UI](https://park-ui.com/) comes from the same ecosystem: styled components built on Ark UI, with Panda CSS or Tailwind for styling. If you like Chakra's behaviour layer but want build-time CSS, it is the most familiar path. It uses a copy-into-your-project model similar to shadcn/ui.
+
+### 3. Radix Themes
+
+[Radix Themes](https://www.radix-ui.com/themes/docs/overview/getting-started) offers a styled component set in plain CSS with CSS variables, layout primitives (`Box`, `Flex`, `Grid`) with a small set of spacing props, and a `<Theme>` wrapper for appearance, accent and radius. It feels close to Chakra in usage, without runtime styling.
+
+### 4. HeroUI
+
+[HeroUI](https://heroui.com/docs/react/getting-started) v3 sits on React Aria Components and Tailwind CSS v4. If your team is ready to adopt Tailwind, it gives you a polished, animated component set with strong accessibility.
+
+### 5. Merid
+
+[Merid](https://github.com/ahmetcantryk/merid) takes the opposite approach to style props. Instead of letting every call site choose values, it fixes them: every colour, radius, shadow and spacing step is a `--mrd-*` token, and components expose a small set of variants through props and data attributes. A written design contract defines the rules (one accent, hairline borders, a rounding scale that steps down when nested, three text tones).
+
+That is a deliberate trade. You lose some authoring freedom. You gain output that stays consistent when many people, or an AI agent, write the JSX.
+
+Practical differences from Chakra:
+
+- **No provider.** Import one stylesheet. Components work anywhere, including React Server Components; interactive modules mark themselves `"use client"`.
+- **Plain CSS in cascade layers.** Override with a normal class. No `!important`, no specificity games.
+- **Theming with attributes.** `data-theme`, `data-accent`, `data-density` and `dir` work on any element and nest, so a dark sidebar in a light app is one attribute.
+- **Forms.** Guides for [React Hook Form](https://meridui.dev/docs/integrations/react-hook-form) and [Zod](https://meridui.dev/docs/integrations/zod), and a `Field` component that wires label, hint and error.
+- **Accessibility.** Targets WCAG 2.2 AA with an axe suite in CI, plus RTL and forced colours support.
+
+Limits: it is version 0.1, independently maintained, and has 46 components. No combobox, date picker or charts, and no layout style props. If you rely on Chakra's `Box`-everything style, you will write more CSS (or use Tailwind alongside it; the [Tailwind guide](https://meridui.dev/docs/integrations/tailwind) covers layer order).
+
+### 6. React Aria Components
+
+For teams that liked Chakra's behaviour but want to own the design completely, [React Aria](https://react-spectrum.adobe.com/react-aria/) is the most thorough unstyled option.
+
+## When to stay on Chakra UI
+
+If you are already on v3, your team likes style props and runtime styling has not caused measurable problems, staying is reasonable. The Chakra team has said where styling is heading; you may get zero-runtime without switching.
+
+## When to switch
+
+- You are on v2 and facing a rewrite anyway.
+- You are moving to the App Router and want fewer client boundaries.
+- Your UI has drifted because every call site picks its own values.
+
+## Quick picks
+
+- Chakra feel, more components, no Emotion: **Mantine**.
+- Same Ark UI behaviour, build-time CSS: **Park UI**.
+- Plain CSS, polished defaults, layout props: **Radix Themes**.
+- Tailwind team: **HeroUI**.
+- No provider, strict tokens, consistent AI output: **Merid**.
+
+## FAQ
+
+**Does Chakra UI v3 still use Emotion?**
+Yes. The official installation guide installs `@emotion/react` and states that Chakra uses Emotion at runtime today, with zero-runtime styling as a long-term direction. Some third-party articles say v3 moved to Panda CSS; that is not what the Chakra docs say.
+
+**What is the difference between Chakra UI, Ark UI and Park UI?**
+Ark UI is the headless behaviour layer (built on Zag.js). Chakra UI v3 is a styled library on top of Ark with Emotion. Park UI is a separate styled layer on Ark using Panda CSS or Tailwind, distributed by copying code into your project.
+
+**Which Chakra alternative works best with Next.js App Router?**
+Libraries without runtime CSS-in-JS need fewer client boundaries. Radix Themes, Mantine and Merid all ship static CSS. Merid needs no provider, so nothing has to wrap the root layout.
+
+**Can I keep style props if I leave Chakra?**
+Mantine and Radix Themes keep some. Merid does not have style props by design; use CSS, CSS modules or Tailwind utilities for layout.
+
+**Related:** [MUI alternatives](/blog/mui-alternatives) · [Best React component libraries for AI coding](/blog/best-react-component-libraries-ai-coding-2026) · [Chakra UI vs Merid](/compare/chakra-ui-vs-merid)

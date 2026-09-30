@@ -1,0 +1,180 @@
+---
+title: "Erişilebilir React Component'leri: Pratik Rehber"
+description: "React'te erişilebilirlik: klavye, focus, ARIA, kontrast ve axe testleri. WCAG 2.2 AA hedefleyen component'leri nasıl seçer, nasıl test edersin?"
+slug: erisilebilir-react-bilesenleri
+lang: tr
+canonical: /tr/blog/erisilebilir-react-bilesenleri
+alternate:
+  en: /blog/accessible-react-component-libraries
+keywords:
+  - erişilebilir react
+  - react erişilebilirlik
+  - wcag react
+  - react aria
+  - erişilebilir component
+date: 2026-11-24
+updated: 2026-11-24
+tags:
+  - accessibility
+author: Ahmet Can Tiryaki
+---
+
+# Erişilebilir React component'leri: pratik rehber
+
+Türkçe "erişilebilirlik" araması yaptığında karşına çoğunlukla iki tür sayfa çıkar: WCAG'ın maddelerini sıralayan danışmanlık yazıları ve bir erişilebilirlik eklentisi satan siteler. İkisi de React yazan birine şu soruların cevabını vermez: modal'ım klavyeyle kapanıyor mu, focus nereye dönüyor, ekran okuyucu select'imi doğru okuyor mu?
+
+Bu yazı o boşluk için. Önce erişilebilirliğin component seviyesinde neye karşılık geldiğini, sonra bir kütüphaneyi nasıl değerlendireceğini, en son da kendi projende nasıl test edeceğini anlatıyorum.
+
+## Erişilebilirlik neden component meselesi
+
+Bir sayfanın erişilebilir olması büyük ölçüde onu oluşturan parçalara bağlıdır. Dialog, dropdown menü, tabs, tooltip, select gibi etkileşimli component'ler en çok hatanın çıktığı yerlerdir. Çünkü HTML'in hazır karşılığı yoktur ya da yetersizdir, davranışı sen yazarsın.
+
+Kendin yazdığında tipik hatalar şunlar olur:
+
+- `div` ile yapılmış, klavyeyle odaklanamayan "buton"lar.
+- Açıldığında focus'u içine almayan, kapandığında focus'u tetikleyen butona geri vermeyen modal'lar.
+- Ok tuşlarıyla gezinilemeyen menüler.
+- Ekran okuyucuya hangi sekmenin seçili olduğunu söylemeyen tabs.
+- Sadece hover ile açılan, klavye kullanıcısının hiç göremediği tooltip'ler.
+
+Bu yüzden iyi bir component kütüphanesi seçmek, erişilebilirlik işinin büyük kısmını çözer. Ama hepsini değil; ona sonra geleceğim.
+
+## WCAG 2.2 AA component'te neye karşılık gelir
+
+WCAG maddelerini tek tek ezberlemene gerek yok. Component yazarken ya da seçerken şu listeye bakman yeterli:
+
+1. **Semantik.** Native element varsa kullanılır: `button`, `a`, `input`, `select`. Yoksa WAI-ARIA Authoring Practices Guide'daki (APG) desen uygulanır: rol, durum ve özellikler.
+2. **Klavye.** Fareyle yapılan her şey klavyeyle de yapılır. Tab ile girilir, ok tuşlarıyla içinde gezilir, Escape ile kapatılır.
+3. **Görünür focus.** Focus her zaman görünür. `outline: none` yazıp yerine bir şey koymamak en sık yapılan hatadır.
+4. **Focus yönetimi.** Overlay açıkken focus içinde kalır (focus trap), kapanınca tetikleyiciye döner.
+5. **Kontrast.** Normal metin için en az 4.5:1. Soluk gri "muted" metinler bu sınırı en sık kaçıranlardır.
+6. **Hedef boyutu.** WCAG 2.2 ile gelen kriter: tıklanabilir hedefler en az 24 × 24 CSS piksel.
+7. **Hareket.** `prefers-reduced-motion` açıksa animasyonlar kalkar ya da azalır.
+8. **Zoom ve reflow.** %200 zoom'da ve 320 piksel genişlikte yatay kaydırma olmadan kullanılabilir.
+
+Bunlara iki "ekstra" ekleyebilirsin: sağdan sola diller (RTL) ve Windows'un yüksek kontrast modu (forced colors). Çoğu kütüphane bunları dokümante etmez; ediyorsa ciddiye aldığını gösterir.
+
+## Bir kütüphaneyi nasıl değerlendirirsin
+
+Ana sayfada "accessible" yazması bir şey ifade etmez. Şunlara bak:
+
+**Her component sayfasında klavye tablosu var mı?** Hangi tuşun ne yaptığı yazıyorsa, ekip bunu düşünmüş ve test etmiş demektir.
+
+**Otomatik test var mı?** Repoda axe (ör. `jest-axe`, `vitest-axe` ya da Playwright ile `@axe-core/playwright`) çalışıyor mu? CI'da mı çalışıyor?
+
+**Manuel ekran okuyucu testi var mı?** Otomatik araçlar hataların ancak bir kısmını yakalar. VoiceOver ve NVDA ile test edildiği yazıyor mu?
+
+**Bilinen eksikler açıkça yazılmış mı?** Hiç eksiği olmayan kütüphane yoktur. Eksiklerini yazan kütüphane daha güvenilirdir.
+
+**Primitive'ler kimden geliyor?** Birçok kütüphane davranışı hazır bir katmandan alır: Radix, React Aria, Base UI, Ark UI gibi. React Aria (Adobe) erişilebilirlik ve uluslararasılaştırma konusunda en kapsamlı seçeneklerden biri; ama stilsiz gelir, görünümü sen yazarsın.
+
+Kaba bir sınıflandırma:
+
+| Tür | Örnek | Ne verir | Ne vermez |
+|---|---|---|---|
+| Headless primitive | React Aria, Radix Primitives, Base UI, Headless UI | Davranış, ARIA, klavye | Görünüm, token, kontrast |
+| Stilli kütüphane | MUI, Mantine, Chakra UI, Radix Themes, Merid | Davranış + görünüm | Senin içeriğinin doğruluğu |
+| Kopyala-yapıştır | shadcn/ui | Kaynak kod + primitive davranışı | Sonradan yaptığın değişikliklerin güvencesi |
+
+Kontrast headless kütüphanenin sorumluluğunda değildir, çünkü rengi sen seçersin. Stilli kütüphanede ise renk kararları kütüphaneye aittir; ölçülmüş kontrast değerlerini dokümante edip etmediğine bak.
+
+## Kendi kodunda dikkat etmen gerekenler
+
+Kütüphane ne kadar iyi olursa olsun şu kısımlar senin sorumluluğunda:
+
+**Sadece ikondan oluşan butonlara isim ver.**
+
+```tsx
+import { Trash2 } from "lucide-react";
+import { IconButton } from "@meridui/react";
+
+// Yanlış: ekran okuyucu sadece "button" der
+<IconButton><Trash2 /></IconButton>
+
+// Doğru
+<IconButton aria-label="Projeyi sil"><Trash2 aria-hidden /></IconButton>
+```
+
+**Her form alanının görünür bir label'ı olsun.** Placeholder label yerine geçmez; yazmaya başlayınca kaybolur.
+
+```tsx
+import { Field, Input } from "@meridui/react";
+
+<Field label="E-posta" hint="Faturalar bu adrese gider.">
+  <Input type="email" name="email" autoComplete="email" />
+</Field>
+```
+
+Buradaki `Field` label, açıklama ve hata mesajını input'a bağlar; `aria-describedby` gibi ilişkileri elle kurman gerekmez. Merid'in [Field sayfasında](https://meridui.dev/docs/components/field) prop'ların tamamı var.
+
+**Link metni bağlamdan bağımsız anlaşılsın.** "Buraya tıkla" yerine "Fatura geçmişini gör".
+
+**Hata mesajını sadece renkle gösterme.** Kırmızı kenarlık yetmez; metin olarak da yaz.
+
+**Başlık hiyerarşisini atlama.** `h1`'den sonra `h3`'e geçme; ekran okuyucu kullanıcıları sayfada başlıklarla gezinir.
+
+## Test: axe'i CI'a koy
+
+En ucuz kazanç, component'lerini ve sayfalarını axe ile otomatik test etmek. Vitest ile basit bir örnek:
+
+```tsx
+import { render } from "@testing-library/react";
+import { axe } from "vitest-axe";
+import { expect, test } from "vitest";
+import { SettingsForm } from "./SettingsForm";
+
+test("ayarlar formunda erişilebilirlik ihlali yok", async () => {
+  const { container } = render(<SettingsForm />);
+  expect(await axe(container)).toHaveNoViolations();
+});
+```
+
+Sayfa seviyesinde Playwright ile:
+
+```ts
+import AxeBuilder from "@axe-core/playwright";
+import { expect, test } from "@playwright/test";
+
+test("ayarlar sayfası", async ({ page }) => {
+  await page.goto("/settings");
+  const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag22aa"]).analyze();
+  expect(results.violations).toEqual([]);
+});
+```
+
+Sonra klavye testini elle yap: fareyi bir kenara koy, sayfayı sadece Tab, Shift+Tab, Enter, Space, ok tuşları ve Escape ile kullanmayı dene. Beş dakikalık bu test, axe'in kaçırdığı çoğu şeyi gösterir. Mac'te VoiceOver (Cmd+F5), Windows'ta ücretsiz NVDA ile bir tur daha at.
+
+## Yasal taraf hakkında kısa not
+
+Türkiye'deki yükümlülükler hakkında hukuki yorum yapmayacağım; kurumuna özel durum için bir uzmana danış. Şunu bilmekte fayda var: AB'ye ürün ya da hizmet satıyorsan, Avrupa Erişilebilirlik Yasası (European Accessibility Act) 28 Haziran 2025'ten beri uygulanıyor ve birçok dijital hizmeti kapsıyor. Pratikte referans standart WCAG 2.1/2.2 AA seviyesi. Hiçbir kütüphane seni tek başına "uyumlu" yapmaz; uyum, ürünün tamamının durumudur.
+
+## Merid bu konuda ne yapıyor
+
+Merid'i ben geliştiriyorum, bunu bilerek oku. Merid, WCAG 2.2 AA'yı **hedefler**; "sertifikalı" ya da "uyumlu" demiyoruz, çünkü bu iddia bir kütüphane için doğru olmaz. Yapılanlar:
+
+- Native element olan yerde native element; olmayan yerde WAI-ARIA APG desenleri.
+- Her component'in etkileşim testleri klavyeyle çalışır, render edilen durumları axe ile test edilir; bu testler her değişiklikte CI'da koşar.
+- Görünür focus: 2px accent outline, 3px offset.
+- Etkileşimli hedefler en az 24 × 24 piksel; dokunmatik (coarse pointer) cihazlarda büyür.
+- `prefers-reduced-motion` açıkken skeleton shimmer dahil tüm animasyonlar kalkar.
+- Metin kontrastı 4.5:1; ölçülen oranlar [Color](https://meridui.dev/docs/foundations/color) sayfasında.
+- RTL (logical property'ler, aynalanan klavye gezinmesi) ve Windows yüksek kontrast modu desteği.
+
+Eksikler de var: Merid 0.1 sürümünde, 46 component içeriyor ve combobox/autocomplete ya da date picker yok. Tam bir admin paneli için gereken her şeyi bulamayabilirsin. Erişilebilirlik beyanının tamamı [Accessibility](https://meridui.dev/docs/accessibility) sayfasında.
+
+```bash
+npm i @meridui/react
+```
+
+## Kısa kontrol listesi
+
+- [ ] Etkileşimli component'ler klavyeyle tamamen kullanılabiliyor
+- [ ] Focus her zaman görünür, overlay kapanınca geri dönüyor
+- [ ] İkon butonlarında `aria-label` var
+- [ ] Her alanın görünür label'ı var
+- [ ] Metin kontrastı 4.5:1 ve üstü
+- [ ] `prefers-reduced-motion` destekleniyor
+- [ ] axe testleri CI'da çalışıyor
+- [ ] En az bir ekran okuyucuyla elle test edildi
+
+Bu listeyi PR şablonuna koymak, erişilebilirliği "sonra bakarız" işi olmaktan çıkarır.
