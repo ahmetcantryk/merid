@@ -1,0 +1,27 @@
+{
+  "name": "meridui",
+  "version": "0.0.0",
+  "description": "Short alias for @meridui/cli: `npx meridui init` sets up Merid in your React project.",
+  "license": "MIT",
+  "type": "module",
+  "homepage": "https://meridui.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahmetcantryk/merid.git",
+    "directory": "packages/meridui"
+  },
+  "bugs": "https://github.com/ahmetcantryk/merid/issues",
+  "bin": {
+    "meridui": "bin/meridui.js"
+  },
+  "files": [
+    "bin"
+  ],
+  "dependencies": {
+    "@meridui/cli": "^0.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": ["merid", "react", "components", "design-system", "cli"]
+}
