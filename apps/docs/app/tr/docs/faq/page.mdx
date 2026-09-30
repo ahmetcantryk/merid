@@ -1,0 +1,35 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/faq", {
+  title: "Sık sorulan sorular",
+  description: "Merid hakkında sık sorulan soruların cevapları.",
+});
+
+# Sık sorulan sorular
+
+## Merid'i React olmadan kullanabilir miyim?
+
+Stil dosyası, belgelenmiş sınıf adları ve data attribute'larıyla tek başına kullanılabilir. Ama davranış (focus yönetimi, klavye desteği, ARIA bağlantıları) React component'lerinde yaşar. Yalnızca React desteklenir.
+
+## Tailwind CSS ile çalışır mı?
+
+Evet. Utility'lerin yine kazanması için Merid'in cascade layer'larını Tailwind'in utilities layer'ından önce tanımla. [Stil ve CSS layer'ları](/tr/docs/styling) sayfasına bak.
+
+## Accent rengini değiştirebilir miyim?
+
+Evet, `--mrd-accent` ve ilgili token'larıyla. Merid tek bir accent üzerine kurulu, bu yüzden ayarlanacak ikinci bir marka rengi yok.
+
+## Neden gradyan yok?
+
+Gradyanlar içerikle yarışır ve çabuk eskir. Kütüphanedeki tek gradyan skeleton parıltısıdır ve azaltılmış hareket açıkken kaldırılır.
+
+## Figma kütüphanesi var mı?
+
+Henüz yok. Token'lar, variable olarak yeniden kurulabilecek kadar kesin belgelenmiştir. 1.0'dan sonra bir Figma kütüphanesi değerlendiriliyor.
+
+## Stil dosyası ne kadar büyük?
+
+Stil dosyasının tamamı, üretilmiş utility'ler içermeyen sade CSS'tir. Yalnızca değişkenlere ihtiyacın varsa sadece `tokens.css`'i import et.
+
+## Merid'i kim geliştiriyor?
+
+Merid bağımsız bir open source projedir. Yardım etmek istersen [Katkıda bulunma](/tr/docs/contributing) sayfasına bak.

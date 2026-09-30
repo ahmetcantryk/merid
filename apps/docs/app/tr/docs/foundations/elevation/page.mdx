@@ -1,0 +1,46 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ShadowScale } from "@/components/foundations";
+
+export const metadata = docMetadata("tr", "/docs/foundations/elevation", {
+  title: "Yükselti",
+  description: "Gölge token'ları, yüzey katmanları ve focus halesi.",
+});
+
+# Yükselti
+
+Merid'de yükselti önce yüzeylerden, sonra gölgelerden gelir. Sayfadaki bir kart gri yüzeyin (tray) üzerinde durur; gri yüzey üzerindeki bir kart ise yumuşak gölgeli beyaz bir yüzeye döner. Kenarlık son çaredir.
+
+## Gölge ölçeği
+
+Tüm gölgeler uzun, yumuşak ve silik; siyahla değil mürekkep tonuyla (`rgb(15 18 25 / …)`) renklendirilir. Tek doygun gölge, birincil butonun accent parıltısıdır.
+
+<ShadowScale locale="tr" />
+
+## Seviye seçme
+
+<table>
+  <thead>
+    <tr><th>Yüzey</th><th>Gölge</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Segmented control'deki seçili chip</td><td><code>--mrd-shadow-xs</code></td></tr>
+    <tr><td>Gri yüzey üzerindeki kart, hover'daki etkileşimli kart</td><td><code>--mrd-shadow-md</code></td></tr>
+    <tr><td>Popover, toast, tooltip</td><td><code>--mrd-shadow-lg</code></td></tr>
+    <tr><td>Menü</td><td><code>--mrd-shadow-xl</code></td></tr>
+    <tr><td>Dialog</td><td><code>--mrd-shadow-2xl</code></td></tr>
+  </tbody>
+</table>
+
+## Dark mode'da
+
+Gölgeler %40–60 opaklıkta siyaha döner ve yükseltilmiş yüzeyler `--mrd-elevated-ring` ile 1px'lik bir halka ekler. Kendi yüzeylerin de aynı davransın diye bunu gölgenin yanına ekle:
+
+```css
+.floating-panel {
+  box-shadow: var(--mrd-shadow-lg), var(--mrd-elevated-ring);
+}
+```
+
+## Focus halesi
+
+`--mrd-focus-ring`, düşük opaklıkta 4px'lik bir accent halesidir ve input'larda accent kenarlıkla birlikte kullanılır. Diğer kontroller 3px ofsetli 2px'lik bir accent outline kullanır.

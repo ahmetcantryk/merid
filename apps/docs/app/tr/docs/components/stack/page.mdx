@@ -1,0 +1,126 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { StackDemo, StackRow, StackAlign, StackWrap, StackAs } from "@/examples/tr/stack";
+
+export const metadata = docMetadata("tr", "/docs/components/stack", {
+  title: "Stack",
+  description: "Boşluk skalasından gap alan tek boyutlu flex layout.",
+});
+
+# Stack
+
+Tek boyutlu bir flex layout: children'ı bir kolon ya da satır halinde dizer, aralarına `--mrd-space-*` skalasından bir gap koyar. Kardeş elemanlar arasında margin yerine bunu kullan.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/stack">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Stack gap={3}>
+  <Box>1</Box>
+  <Box>2</Box>
+  <Box>3</Box>
+</Stack>`}>
+  <StackDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Stack } from "@merid/react";
+```
+
+## Örnekler
+
+### Satır
+
+<ComponentPreview code={`<Stack direction="row" gap={2}>
+  <Box>1</Box>
+  <Box>2</Box>
+  <Box>3</Box>
+</Stack>`}>
+  <StackRow />
+</ComponentPreview>
+
+### Hizalama
+
+`align`, `align-items`'a; `justify`, `justify-content`'e karşılık gelir (`between`, `space-between` demektir).
+
+<ComponentPreview code={`<Stack direction="row" gap={2} align="center" justify="between">
+  <Box>kısa</Box>
+  <Box>uzun</Box>
+  <Box>orta</Box>
+</Stack>`}>
+  <StackAlign />
+</ComponentPreview>
+
+### Satır kaydırma
+
+<ComponentPreview code={`<Stack direction="row" gap={2} wrap>
+  {tags.map((tag) => <Box key={tag}>{tag}</Box>)}
+</Stack>`}>
+  <StackWrap />
+</ComponentPreview>
+
+### Semantik eleman
+
+Liste, nav ya da form render'lamak için `as` kullan; layout aynı kalır.
+
+<ComponentPreview code={`<Stack as="ul" gap={1}>
+  <li>Birinci öğe</li>
+  <li>İkinci öğe</li>
+</Stack>`}>
+  <StackAs />
+</ComponentPreview>
+
+## API referansı
+
+`as` verilmedikçe bir `div` render'lar; ref'ini iletir ve tüm HTML attribute'larını aktarır.
+
+<PropsTable rows={[
+  { name: "direction", type: '"row" | "column"', default: '"column"', description: "Ana eksen." },
+  { name: "gap", type: "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 10 | 14 | 16 | 18 | 28", default: "4", description: "--mrd-space-* skalasından gap (4 = 16px)." },
+  { name: "align", type: '"start" | "center" | "end" | "stretch" | "baseline"', description: "Çapraz eksende hizalama (align-items)." },
+  { name: "justify", type: '"start" | "center" | "end" | "between"', description: "Ana eksende dağılım (justify-content)." },
+  { name: "wrap", type: "boolean", default: "false", description: "Öğelerin birden fazla satıra kaymasına izin verir." },
+  { name: "as", type: "ElementType", default: '"div"', description: "div yerine render'lanacak eleman ya da component." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-stack</code></td><td>Kök eleman</td></tr>
+    <tr><td><code>data-direction</code></td><td><code>row</code> · <code>column</code></td></tr>
+    <tr><td><code>data-align</code></td><td><code>start</code> · <code>center</code> · <code>end</code> · <code>stretch</code> · <code>baseline</code></td></tr>
+    <tr><td><code>data-justify</code></td><td><code>start</code> · <code>center</code> · <code>end</code> · <code>between</code></td></tr>
+    <tr><td><code>data-wrap</code></td><td><code>wrap</code> verildiğinde bulunur</td></tr>
+  </tbody>
+</table>
+
+Component değişkeni: `gap`'ten inline olarak ayarlanan `--mrd-stack-gap`. Responsive gap'ler için CSS'te onu ez:
+
+```css
+@media (max-width: 640px) {
+  .actions.mrd-stack { --mrd-stack-gap: var(--mrd-space-2); }
+}
+```
+
+## Erişilebilirlik
+
+- Stack yalnızca layout'tur ve rol eklemez. Doğru elemanı `as` ile seç (`ul`, `nav`, `form`).
+- Görsel sıra DOM sırasını izler; bunu CSS ile ters çevirme, yoksa focus sırası ile okuma sırası birbirini tutmaz.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Her stack'te tek bir gap kullan; farklı ritimler için stack'leri iç içe koy.</p>}
+  dont={<p>Boşluğa ince ayar yapmak için <code>gap</code> ile children üzerindeki margin'leri karıştırmak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Grid](/tr/docs/components/grid): iki boyutlu layout.
+- [Container](/tr/docs/components/container): içerik genişliğini sınırlar.

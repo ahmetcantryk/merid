@@ -1,0 +1,131 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { LinkDemo, LinkTones, LinkUnderlines, LinkExternal } from "@/examples/tr/link";
+
+export const metadata = docMetadata("tr", "/docs/components/link", {
+  title: "Link",
+  description: "Metin içinde ya da tek başına kullanılan, navigasyon için stillenmiş bir anchor.",
+});
+
+# Link
+
+Navigasyon için stillenmiş bir `<a>`: metnin içinde ya da listelerde ve footer'larda tek başına. Sonuç yeni bir yere gitmek değil de bir aksiyonsa [Button](/tr/docs/components/button) kullan.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/link">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Text>
+  Başlamadan önce <Link href="/tr/docs/installation">kurulum rehberini</Link> oku.
+</Text>`}>
+  <LinkDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Link } from "@merid/react";
+```
+
+## Örnekler
+
+### Tonlar
+
+`accent` (varsayılan) akan metnin içindeki linkler içindir. `ink` ve `muted` daha sakindir; her öğenin link olduğu navigasyon listeleri ve footer'lar için uygundur.
+
+<ComponentPreview code={`<Link href="#" tone="accent">Accent</Link>
+<Link href="#" tone="ink">Ink</Link>
+<Link href="#" tone="muted">Muted</Link>`}>
+  <LinkTones />
+</ComponentPreview>
+
+### Alt çizgi
+
+`hover` (varsayılan) alt çizgiyi hover ve focus'ta gösterir. Link renkten bağımsız olarak da ayırt edilebilmeliyse `always` kullan, örneğin muted renkli bir paragrafın içinde.
+
+<ComponentPreview code={`<Link href="#" underline="hover">Hover'da altı çizili</Link>
+<Link href="#" underline="always">Her zaman altı çizili</Link>
+<Link href="#" underline="none">Alt çizgi yok</Link>`}>
+  <LinkUnderlines />
+</ComponentPreview>
+
+### Harici link
+
+`external` linki yeni bir tab'da açar, `rel="noopener noreferrer"` ekler ve ekran okuyucu kullanıcıları uyarılsın diye görsel olarak gizli bir “(opens in a new tab)” metni ekler.
+
+<Callout tone="warning">
+  Bu gizli metin şimdilik İngilizce ve bir prop ile değiştirilemiyor. Türkçe arayüzde ekran okuyucular uyarıyı İngilizce okur.
+</Callout>
+
+<ComponentPreview code={`<Link href="https://github.com/ahmetcantryk/merid" external>
+  GitHub reposu
+</Link>`}>
+  <LinkExternal />
+</ComponentPreview>
+
+### Client-side router ile
+
+`asChild` ver ve router'ının link component'ini tek child olarak geçir: Merid'in link stilini alır, kendi davranışını korur. Bu server component'lerde de çalışır.
+
+```tsx
+import NextLink from "next/link";
+
+<Link asChild tone="accent">
+  <NextLink href="/pricing">Fiyatlandırma</NextLink>
+</Link>
+```
+
+## API referansı
+
+Ref'ini `<a>`'ya iletir ve tüm native anchor attribute'larını olduğu gibi geçirir. `external` verildiğinde `target` ve `rel`'i ezer.
+
+<PropsTable rows={[
+  { name: "tone", type: '"accent" | "ink" | "muted"', default: '"accent"', description: "Metin rengi." },
+  { name: "underline", type: '"hover" | "always" | "none"', default: '"hover"', description: "Alt çizginin ne zaman görüneceği." },
+  { name: "external", type: "boolean", default: "false", description: "Linki rel=\"noopener noreferrer\" ile yeni bir tab'da açar ve görsel olarak gizli bir uyarı metni ekler." },
+  { name: "href", type: "string", description: "Native link hedefi." },
+  { name: "asChild", type: "boolean", default: "false", description: "Bir `<a>` yerine tek child elemanı (örneğin bir router linki) link stiliyle render'lar." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-link</code></td><td>Kök <code>{"<a>"}</code></td></tr>
+    <tr><td><code>data-tone</code></td><td><code>accent</code> · <code>ink</code> · <code>muted</code></td></tr>
+    <tr><td><code>data-underline</code></td><td><code>hover</code> · <code>always</code> · <code>none</code></td></tr>
+  </tbody>
+</table>
+
+Link'in kendine ait component değişkeni yok; `--mrd-accent`, `--mrd-accent-hover`, `--mrd-ink` ve `--mrd-muted` token'larını okur.
+
+## Erişilebilirlik
+
+- Native bir `<a>` render'lar: Enter linke gider ve link, ekran okuyucunun link listesinde görünür.
+- Link metni bağlamından koparıldığında da anlamlı olmalı: “buraya tıkla” değil, “Fiyatlandırma rehberini oku”.
+- `external` yeni tab uyarısını ekler; yeni tab'ları tek başına `target="_blank"` ile sessizce açma.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Focus'u linke taşır." },
+  { keys: ["Enter"], action: "Linke gider." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Kullanıcıyı bir yere götüren şey için <code>Link</code>, bir şey yapan şey için <code>Button</code> kullan.</p>}
+  dont={<p>Bir aksiyonu tetiklemek için <code>href="#"</code> olan bir linke <code>onClick</code> bağlamak.</p>}
+/>
+
+<DoDont
+  do={<p>Muted ya da yoğun metnin içindeki linklerin altını çiz; yalnızca renkle ayırt edilmesinler.</p>}
+  dont={<p>Akan metnin içindeki linklerde <code>underline="none"</code> kullanmak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Button](/tr/docs/components/button): `link` varyantı link gibi görünür ama bir aksiyon çalıştırır.
+- [VisuallyHidden](/tr/docs/components/visually-hidden): harici link uyarısının arkasındaki yardımcı component.

@@ -1,0 +1,165 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import {
+  AccordionBasic,
+  AccordionMultiple,
+  AccordionNonCollapsible,
+} from "@/examples/tr/accordion";
+import { accordionBasicCode, accordionMultipleCode, accordionNonCollapsibleCode } from "@/examples/tr/accordion.code";
+
+export const metadata = docMetadata("tr", "/docs/components/accordion", {
+  title: "Accordion",
+  description: "Alt alta dizilmiş, açılıp kapanan bölümler; aynı anda bir ya da birden çok panel gösterir.",
+});
+
+# Accordion
+
+Alt alta dizilmiş, açılıp kapanan bölümler; aynı anda bir ya da birden çok panel gösterir.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/accordion">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={accordionBasicCode}>
+  <AccordionBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Accordion } from "@merid/react";
+```
+
+## Anatomi
+
+```tsx
+<Accordion.Root type="single">
+  <Accordion.Item value="a">
+    <Accordion.Trigger />
+    <Accordion.Content />
+  </Accordion.Item>
+</Accordion.Root>
+```
+
+- **Root**, aynı anda tek bir item'ın mı (`type="single"`) yoksa birden çok item'ın mı (`type="multiple"`) açık olabileceğini belirler.
+- **Item**, bir tetikleyiciyi ve onun içeriğini benzersiz bir `value` altında gruplar.
+- **Trigger**, bir başlığın (varsayılan olarak `h3`) içine yerleştirilmiş, artı ikonlu bir `<button>`'dır.
+- **Content**, tetikleyicisiyle etiketlenen bir `role="region"`'dır. Children yalnızca açıkken render'lanır.
+
+## Örnekler
+
+### Multiple, controlled
+
+`type="multiple"` ile `value` ve `onValueChange` bir `string[]` kullanır. `headingLevel`, sarmalayan başlığın seviyesini sayfanın başlık hiyerarşisine uyacak şekilde ayarlar.
+
+<ComponentPreview code={accordionMultipleCode}>
+  <AccordionMultiple />
+</ComponentPreview>
+
+### Her zaman biri açık
+
+Single bir accordion'da `collapsible={false}`, açık item'ın kapatılmasını engeller.
+
+<ComponentPreview code={accordionNonCollapsibleCode}>
+  <AccordionNonCollapsible />
+</ComponentPreview>
+
+## API referansı
+
+### Root (single)
+
+`defaultValue` ve `onChange` dışındaki tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "type", type: "\"single\"", required: true, description: "Aynı anda tek item açık olur." },
+  { name: "value", type: "string", description: "Controlled açık item (hiçbiri için \"\")." },
+  { name: "defaultValue", type: "string", description: "Uncontrolled kullanımda başlangıçta açık olan item." },
+  { name: "onValueChange", type: "(value: string) => void", description: "Açık item'ın value'su ile çağrılır (hepsi kapalıyken \"\")." },
+  { name: "collapsible", type: "boolean", default: "true", description: "Açık item'ın kapatılmasına izin verir." },
+  { name: "headingLevel", type: "2 | 3 | 4 | 5 | 6", default: "3", description: "Her tetikleyiciyi saran başlığın seviyesi." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Root elemanına iletilen ref." },
+]} />
+
+### Root (multiple)
+
+<PropsTable rows={[
+  { name: "type", type: "\"multiple\"", required: true, description: "İstenen sayıda item açık olabilir." },
+  { name: "value", type: "string[]", description: "Controlled açık item'lar." },
+  { name: "defaultValue", type: "string[]", description: "Uncontrolled kullanımda başlangıçta açık olan item'lar." },
+  { name: "onValueChange", type: "(value: string[]) => void", description: "Açık item'ların value'larıyla çağrılır." },
+  { name: "headingLevel", type: "2 | 3 | 4 | 5 | 6", default: "3", description: "Her tetikleyiciyi saran başlığın seviyesi." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Root elemanına iletilen ref." },
+]} />
+
+### Item
+
+Tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "value", type: "string", required: true, description: "Bu item'ın benzersiz değeri." },
+  { name: "disabled", type: "boolean", default: "false", description: "Açılıp kapanmasını engeller." },
+]} />
+
+### Trigger
+
+Tüm `<button>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Butona iletilen ref." },
+]} />
+
+### Content
+
+Tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Region elemanına iletilen ref." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-accordion` | Root |
+| `.mrd-accordion__item` | Item |
+| `.mrd-accordion__heading` | Tetikleyiciyi saran başlık |
+| `.mrd-accordion__trigger`, `.mrd-accordion__trigger-text` | Tetikleyici ve metni |
+| `.mrd-accordion__icon` | Artı ikonu (açıkken döner) |
+| `.mrd-accordion__content` | İçerik bölgesi |
+
+| Attribute | Nerede | Değerler |
+|---|---|---|
+| `data-state` | Item, Trigger, Content | `open`, `closed` |
+| `aria-expanded` | Trigger | `true`, `false` |
+| `aria-disabled="true"`, `data-disabled` | Trigger | item devre dışıyken |
+
+## Erişilebilirlik
+
+WAI-ARIA [Accordion desenini](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) izler. Her tetikleyici bir başlığın içinde durur, `aria-expanded` ve `aria-controls` taşır; bölgesi de tetikleyiciyle etiketlenir. Devre dışı tetikleyicilere Tab ile hâlâ ulaşılır (`aria-disabled` ile), böylece ekran okuyucu onları okumaya devam eder; ama ok tuşları, Home ve End onları atlar.
+
+<KeyboardTable rows={[
+  { keys: ["Enter"], action: "Focus'taki bölümü açar ya da kapatır." },
+  { keys: ["Space"], action: "Focus'taki bölümü açar ya da kapatır." },
+  { keys: ["Tab"], action: "Açık içeriğin içindekiler dahil, focus alabilen bir sonraki elemana geçer." },
+  { keys: ["ArrowDown"], action: "Bir sonraki etkin tetikleyiciye geçer; sona gelince başa döner." },
+  { keys: ["ArrowUp"], action: "Bir önceki etkin tetikleyiciye geçer; başa gelince sona döner." },
+  { keys: ["Home"], action: "İlk etkin tetikleyiciye geçer." },
+  { keys: ["End"], action: "Son etkin tetikleyiciye geçer." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Accordion'ı, kullanıcıların başlığa bakarak taradığı ikincil içerik için kullan: SSS, ayar grupları, detaylar.</p>}
+  dont={<p>Herkesin okuması gereken içeriği gizlemek ya da accordion'a tek bir item koymak.</p>}
+/>
+
+<DoDont
+  do={<p>Tetikleyicileri soru ya da konu olarak yaz; sayfanın başlık yapısı düzgün okunsun.</p>}
+  dont={<p>Accordion'ları iç içe koymak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Tabs](/tr/docs/components/tabs)
+- [Card](/tr/docs/components/card)

@@ -1,0 +1,172 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { paginationBasicCode, paginationControlledCode, paginationSiblingsCode, paginationLinksCode } from "@/examples/tr/pagination.code";
+import {
+  PaginationBasic,
+  PaginationControlled,
+  PaginationSiblings,
+  PaginationLinks,
+} from "@/examples/tr/pagination";
+
+export const metadata = docMetadata("tr", "/docs/components/pagination", {
+  title: "Pagination",
+  description: "Önceki ve sonraki kontrolleri ve kompakt bir sayfa aralığıyla sonuç sayfaları arasında gezinir.",
+});
+
+# Pagination
+
+Önceki ve sonraki kontrolleri ve kompakt bir sayfa aralığıyla sonuç sayfaları arasında gezinir.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/pagination">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={paginationBasicCode}>
+  <PaginationBasic />
+</ComponentPreview>
+
+<Callout tone="success">
+  Landmark adı ve buton etiketleri varsayılan olarak İngilizcedir (“Pagination”, “Previous page”, “Next page”, “Page 3”). Türkçe arayüzde `aria-label`, `previousLabel`, `nextLabel` ve `pageLabel` prop'larına Türkçe değer ver; bu sayfadaki örnekler bunu yapıyor.
+</Callout>
+
+## Import
+
+```tsx
+import { Pagination, getPageRange } from "@merid/react";
+```
+
+## Anatomi
+
+`Pagination` tek bir component'tir. Şunları render'lar:
+
+- içinde bir liste olan bir `<nav>` landmark'ı,
+- bir önceki ve bir sonraki kontrolü (etiketli ikon butonlar),
+- sayfa butonları: ilk sayfa, son sayfa ve geçerli sayfanın her iki yanında `siblingCount` kadar sayfa,
+- iki ya da daha fazla sayfanın atlandığı her yerde bir üç nokta.
+
+## Örnekler
+
+### Controlled
+
+Sayfa senin state'inde ya da URL'de tutuluyorsa `page` ve `onPageChange` ver.
+
+<ComponentPreview code={paginationControlledCode}>
+  <PaginationControlled />
+</ComponentPreview>
+
+### Daha fazla komşu sayfa
+
+`siblingCount`, geçerli sayfanın her iki yanında kaç sayfa gösterileceğini belirler.
+
+<ComponentPreview code={paginationSiblingsCode}>
+  <PaginationSiblings />
+</ComponentPreview>
+
+### Link olarak
+
+`getHref` verildiğinde diğer her sayfa bir `<a>` olarak render'lanır; böylece sonuçlar taranabilir ve yeni bir tab'da açılabilir. Geçerli sayfa (kendine link vermek yerine) `aria-current="page"` ile düz metin olarak render'lanır. Devre dışı önceki/sonraki kontrolleri buton olarak kalır.
+
+<ComponentPreview code={paginationLinksCode}>
+  <PaginationLinks />
+</ComponentPreview>
+
+Client-side routing için `renderLink` ekle. Link'in tüm prop'larını (`href`, `className`, `aria-label`, `aria-current`, `onClick`, `children`, …) ve hedef `page` değerini alır:
+
+```tsx
+import NextLink from "next/link";
+
+<Pagination
+  pageCount={12}
+  page={page}
+  getHref={(p) => `/invoices?page=${p}`}
+  renderLink={({ page, ...props }) => <NextLink {...props} />}
+/>
+```
+
+### getPageRange ile özel layout'lar
+
+`getPageRange(page, pageCount, siblings = 1)`, component'in kullandığı aralığın aynısını sayfa numaraları ile `"ellipsis-start"` / `"ellipsis-end"` işaretlerinden oluşan bir dizi olarak döndürür.
+
+```tsx
+getPageRange(5, 12); // [1, "ellipsis-start", 4, 5, 6, "ellipsis-end", 12]
+```
+
+## API referansı
+
+### Pagination
+
+`<nav>` render'lar ve `onChange` dışındaki HTML attribute'larını kabul eder.
+
+<PropsTable
+  rows={[
+    { name: "pageCount", type: "number", required: true, description: "Toplam sayfa sayısı (≥ 1)." },
+    { name: "page", type: "number", description: "Controlled geçerli sayfa, 1'den başlar." },
+    { name: "defaultPage", type: "number", default: "1", description: "Uncontrolled kullanımda başlangıç sayfası." },
+    { name: "onPageChange", type: "(page: number) => void", description: "İstenen sayfayla çağrılır." },
+    { name: "siblingCount", type: "number", default: "1", description: "Geçerli sayfanın her iki yanında gösterilen sayfa sayısı." },
+    { name: "getHref", type: "(page: number) => string", description: "Verildiğinde sayfalar bu href ile link olarak render'lanır; geçerli sayfa metin olarak render'lanır." },
+    { name: "renderLink", type: "(props: PaginationLinkProps) => ReactNode", description: "getHref ile birlikte her linki kendin render'larsın (örneğin bir router linki). `page` dışındaki tüm prop'ları `<a>` render'layan bir elemana yay." },
+    { name: "aria-label", type: "string", default: '"Pagination"', description: "Landmark'ın erişilebilir adı. Türkçe arayüzde Türkçe bir değer ver, örneğin \"Sayfalama\"." },
+    { name: "previousLabel", type: "string", default: '"Previous page"', description: "Önceki butonunun etiketi. Türkçe arayüzde Türkçe bir değer ver, örneğin \"Önceki sayfa\"." },
+    { name: "nextLabel", type: "string", default: '"Next page"', description: "Sonraki butonunun etiketi. Türkçe arayüzde Türkçe bir değer ver, örneğin \"Sonraki sayfa\"." },
+    { name: "pageLabel", type: "(page: number) => string", default: "(p) => `Page ${p}`", description: "Bir sayfa butonunun erişilebilir etiketini üretir. Türkçe arayüzde örneğin (p) => `Sayfa ${p}` ver." },
+    { name: "ref", type: "Ref<HTMLElement>", description: "nav elemanına iletilen ref." },
+  ]}
+/>
+
+### getPageRange
+
+<PropsTable
+  rows={[
+    { name: "page", type: "number", required: true, description: "Geçerli sayfa, 1…pageCount aralığına sıkıştırılır." },
+    { name: "pageCount", type: "number", required: true, description: "Toplam sayfa." },
+    { name: "siblings", type: "number", default: "1", description: "Geçerli sayfanın her iki yanındaki sayfa sayısı." },
+  ]}
+/>
+
+`PageRangeItem[]` döndürür; burada `PageRangeItem = number | "ellipsis-start" | "ellipsis-end"`.
+
+## Stil verme
+
+- `.mrd-pagination` / `.mrd-pagination__list`: nav kökü ve flex liste.
+- `.mrd-pagination__page`: bir sayfa butonu, linki ya da (link modunda geçerli sayfa için) metni: `--mrd-icon-button-md` boyutunda kare, `--mrd-radius-md`.
+- `.mrd-pagination__page[aria-current="page"]` (ayrıca `data-state="active"`): geçerli sayfa; `--mrd-accent-soft` dolgu, `--mrd-accent-strong` metin.
+- `data-direction="previous"` ya da `"next"` ile `.mrd-pagination__control`: chevron kontrolleri; `:disabled` durumunda `--mrd-placeholder` kullanılır.
+- `.mrd-pagination__ellipsis`: `…` boşluğu, yardımcı teknolojilerden gizlenir.
+
+Kaba işaretçilerde (coarse pointer) kontroller `--mrd-icon-button-lg` boyutuna büyür. Azaltılmış hareket basma ölçeğini kaldırır.
+
+## Erişilebilirlik
+
+Sayfalama için ayrı bir APG deseni yok; adlandırılmış bir `navigation` bölgesi için [landmark bölgeleri rehberini](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/) izler.
+
+- Liste, "Pagination" adlı bir `nav` içinde durur. Sayfada birden fazla varsa daha belirgin bir ad ver (örneğin "Arama sonucu sayfaları").
+- Her sayfa kontrolünün `pageLabel`'dan gelen erişilebilir bir etiketi vardır; geçerli sayfada `aria-current="page"` bulunur.
+- Önceki ve sonraki, uçlarda gizlenmez, devre dışı bırakılır; böylece layout kaymaz.
+- Üç noktalar `aria-hidden`'dır.
+
+<KeyboardTable
+  rows={[
+    { keys: ["Tab"], action: "Focus'u sonraki kontrole taşır." },
+    { keys: ["Enter"], action: "Focus'taki sayfayı ya da kontrolü etkinleştirir." },
+    { keys: ["Space"], action: "Focus'taki butonu etkinleştirir (buton modu)." },
+  ]}
+/>
+
+## Kullanım ilkeleri
+
+<DoDont
+  do="Sayfalamanın yanında sonuç sayısını göster ve sayfa değiştiğinde listeyi en üste kaydır."
+  dont="Birkaç öğe için ya da bir akıştaki adımlar için sayfalama kullanmak. Sıralı görevler için Stepper kullan."
+/>
+
+<DoDont
+  do="Sayfalar gerçek URL'lerse getHref kullan; böylece paylaşılabilir ve yer imlerine eklenebilirler."
+  dont="Sayfalar arasında sayfa boyutunu sessizce değiştirmek."
+/>
+
+## İlgili sayfalar
+
+- [Table](/tr/docs/components/table)
+- [Stepper](/tr/docs/components/stepper)
+- [Breadcrumb](/tr/docs/components/breadcrumb)

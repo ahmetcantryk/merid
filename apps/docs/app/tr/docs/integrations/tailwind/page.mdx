@@ -1,0 +1,85 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/integrations/tailwind", {
+  title: "Tailwind CSS",
+  description: "Merid'i Tailwind CSS v4 ile birlikte kullan: layer sırası, Preflight ve Tailwind tema değeri olarak Merid token'ları.",
+});
+
+# Tailwind CSS
+
+Merid ve Tailwind sorunsuz bir arada çalışır, çünkü ikisi de cascade layer kullanır. Karar vermen gereken tek şey sıralamaları.
+
+## Layer sırası
+
+Merid her şeyi `merid.tokens`, `merid.base` ve `merid.components` içine koyar. Tailwind v4 `theme`, `base`, `components` ve `utilities` kullanır. Sırayı iki stil dosyasından da önce, bir kez tanımla:
+
+```css
+/* app.css */
+@layer theme, base, merid, components, utilities;
+
+@import "tailwindcss";
+@import "@merid/react/styles.css";
+```
+
+Bu sırayla:
+
+- Tailwind'in Preflight'ı (`base`) önce gelir; Merid'in base ve component stilleri onu ezer.
+- Tailwind utility'leri en son gelir; bir Merid component'indeki `className="mt-4 w-full"`, `!important` olmadan component'in kendi boşluğunu ve genişliğini ezer.
+- Layer dışındaki kendi CSS'in yine ikisini de ezer.
+
+Merid'i bunun yerine JavaScript'ten import ediyorsan (`import "@merid/react/styles.css"`), `@layer` satırını Tailwind'in işlediği CSS dosyasının en üstünde tut ve o dosyanın ilk yüklendiğinden emin ol.
+
+## Preflight
+
+Preflight kenarlıkları `0 solid`'e sıfırlar, buton arka planlarını kaldırır ve görselleri `display: block` yapar. Merid'in component kuralları ihtiyaç duydukları her şeyi yeniden tanımlar, bu yüzden component'ler etkilenmez. Bilmen gereken tek şey:
+
+- Preflight her elemanda `border-color`'ı `currentColor` yapar. Merid'in ince çizgileri `--mrd-line` kullanır; kendi kenarlıklarını Tailwind ile çiziyorsan token'ı kullan: `border border-[var(--mrd-line)]` ya da aşağıdaki tema rengi.
+
+## Tailwind temasında token'lar
+
+Merid'in CSS değişkenlerini `@theme inline` ile Tailwind'e eşle; utility'ler açık ve koyu temayı kendiliğinden izler:
+
+```css
+@theme inline {
+  --color-accent: var(--mrd-accent);
+  --color-accent-soft: var(--mrd-accent-soft);
+  --color-ink: var(--mrd-ink);
+  --color-body: var(--mrd-body);
+  --color-muted: var(--mrd-muted);
+  --color-line: var(--mrd-line);
+  --color-surface: var(--mrd-surface);
+  --color-tray: var(--mrd-tray);
+  --color-danger: var(--mrd-danger);
+
+  --radius-control: var(--mrd-radius-lg);
+  --radius-card: var(--mrd-radius-card);
+
+  --shadow-sm: var(--mrd-shadow-sm);
+  --shadow-md: var(--mrd-shadow-md);
+
+  --font-sans: var(--mrd-font-sans);
+  --font-mono: var(--mrd-font-mono);
+}
+```
+
+```tsx
+<div className="rounded-card bg-tray p-6 text-body">
+  <h2 className="text-ink font-semibold">Kullanım</h2>
+  <p className="text-muted">Her ayın 1'inde sıfırlanır.</p>
+</div>
+```
+
+`inline`, Tailwind'in değeri kopyalamak yerine her utility'de `var(--mrd-…)` üretmesini sağlar; dark mode'un çalışmaya devam etmesini sağlayan da bu. Temayı JavaScript'ten üretiyorsan `@merid/tokens` paketi aynı listeyi `cssVar` olarak export eder.
+
+## Dark mode varyantı
+
+Merid `data-theme="dark"` ile geçiş yapar. İkisi aynı şeyi söylesin diye Tailwind'in `dark:` varyantını aynı attribute'a yönlendir:
+
+```css
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+```
+
+Bu, Tailwind'in varsayılan `prefers-color-scheme` davranışını devre dışı bırakır. Tema değiştirici olmadan sistem ayarına güveniyorsan Tailwind'in varsayılanını koru ve Merid'in de media query'yi izlemesine izin ver; varsayılan olarak zaten izliyor.
+
+## Tailwind v3
+
+Tailwind v3 çıktısını layer dışında üretir; Preflight dahil hepsi Merid'in layer'lı kurallarını ezer. Preflight'ı kapat (`corePlugins: { preflight: false }`) ya da kapsamını daralt ve utility'lerin her zaman kazanacağını bil. Token'ları `tailwind.config.js` içinde `colors: { accent: "var(--mrd-accent)" }` ile eşle.

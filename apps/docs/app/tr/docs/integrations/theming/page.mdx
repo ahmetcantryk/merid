@@ -1,0 +1,97 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ThemingBrandPreview } from "@/examples/tr/integrations/theming";
+
+export const metadata = docMetadata("tr", "/docs/integrations/theming", {
+  title: "Markaya göre tema",
+  description: "Accent token'larını açık ve koyu temada ezerek Merid'e marka rengini ver; tüm uygulama için ya da tek bir alt ağaç için.",
+});
+
+# Markaya göre tema
+
+Merid'in tek bir accent rengi var. Hazır preset'lerden biri yeterince yakınsa onu kullan: herhangi bir elemanda `data-accent="violet"`, `"green"` ya da `"graphite"` ([Alt ağaç attribute'ları](/tr/docs/integrations/subtree-attributes)). Kendi marka rengin için CSS'inde accent ailesini ez. Merid cascade layer'lar içinde durduğu için layer dışındaki düz bir kural `!important` olmadan kazanır.
+
+<ComponentPreview align="start" code={`.brand-teal {
+  --mrd-accent: #0f766e;
+  --mrd-accent-hover: #0d6560;
+  --mrd-accent-solid: #0f766e;
+  --mrd-accent-solid-hover: #0d6560;
+  --mrd-accent-soft: #e7f5f3;
+  --mrd-accent-strong: #0b4f4a;
+  --mrd-focus-ring: 0 0 0 3px rgb(15 118 110 / 20%);
+}`}>
+  <ThemingBrandPreview />
+</ComponentPreview>
+
+## Accent ailesi
+
+| Token | Nerede kullanılır | Pratik kural |
+|---|---|---|
+| `--mrd-accent` | linkler, focus outline'ı, seçili tab'ın alt çizgisi, işaretli kontroller | `--mrd-bg`'ye karşı ≥ 3:1 (metin dışı), link metni için kullanılıyorsa ≥ 4.5:1 |
+| `--mrd-accent-hover` | yukarıdakilerin hover'ı | yaklaşık bir ton koyu (açık tema) ya da açık (koyu tema) |
+| `--mrd-accent-solid` / `-solid-hover` | primary buton dolgusu, solid badge | `--mrd-on-accent`'e karşı ≥ 4.5:1 |
+| `--mrd-on-accent` | solid dolgular üzerindeki metin ve ikonlar | genellikle `#fff`; çok açık markalarda koyu metin ver |
+| `--mrd-accent-soft` | seçili satır, accent badge, ikon kutusu | accent'in %5–10'luk bir tonu |
+| `--mrd-accent-strong` | `accent-soft` üzerindeki metin | `accent-soft`'a karşı ≥ 4.5:1 |
+| `--mrd-focus-ring` | focus alan kontrollerin etrafındaki yumuşak hale | accent'in %18–28 opaklıktaki hali |
+
+Hepsini birlikte ez. Yalnızca `--mrd-accent`'i değiştirirsen primary buton ve yumuşak tonlar varsayılan mavide kalır.
+
+## Tüm uygulama, açık ve koyu
+
+```css
+/* brand.css — @merid/react/styles.css'ten sonra yükle */
+:root,
+[data-theme="light"] {
+  --mrd-accent: #0f766e;
+  --mrd-accent-hover: #0d6560;
+  --mrd-accent-solid: #0f766e;
+  --mrd-accent-solid-hover: #0d6560;
+  --mrd-accent-soft: #e7f5f3;
+  --mrd-accent-strong: #0b4f4a;
+  --mrd-focus-ring: 0 0 0 3px rgb(15 118 110 / 20%);
+}
+
+[data-theme="dark"] {
+  --mrd-accent: #2dd4bf;
+  --mrd-accent-hover: #5eead4;
+  --mrd-accent-solid: #0f766e;
+  --mrd-accent-solid-hover: #115e59;
+  --mrd-accent-soft: rgb(45 212 191 / 12%);
+  --mrd-accent-strong: #99f6e4;
+  --mrd-focus-ring: 0 0 0 3px rgb(45 212 191 / 28%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* [data-theme="dark"] ile aynı değerler */
+  }
+}
+```
+
+Dark mode'da metin accent'i açılır, ama solid dolgu genellikle beyaz metni taşıyacak kadar koyu kalır. Merid'in kendi mavisi de aynı ayrımı kullanır.
+
+## Tek bir alt ağaç
+
+Her şey bir custom property olduğu için herhangi bir elemandaki bir sınıf ya da attribute sayfanın yalnızca o kısmına tema verir: bir iş ortağının gömülü widget'ı, bir pazarlama bölümü, çalışma alanına özel bir renk:
+
+```tsx
+<section className="brand-teal">
+  <Button variant="primary">Denemeyi başlat</Button>
+</section>
+```
+
+Çalışma anında müşteriye özel renkler için özellikleri inline ver: `style={{ "--mrd-accent": workspace.color, … } as React.CSSProperties}`. Bir rengi kabul etmeden önce kontrastı sunucuda doğrula; beyaz üzerinde soluk bir marka rengi okunmaz.
+
+## Rengin ötesi
+
+Aynı yaklaşım her token için çalışır:
+
+```css
+:root {
+  --mrd-font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --mrd-radius-lg: 6px;   /* kontroller */
+  --mrd-radius-card: 10px;
+}
+```
+
+Boyut için kontrol yüksekliklerini tek tek ezmek yerine `data-density` kullan. Tasarım sözleşmesini aklında tut: tek accent, ince çizgi kenarlıklar, ink tonlu yumuşak gölgeler. Marka rengi accent'i değiştirir, kuralları değil.

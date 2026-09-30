@@ -1,0 +1,33 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/versioning", {
+  title: "Sürümleme",
+  description: "Merid release'leri nasıl sürümler ve API'leri nasıl kullanımdan kaldırır.",
+});
+
+# Sürümleme
+
+Merid [Semantic Versioning](https://semver.org) kurallarına uyar. Release'ler Changesets ile hazırlanır ve npm'e provenance ile yayınlanır.
+
+## Public API'ye neler dahil
+
+- Component adları, prop'ları ve belgelenmiş değerleri.
+- Export edilen TypeScript tipleri.
+- Belgelenmiş `.mrd-` sınıf adları, parça sınıfları ve data attribute'ları.
+- Token adları (`--mrd-*`) ve cascade layer adları.
+
+Token *değerleri* tasarım kararlarıdır. Bir kontrast sorununu çözüyorsa ya da bir component'i tasarım sözleşmesiyle yeniden uyumlu hale getiriyorsa, bir değer minor bir release'te değişebilir. Bu tür değişiklikler her zaman changelog'da listelenir.
+
+## 1.0 öncesi
+
+Sürüm `0.x` olduğu sürece minor bir release (`0.1` → `0.2`) breaking change içerebilir. Her biri changelog'da bir geçiş notuyla işaretlenir. Patch release'ler hiçbir şeyi bozmaz.
+
+## Kullanımdan kaldırma politikası
+
+1. Kullanımdan kaldırılan bir API, 1.0 öncesinde en az bir minor release, sonrasında bir major release boyunca çalışmaya devam eder.
+2. Kullanımdan kaldırılan prop'lar ve component'ler tiplerde `@deprecated` ile işaretlenir, böylece editörün onların üstünü çizer.
+3. Development build'lerinde ilk kullanım, yerine geçeni söyleyen tek bir console uyarısı basar.
+4. Doküman sayfası *Kullanımdan kalktı* durumunu ve geçiş yolunu gösterir.
+
+## Destek süresi
+
+Düzeltmeleri yalnızca son minor release alır. Yeni bir minor çıktıktan sonra üç ay boyunca güvenlik düzeltmeleri bir önceki minor release'e de taşınır.

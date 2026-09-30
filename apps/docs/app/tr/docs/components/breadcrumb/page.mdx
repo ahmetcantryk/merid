@@ -1,0 +1,140 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { breadcrumbBasicCode, breadcrumbLongCode } from "@/examples/tr/breadcrumb.code";
+import { BreadcrumbBasic, BreadcrumbLong } from "@/examples/tr/breadcrumb";
+
+export const metadata = docMetadata("tr", "/docs/components/breadcrumb", {
+  title: "Breadcrumb",
+  description: "Mevcut sayfanın hiyerarşideki yerini, her üst sayfaya link vererek gösterir.",
+});
+
+# Breadcrumb
+
+Mevcut sayfanın hiyerarşideki yerini, her üst sayfaya link vererek gösterir.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/breadcrumb">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={breadcrumbBasicCode}>
+  <BreadcrumbBasic />
+</ComponentPreview>
+
+<Callout tone="success">
+  Landmark'ın erişilebilir adı varsayılan olarak “Breadcrumb”tır. Türkçe arayüzde `aria-label="Sayfa yolu"` gibi Türkçe bir ad ver; ekran okuyucular doğru dilde okusun.
+</Callout>
+
+## Import
+
+```tsx
+import { Breadcrumb } from "@merid/react";
+```
+
+## Anatomi
+
+```tsx
+<Breadcrumb.Root>
+  <Breadcrumb.Item>
+    <Breadcrumb.Link href="/" />
+  </Breadcrumb.Item>
+  <Breadcrumb.Item>
+    <Breadcrumb.Page />
+  </Breadcrumb.Item>
+</Breadcrumb.Root>
+```
+
+- `Breadcrumb.Root`: sıralı bir listeyi saran `<nav>` landmark'ı.
+- `Breadcrumb.Item`: yoldaki bir `<li>`. Ayraçlar item'ların arasına CSS ile çizilir.
+- `Breadcrumb.Link`: bir üst sayfaya giden `<a>`.
+- `Breadcrumb.Page`: `aria-current="page"` taşıyan, düz metin olarak mevcut sayfa.
+
+## Örnekler
+
+### Uzun yol
+
+Yer kalmadığında mevcut sayfa alt satıra geçmek yerine üç noktayla kısaltılır; genişliği sınırlı bir alanda item'ına `min-width: 0` ver. Listenin kendisi item'lar arasında alt satıra geçer.
+
+<ComponentPreview code={breadcrumbLongCode}>
+  <BreadcrumbLong />
+</ComponentPreview>
+
+### Router ile
+
+`Breadcrumb.Link` düz bir `<a>` render'lar ve `as` prop'u almaz. Client tarafı routing için router'ının link'ini `Breadcrumb.Item`'ın içine koy ve ona `className="mrd-breadcrumb__link"` ekle.
+
+## API referansı
+
+### Breadcrumb.Root
+
+`<nav>` render'lar ve tüm HTML attribute'larını kabul eder.
+
+<PropsTable
+  rows={[
+    { name: "aria-label", type: "string", default: '"Breadcrumb"', description: "Landmark'ın erişilebilir adı. Türkçe arayüzde örneğin `\"Sayfa yolu\"` ver." },
+    { name: "ref", type: "Ref<HTMLElement>", description: "nav elemanına iletilen ref." },
+  ]}
+/>
+
+### Breadcrumb.Item
+
+`<li>` render'lar ve tüm HTML attribute'larını kabul eder. Ek prop'u yoktur.
+
+### Breadcrumb.Link
+
+Varsayılan olarak `<a>` render'lar ve tüm anchor attribute'larını kabul eder. Onun yerine bir router link'i render'lamak için `as` ver; `to` gibi ek prop'lar iletilir.
+
+<PropsTable
+  rows={[
+    { name: "as", type: "ElementType", default: "\"a\"", description: "Render'lanacak eleman ya da component, örneğin bir router `Link`'i." },
+    { name: "href", type: "string", description: "Üst sayfanın adresi." },
+    { name: "ref", type: "Ref<HTMLAnchorElement>", description: "Anchor'a iletilen ref." },
+  ]}
+/>
+
+### Breadcrumb.Page
+
+`<span aria-current="page">` render'lar ve tüm HTML attribute'larını kabul eder. Ek prop'u yoktur.
+
+## Stil verme
+
+- `.mrd-breadcrumb`: `nav` root.
+- `.mrd-breadcrumb__list`: `ol` elemanı; `--mrd-text-xs` boyutunda, alt satıra geçebilen bir flex satırı.
+- `.mrd-breadcrumb__item`: her `li`; `.mrd-breadcrumb__item + .mrd-breadcrumb__item::before`, `/` ayracını `--mrd-placeholder` renginde çizer.
+- `.mrd-breadcrumb__link`: `--mrd-body` renginde üst sayfa link'i, hover'da `--mrd-ink`.
+- `.mrd-breadcrumb__page`: `--mrd-ink` renginde, orta kalınlıkta, tek satırda üç noktayla kısalan mevcut sayfa.
+
+Ayraç `content: "/" / ""` kullanır; alternatif metni boş olduğu için ekran okuyucu onu okumaz. Değiştirmek için kendi layer'ında `.mrd-breadcrumb__item + .mrd-breadcrumb__item::before`'u ez.
+
+## Erişilebilirlik
+
+[WAI-ARIA Breadcrumb desenini](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/) izler.
+
+- Root, varsayılan olarak "Breadcrumb" adını taşıyan bir `nav` landmark'ıdır. Sayfada birden çok navigasyon landmark'ı varsa `aria-label` ile yeniden adlandır.
+- Item'lar sıralı bir listedir; ekran okuyucular konumu ve toplam sayıyı okur.
+- Son item `Breadcrumb.Page` kullanır; bu `aria-current="page"` atar ve link değildir.
+
+<KeyboardTable
+  rows={[
+    { keys: ["Tab"], action: "Focus'u yoldaki bir sonraki link'e taşır." },
+    { keys: ["Shift", "Tab"], action: "Focus'u bir önceki link'e taşır." },
+    { keys: ["Enter"], action: "Focus'taki link'e gider." },
+  ]}
+/>
+
+## Kullanım ilkeleri
+
+<DoDont
+  do="Anlamlı bir kökten başla ve mevcut sayfayla, metin olarak bitir. Etiketleri kullanıcıların zaten gördüğü sayfa başlıklarıyla aynı tut."
+  dont="Breadcrumb'ı tek navigasyon olarak ya da ziyaret edilen sayfaların geçmişini göstermek için kullanmak. Hiyerarşiyi anlatır, geri butonu değildir."
+/>
+
+<DoDont
+  do="Her üst sayfayı link yap."
+  dont="Mevcut sayfayı kendisine link'lemek."
+/>
+
+## İlgili sayfalar
+
+- [Link](/tr/docs/components/link)
+- [SidebarNav](/tr/docs/components/sidebar-nav)
+- [Pagination](/tr/docs/components/pagination)

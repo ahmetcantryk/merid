@@ -1,0 +1,59 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/foundations", {
+  title: "Design token'lar",
+  description: "Merid'in design token'ları nasıl adlandırılır, hangi katmanlara ayrılır ve nasıl kullanılır.",
+});
+
+# Design token'lar
+
+Merid'deki her renk, boyut, gölge ve süre bir CSS custom property'dir. Component'lerde token olmayan ham bir değer bulunmaz; bu yüzden bir token'ı değiştirdiğinde kullanıldığı her yer değişir.
+
+## Adlandırma
+
+Tüm token'lar `--mrd-` önekini taşır ve üç katmana ayrılır.
+
+<table>
+  <thead>
+    <tr><th>Katman</th><th>Örnek</th><th>Amaç</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Primitive</td><td><code>--mrd-space-4</code></td><td>Bir ölçekteki ham adım. Tek başına bir anlamı yoktur.</td></tr>
+    <tr><td>Semantic</td><td><code>--mrd-accent</code>, <code>--mrd-tray</code></td><td>Rolüne göre adlandırılır. Açık ve koyu tema arasında değişir.</td></tr>
+    <tr><td>Component</td><td><code>--mrd-control-md</code></td><td>Bir component ailesinin paylaştığı boyutlar.</td></tr>
+  </tbody>
+</table>
+
+Kendi kodunda semantic token'ları tercih et. `var(--mrd-tray)` dark mode'a uyar, hex değeri uymaz.
+
+## Kategoriler
+
+- [Renk](/tr/docs/foundations/color): accent, yüzeyler, çizgiler, metin tonları ve durum renkleri.
+- [Tipografi](/tr/docs/foundations/typography): font stack'leri, satır yüksekliği ve harf aralığıyla dokuz boyut, üç ağırlık.
+- [Boşluk](/tr/docs/foundations/spacing): 4 ve 8 piksellik bir ölçek ve layout genişlikleri.
+- [Köşe yuvarlaklığı](/tr/docs/foundations/radius): yüzeyler iç içe geçtikçe küçülen dokuz köşe boyutu.
+- [Yükselti](/tr/docs/foundations/elevation): mürekkep tonlu gölgeler ve focus halesi.
+- [Hareket](/tr/docs/foundations/motion): süreler ve tek easing eğrisi.
+- [Breakpoint'ler ve layer'lar](/tr/docs/foundations/layout): iki breakpoint ve z-index ölçeği.
+
+## Token'ları kullanma
+
+Yalnızca değişkenlere ihtiyacın varsa token'ları component kuralları olmadan import et:
+
+```tsx
+import "@merid/react/tokens.css";
+```
+
+Sonra CSS'in değer kabul ettiği her yerde kullan:
+
+```css
+.panel {
+  padding: var(--mrd-space-7);
+  border-radius: var(--mrd-radius-card);
+  background: var(--mrd-tray);
+  color: var(--mrd-body);
+}
+```
+
+## Token'ları ezme
+
+Bir token'ı global olarak değiştirmek için `:root` üzerinde, yalnızca bir alt ağaçta değiştirmek için o elemanda tanımla. Token'lar `merid.tokens` layer'ında durur; bu yüzden layer'sız sıradan bir tanım her zaman kazanır. Ayrıntılar için [Stil ve CSS layer'ları](/tr/docs/styling) sayfasına bak.

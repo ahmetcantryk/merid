@@ -1,0 +1,145 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import {
+  SegmentedControlDemo,
+  SegmentedControlControlled,
+  SegmentedControlIcons,
+  SegmentedControlStates,
+} from "@/examples/tr/segmented-control";
+
+export const metadata = docMetadata("tr", "/docs/components/segmented-control", {
+  title: "SegmentedControl",
+  description: "Görünümler ya da aralıklar arasında geçiş için hap biçiminde tekli seçim kontrolü.",
+});
+
+# SegmentedControl
+
+Birkaç görünüm, aralık ya da mod arasında geçiş için hap biçiminde tekli seçim kontrolü. Bir radio grubu gibi davranır: tek Tab durağı, gezinmek için ok tuşları.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/segmented-control">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<SegmentedControl
+  aria-label="Zaman aralığı"
+  defaultValue="week"
+  options={[
+    { value: "day", label: "Gün" },
+    { value: "week", label: "Hafta" },
+    { value: "month", label: "Ay" },
+  ]}
+/>`}>
+  <SegmentedControlDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { SegmentedControl, type SegmentedControlOption } from "@merid/react";
+```
+
+## Örnekler
+
+### Controlled
+
+Uncontrolled kullanımda kontrol `defaultValue` ile ya da ilk etkin seçenekle başlar. Controlled kullanım için `value` ve `onValueChange` ver.
+
+<ComponentPreview code={`const [value, setValue] = useState("month");
+
+<SegmentedControl aria-label="Zaman aralığı" options={range} value={value} onValueChange={setValue} />`}>
+  <SegmentedControlControlled />
+</ComponentPreview>
+
+### İkonlu segment'ler
+
+Bir segment'in `label` değeri ikon olduğunda seçeneğe bir `ariaLabel` ver.
+
+<ComponentPreview code={`<SegmentedControl
+  aria-label="Görünüm"
+  options={[
+    { value: "list", label: <ListIcon />, ariaLabel: "Liste görünümü" },
+    { value: "grid", label: <GridIcon />, ariaLabel: "Grid görünümü" },
+  ]}
+/>`}>
+  <SegmentedControlIcons />
+</ComponentPreview>
+
+### Devre dışı seçenekler, devre dışı kontrol, tam genişlik
+
+<ComponentPreview code={`<SegmentedControl
+  aria-label="Paket"
+  options={[
+    { value: "monthly", label: "Aylık" },
+    { value: "yearly", label: "Yıllık" },
+    { value: "lifetime", label: "Ömür boyu", disabled: true },
+  ]}
+/>
+<SegmentedControl aria-label="Zaman aralığı" options={range} disabled />
+<SegmentedControl aria-label="Zaman aralığı" options={range} fullWidth />`}>
+  <SegmentedControlStates />
+</ComponentPreview>
+
+## API referansı
+
+### SegmentedControl
+
+Ref ve diğer div attribute'ları `role="radiogroup"` kapsayıcısına gider.
+
+<PropsTable rows={[
+  { name: "options", type: "SegmentedControlOption[]", required: true, description: "Segment'ler." },
+  { name: "value", type: "string", description: "Seçili değer (controlled)." },
+  { name: "defaultValue", type: "string", description: "Başlangıçta seçili değer (uncontrolled). Varsayılanı ilk etkin seçenektir." },
+  { name: "onValueChange", type: "(value: string) => void", description: "Seçim değiştiğinde yeni değerle çağrılır." },
+  { name: "fullWidth", type: "boolean", default: "false", description: "Segment'leri kapsayıcıyı dolduracak şekilde genişletir." },
+  { name: "disabled", type: "boolean", default: "false", description: "Kontrolün tamamını devre dışı bırakır." },
+]} />
+
+### SegmentedControlOption
+
+<PropsTable rows={[
+  { name: "value", type: "string", required: true, description: "Seçildiğinde bildirilen değer." },
+  { name: "label", type: "ReactNode", required: true, description: "Segment'in görünür içeriği." },
+  { name: "ariaLabel", type: "string", description: "Etiket metin değilse (örneğin bir ikon) erişilebilir ad." },
+  { name: "disabled", type: "boolean", description: "Segment'i seçilemez yapar; ok tuşları onu atlar." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-segmented</code></td><td>Hap biçimli kanal; genişletildiğinde <code>data-full-width</code></td></tr>
+    <tr><td><code>.mrd-segmented__item</code></td><td>Her bir segment {"<button role=\"radio\">"}</td></tr>
+    <tr><td><code>data-state</code></td><td>Her item'da <code>on</code> · <code>off</code></td></tr>
+  </tbody>
+</table>
+
+Tray section ya da tray kart üzerinde kanal otomatik olarak `--mrd-tray-2` rengine geçer. Component değişkeni yoktur.
+
+## Erişilebilirlik
+
+- Kapsayıcı `role="radiogroup"`, her segment ise `aria-checked` ile `role="radio"` olur. Gruba `aria-label` ya da `aria-labelledby` ile ad ver.
+- Tab sırasında yalnızca seçili segment bulunur. Ok tuşları focus'u taşır ve aynı anda seçer (APG radio group); devre dışı segment'leri atlar, uçlarda başa ya da sona döner.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Focus'u seçili segment'e taşır." },
+  { keys: ["→", "↓"], action: "Sonraki etkin segment'i seçer." },
+  { keys: ["←", "↑"], action: "Önceki etkin segment'i seçer." },
+  { keys: ["Home"], action: "İlk etkin segment'i seçer." },
+  { keys: ["End"], action: "Son etkin segment'i seçer." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Görünümü yerinde değiştiren, iki ile beş arası kısa ve paralel etiket kullan: Gün / Hafta / Ay.</p>}
+  dont={<p>Sayfalar arası gezinme için ya da kendi içeriği olan paneller için kullanmak. O bir <a href="/tr/docs/components/tabs">Tabs</a> işi.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Tabs](/tr/docs/components/tabs): içerik panelleri arasında geçiş.
+- [Radio](/tr/docs/components/radio): uzun etiketli ya da açıklamalı tekli seçim.
+- [Switch](/tr/docs/components/switch): tek bir açık/kapalı ayarı.

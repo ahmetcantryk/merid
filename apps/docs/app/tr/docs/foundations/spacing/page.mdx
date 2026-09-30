@@ -1,0 +1,36 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { SpacingScale } from "@/components/foundations";
+
+export const metadata = docMetadata("tr", "/docs/foundations/spacing", {
+  title: "Boşluk",
+  description: "Merid genelinde kullanılan boşluk ölçeği ve layout genişlikleri.",
+});
+
+# Boşluk
+
+Boşluklar 4px'lik bir taban ve 8px'lik bir ritim üzerine kurulur. Ölçek bazı adımları bilerek atlar: daha az seçenek, daha tutarlı layout demektir.
+
+## Ölçek
+
+<SpacingScale locale="tr" />
+
+## Layout token'ları
+
+<table>
+  <thead>
+    <tr><th>Token</th><th>Değer</th><th>Kullanım</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>--mrd-container</code></td><td>1160px</td><td>En fazla içerik genişliği</td></tr>
+    <tr><td><code>--mrd-gutter</code></td><td>24px, 640px ve altında 20px</td><td>Yatay sayfa padding'i</td></tr>
+    <tr><td><code>--mrd-section</code></td><td>112px, 920px'te 80px, 640px'te 64px</td><td>Dikey bölüm padding'i</td></tr>
+    <tr><td><code>--mrd-prose</code></td><td>720px</td><td>En fazla okuma genişliği</td></tr>
+  </tbody>
+</table>
+
+## Kurallar
+
+- Ferahlığı tercih et. Bölümler çizgi ya da kutuyla değil, cömert padding'le ayrılır.
+- Bir component'in içindeki boşluk, component'ler arasındaki boşluktan küçüktür.
+- Kart padding'i `--mrd-space-7` (28px), dialog padding'i `--mrd-space-8` (32px).
+- Flex ve grid container'larında child'lara margin vermek yerine `gap` kullan.

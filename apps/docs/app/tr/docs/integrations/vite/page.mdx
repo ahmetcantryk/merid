@@ -1,0 +1,60 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/integrations/vite", {
+  title: "Vite",
+  description: "Merid'i bir Vite + React uygulamasında kur: stil dosyası sırası, fontlar ve dark mode.",
+});
+
+# Vite
+
+```bash
+npm create vite@latest my-app -- --template react-ts
+cd my-app
+npm i @merid/react
+```
+
+## Giriş dosyası
+
+Merid'in stil dosyasını kendi CSS'inden önce import et.
+
+```tsx
+// src/main.tsx
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "@merid/react/styles.css";
+import "./index.css";
+import { App } from "./App";
+
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);
+```
+
+Base layer dokümanın kendisine stil verir; `mrd-root` yalnızca, başka stilleri olan bir sayfanın içindeki bir alt ağaca bunu yeniden uygulamak için gerekir.
+
+Şablondaki `index.css` ve `App.css` içinde `body`, `button` ve `a`'ya stil veren kuralları sil: bunlar layer dışındadır ve Merid'in layer'lı kurallarını ezer. Bu bilinçli bir tasarım (bkz. [Stil ve CSS layer'ları](/tr/docs/styling)), ama şablonun varsayılanları senin istediğin şey değil.
+
+## Fontlar
+
+Vite, Merid'in CSS'indeki `url("../fonts/…")`'u `node_modules` içinden çözer ve iki `.woff2` dosyasını hash'li adlarla `dist/assets`'e kopyalar. Ayarlanacak bir şey yok. Kendi fontunu kullanmak için CSS'inde `--mrd-font-sans`'ı ayarla; paketteki font o zaman hiç istenmez.
+
+## Boyamadan önce dark mode
+
+Sayfa hiçbir zaman yanlış temayla yanıp sönmesin diye `index.html`'e küçük bir inline script ekle:
+
+```html
+<script>
+  try {
+    const t = localStorage.getItem("theme");
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  } catch {}
+</script>
+```
+
+Tema değiştirici için [Dark mode stratejileri](/tr/docs/integrations/dark-mode) sayfasına bak.
+
+## Kütüphane modu
+
+Vite'ın kütüphane moduyla Merid üzerine kendi component paketini yapıyorsan, `@merid/react`, `react` ve `react-dom`'u `build.rollupOptions.external` içinde listele; böylece paketi kullananlar Merid'in context'inden ve stillerinden tek bir kopya alır.

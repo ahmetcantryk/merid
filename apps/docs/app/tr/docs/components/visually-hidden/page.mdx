@@ -1,0 +1,78 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { VisuallyHiddenDemo, VisuallyHiddenHeading } from "@/examples/tr/visually-hidden";
+
+export const metadata = docMetadata("tr", "/docs/components/visually-hidden", {
+  title: "VisuallyHidden",
+  description: "İçeriği görsel olarak gizler, ekran okuyucular için erişilebilir tutar.",
+});
+
+# VisuallyHidden
+
+İçeriği gözden gizler ama erişilebilirlik ağacında tutar. Görsel olarak belli olan ama sesli okunduğunda kaybolan bağlam için kullan.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/visually-hidden">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Text>
+  Gelir %12 arttı
+  <VisuallyHidden> (geçen aya göre)</VisuallyHidden>
+</Text>`}>
+  <VisuallyHiddenDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { VisuallyHidden } from "@merid/react";
+```
+
+## Örnekler
+
+### Gizli başlık
+
+Layout'tan anlaşılan bir bölge de ekran okuyucuyla gezinmek için bir başlıktan faydalanır. `as` doğru elemanı render'lar.
+
+<ComponentPreview code={`<nav aria-labelledby="vh-nav">
+  <VisuallyHidden as="h2" id="vh-nav">Hesap ayarları</VisuallyHidden>
+  <IconButton label="Ayarlar" icon={<SettingsIcon />} />
+</nav>`}>
+  <VisuallyHiddenHeading />
+</ComponentPreview>
+
+## API referansı
+
+Varsayılan olarak bir `<span>` render'lar, ref'ini iletir ve diğer HTML attribute'larını olduğu gibi geçirir.
+
+<PropsTable rows={[
+  { name: "as", type: "ElementType", default: '"span"', description: "Onun yerine render'lanacak eleman ya da component." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-visually-hidden</code></td><td>Clip deseni; component olmadan da herhangi bir elemanda kullanılabilir</td></tr>
+  </tbody>
+</table>
+
+## Erişilebilirlik
+
+- İçerik ekran okuyucular tarafından okunmaya devam eder; focus alabiliyorsa tab sırasında da kalır. Focus alabilen elemanları gizleme: gören bir klavye kullanıcısı görünmeyen bir şeye focus vermiş olur.
+- Yalnızca ikon içeren butonlarda [IconButton](/tr/docs/components/icon-button)'ın `aria-label`'ı doğrudan ayarlayan `label` prop'unu tercih et.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Görsel layout'un zaten ima ettiği kısa bir bağlam ekle, örneğin “geçen aya göre”.</p>}
+  dont={<p>Anahtar kelimeyle doldurulmuş metni ya da gören kullanıcıların da ihtiyaç duyduğu içeriği gizlemek.</p>}
+/>
+
+## İlgili sayfalar
+
+- [IconButton](/tr/docs/components/icon-button): yalnızca ikon içeren aksiyonlara ad verir.
+- [Link](/tr/docs/components/link): “yeni sekmede açılır” ipucu için aynı sınıfı kullanır.

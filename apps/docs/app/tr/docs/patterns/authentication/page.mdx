@@ -1,0 +1,67 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { SignInExample, OneTimeCodeExample } from "@/examples/tr/patterns/authentication";
+
+export const metadata = docMetadata("tr", "/docs/patterns/authentication", {
+  title: "Kimlik doğrulama",
+  description: "Doğru autocomplete, hata yönetimi ve yükleniyor state'leriyle giriş ve doğrulama kodu ekranları.",
+});
+
+# Kimlik doğrulama
+
+Sayfa arka planında ortalanmış bir `Card variant="elevated"`, bir başlık, form ve tek bir primary aksiyon. Hata durumunu görmek için aşağıdaki formu gönder.
+
+<ComponentPreview code={`<Card variant="elevated" padding="lg">
+  <Heading level={1} size="h3">Merid'e giriş yap</Heading>
+  <Button fullWidth>SSO ile devam et</Button>
+  <form onSubmit={onSubmit} noValidate>
+    {failed ? <Alert tone="danger" live="assertive">E-posta ve şifre eşleşmiyor.</Alert> : null}
+    <Field label="E-posta" error={emailError}>
+      <Input name="email" type="email" autoComplete="username" />
+    </Field>
+    <Field label="Şifre">
+      <Input name="password" type={show ? "text" : "password"} autoComplete="current-password" />
+    </Field>
+    <Checkbox checked={show} onChange={(e) => setShow(e.target.checked)}>Şifreyi göster</Checkbox>
+    <Button type="submit" variant="primary" fullWidth loading={submitting}>Giriş yap</Button>
+  </form>
+</Card>`}>
+  <SignInExample />
+</ComponentPreview>
+
+## Autocomplete
+
+Şifre yöneticileri bu attribute'lara dayanır. Bunları doğru verirsen kullanıcıların çoğu hiç şifre yazmaz.
+
+| Alan | Attribute'lar |
+|---|---|
+| Girişte e-posta / kullanıcı adı | `type="email" autoComplete="username"` |
+| Mevcut şifre | `type="password" autoComplete="current-password"` |
+| Yeni şifre (kayıt, sıfırlama) | `type="password" autoComplete="new-password"` |
+| Tek kullanımlık kod | `inputMode="numeric" autoComplete="one-time-code"` |
+
+## Hatalar
+
+- Hangi kısmın yanlış olduğunu belli etme: "Bu e-postayla kayıtlı hesap yok" değil, "E-posta ve şifre eşleşmiyor". Bu, hesapların tek tek yoklanmasını (account enumeration) engeller.
+- Hatayı alanların üstünde, `live="assertive"` ile bir `Alert` içinde göster; e-postayı koru, başka hiçbir şeyi otomatik olarak temizleme.
+- İstemci tarafında yalnızca biçimi doğrula (e-postada bir `@` olması). Gerisi sunucunun işi.
+- Art arda başarısız denemelerden sonra sessizce rate limit uygulamak yerine sonra ne olacağını söyle ("5 dakika sonra tekrar dene").
+
+## Şifreyi göster
+
+"Şifreyi göster" `Checkbox`'ı (ya da input'un sondaki slot'unda bir `IconButton`) `type`'ı `password` ile `text` arasında değiştirir. Mobilde işe yarar ve şifre tekrarı alanından daha güvenlidir.
+
+## Doğrulama kodu
+
+<ComponentPreview code={`<Field label="Doğrulama kodu">
+  <Input inputMode="numeric" autoComplete="one-time-code" maxLength={6}
+    value={code} onChange={(e) => setCode(e.target.value.replace(/\\D/g, ""))} />
+</Field>
+<Button variant="primary" fullWidth disabled={!/^\\d{6}$/.test(code)}>Doğrula</Button>`}>
+  <OneTimeCodeExample />
+</ComponentPreview>
+
+Altı ayrı kutu yerine tek bir input kullan: yapıştırmayı destekler, SMS ve e-postadan otomatik doldurulur, ekran okuyucularla çalışır. Kodun nereye gönderildiğini ve ne zaman geçersiz olacağını söyle.
+
+## Sayfa layout'u
+
+Kartı bir grid ile ortala: `place-items: center` ve `min-height: 100dvh`. Sayfayı sade tut: logo, kart ve yardım ya da kullanım koşullarına giden tek bir footer linki.

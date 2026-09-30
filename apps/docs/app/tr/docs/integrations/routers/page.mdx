@@ -1,0 +1,88 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/integrations/routers", {
+  title: "React Router ve TanStack",
+  description: "Merid'in navigasyon component'lerini React Router ya da TanStack Router linki olarak render'la.",
+});
+
+# React Router ve TanStack
+
+Merid'in navigasyon parçaları varsayılan olarak bir `<a>` render'lar ve router'ın link component'i için bir `as` prop'u kabul eder. Tıklamayı router yönetir; sınıfları, `aria-current`'i ve focus stillerini Merid korur.
+
+| Component | Router prop'u | Notlar |
+|---|---|---|
+| `SidebarNav.Item` | `as` | `active`'i kendin ver; `aria-current="page"`'i o ayarlar. |
+| `Breadcrumb.Link` | `as` | Son adım bir link değil, `Breadcrumb.Page`'dir. |
+| `Card` | `as` | Tıklanabilir bir kart için `interactive` ile kullan. |
+| `Button`, `Link` | — | Henüz `as` yok: sınıfları router linkine koy (aşağıda). |
+
+## React Router
+
+```tsx
+import { Link as RouterLink, NavLink, useLocation } from "react-router";
+import { Breadcrumb, SidebarNav } from "@merid/react";
+
+function AppNav() {
+  const { pathname } = useLocation();
+  return (
+    <SidebarNav aria-label="Ana menü">
+      <SidebarNav.Item as={RouterLink} to="/" href="/" active={pathname === "/"}>Genel bakış</SidebarNav.Item>
+      <SidebarNav.Item as={RouterLink} to="/settings" href="/settings" active={pathname.startsWith("/settings")}>
+        Ayarlar
+      </SidebarNav.Item>
+    </SidebarNav>
+  );
+}
+
+<Breadcrumb.Link as={RouterLink} to="/projects">Projeler</Breadcrumb.Link>
+```
+
+React Router'ın `Link`'i `to` alır; yanına `href` de vermek, Merid'in anchor prop'larıyla TypeScript'i memnun eder, router ise onu yok sayar. Burada `NavLink`'ten kaçın: `className` fonksiyon imzası Merid'in string sınıfıyla çakışır. Onun yerine `active`'i `useLocation` ya da `useMatch` ile hesapla.
+
+## TanStack Router
+
+```tsx
+import { Link, useMatchRoute } from "@tanstack/react-router";
+import { SidebarNav } from "@merid/react";
+
+function AppNav() {
+  const matchRoute = useMatchRoute();
+  return (
+    <SidebarNav aria-label="Ana menü">
+      <SidebarNav.Item as={Link} to="/projects" active={Boolean(matchRoute({ to: "/projects", fuzzy: true }))}>
+        Projeler
+      </SidebarNav.Item>
+    </SidebarNav>
+  );
+}
+```
+
+TanStack'in `Link`'i `<a href>`'i kendisi render'lar, yani `to` yeterli. Tipli route kontrolü `as` üzerinden akmaz; istiyorsan linki bir kez sarmala:
+
+```tsx
+import { createLink } from "@tanstack/react-router";
+import { SidebarNavItem } from "@merid/react";
+
+export const NavItem = createLink(SidebarNavItem);
+// <NavItem to="/projects/$id" params={{ id }} active={…}>Northwind</NavItem>
+```
+
+## Sayfa değiştiren butonlar
+
+`Button` bir `<button>` render'lar. Gezinme için Merid'in buton sınıflarını taşıyan bir link kullan; böylece orta tık, "yeni sekmede aç" ve prefetch çalışmaya devam eder:
+
+```tsx
+<RouterLink to="/projects/new" className="mrd-button" data-variant="primary" data-size="md">
+  <span className="mrd-button__content">Yeni proje</span>
+</RouterLink>
+```
+
+## Sayfalama
+
+`Pagination` `onPageChange` alır; onu URL'den yönet:
+
+```tsx
+const [params, setParams] = useSearchParams();
+const page = Number(params.get("page") ?? 1);
+
+<Pagination pageCount={20} page={page} onPageChange={(p) => setParams({ page: String(p) })} />
+```
