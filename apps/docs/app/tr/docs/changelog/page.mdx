@@ -1,0 +1,26 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/changelog", {
+  title: "Sürüm notları",
+  description: "@merid/react'in yayınlanan her sürümü için sürüm notları.",
+});
+
+# Sürüm notları
+
+`@merid/react`'teki tüm önemli değişiklikler. Aynı notlar repodaki `CHANGELOG.md` dosyasında da tutulur.
+
+## 0.1.0
+
+*28 Eylül 2026, ilk public release.*
+
+### Eklenenler
+
+- 46 component: layout (Container, Section, Stack, Grid, Separator), tipografi (Heading, Text, Link, Code, Kbd, Label, VisuallyHidden), aksiyonlar (Button, IconButton), formlar (Field, Input, Textarea, NativeSelect, Select, Checkbox, RadioGroup, Switch, SegmentedControl), navigasyon (Tabs, Breadcrumb, Pagination, SidebarNav, Stepper), overlay'ler (Dialog, AlertDialog, Drawer, Popover, Tooltip, DropdownMenu, Portal), geri bildirim (Alert, Toast, Progress, Spinner, Skeleton, EmptyState) ve veri gösterimi (Card, Badge, Avatar, Table, Accordion).
+- Renk, tipografi, boşluk, köşe yuvarlaklığı, gölge, hareket, layout ve katmanlar için açık ve koyu değerli design token'lar. Metin ve dolgu çiftleri WCAG AA kontrastını karşılar; `--mrd-accent-solid` / `--mrd-accent-solid-hover`, üzerinde accent'e uygun metin taşıyan dolgulardır.
+- `merid.tokens`, `merid.base` ve `merid.components` cascade layer'larına ayrılmış `tokens.css` ve `styles.css` giriş noktaları.
+- `mrd-root` sınıfıyla isteğe bağlı base stiller.
+- Kendi `Button`'ını render'lamak için Dialog, Drawer ve Popover Trigger/Close, AlertDialog Trigger/Action/Cancel ve DropdownMenu.Trigger üzerinde `asChild`.
+- `Dialog.Content size` (`sm`, `md`, `lg`, `full`) ve `Drawer.Content size` (`sm`, `md`, `lg`); `AlertDialog.Action tone` (`primary`, `danger`). `DialogSize`, `DrawerSize`, `AlertDialogActionTone` tipleri.
+- Input, Textarea, NativeSelect, Checkbox, Switch ve RadioGroup için `Field` bağlantısı: semantik için `aria-invalid`, stil için `data-invalid`.
+- Her etkileşimli modülde `"use client"`, böylece component'ler doğrudan React Server Components'e import edilir.
+- SIL Open Font License 1.1 ile paketle gelen Inter Variable font'u.
+- Temeller, erişilebilirlik beyanı ve sürümleme politikasını içeren doküman sitesi.

@@ -1,0 +1,81 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("en", "/docs/integrations/design-tokens", {
+  title: "Figma and Style Dictionary",
+  description: "Use @merid/tokens to bring Merid's design tokens into Figma (Tokens Studio), Style Dictionary and JavaScript.",
+});
+
+# Figma and Style Dictionary
+
+`@merid/tokens` publishes Merid's tokens in formats other tools read. It is generated from the same `tokens.css` that `@merid/react` ships, and a test fails the build if the two ever disagree.
+
+```bash
+npm i @merid/tokens
+```
+
+| Import | Format | Use it for |
+|---|---|---|
+| `@merid/tokens/tokens.json` | [W3C Design Tokens](https://www.designtokens.org/tr/drafts/format/) (`$value`, `$type`) | Style Dictionary v4+, Terrazzo, other DTCG tools |
+| `@merid/tokens/figma-tokens.json` | Tokens Studio for Figma | Syncing variables and styles in Figma |
+| `@merid/tokens` | ES module + types | Raw values and `var()` references in JS |
+| `@merid/tokens/tokens.css` | CSS | A copy of the source, for non-React stacks |
+
+## Token groups
+
+`color`, `space`, `radius`, `typography`, `shadow`, `motion`, `size` (control heights, layout widths) and `z`. Each token keeps its CSS name in `$extensions["com.merid"].cssVariable`.
+
+```json
+"accent": {
+  "$value": "#3f63f5",
+  "$type": "color",
+  "$extensions": {
+    "com.merid": { "cssVariable": "--mrd-accent", "modes": { "dark": "#6b8aff" } }
+  }
+}
+```
+
+`$value` is the light (default) value. Dark values, and the responsive and touch overrides (`viewport-md`, `viewport-sm`, `pointer-coarse`), live under `modes`.
+
+## Figma (Tokens Studio)
+
+1. In Tokens Studio, add a sync provider (GitHub, URL, or JSON file) pointing at `figma-tokens.json`.
+2. The file contains three sets — `core`, `dark` and `pointer-coarse` — and two themes, **Light** (`core`) and **Dark** (`core` as source + `dark`).
+3. Use **Create variables** with both themes selected to get a Figma variable collection with Light and Dark modes.
+
+Shadows come across as `boxShadow` tokens; duration, easing and z-index are typed `other` and are best left out of Figma variables.
+
+## Style Dictionary
+
+Style Dictionary v4 reads DTCG natively. Use it to emit tokens for platforms Merid does not target, such as iOS, Android or email templates:
+
+```js
+// sd.config.mjs
+import StyleDictionary from "style-dictionary";
+
+const sd = new StyleDictionary({
+  source: ["node_modules/@merid/tokens/dist/tokens.json"],
+  platforms: {
+    ios: { transformGroup: "ios-swift", buildPath: "ios/", files: [{ destination: "Merid.swift", format: "ios-swift/class.swift" }] },
+    scss: { transformGroup: "scss", buildPath: "scss/", files: [{ destination: "_merid.scss", format: "scss/variables" }] },
+  },
+});
+
+await sd.buildAllPlatforms();
+```
+
+For a dark build, add a small preprocessor that swaps `$value` for `$extensions["com.merid"].modes.dark` where present.
+
+## JavaScript
+
+```ts
+import { tokens, cssVar } from "@merid/tokens";
+
+tokens.light.accent; // "#3f63f5"
+tokens.dark.accent; // "#6b8aff"
+cssVar.accent; // "var(--mrd-accent)"
+```
+
+In the browser, prefer `cssVar`: it follows the active theme. Reach for raw `tokens` only where CSS variables are not available — canvas, charts rendered to images, emails, native code.
+
+## Changing tokens
+
+Tokens are defined once, in `packages/react/styles/tokens.css`. Edit there, then run `npm run build -w @merid/tokens`. The build fails if the `[data-theme="dark"]` block and the `prefers-color-scheme: dark` block drift apart.

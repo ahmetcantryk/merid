@@ -1,5 +1,5 @@
 import { highlight } from "@/lib/highlight";
-import { CopyButton } from "./CopyButton";
+import { CodeFrame } from "./CodeFrame";
 
 interface CodeBlockProps {
   readonly code: string;
@@ -9,18 +9,5 @@ interface CodeBlockProps {
 
 export async function CodeBlock({ code, lang = "tsx", title }: CodeBlockProps) {
   const html = await highlight(code, lang);
-  return (
-    <figure className="code-block">
-      <div className="code-block__bar">
-        <span className="code-block__title">{title ?? lang}</span>
-        <CopyButton value={code.replace(/\n$/, "")} />
-      </div>
-      <div
-        className="code-block__body"
-        tabIndex={0}
-        role="region"
-        aria-label={`${title ?? lang} code`}
-        dangerouslySetInnerHTML={{ __html: html }} />
-    </figure>
-  );
+  return <CodeFrame html={html} code={code.replace(/\n$/, "")} name={title ?? lang} />;
 }

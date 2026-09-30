@@ -1,0 +1,150 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import {
+  CheckboxDemo,
+  CheckboxDescription,
+  CheckboxControlled,
+  CheckboxIndeterminate,
+  CheckboxStates,
+  CheckboxBare,
+} from "@/examples/tr/checkbox";
+
+export const metadata = docMetadata("tr", "/docs/components/checkbox", {
+  title: "Checkbox",
+  description: "Birbirinden bağımsız açık/kapalı seçimler ve çoklu seçim listeleri için native bir checkbox.",
+});
+
+# Checkbox
+
+18px kutulu native bir checkbox. Birbirinden bağımsız evet/hayır seçimleri ve bir listeden birden fazla öğe seçmek için kullanılır. Her `<input type="checkbox">` gibi formla birlikte gönderilir.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/checkbox">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Checkbox defaultChecked>Ürün güncellemelerini e-postayla gönder</Checkbox>`}>
+  <CheckboxDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Checkbox } from "@merid/react";
+```
+
+## Örnekler
+
+### Açıklamalı
+
+`description`, etiketin altına ikinci bir satır render'lar ve onu `aria-describedby` ile bağlar.
+
+<ComponentPreview code={`<Checkbox description="Faturalar, makbuzlar ve plan değişiklikleri dahil.">
+  Faturalandırma bildirimleri
+</Checkbox>`}>
+  <CheckboxDescription />
+</ComponentPreview>
+
+### Controlled
+
+Uncontrolled checkbox'lar `defaultChecked` kullanır. Controlled kullanmak için `checked` ver ve `onChange` içinde `event.target.checked` değerini oku.
+
+<ComponentPreview code={`const [checked, setChecked] = useState(false);
+
+<Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)}>
+  Koşulları kabul ediyorum
+</Checkbox>`}>
+  <CheckboxControlled />
+</ComponentPreview>
+
+### Belirsiz (indeterminate)
+
+`indeterminate`, karışık “–” state'ini gösterir; genellikle kısmen seçili bir üst öğede kullanılır. DOM'daki `indeterminate` özelliğini ayarlar; yardımcı teknolojiler bunu `aria-checked="mixed"` olarak bildirir.
+
+<ComponentPreview code={`const all = selected.length === items.length;
+const some = selected.length > 0 && !all;
+
+<Checkbox checked={all} indeterminate={some} onChange={() => setSelected(all ? [] : items)}>
+  Tüm ekipler
+</Checkbox>`}>
+  <CheckboxIndeterminate />
+</ComponentPreview>
+
+### Devre dışı ve geçersiz
+
+<ComponentPreview code={`<Checkbox disabled>Devre dışı</Checkbox>
+<Checkbox disabled defaultChecked>Devre dışı ve işaretli</Checkbox>
+<Checkbox invalid required>Veri işleme sözleşmesini kabul et</Checkbox>`}>
+  <CheckboxStates />
+</ComponentPreview>
+
+### Görünür etiket olmadan
+
+Children vermeden `aria-label` ver; örneğin bir tablonun seçim kolonunda.
+
+<ComponentPreview code={`<Checkbox aria-label="Satırı seç" />`}>
+  <CheckboxBare />
+</ComponentPreview>
+
+## API referansı
+
+Ref ve native input attribute'ları (`checked`, `defaultChecked`, `onChange`, `name`, `value`, …) `<input>`'a gider. `className` ve `style` dıştaki sarmalayıcıya gider.
+
+<PropsTable rows={[
+  { name: "children", type: "ReactNode", description: "Kutunun yanındaki görünür etiket. Etiketsiz bir checkbox için verme ve aria-label kullan. Bir `Field` içinde checkbox'ı Field'ın etiketi adlandırır, children ise açıklamaya dönüşür." },
+  { name: "description", type: "ReactNode", description: "Etiketin altındaki ikincil satır; aria-describedby ile bağlanır." },
+  { name: "indeterminate", type: "boolean", default: "false", description: "Karışık state'i gösterir ve DOM'daki indeterminate özelliğini ayarlar." },
+  { name: "invalid", type: "boolean", description: "Geçersiz stilini (`data-invalid`) ve `aria-invalid`'i zorla uygular." },
+  { name: "checked", type: "boolean", description: "İşaretli state'i (controlled)." },
+  { name: "defaultChecked", type: "boolean", description: "Başlangıçtaki işaretli state (uncontrolled)." },
+  { name: "disabled", type: "boolean", description: "Input'u devre dışı bırakır ve etiketi soluklaştırır." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-checkbox</code></td><td>Dış sarmalayıcı; <code>className</code> ve <code>style</code> buraya gelir</td></tr>
+    <tr><td><code>.mrd-checkbox__control</code></td><td>Kutu kapsayıcısı</td></tr>
+    <tr><td><code>.mrd-checkbox__input</code></td><td>Native {"<input>"}</td></tr>
+    <tr><td><code>.mrd-checkbox__icon</code></td><td>Tik / çizgi SVG'si</td></tr>
+    <tr><td><code>.mrd-checkbox__text</code>, <code>__label</code>, <code>__description</code></td><td>Etiket kolonu</td></tr>
+    <tr><td><code>data-disabled</code>, <code>data-invalid</code></td><td>Sarmalayıcı üzerinde</td></tr>
+    <tr><td><code>data-invalid</code></td><td>Geçersizken input üzerinde; danger halkasını çizer</td></tr>
+    <tr><td><code>data-indeterminate</code></td><td>Karışık state'teyken input üzerinde</td></tr>
+  </tbody>
+</table>
+
+Geçersiz halkasını input üzerindeki `data-invalid` belirler; anlamı `aria-invalid` taşır. Checkbox'ın component değişkeni yoktur; `--mrd-accent`, `--mrd-line-strong` ve `--mrd-danger` token'larını kullanır.
+
+## Erişilebilirlik
+
+- Native bir checkbox'tır: işaretli state, devre dışı state ve form gönderimi platformdan gelir.
+- Etiket gerçek bir `<label htmlFor>` olduğu için metne tıklamak kutuyu değiştirir.
+- Bir `Field` içinde checkbox'ı Field'ın etiketi adlandırır (`aria-labelledby`). Children yine tıklanabilir bir etiket olarak render'lanır ama açıklama olarak bağlanır (`aria-describedby`); böylece kontrol hiçbir zaman iki kez etiketlenmez.
+- İlişkili checkbox'ları `legend`'lı bir `fieldset` içinde ya da `role="group"` ve `aria-labelledby` taşıyan bir kapsayıcıda grupla.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Focus'u checkbox'a taşır." },
+  { keys: ["Space"], action: "Checkbox'ı işaretler ya da işareti kaldırır." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Etiketleri, işaretliyken doğru olan olumlu ifadeler olarak yaz: “Güncellemeleri e-postayla gönder”.</p>}
+  dont={<p>“Bana e-posta gönderme” gibi olumsuz etiketler kullanmak. İşaretli olanın “hayır” anlamına gelmesi kolayca yanlış okunur.</p>}
+/>
+
+<DoDont
+  do={<p>Checkbox'ı, form gönderildiğinde kaydedilen bir seçim için kullan.</p>}
+  dont={<p>Hemen etkili olan bir ayar için kullanmak. Bunun için <a href="/tr/docs/components/switch">Switch</a> var.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Switch](/tr/docs/components/switch): hemen etkili olan açık/kapalı ayarlar.
+- [Radio](/tr/docs/components/radio): bir kümeden tek seçim.
+- [Table](/tr/docs/components/table): checkbox'larla satır seçimi.

@@ -1,0 +1,104 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { GridDemo, GridColumns, GridAuto } from "@/examples/tr/grid";
+
+export const metadata = docMetadata("tr", "/docs/components/grid", {
+  title: "Grid",
+  description: "Sabit ya da auto-fit kolonlu, iki boyutlu grid layout.",
+});
+
+# Grid
+
+Kart, istatistik ve kutucuk satırları için iki boyutlu bir CSS grid. Sabit bir kolon sayısı seç ya da kolonların minimum genişliğe göre auto-fit ile yerleşmesine izin ver.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/grid">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Grid>
+  <Box>1</Box>
+  <Box>2</Box>
+  <Box>3</Box>
+  <Box>4</Box>
+  <Box>5</Box>
+  <Box>6</Box>
+</Grid>`}>
+  <GridDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Grid } from "@merid/react";
+```
+
+## Örnekler
+
+### Sabit kolonlar
+
+`columns` 1 ile 6 arasında eşit kolon belirler (varsayılan 3). 640px ve altında sabit grid tek kolona düşer.
+
+<ComponentPreview code={`<Grid columns={4} gap={3}>
+  {items.map((item) => <Box key={item.id}>{item.label}</Box>)}
+</Grid>`}>
+  <GridColumns />
+</ComponentPreview>
+
+### Auto-fit
+
+`minItemWidth`, grid'i `auto-fit`'e geçirir: sığdığı kadar kolon açılır, her biri en az bu genişlikte olur. `columns`'u geçersiz kılar ve breakpoint gerektirmez.
+
+<ComponentPreview code={`<Grid minItemWidth={140} gap={4}>
+  {items.map((item) => <Box key={item.id}>{item.label}</Box>)}
+</Grid>`}>
+  <GridAuto />
+</ComponentPreview>
+
+## API referansı
+
+`as` verilmedikçe bir `div` render'lar; ref'ini iletir ve tüm HTML attribute'larını olduğu gibi geçirir.
+
+<PropsTable rows={[
+  { name: "columns", type: "1 | 2 | 3 | 4 | 5 | 6", default: "3", description: "Sabit sayıda eşit kolon. ≤ 640px'te teke düşer. minItemWidth verildiğinde yok sayılır." },
+  { name: "minItemWidth", type: "number | string", description: "Responsive auto-fit: her kolon en az bu genişlikte olur (number = px)." },
+  { name: "gap", type: "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 10 | 14 | 16 | 18 | 28", default: "6", description: "--mrd-space-* ölçeğinden boşluk (6 = 24px)." },
+  { name: "as", type: "ElementType", default: '"div"', description: "div yerine render'lanacak eleman ya da component." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-grid</code></td><td>Kök eleman</td></tr>
+    <tr><td><code>data-layout</code></td><td><code>fixed</code> (columns) · <code>auto</code> (minItemWidth)</td></tr>
+  </tbody>
+</table>
+
+Prop'lardan inline atanan component değişkenleri: `--mrd-grid-gap`, `--mrd-grid-columns` (sabit layout) ve `--mrd-grid-min` (auto layout).
+
+```css
+@media (min-width: 1024px) {
+  .dashboard.mrd-grid { --mrd-grid-columns: 4; }
+}
+```
+
+## Erişilebilirlik
+
+- Grid yalnızca layout içindir ve rol eklemez; bir ARIA `grid`'i değildir. Öğe listesi için `as="ul"` ve `li` child'ları kullan.
+- Öğeler DOM sırasıyla akar; klavye ve ekran okuyucu kullanıcıları için bu sıranın anlamlı kalmasını sağla.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Kart koleksiyonlarında <code>minItemWidth</code>'i tercih et; grid her container genişliğine uyum sağlar.</p>}
+  dont={<p>Tek satırlık butonlar ya da form kontrolleri için Grid kullanmak. Onun için <code>Stack</code> var.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Stack](/tr/docs/components/stack): tek boyutlu layout.
+- [Card](/tr/docs/components/card): grid'in olağan öğesi.
+- [Container](/tr/docs/components/container): grid'in genişliğini sınırlar.

@@ -1,0 +1,95 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ContainerDemo, ContainerProse } from "@/examples/tr/container";
+
+export const metadata = docMetadata("tr", "/docs/components/container", {
+  title: "Container",
+  description: "İçeriği ortalar, genişliğini sınırlar ve responsive yan boşluğu (gutter) ekler.",
+});
+
+# Container
+
+İçeriği ortalar, genişliğini 1160px ile sınırlar ve responsive yan boşluğu (gutter) ekler. Her [Section](/tr/docs/components/section)'ın içine bir tane koy; sayfa bantları kenardan kenara uzanırken içerikleri aynı hizada kalır.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/container">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Container>
+  <Box>İçerik 1160px ile sınırlı, ortalı ve yan boşluklu</Box>
+</Container>`}>
+  <ContainerDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Container } from "@merid/react";
+```
+
+## Örnekler
+
+### Okuma genişliği
+
+`size="prose"` içeriği 720px ile sınırlar; bu, uzun metinler için okuma genişliğidir.
+
+<ComponentPreview code={`<Container size="prose">
+  <Box>Okuma genişliği: 720px</Box>
+</Container>`}>
+  <ContainerProse />
+</ComponentPreview>
+
+### Bir sayfa bandında
+
+```tsx
+<Section tone="tray">
+  <Container>
+    <Heading level={2}>Fiyatlandırma</Heading>
+  </Container>
+</Section>
+```
+
+## API referansı
+
+`as` verilmedikçe bir `div` render'lar; ref'i iletir ve tüm HTML attribute'larını aktarır.
+
+<PropsTable rows={[
+  { name: "size", type: '"default" | "prose"', default: '"default"', description: "Maksimum içerik genişliği: default 1160px, prose 720px." },
+  { name: "as", type: "ElementType", default: '"div"', description: "div yerine render'lanacak eleman ya da component, örneğin main." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-container</code></td><td>Kök eleman</td></tr>
+    <tr><td><code>data-size</code></td><td><code>default</code> · <code>prose</code></td></tr>
+  </tbody>
+</table>
+
+Component değişkeni: `--mrd-container-width`; değeri `--mrd-container` (1160px) ya da `--mrd-prose` (720px) olur.
+
+```css
+.wide.mrd-container {
+  --mrd-container-width: 1320px;
+}
+```
+
+## Erişilebilirlik
+
+- Container yalnızca layout içindir ve bir rol eklemez. En dıştaki sarmalayıcı olduğunda sayfanın ana landmark'ı için `as="main"` kullan.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Arka planı kenardan kenara uzanan <code>Section</code>'a, genişlik sınırını da onun içindeki <code>Container</code>'a ver.</p>}
+  dont={<p>Container'ları iç içe koymak ya da bir container'a arka plan rengi vermek. Renk viewport kenarlarına ulaşmadan biter.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Section](/tr/docs/components/section): container'ı saran, kenardan kenara uzanan bant.
+- [Grid](/tr/docs/components/grid) ve [Stack](/tr/docs/components/stack): container içindeki layout.

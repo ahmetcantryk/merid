@@ -1,0 +1,190 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import {
+  ButtonDemo,
+  ButtonVariants,
+  ButtonSizes,
+  ButtonIcons,
+  ButtonLoading,
+  ButtonDisabled,
+  ButtonFullWidth,
+} from "@/examples/button";
+
+export const metadata = docMetadata("en", "/docs/components/button", {
+  title: "Button",
+  description: "Triggers an action: submit a form, open a dialog, save a change.",
+});
+
+# Button
+
+Triggers an action — submitting a form, opening a dialog, saving a change. Use a link instead when the result is navigation.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/button">Source</a>
+</div>
+
+<ComponentPreview code={`<Button variant="primary">Save changes</Button>
+<Button>Cancel</Button>`}>
+  <ButtonDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Button } from "@merid/react";
+```
+
+## Examples
+
+### Variants
+
+`primary` is the single accent action on a screen. `secondary` (the default) is for everything else; `ghost` sits quietly in toolbars and dense rows; `danger` confirms destructive actions; `link` looks like inline text but keeps button semantics.
+
+<ComponentPreview code={`<Button variant="primary">Primary</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="ghost">Ghost</Button>
+<Button variant="danger">Danger</Button>
+<Button variant="link">Link</Button>`}>
+  <ButtonVariants />
+</ComponentPreview>
+
+### Sizes
+
+`sm` is 36px, `md` 44px (default) and `lg` 50px tall. Match the size of neighbouring inputs so a row of controls shares one baseline.
+
+<ComponentPreview code={`<Button size="sm">Small</Button>
+<Button size="md">Medium</Button>
+<Button size="lg">Large</Button>`}>
+  <ButtonSizes />
+</ComponentPreview>
+
+### With icons
+
+`leadingIcon` and `trailingIcon` take any node. They are wrapped in `aria-hidden` spans, so the label alone names the button.
+
+<ComponentPreview code={`<Button variant="primary" leadingIcon={<PlusIcon />}>New project</Button>
+<Button trailingIcon={<ArrowRightIcon />}>Continue</Button>
+<Button variant="danger" leadingIcon={<TrashIcon />}>Delete</Button>`}>
+  <ButtonIcons />
+</ComponentPreview>
+
+### Loading
+
+`loading` overlays a spinner, keeps the button's width so the layout does not jump, sets `aria-busy` and `aria-disabled`, and swallows clicks. The button stays focusable, so keyboard focus is not lost mid-request.
+
+<ComponentPreview code={`const [saving, setSaving] = useState(false);
+
+<Button
+  variant="primary"
+  loading={saving}
+  onClick={() => {
+    setSaving(true);
+    window.setTimeout(() => setSaving(false), 1500);
+  }}
+>
+  Save changes
+</Button>`}>
+  <ButtonLoading />
+</ComponentPreview>
+
+### Disabled
+
+`disabled` is the native attribute: the button leaves the tab order and ignores clicks. Prefer explaining why an action is unavailable over silently disabling it.
+
+<ComponentPreview code={`<Button variant="primary" disabled>Publish</Button>
+<Button disabled>Export</Button>`}>
+  <ButtonDisabled />
+</ComponentPreview>
+
+### Full width
+
+`fullWidth` stretches the button to its container — useful in narrow forms and on mobile.
+
+<ComponentPreview code={`<Button variant="primary" fullWidth>Create account</Button>`}>
+  <ButtonFullWidth />
+</ComponentPreview>
+
+### As a router link
+
+Use `asChild` to render your router's link with button styling, so navigation stays a real link:
+
+```tsx
+import Link from "next/link";
+
+<Button asChild variant="primary">
+  <Link href="/signup">Start free</Link>
+</Button>
+```
+
+## API reference
+
+`Button` forwards its ref to the `<button>` and passes every other native button attribute through. `type` defaults to `"button"`, so a button inside a form does not submit it unless you set `type="submit"`.
+
+<PropsTable rows={[
+  { name: "variant", type: '"primary" | "secondary" | "ghost" | "danger" | "link"', default: '"secondary"', description: "Visual style. primary is the single accent action." },
+  { name: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Height and padding: sm 36px, md 44px, lg 50px." },
+  { name: "loading", type: "boolean", default: "false", description: "Shows a spinner, keeps the width, sets aria-busy and blocks clicks." },
+  { name: "leadingIcon", type: "ReactNode", description: "Icon before the label. Hidden from assistive tech." },
+  { name: "trailingIcon", type: "ReactNode", description: "Icon after the label. Hidden from assistive tech." },
+  { name: "fullWidth", type: "boolean", default: "false", description: "Stretches the button to the width of its container." },
+  { name: "asChild", type: "boolean", default: "false", description: "Render the single child element (e.g. a router `<Link>`) styled as this button instead of a `<button>`. Props, ref, handlers and className merge onto the child; its children are wrapped in the button's content span. `disabled`/`loading` become `aria-disabled` and block clicks. Works from server components." },
+  { name: "type", type: '"button" | "submit" | "reset"', default: '"button"', description: "Native button type." },
+  { name: "disabled", type: "boolean", description: "Native disabled attribute." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-button</code></td><td>Root <code>{"<button>"}</code></td></tr>
+    <tr><td><code>.mrd-button__content</code></td><td>Wrapper around icons and label (hidden while loading)</td></tr>
+    <tr><td><code>.mrd-button__icon</code></td><td>Leading / trailing icon slot</td></tr>
+    <tr><td><code>.mrd-button__spinner</code></td><td>Spinner shown while loading</td></tr>
+    <tr><td><code>data-variant</code></td><td><code>primary</code> · <code>secondary</code> · <code>ghost</code> · <code>danger</code> · <code>link</code></td></tr>
+    <tr><td><code>data-size</code></td><td><code>sm</code> · <code>md</code> · <code>lg</code></td></tr>
+    <tr><td><code>data-loading</code></td><td>Present while loading</td></tr>
+    <tr><td><code>data-full-width</code></td><td>Present when <code>fullWidth</code></td></tr>
+  </tbody>
+</table>
+
+Component variables, set per size: `--mrd-button-height`, `--mrd-button-padding`, `--mrd-button-font`.
+
+```css
+.toolbar .mrd-button {
+  --mrd-button-height: 32px;
+  --mrd-button-padding: 0 12px;
+}
+```
+
+## Accessibility
+
+- Renders a native `<button>`, so Enter and Space activate it and it takes part in forms.
+- The visible label is the accessible name. For icon-only actions use [IconButton](/docs/components/icon-button), which requires a `label`.
+- While `loading`, the button reports `aria-busy="true"` and `aria-disabled="true"` but keeps focus.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Moves focus to the button." },
+  { keys: ["Enter"], action: "Activates the button." },
+  { keys: ["Space"], action: "Activates the button." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Use one <code>primary</code> button per view, labelled with a verb that says what happens: “Save changes”, “Send invite”.</p>}
+  dont={<p>Put two primary buttons side by side, or use vague labels like “OK” and “Submit”.</p>}
+/>
+
+<DoDont
+  do={<p>Use <code>loading</code> while a request is in flight so the button keeps its place and focus.</p>}
+  dont={<p>Swap the label for a spinner by hand or disable the button during the request — focus is lost and the width jumps.</p>}
+/>
+
+## Related
+
+- [IconButton](/docs/components/icon-button) — square, icon-only actions.
+- [Link](/docs/components/link) — navigation rather than actions.
+- [Spinner](/docs/components/spinner) — the indicator used by `loading`.

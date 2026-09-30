@@ -1,0 +1,90 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { HeadingDemo, HeadingSizes, HeadingDecoupled } from "@/examples/tr/heading";
+
+export const metadata = docMetadata("tr", "/docs/components/heading", {
+  title: "Heading",
+  description: "Merid'in sıkı ve dengeli başlık ölçeğiyle semantik h1–h6; boyut seviyeden bağımsız.",
+});
+
+# Heading
+
+Merid'in başlık stilinde semantik `h1`–`h6`: 600 kalınlık, negatif harf aralığı ve `text-wrap: balance`. Görsel boyut seviyeden bağımsızdır; böylece başlık hiyerarşisi doğru kalırken tasarım da tutarlı kalır.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/heading">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Heading level={2}>Daha sakin arayüzler yayınla</Heading>`}>
+  <HeadingDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Heading } from "@merid/react";
+```
+
+## Örnekler
+
+### Varsayılan boyutlar
+
+Her seviyenin varsayılan bir boyutu vardır: 1. seviye `display`, 2. seviye `h2`, 3. seviye `h3`; 4–6 ise sırasıyla `lg`, `md` ve `sm`'ye karşılık gelir.
+
+<ComponentPreview align="start" code={`<Heading level={1}>Display</Heading>
+<Heading level={2}>Başlık h2</Heading>
+<Heading level={3}>Başlık h3</Heading>
+<Heading level={4}>Başlık lg</Heading>
+<Heading level={5}>Başlık md</Heading>
+<Heading level={6}>Başlık sm</Heading>`}>
+  <HeadingSizes />
+</ComponentPreview>
+
+### Seviyeden bağımsız boyut
+
+`level`'ı belgenin başlık hiyerarşisine, `size`'ı tasarıma göre seç. Bir ayarlar panelinin başlığı küçük bir başlık gibi görünen bir `h2` olabilir.
+
+<ComponentPreview align="start" code={`<Heading level={2} size="lg">Fatura geçmişi</Heading>
+<Heading level={3} size="sm">Faturalar</Heading>`}>
+  <HeadingDecoupled />
+</ComponentPreview>
+
+## API referansı
+
+`Heading` ref'ini başlık elemanına iletir ve diğer HTML attribute'larını olduğu gibi geçirir.
+
+<PropsTable rows={[
+  { name: "level", type: "1 | 2 | 3 | 4 | 5 | 6", default: "2", description: "Semantik seviye: h1–h6 render'lar." },
+  { name: "size", type: '"display" | "h2" | "h3" | "lg" | "md" | "sm"', description: "Görsel boyut. Varsayılanı seviyeye göre: display, h2, h3, lg, md, sm." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-heading</code></td><td>Kök {"<h1>"}–{"<h6>"}</td></tr>
+    <tr><td><code>data-size</code></td><td><code>display</code> · <code>h2</code> · <code>h3</code> · <code>lg</code> · <code>md</code> · <code>sm</code></td></tr>
+  </tbody>
+</table>
+
+Boyutlar tipografi token'larını okur (bkz. [Tipografi](/tr/docs/foundations/typography)); başlığa özel değişken yoktur.
+
+## Erişilebilirlik
+
+- Sayfa başına tek bir `h1` kullan ve aşağı inerken seviye atlama. Görünümü ayarlamak için `level`'ı değil `size`'ı değiştir.
+- Başlığı yalnızca büyük metin için kullanma; bunun için `size="lg"` ile [Text](/tr/docs/components/text) kullan.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p><code>level</code>'ı sayfanın başlık hiyerarşisine, <code>size</code>'ı tasarıma göre seç.</p>}
+  dont={<p>Daha küçük boyut doğru göründüğü için <code>h2</code>'den <code>h5</code>'e atlamak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Text](/tr/docs/components/text): gövde metni ve açıklamalar.
+- [VisuallyHidden](/tr/docs/components/visually-hidden): yalnızca yardımcı teknolojinin ihtiyaç duyduğu başlıklar.

@@ -1,0 +1,105 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { EmptyStateDemo, EmptyStatePlain, EmptyStateMinimal } from "@/examples/tr/empty-state";
+
+export const metadata = docMetadata("tr", "/docs/components/empty-state", {
+  title: "EmptyState",
+  description: "Boş listeler, sonuçsuz aramalar ve ilk açılış ekranları için ortalanmış bir boş durum alanı.",
+});
+
+# EmptyState
+
+Gösterilecek bir şey olmadığı anlar için ortalanmış bir alan: boş bir liste, sonuç vermeyen bir arama, ilk açılış ekranı. Nedenini açıklar ve bir sonraki adımı sunar.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/empty-state">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<EmptyState
+  icon={<InboxIcon />}
+  title="Henüz fatura yok"
+  description="Oluşturduğun ya da aldığın faturalar burada görünür."
+  action={<Button variant="primary" leadingIcon={<PlusIcon />}>Yeni fatura</Button>}
+/>`}>
+  <EmptyStateDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { EmptyState } from "@merid/react";
+```
+
+## Örnekler
+
+### Plain
+
+`variant="plain"` gri yüzey (tray) arka planını kaldırır. Zaten bir yüzeyi olan kart ya da tablo çerçevesinin içinde bunu kullan. `titleLevel`, başlık seviyesini sayfanın başlık hiyerarşisine uyacak şekilde ayarlar.
+
+<ComponentPreview code={`<EmptyState
+  variant="plain"
+  icon={<SearchIcon />}
+  title="“çeyreklik” için sonuç yok"
+  description="Daha kısa bir arama dene ya da yazımı kontrol et."
+  action={<Button>Aramayı temizle</Button>}
+  titleLevel={2}
+/>`}>
+  <EmptyStatePlain />
+</ComponentPreview>
+
+### Yalnızca başlık
+
+Zorunlu olan tek prop `title`'dır.
+
+<ComponentPreview code={`<EmptyState title="İncelenecek bir şey yok" />`}>
+  <EmptyStateMinimal />
+</ComponentPreview>
+
+## API referansı
+
+Bir `div` render'lar; ref'i ve diğer div attribute'larını iletir (native `title` attribute'unun yerini `title` prop'u alır).
+
+<PropsTable rows={[
+  { name: "title", type: "ReactNode", required: true, description: "Kısa başlık, örneğin \"Henüz fatura yok\"." },
+  { name: "description", type: "ReactNode", description: "Sonraki adımı anlatan bir iki cümle." },
+  { name: "icon", type: "ReactNode", description: "Yumuşak accent zeminli bir karede gösterilen ikon. Dekoratiftir." },
+  { name: "action", type: "ReactNode", description: "Ana aksiyon(lar), genellikle bir Button." },
+  { name: "titleLevel", type: "1 | 2 | 3 | 4 | 5 | 6", default: "3", description: "title için başlık seviyesi." },
+  { name: "variant", type: '"tray" | "plain"', default: '"tray"', description: "Yüzey: tray içe gömülü gri bir panel, plain arka plansız." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-empty-state</code></td><td>Kök; <code>data-variant</code> = <code>tray</code> · <code>plain</code></td></tr>
+    <tr><td><code>.mrd-empty-state__icon</code></td><td>Yumuşak accent zeminli ikon karesi</td></tr>
+    <tr><td><code>.mrd-empty-state__title</code></td><td>Başlık</td></tr>
+    <tr><td><code>.mrd-empty-state__description</code></td><td>Gövde metni</td></tr>
+    <tr><td><code>.mrd-empty-state__action</code></td><td>Aksiyon satırı</td></tr>
+  </tbody>
+</table>
+
+EmptyState'in component değişkeni yoktur.
+
+## Erişilebilirlik
+
+- Başlık gerçek bir heading'dir (varsayılan `h3`). Çevresindeki başlık hiyerarşisine uysun diye `titleLevel`'ı ayarla.
+- İkon `aria-hidden`'dır; anlamı başlık tek başına taşımalı.
+- Boş durum bir aramadan sonra sonuçların yerini alıyorsa değişikliği duyur. Örneğin sonuç sayısını polite bir live region içinde render'la.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Neyin eksik olduğunu ve nasıl doldurulacağını söyle: “Henüz fatura yok” ve yanında bir “Yeni fatura” butonu.</p>}
+  dont={<p>Yalnızca “Veri yok” yazmak ya da ilerleme yolu sunmayan büyük bir illüstrasyon göstermek.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Table](/tr/docs/components/table): boş durumun en sık göründüğü yer.
+- [Skeleton](/tr/docs/components/skeleton): veri hâlâ yüklenirken, boş olduğu henüz belli değilken.
+- [Button](/tr/docs/components/button): aksiyonun kendisi.

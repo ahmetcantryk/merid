@@ -1,0 +1,146 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { PopoverDemo, PopoverPlacementDemo, PopoverControlledDemo } from "@/examples/tr/popover";
+
+export const metadata = docMetadata("tr", "/docs/components/popover", {
+  title: "Popover",
+  description: "Bir tetikleyiciye bağlı, modal olmayan kayan panel.",
+});
+
+# Popover
+
+Tetikleyicisine bağlı, modal olmayan kayan bir panel. Escape ya da dışarıya tıklamak onu kapatır.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" /> <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/popover">Kaynak kodu gör</a>
+</div>
+
+## Import
+
+```tsx
+import { Popover } from "@merid/react";
+```
+
+<ComponentPreview code={`<Popover.Root>
+  <Popover.Trigger asChild>
+    <Button variant="secondary">Paylaş</Button>
+  </Popover.Trigger>
+  <Popover.Content aria-label="Paylaş">
+    <p>Linke sahip olan herkes bu sayfayı görüntüleyebilir.</p>
+    <Popover.Close asChild>
+      <Button variant="primary" size="sm">Linki kopyala</Button>
+    </Popover.Close>
+  </Popover.Content>
+</Popover.Root>`}>
+  <PopoverDemo />
+</ComponentPreview>
+
+## Anatomi
+
+```tsx
+<Popover.Root>
+  <Popover.Trigger />
+  <Popover.Content>
+    <Popover.Close />
+  </Popover.Content>
+</Popover.Root>
+```
+
+- **Root** açık state'ini tutar.
+- **Trigger**, panelin bağlandığı `<button>`'dır. Paneli kendi elemanına, örneğin bir `Button`'a bağlamak için `asChild` ver.
+- **Content** kayan paneldir; portal ile render'lanır ve çakışma kontrolüyle konumlanır.
+- **Close**, popover'ı kapatıp focus'u tetikleyiciye döndüren stilsiz bir butondur. Kendi `Button`'ını render'lamak için `asChild` ver.
+
+## Örnekler
+
+### Konum
+
+`placement` herhangi bir Floating UI konumunu (`top`, `bottom-start`, `left-end`…) kabul eder. Ekranda kalmak için yön değiştirir ve kayar.
+
+<ComponentPreview code={`<Popover.Content placement="top">Üstte</Popover.Content>
+<Popover.Content placement="right">Sağda</Popover.Content>
+<Popover.Content placement="bottom">Altta</Popover.Content>
+<Popover.Content placement="left">Solda</Popover.Content>`}>
+  <PopoverPlacementDemo />
+</ComponentPreview>
+
+### Controlled
+
+<ComponentPreview code={`const [open, setOpen] = useState(false);
+
+<Popover.Root open={open} onOpenChange={setOpen}>
+  <Popover.Trigger asChild>
+    <Button variant="secondary">Ayrıntılar</Button>
+  </Popover.Trigger>
+  <Popover.Content aria-label="Ayrıntılar">Açık: {String(open)}</Popover.Content>
+</Popover.Root>
+<span>{open ? "Açık" : "Kapalı"}</span>`}>
+  <PopoverControlledDemo />
+</ComponentPreview>
+
+## API referansı
+
+### Popover.Root
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled açık state'i." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Uncontrolled kullanımda başlangıçtaki açık state'i." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Açık state'i değişmesi gerektiğinde çağrılır." },
+  { name: "children", type: "ReactNode", description: "Trigger ve Content." },
+]} />
+
+### Popover.Trigger
+
+Tüm `<button>` attribute'larını kabul eder. `type` varsayılan olarak `"button"`'dır (`asChild` kullanıldığında atanmaz).
+
+<PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "Bir `<button>` yerine tek child elemanı (örneğin kendi `Button`'ını) render'lar; prop'ları, ref'i ve handler'ları birleştirir." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Butona iletilen ref." },
+]} />
+
+### Popover.Content
+
+Tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "placement", type: "Placement", default: "\"bottom-start\"", description: "Tetikleyiciye göre tercih edilen konum." },
+  { name: "sideOffset", type: "number", default: "8", description: "Tetikleyiciye px cinsinden uzaklık." },
+  { name: "aria-label", type: "string", description: "İçerikte görünür bir başlık yoksa erişilebilir ad." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal hedefi. `undefined` `document.body`'yi kullanır; `null` verildiğinde hedef var olana kadar hiçbir şey render'lanmaz." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "İçerik elemanına iletilen ref." },
+]} />
+
+### Popover.Close
+
+Tüm `<button>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "Bir `<button>` yerine tek child elemanı (örneğin kendi `Button`'ını) render'lar; prop'ları, ref'i ve handler'ları birleştirir." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Butona iletilen ref." },
+]} />
+
+## Stil verme
+
+`.mrd-popover` paneldir: `--mrd-surface`, 1px `--mrd-line` kenarlık, `--mrd-radius-xl`, `--mrd-shadow-lg`, en fazla `min(360px, 100vw - 16px)` genişlik. Üzerinde `data-state="open"` bulunur; tetikleyicide `data-state="open" | "closed"` bulunur. Trigger ve Close stilsiz butonlardır; stil vermek için `asChild` ile bir `Button` geçir.
+
+## Erişilebilirlik
+
+Content `role="dialog"` taşır (modal değil); tetikleyicide `aria-haspopup="dialog"`, `aria-expanded` ve `aria-controls` bulunur. Açıldığında focus panele geçer ama içinde hapsedilmez. Modal karşılığı için [WAI-ARIA Dialog desenine](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) bak. Content'e bir `aria-label` ya da `aria-labelledby` ile bağlanmış görünür bir başlık ver.
+
+<KeyboardTable rows={[
+  { keys: ["Space", "Enter"], action: "Tetikleyicideyken popover'ı açar ya da kapatır." },
+  { keys: ["Tab"], action: "Popover içeriğinde ilerler, sonra dışına çıkar." },
+  { keys: ["Esc"], action: "Popover'ı kapatır ve focus'u tetikleyiciye döndürür." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do="Popover'ı tek bir kontrole bağlı, küçük ve isteğe bağlı içerik için kullan: paylaşım, hızlı ayarlar, ayrıntılar."
+  dont="Ana bir görevi ya da uzun bir formu popover'a koymak. Bunun için Dialog kullan."
+/>
+
+## İlgili sayfalar
+
+- [Tooltip](/tr/docs/components/tooltip): kısa, etkileşimsiz etiketler için.
+- [DropdownMenu](/tr/docs/components/dropdown-menu): aksiyon listeleri için.
+- [Dialog](/tr/docs/components/dialog)

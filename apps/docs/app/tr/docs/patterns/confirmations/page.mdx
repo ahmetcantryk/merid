@@ -1,0 +1,68 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ConfirmTyped, ConfirmUndo } from "@/examples/tr/patterns/confirmations";
+
+export const metadata = docMetadata("tr", "/docs/patterns/confirmations", {
+  title: "Onaylar",
+  description: "Ne zaman onay istenir, ne zaman geri alma sunulur ve AlertDialog ile yazarak onaylama nasıl kurulur.",
+});
+
+# Onaylar
+
+Onay dialog'ları kullanıcının akışını keser. Onları yalnızca geri alınamayan aksiyonlarda kullan; geri kalan her şeyi hemen yap ve Geri al seçeneği sun.
+
+| Aksiyon | Desen |
+|---|---|
+| Geri alınabilir (arşivle, gizle, taşı, okundu olarak işaretle) | Hemen yap, **Geri al** içeren bir toast göster |
+| Geri alınamaz, riski düşük (taslağı sil, filtreyi kaldır) | Net bir fiille `AlertDialog` |
+| Geri alınamaz, riski yüksek (projeyi sil, tüm anahtarları iptal et, sahipliği devret) | Yazarak onaylatan bir `AlertDialog` |
+
+## Onay yerine geri alma
+
+<ComponentPreview code={`toast({
+  id: "archive",
+  title: "Proje arşivlendi",
+  description: "Artık panelde görünmüyor.",
+  duration: 8000,
+  action: { label: "Geri al", onClick: restore },
+});`}>
+  <ConfirmUndo />
+</ComponentPreview>
+
+Tekrarlanan tıklamalar toast'ları üst üste yığmak yerine öncekinin yerini alsın diye toast'a sabit bir `id` ver; kullanıcının tepki verecek zamanı olsun diye de `duration`'ı uzat. Türkçe arayüzde `ToastProvider`'a `label="Bildirimler"` ver (varsayılanı `"Notifications"`).
+
+## Yazarak onaylama
+
+<ComponentPreview code={`<AlertDialog.Root onOpenChange={(open) => !open && setTyped("")}>
+  <AlertDialog.Trigger asChild>
+    <Button variant="danger">Projeyi sil</Button>
+  </AlertDialog.Trigger>
+  <AlertDialog.Content>
+    <AlertDialog.Title>“northwind” silinsin mi?</AlertDialog.Title>
+    <AlertDialog.Description>
+      24 deployment, 3 alan adı ve tüm ortam değişkenleri silinir. Bu işlem geri alınamaz.
+    </AlertDialog.Description>
+    <Field label="Onaylamak için northwind yaz">
+      <Input value={typed} onChange={(e) => setTyped(e.target.value)} autoComplete="off" />
+    </Field>
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel>Vazgeç</AlertDialog.Cancel>
+      <AlertDialog.Action tone="danger" disabled={typed !== "northwind"} onClick={remove}>
+        Projeyi sil
+      </AlertDialog.Action>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>`}>
+  <ConfirmTyped />
+</ComponentPreview>
+
+## Dialog metnini yazmak
+
+- **Başlık, nesneyi içeren bir soru olsun:** "“northwind” silinsin mi?". "Emin misin?" değil.
+- **Açıklama sonucu somut sayılarla anlatır** ve işlemin geri alınamayacağını söyler.
+- **Onay butonu fiili tekrarlar:** "Projeyi sil"; asla "Tamam" ya da "Evet" değil.
+- **Güvenli varsayılan Vazgeç'tir.** `AlertDialog` açıldığında focus'u Vazgeç'e verir; refleksle Enter'a basmak yıkıcı bir şey yapmaz. Arka plana tıklamak dialog'u kapatmaz; Escape, Vazgeç gibi davranır.
+- Aksiyonda `tone="danger"`'ı yalnızca bir şeyi yok ediyorsa kullan.
+
+## Buton nerede durur
+
+Yıkıcı aksiyonları ana akıştan uzak tut. Bir ayarlar sayfasında bunları en altta ayrı bir bölüme ("Tehlikeli bölge") koy ve dialog'u açan bir `danger` buton kullan; doğrudan silen bir primary buton asla kullanma.

@@ -1,0 +1,56 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ColorTables } from "@/components/foundations";
+
+export const metadata = docMetadata("tr", "/docs/foundations/color", {
+  title: "Renk",
+  description: "Merid'in açık ve koyu renk token'ları, rolleri ve ölçülmüş kontrast oranları.",
+});
+
+# Renk
+
+Merid'in paleti tek bir soğuk mavi ve mürekkep tonlu nötrlerden oluşur. Accent etkileşimi ve seçimi işaret eder, geri kalan her şeyi nötrler taşır. Durum renkleri hiçbir zaman büyük, doygun dolgular olarak görünmez; güçlü metinli yumuşak tonlar olarak görünür.
+
+## Kurallar
+
+- Accent'i kullanıcının etkileşime girebileceği şeyler ve mevcut seçim için kullan. Süsleme ya da vurgu için kullanma.
+- Kenarlığa başvurmadan önce bölgeleri `--mrd-tray` ile ayır. Kenarlık gerekiyorsa 1px `--mrd-line` olur.
+- Hiyerarşiyi renkle değil, üç metin tonu (`ink`, `body`, `muted`) ve font ağırlığıyla kur.
+- Bir sayfada en fazla bir dolgu renkli blok olur.
+
+## Token'lar
+
+<ColorTables locale="tr" />
+
+## Kontrast
+
+Aşağıdaki oranlar, aksi belirtilmedikçe sayfa arka planına (`--mrd-bg`) göre ölçülmüştür. AA eşikleri normal metin için 4.5:1, büyük metin ve arayüz component'leri için 3:1'dir.
+
+<table>
+  <thead>
+    <tr><th>Çift</th><th>Açık</th><th>Koyu</th><th>Kullanım</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>ink, bg üzerinde</td><td>18.74</td><td>17.03</td><td>Başlıklar, vurgulu metin</td></tr>
+    <tr><td>body, bg üzerinde</td><td>6.94</td><td>8.24</td><td>Gövde metni</td></tr>
+    <tr><td>body, tray üzerinde</td><td>6.42</td><td>7.39</td><td>İçe gömük bölümlerdeki metin</td></tr>
+    <tr><td>accent-strong, accent-soft üzerinde</td><td>6.98</td><td>—</td><td>Seçili öğeler, bilgi tonları</td></tr>
+    <tr><td>danger / warning / success strong, soft üzerinde</td><td>5.94 / 5.46 / 5.30</td><td>—</td><td>Bildirimler</td></tr>
+    <tr><td>muted, bg üzerinde</td><td>3.21</td><td>4.25</td><td>Yalnızca meta metin</td></tr>
+    <tr><td>accent, bg üzerinde</td><td>4.32</td><td>6.20</td><td>Linkler, focus halkası, kontroller</td></tr>
+    <tr><td>on-accent, accent üzerinde</td><td>4.32</td><td>3.13</td><td>Birincil buton etiketi</td></tr>
+  </tbody>
+</table>
+
+<Callout tone="warning" title="0.1'deki bilinen kontrast eksikleri">
+  Üç çift, normal boyuttaki metin için 4.5:1'in altında kalıyor: sayfa üzerindeki muted ton, link metni olarak kullanılan açık accent ve accent dolgu üzerindeki beyaz etiketler (en belirgin olarak dark mode'da). Bu çiftler büyük metin ve arayüz component'leri için 3:1 eşiğini karşılıyor. `--mrd-muted`, `--mrd-accent` ve koyu `--mrd-on-accent` düzeltmeleri bir sonraki minor sürüm için takipte ve changelog'da listelenecek. O zamana kadar okuyucunun mutlaka anlaması gereken hiçbir metinde muted tonu kullanma.
+</Callout>
+
+## Kendi component'lerinde renk kullanma
+
+```css
+.notice {
+  background: var(--mrd-warning-soft);
+  color: var(--mrd-warning-strong);
+  border-radius: var(--mrd-radius-lg);
+}
+```

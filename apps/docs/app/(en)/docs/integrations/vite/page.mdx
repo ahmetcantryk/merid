@@ -1,0 +1,60 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("en", "/docs/integrations/vite", {
+  title: "Vite",
+  description: "Set up Merid in a Vite + React app: stylesheet order, fonts and dark mode.",
+});
+
+# Vite
+
+```bash
+npm create vite@latest my-app -- --template react-ts
+cd my-app
+npm i @merid/react
+```
+
+## Entry file
+
+Import Merid's stylesheet before your own CSS.
+
+```tsx
+// src/main.tsx
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "@merid/react/styles.css";
+import "./index.css";
+import { App } from "./App";
+
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);
+```
+
+The base layer styles the document itself; `mrd-root` is only needed to re-apply it to a subtree inside a host page with other styles.
+
+Delete the template's `index.css` and `App.css` rules that style `body`, `button` and `a` — they are unlayered and will beat Merid's layered rules. That is by design (see [Styling and CSS layers](/docs/styling)), but the template's defaults are not what you want.
+
+## Fonts
+
+Vite resolves the `url("../fonts/…")` in Merid's CSS from `node_modules` and copies the two `.woff2` files into `dist/assets` with hashed names. Nothing to configure. To use your own font instead, set `--mrd-font-sans` in your CSS; the bundled face is then never requested.
+
+## Dark mode before paint
+
+Add a small inline script to `index.html` so the page never flashes the wrong theme:
+
+```html
+<script>
+  try {
+    const t = localStorage.getItem("theme");
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+  } catch {}
+</script>
+```
+
+See [Dark mode strategies](/docs/integrations/dark-mode) for the toggle.
+
+## Library mode
+
+If you build your own component package on top of Merid with Vite's library mode, list `@merid/react`, `react` and `react-dom` in `build.rollupOptions.external` so consumers get a single copy of Merid's context and styles.

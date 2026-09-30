@@ -1,0 +1,117 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/integrations/nextjs", {
+  title: "Next.js",
+  description: "Merid'i Next.js App Router ile kullan: stil dosyası, server component'ler, router linkleri, fontlar ve metadata.",
+});
+
+# Next.js
+
+Merid, App Router'da hiçbir ayar gerektirmeden çalışır. Bu site de Merid ile yapılmış bir Next.js 16 uygulaması.
+
+## Kurulum
+
+```tsx
+// app/layout.tsx
+import type { Metadata, Viewport } from "next";
+import "@merid/react/styles.css";
+import "./globals.css"; // kendi CSS'in Merid'inkinden sonra
+
+export const metadata: Metadata = {
+  title: { default: "Acme", template: "%s — Acme" },
+};
+
+export const viewport: Viewport = {
+  // Açık ve koyu temada --mrd-bg ile eşleşir; mobil tarayıcı arayüzü sayfayla bütünleşir.
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b0d12" },
+  ],
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="tr">
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+Base layer tipografi, arka plan ve focus stillerini dokümana sıfır specificity ile uygular; hiçbir sınıf gerekmez. `transpilePackages` girdisi de gerekmez. Server component dosyalarında düz parça adlarını (`DialogRoot`, `TabsList`, …) ve router linkleri için `asChild`'ı kullan; ayrıntılar [Server component'ler](/tr/docs/server-components) sayfasında.
+
+## Server component'ler
+
+Her etkileşimli component kendi `"use client"` direktifiyle gelir; bu yüzden bir server component'te `@merid/react`'ten import edip doğrudan render'layabilirsin. Görsel component'ler (`Card`, `Stack`, `Heading`, `Text`, `Badge`, `Table`, …) kendilerine ait hiçbir istemci JavaScript'i olmadan sunucuda render'lanır. Event handler'lar yine de bir client sınırı ister; bkz. [Server component'ler](/tr/docs/server-components).
+
+```tsx
+// app/projects/page.tsx — bir server component
+import { Badge, Card, Heading, Stack, Text } from "@merid/react";
+
+export default async function Projects() {
+  const projects = await db.project.findMany();
+  return (
+    <Stack gap={4}>
+      <Heading level={1} size="h2">Projeler</Heading>
+      {projects.map((p) => (
+        <Card key={p.id} variant="outline">
+          <Text tone="ink" weight="medium">{p.name}</Text>
+          <Badge tone={p.live ? "success" : "neutral"}>{p.live ? "Yayında" : "Taslak"}</Badge>
+        </Card>
+      ))}
+    </Stack>
+  );
+}
+```
+
+## Linkler
+
+Anchor render'layan component'ler bir `as` prop'u alır; `next/link` verdiğinde istemci tarafı gezinme ve prefetch kazanırlar:
+
+```tsx
+import NextLink from "next/link";
+import { Breadcrumb, Card, SidebarNav } from "@merid/react";
+
+<SidebarNav.Item as={NextLink} href="/settings" active={pathname === "/settings"}>Ayarlar</SidebarNav.Item>
+<Breadcrumb.Link as={NextLink} href="/projects">Projeler</Breadcrumb.Link>
+<Card as={NextLink} href={`/projects/${id}`} interactive>…</Card>
+```
+
+Overlay tetikleyicileri (`Dialog.Trigger`, `Popover.Trigger`, `DropdownMenu.Trigger`, `Tooltip`) `asChild` alır; yani bir `next/link` aynı zamanda bir tooltip'in ya da menünün tetikleyicisi olabilir.
+
+`Button` ve `Link` şu an `as` ya da `asChild` almıyor. Yönlendirme yapan bir buton ya da metin linki için Merid'in sınıflarını ve data attribute'larını doğrudan `next/link`'e koy; stiller yalnızca bunlara bağlı:
+
+```tsx
+<NextLink href="/new" className="mrd-button" data-variant="primary" data-size="md">
+  <span className="mrd-button__content">Yeni proje</span>
+</NextLink>
+
+<NextLink href="/pricing" className="mrd-link" data-tone="accent" data-underline="hover">
+  Fiyatlandırma
+</NextLink>
+```
+
+`getHref` verilen `Pagination` düz anchor'lar render'lar (sayfa baştan yüklenir). Uygulama içinde `onPageChange` ve `router.push`'u tercih et; `getHref`'i herkese açık sayfalarda taranabilir sayfalama için sakla.
+
+## Fontlar
+
+Merid, Geist ve Geist Mono'yu paketinde taşır ve stil dosyasındaki `@font-face` ile yükler; başka bir şey gerekmez. Bunun yerine `next/font` kullanmak için (kendi sunucunda barınan, önceden yüklenen, layout kayması olmayan) token'ları onun değişkenine yönlendir:
+
+```tsx
+import { Inter } from "next/font/google";
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+
+<html lang="tr" className={inter.variable}>
+```
+
+```css
+/* globals.css */
+:root {
+  --mrd-font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+Tarayıcılar yalnızca kullanılan font dosyalarını indirir; token başka bir yeri gösterdiği anda paketteki Geist dosyaları hiç istenmez.
+
+## Yanıp sönmeden dark mode
+
+İlk boyamadan önce `<head>` içindeki inline bir script ile `data-theme`'i ayarla ve attribute sunucu render'ından farklı olacağı için `<html>`'e `suppressHydrationWarning` ekle. Bkz. [Dark mode stratejileri](/tr/docs/integrations/dark-mode).

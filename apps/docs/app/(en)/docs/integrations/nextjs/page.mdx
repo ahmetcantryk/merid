@@ -1,0 +1,117 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("en", "/docs/integrations/nextjs", {
+  title: "Next.js",
+  description: "Use Merid with the Next.js App Router: stylesheet, server components, routing links, fonts and metadata.",
+});
+
+# Next.js
+
+Merid works in the App Router without configuration. This site is itself a Next.js 16 app built with it.
+
+## Set up
+
+```tsx
+// app/layout.tsx
+import type { Metadata, Viewport } from "next";
+import "@merid/react/styles.css";
+import "./globals.css"; // your CSS after Merid's
+
+export const metadata: Metadata = {
+  title: { default: "Acme", template: "%s — Acme" },
+};
+
+export const viewport: Viewport = {
+  // Matches --mrd-bg in light and dark so mobile browser chrome blends in.
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b0d12" },
+  ],
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+The base layer applies typography, background and focus styles to the document at zero specificity; no class is needed. No `transpilePackages` entry is needed. In server component files use the flat part names (`DialogRoot`, `TabsList`, …) and `asChild` for router links; see [Server components](/docs/server-components).
+
+## Server components
+
+Every interactive component ships its own `"use client"` directive, so you can import from `@merid/react` in a server component and render it directly. Presentational components (`Card`, `Stack`, `Heading`, `Text`, `Badge`, `Table`, …) render on the server with no client JavaScript of their own. Event handlers still need a client boundary — see [Server components](/docs/server-components).
+
+```tsx
+// app/projects/page.tsx — a server component
+import { Badge, Card, Heading, Stack, Text } from "@merid/react";
+
+export default async function Projects() {
+  const projects = await db.project.findMany();
+  return (
+    <Stack gap={4}>
+      <Heading level={1} size="h2">Projects</Heading>
+      {projects.map((p) => (
+        <Card key={p.id} variant="outline">
+          <Text tone="ink" weight="medium">{p.name}</Text>
+          <Badge tone={p.live ? "success" : "neutral"}>{p.live ? "Live" : "Draft"}</Badge>
+        </Card>
+      ))}
+    </Stack>
+  );
+}
+```
+
+## Links
+
+Components that render an anchor take an `as` prop, so `next/link` gives them client-side navigation and prefetching:
+
+```tsx
+import NextLink from "next/link";
+import { Breadcrumb, Card, SidebarNav } from "@merid/react";
+
+<SidebarNav.Item as={NextLink} href="/settings" active={pathname === "/settings"}>Settings</SidebarNav.Item>
+<Breadcrumb.Link as={NextLink} href="/projects">Projects</Breadcrumb.Link>
+<Card as={NextLink} href={`/projects/${id}`} interactive>…</Card>
+```
+
+Overlay triggers (`Dialog.Trigger`, `Popover.Trigger`, `DropdownMenu.Trigger`, `Tooltip`) take `asChild`, so a `next/link` can also be a tooltip or menu anchor.
+
+`Button` and `Link` do not take `as` or `asChild` today. For a routed button or text link, put Merid's classes and data attributes on `next/link` directly — the styles only depend on them:
+
+```tsx
+<NextLink href="/new" className="mrd-button" data-variant="primary" data-size="md">
+  <span className="mrd-button__content">New project</span>
+</NextLink>
+
+<NextLink href="/pricing" className="mrd-link" data-tone="accent" data-underline="hover">
+  Pricing
+</NextLink>
+```
+
+`Pagination` with `getHref` renders plain anchors (full page loads). In an app, prefer `onPageChange` and `router.push`, or keep `getHref` for crawlable pagination on public pages.
+
+## Fonts
+
+Merid bundles Geist and Geist Mono and loads them through `@font-face` in its stylesheet, so nothing else is needed. To use `next/font` instead (self-hosted, preloaded, no layout shift), point the tokens at its variable:
+
+```tsx
+import { Inter } from "next/font/google";
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+
+<html lang="en" className={inter.variable}>
+```
+
+```css
+/* globals.css */
+:root {
+  --mrd-font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+Browsers only download faces that are used, so the bundled Geist files are never requested once the token points elsewhere.
+
+## Dark mode without a flash
+
+Set `data-theme` before first paint with an inline script in `<head>`, and add `suppressHydrationWarning` to `<html>` because the attribute differs from the server render. See [Dark mode strategies](/docs/integrations/dark-mode).

@@ -1,0 +1,31 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("en", "/docs/contributing", {
+  title: "Contributing",
+  description: "How to set up the repository, propose changes and get a pull request merged.",
+});
+
+# Contributing
+
+Contributions are welcome — bug reports, documentation fixes and components alike. The full guide lives in `CONTRIBUTING.md`; this page is the short version.
+
+## Set up
+
+```bash
+git clone https://github.com/ahmetcantryk/merid.git
+cd merid
+npm install
+npm run dev
+```
+
+The documentation site runs at `http://localhost:3210`. The library lives in `packages/react`, the site in `apps/docs`.
+
+## Before you open a pull request
+
+- Read the [design contract](/docs/foundations/principles). Changes that add colours, radii or shadows outside the tokens will not be merged.
+- Run `npm run lint`, `npm run typecheck` and `npm test`.
+- Add a changeset with `npx changeset` for any change that affects the published package.
+- For new components, open an issue first so the API can be agreed before you write code.
+
+## Code of conduct
+
+Everyone taking part is expected to follow the Contributor Covenant. Reports go through GitHub's private channels described in `CODE_OF_CONDUCT.md`.

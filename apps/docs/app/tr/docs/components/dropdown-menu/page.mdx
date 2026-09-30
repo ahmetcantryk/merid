@@ -1,0 +1,196 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import {
+  DropdownMenuBasic,
+  DropdownMenuCheckboxes,
+  DropdownMenuPlacement,
+} from "@/examples/tr/dropdown-menu";
+import { dropdownMenuBasicCode, dropdownMenuCheckboxesCode, dropdownMenuPlacementCode } from "@/examples/tr/dropdown-menu.code";
+
+export const metadata = docMetadata("tr", "/docs/components/dropdown-menu", {
+  title: "DropdownMenu",
+  description: "Bir butondan açılan aksiyon ya da seçenek listesi.",
+});
+
+# DropdownMenu
+
+Bir butondan açılan aksiyon ya da seçenek listesi.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/dropdown-menu">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={dropdownMenuBasicCode}>
+  <DropdownMenuBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { DropdownMenu } from "@merid/react";
+```
+
+## Anatomi
+
+```tsx
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger />
+  <DropdownMenu.Content>
+    <DropdownMenu.Label />
+    <DropdownMenu.Group>
+      <DropdownMenu.Item />
+      <DropdownMenu.CheckboxItem />
+    </DropdownMenu.Group>
+    <DropdownMenu.Separator />
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
+```
+
+- **Root** açık/kapalı state'ini tutar. Kendisi bir eleman render'lamaz.
+- **Trigger**, `aria-haspopup="menu"` taşıyan bir `<button>`'dır.
+- **Content**, tetikleyiciye göre konumlanan ve portal'lanan `role="menu"` panelidir. Yalnızca açıkken mount edilir.
+- **Item** bir aksiyon çalıştırır ve menüyü kapatır. **CheckboxItem** bir ayarı açıp kapatır ve menüyü açık tutar.
+- **Label**, **Group** ve **Separator** uzun menüleri düzenler.
+
+## Örnekler
+
+### Checkbox öğeleri
+
+`CheckboxItem` controlled (`checked` + `onCheckedChange`) ya da uncontrolled (`defaultChecked`) çalışır. Birini seçmek menüyü kapatmaz.
+
+<ComponentPreview code={dropdownMenuCheckboxesCode}>
+  <DropdownMenuCheckboxes />
+</ComponentPreview>
+
+### Konum
+
+`placement` herhangi bir Floating UI konumunu kabul eder (`"top"`, `"bottom-end"`, `"right-start"`…). Menü viewport içinde kalmak için yön değiştirir ve kayar.
+
+<ComponentPreview code={dropdownMenuPlacementCode}>
+  <DropdownMenuPlacement />
+</ComponentPreview>
+
+### Menüyü açık tutmak
+
+`onSelect` iptal edilebilir bir event alır. Bir öğe seçildikten sonra menünün açık kalması için `event.preventDefault()` çağır.
+
+```tsx
+<DropdownMenu.Item onSelect={(event) => { event.preventDefault(); refresh(); }}>
+  Yenile
+</DropdownMenu.Item>
+```
+
+## API referansı
+
+### Root
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled açık/kapalı state'i." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Uncontrolled kullanımda başlangıç state'i." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Açık/kapalı state'i değişmesi gerektiğinde çağrılır." },
+  { name: "children", type: "ReactNode", description: "Trigger ve Content." },
+]} />
+
+### Trigger
+
+Tüm `<button>` attribute'larını kabul eder. `type` varsayılan olarak `"button"`'dır (`asChild` kullanıldığında atanmaz).
+
+<PropsTable rows={[
+  { name: "asChild", type: "boolean", default: "false", description: "`<button>` yerine tek child elemanı (örneğin kendi `Button`'ını) render'lar; props, ref ve handler'ları birleştirir." },
+  { name: "ref", type: "Ref<HTMLButtonElement>", description: "Butona iletilen ref." },
+]} />
+
+### Content
+
+Tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "placement", type: "Placement", default: "\"bottom-start\"", description: "Tetikleyiciye göre tercih edilen konum." },
+  { name: "sideOffset", type: "number", default: "6", description: "Tetikleyiciye px cinsinden uzaklık." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal hedefi. `undefined` verilirse `document.body` kullanılır; `null` verilirse hedef oluşana kadar hiçbir şey render'lanmaz." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Menü elemanına iletilen ref." },
+]} />
+
+### Item
+
+`onSelect` dışındaki tüm `<div>` attribute'larını kabul eder. Senin `onClick`, `onKeyDown` ve `onPointerMove` handler'ların önce çalışır; yerleşik davranışı (aktivasyon, vurgulama) atlamak için içlerinde `event.preventDefault()` çağır.
+
+<PropsTable rows={[
+  { name: "onSelect", type: "(event: Event) => void", description: "Öğe tıklama, Enter ya da Space ile seçildiğinde çağrılır. Menüyü açık tutmak için preventDefault çağır." },
+  { name: "disabled", type: "boolean", default: "false", description: "Öğeyi devre dışı bırakır; ok tuşları onu atlar." },
+  { name: "textValue", type: "string", description: "Children düz metin olmadığında typeahead için kullanılan metin." },
+  { name: "leading", type: "ReactNode", description: "Etiketten önce gösterilen ikon ya da eleman." },
+  { name: "trailing", type: "ReactNode", description: "Etiketten sonra gösterilen kısayol ipucu ya da eleman." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Öğe elemanına iletilen ref." },
+]} />
+
+### CheckboxItem
+
+`onSelect` dışındaki tüm `<div>` attribute'larını kabul eder; handler'lar Item'daki gibi birleştirilir. `leading` render'lanmaz; onun yerini tik işareti alır.
+
+<PropsTable rows={[
+  { name: "checked", type: "boolean", description: "Controlled işaretli state'i." },
+  { name: "defaultChecked", type: "boolean", default: "false", description: "Uncontrolled kullanımda başlangıçtaki işaretli state." },
+  { name: "onCheckedChange", type: "(checked: boolean) => void", description: "Yeni işaretli state ile çağrılır. Menü açık kalır." },
+  { name: "disabled", type: "boolean", default: "false", description: "Öğeyi devre dışı bırakır; ok tuşları onu atlar." },
+  { name: "textValue", type: "string", description: "Children düz metin olmadığında typeahead için kullanılan metin." },
+  { name: "trailing", type: "ReactNode", description: "Etiketten sonra gösterilen kısayol ipucu ya da eleman." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Öğe elemanına iletilen ref." },
+]} />
+
+### Group, Label, Separator
+
+Üçü de tüm `<div>` attribute'larını kabul eder. `Group`, `role="group"` render'lar; ona bir `aria-label` ver. `Label` sunumsal bir metindir; `Separator`, `role="separator"` render'lar.
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-menu` | Content paneli |
+| `.mrd-menu__item` | Item ve CheckboxItem |
+| `.mrd-menu__leading`, `.mrd-menu__trailing` | Baştaki ikon, sondaki ipucu |
+| `.mrd-menu__label-text` | Öğe metni |
+| `.mrd-menu__check` | CheckboxItem'ın tik slot'u |
+| `.mrd-menu__label` | Label |
+| `.mrd-menu__separator` | Separator |
+
+| Attribute | Nerede | Değerler |
+|---|---|---|
+| `data-state` | Trigger (ya da `asChild` elemanı) | `open`, `closed` |
+| `data-state` | Content | `open` |
+| `data-state` | CheckboxItem | `checked`, `unchecked` |
+| `data-disabled` | Item, CheckboxItem | devre dışıyken bulunur |
+
+## Erişilebilirlik
+
+WAI-ARIA [Menu Button desenini](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/) izler. Tetikleyici `aria-haspopup="menu"`, `aria-expanded` ve `aria-controls` taşır; menüyü tetikleyici etiketler. Açılınca focus menünün içine geçer; Escape ile ya da bir seçim yapılınca tetikleyiciye döner.
+
+<KeyboardTable rows={[
+  { keys: ["Enter"], action: "Tetikleyicide: menüyü açar ve ilk öğeye focus verir. Bir öğede: öğeyi çalıştırır." },
+  { keys: ["Space"], action: "Tetikleyicide: menüyü açar ve ilk öğeye focus verir. Bir öğede: öğeyi çalıştırır." },
+  { keys: ["ArrowDown"], action: "Tetikleyicide: menüyü ilk öğede açar. Menüde: sonraki öğe; sona gelince başa döner." },
+  { keys: ["ArrowUp"], action: "Tetikleyicide: menüyü son öğede açar. Menüde: önceki öğe; başa gelince sona döner." },
+  { keys: ["Home"], action: "İlk öğe." },
+  { keys: ["End"], action: "Son öğe." },
+  { keys: ["A–Z"], action: "Yazılan metinle başlayan bir sonraki öğeye gider (typeahead)." },
+  { keys: ["Escape"], action: "Menüyü kapatır ve focus'u tetikleyiciye döndürür." },
+  { keys: ["Tab"], action: "Menüyü kapatır ve focus'u sonraki elemana taşır." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Menüyü bir nesne üzerindeki ikincil aksiyonlar için kullan (yeniden adlandır, çoğalt, arşivle) ve etiketleri bir fiil ya da kısa bir ifadeyle sınırla.</p>}
+  dont={<p>Bir form değeri seçmek için menü kullanmak. Listeden tek bir değer seçmek için <a href="/tr/docs/components/select">Select</a> var.</p>}
+/>
+
+<DoDont
+  do={<p>Yıkıcı aksiyonları bir separator'dan sonra, en sona koy.</p>}
+  dont={<p>Primary bir aksiyona ulaşmanın tek yolunu bir menünün içine saklamak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Select](/tr/docs/components/select): bir form için tek değer seçmek.
+- [Popover](/tr/docs/components/popover): içeriği serbest, modal olmayan panel.
+- [Button](/tr/docs/components/button): tetikleyicinin olağan görünümü.

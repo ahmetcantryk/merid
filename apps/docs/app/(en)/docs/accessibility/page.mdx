@@ -1,0 +1,31 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("en", "/docs/accessibility", {
+  title: "Accessibility",
+  description: "Merid's accessibility statement: the standard it targets, how it is tested, and known limitations.",
+});
+
+# Accessibility
+
+Merid targets conformance with the **Web Content Accessibility Guidelines (WCAG) 2.2, level AA**. Accessibility is part of each component's definition of done, not a later pass.
+
+## What every component guarantees
+
+- **Semantics.** Native elements are used wherever they exist. Where they do not, roles, states and properties follow the WAI-ARIA Authoring Practices Guide.
+- **Keyboard.** Everything that can be done with a pointer can be done with a keyboard. Each component page documents its keys.
+- **Focus.** Focus is always visible: a 2px accent outline offset by 3px, or an accent border with a soft halo on inputs. Overlays trap focus while open and return it to the trigger when closed.
+- **Target size.** Interactive targets are at least 24 × 24 CSS pixels, and controls grow on coarse pointers.
+- **Zoom and reflow.** Layouts work at 200% zoom and at 320 CSS pixels wide without horizontal scrolling.
+- **Motion.** When `prefers-reduced-motion` is set, all transitions and animations are removed, including the skeleton shimmer.
+- **Contrast.** Body and UI text meet 4.5:1. The muted tone is reserved for meta text of 13px and larger. See [Color](/docs/foundations/color) for measured ratios.
+
+## How it is tested
+
+Every component has automated tests that run axe against its rendered states, and interaction tests that drive it with the keyboard. Before a minor release, components are checked manually with VoiceOver and NVDA.
+
+## Your responsibilities
+
+Merid cannot label your content for you. Give icon-only buttons an `aria-label`, give every form field a visible label, and write link text that makes sense out of context.
+
+## Known limitations
+
+Known issues are tracked in the repository with the `accessibility` label. If you find a barrier, please [open an issue](https://github.com/ahmetcantryk/merid/issues/new/choose) — accessibility bugs are treated with the same priority as functional ones.

@@ -1,0 +1,78 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { CodeDemo, CodeBlockDemo } from "@/examples/tr/code";
+
+export const metadata = docMetadata("tr", "/docs/components/code", {
+  title: "Code",
+  description: "Monospace kod: satır içinde tray bir etikette ya da çok satırlı bir blok olarak.",
+});
+
+# Code
+
+Monospace kod: ya satır içinde tray bir etikette ya da çok satırlı bir blok olarak. Sözdizimi renklendirmesi sana bırakılmıştır.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/code">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Text>
+  <Code>@merid/react/styles.css</Code> stil dosyasını bir kez import et.
+</Text>`}>
+  <CodeDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Code } from "@merid/react";
+```
+
+## Örnekler
+
+### Blok
+
+`variant="block"`, çok satırlı kod parçaları için `<pre><code>` render'lar. Boşluklar korunur, uzun satırlar yatayda kaydırılır.
+
+<ComponentPreview code={`<Code variant="block">
+  {'npm i @merid/react\\nimport "@merid/react/styles.css";'}
+</Code>`}>
+  <CodeBlockDemo />
+</ComponentPreview>
+
+## API referansı
+
+`Code`, ref'ini `<code>`'a (inline) ya da `<pre>`'ye (block) iletir ve diğer HTML attribute'larını o elemana aktarır.
+
+<PropsTable rows={[
+  { name: "variant", type: '"inline" | "block"', default: '"inline"', description: "inline, tray bir etiket içinde <code> render'lar; block, <pre><code> render'lar." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-code</code></td><td>Kök: {"<code>"} ya da {"<pre>"}</td></tr>
+    <tr><td><code>data-variant</code></td><td><code>inline</code> · <code>block</code></td></tr>
+  </tbody>
+</table>
+
+Renklendirme eklemek için children'ı önceden renklendirilmiş olarak ver ya da içteki `code` elemanına highlighter'ının çıktısına göre stil ver.
+
+## Erişilebilirlik
+
+- Kod düz metin olarak okunur. Yatayda taşan bir bloğa klavyeyle ulaşılabilmeli; kod parçaları geniş olabiliyorsa bloğa `tabIndex={0}` ve bir `aria-label` ekle.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Cümle içindeki tanımlayıcılar, dosya adları ve kısa komutlar için inline <code>Code</code> kullan.</p>}
+  dont={<p>“Teknik” bir görünüm için paragrafların tamamını ya da arayüz etiketlerini <code>Code</code> ile sarmak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Kbd](/tr/docs/components/kbd): klavye kısayolları.
+- [Text](/tr/docs/components/text): çevresindeki metin.

@@ -1,0 +1,87 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { portalBasicCode, portalContainerCode } from "@/examples/tr/portal.code";
+import { PortalBasic, PortalContainer } from "@/examples/tr/portal";
+
+export const metadata = docMetadata("tr", "/docs/components/portal", {
+  title: "Portal",
+  description: "Children'ı üst DOM ağacının dışında, document.body'ye ya da başka bir elemana render'lar.",
+});
+
+# Portal
+
+Children'ı üst DOM ağacının dışında, `document.body`'ye ya da başka bir elemana render'lar.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/portal">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={portalBasicCode}>
+  <PortalBasic />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Portal } from "@merid/react";
+```
+
+## Anatomi
+
+`Portal`, kendine ait markup'ı olmayan tek bir component'tir. Dialog, AlertDialog, Drawer, Popover, Tooltip, DropdownMenu, Select ve Toast içeriklerini zaten portal ile render'lar; `Portal`'ı doğrudan yalnızca kendi kayan katmanların için kullan.
+
+## Örnekler
+
+### Özel container
+
+`document.body` yerine belirli bir elemana render'lamak için `container` ver.
+
+<ComponentPreview code={portalContainerCode}>
+  <PortalContainer />
+</ComponentPreview>
+
+<Callout tone="warning">
+  `container={undefined}` (varsayılan) `document.body`'ye render'lar. `container={null}` ise (örneğin bir callback ref henüz çalışmadıysa) eleman atanana kadar hiçbir şey render'lamaz; böylece içerik hiçbir zaman yanlış yerde bir anlığına görünmez.
+</Callout>
+
+### Tema, accent, yoğunluk ve yön
+
+Portal ile render'lanan içerik DOM alt ağacından çıktığı için bir üst elemanda tanımlı `data-theme`, `data-accent`, `data-density` ya da `dir` değerlerini kaybederdi. Merid'in overlay'leri (Dialog, AlertDialog, Drawer, Popover, DropdownMenu, Select, Tooltip) bu attribute'ların en yakın üst eleman değerlerini tetikleyicilerinden (dialog'larda: açıldıklarında focus'ta olan eleman) alıp `display: contents` olan bir `.mrd-portal` sarmalayıcısına kopyalar. Böylece koyu bir kartın menüsü koyu açılır, mor bir bölümün select'i mor kalır. `<html>` ya da `<body>` üzerindeki değerler kopyalanmaz; portal bunları doğrudan miras alır. Toast'lar provider'dan portal'lanır ve `<html>`'i izler; sade `Portal` component'i ise children'ı olduğu gibi render'lar.
+
+### Server rendering
+
+`Portal` sunucuda, hydration sırasında ve `container` `null` iken hiçbir şey render'lamaz, ardından client'ta mount edilir. İlk HTML'de bulunması gereken içeriği portal'a koyma.
+
+## API referansı
+
+### Portal
+
+<PropsTable
+  rows={[
+    { name: "children", type: "ReactNode", required: true, description: "Portal'a render'lanan içerik." },
+    { name: "container", type: "Element | null", default: "document.body", description: "Hedef eleman. `undefined` `document.body`'yi kullanır; `null` hiçbir şey render'lamaz." },
+  ]}
+/>
+
+## Stil verme
+
+`Portal` hiçbir sınıf, attribute ya da CSS değişkeni eklemez. İçindeki içerik React ağacında kalmaya devam eder (context ve event'ler React üzerinden yukarı iletilir), ancak CSS hedef elemandan miras alınır; bu yüzden portal'lanan içerik üst elemanlardaki `overflow`, `transform` ya da stacking context'in dışında kalır.
+
+## Erişilebilirlik
+
+Portal bir widget değil, bir yardımcıdır; bu yüzden bir APG deseni yok. DOM sırasını değiştirir, bu da okuma ve `Tab` sırasını değiştirir: portal'lanan içerik etkileşimliyse focus'u [APG dialog deseninin](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) anlattığı gibi kendin yönet ya da bunu zaten yapan Merid overlay component'lerinden birini kullan.
+
+Portal'ın kendine ait klavye etkileşimi yok.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do="Kayan arayüzlerin overflow: hidden ya da bir stacking context'ten kurtulması için Portal kullan."
+  dont="Okuma sırasında yer alması gereken satır içi içeriği portal'lamak. Sayfanın en sonunda okunur."
+/>
+
+## İlgili sayfalar
+
+- [Dialog](/tr/docs/components/dialog)
+- [Popover](/tr/docs/components/popover)
+- [Toast](/tr/docs/components/toast)

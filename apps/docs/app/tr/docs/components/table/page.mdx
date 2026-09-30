@@ -1,0 +1,187 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { TableDemo, TableDense, TableSelectable } from "@/examples/tr/table";
+
+export const metadata = docMetadata("tr", "/docs/components/table", {
+  title: "Table",
+  description: "Tablo verisi için, ince çizgili ve yatayda kaydırılabilen bir çerçeve içinde stillenmiş table primitive'leri.",
+});
+
+# Table
+
+Tablo verisi için stillenmiş primitive'ler: ince çizgi halkalı bir çerçeve içinde, yer kalmadığında yatayda kayan gerçek bir `<table>`. Sıralama, sayfalama ve seçim mantığı senin kodunda kalır.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/table">Kaynak kod</a>
+</div>
+
+<ComponentPreview align="start" code={`<Table scrollLabel="Faturalar">
+  <TableHead>
+    <TableRow>
+      <TableHeader>Fatura</TableHeader>
+      <TableHeader>Müşteri</TableHeader>
+      <TableHeader>Durum</TableHeader>
+      <TableHeader align="end">Tutar</TableHeader>
+    </TableRow>
+  </TableHead>
+  <TableBody>
+    <TableRow>
+      <TableCell>INV-1042</TableCell>
+      <TableCell>Northwind</TableCell>
+      <TableCell><Badge tone="success">Ödendi</Badge></TableCell>
+      <TableCell align="end">1.240,00</TableCell>
+    </TableRow>
+    {/* … */}
+  </TableBody>
+</Table>`}>
+  <TableDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Table, TableHead, TableBody, TableRow, TableHeader, TableCell } from "@merid/react";
+```
+
+## Örnekler
+
+### Sıkı, hover'sız
+
+`density="sm"` hücreleri 10px × 12px'e sıkılaştırır; `hoverable={false}` salt okunur tablolar için satırdaki hover rengini kapatır.
+
+<ComponentPreview align="start" code={`<Table density="sm" hoverable={false} scrollLabel="API anahtarları">
+  <TableHead>
+    <TableRow>
+      <TableHeader>Anahtar</TableHeader>
+      <TableHeader align="end">İstek</TableHeader>
+    </TableRow>
+  </TableHead>
+  <TableBody>
+    <TableRow>
+      <TableCell>api/search</TableCell>
+      <TableCell align="end">12.480</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>`}>
+  <TableDense />
+</ComponentPreview>
+
+### Satır seçimi
+
+Bir satırdaki `selected`, accent-soft dolguyu uygular. Seçimin kullanılabilir olması ve duyurulması için bunu bir [Checkbox](/tr/docs/components/checkbox) kolonuyla birlikte kullan. `scrollLabel` çerçeveyi focus alabilen, adlandırılmış bir bölgeye çevirir; böylece klavye kullanıcıları onu kaydırabilir.
+
+<ComponentPreview align="start" code={`<Table scrollLabel="Faturalar">
+  <TableHead>
+    <TableRow>
+      <TableHeader><Checkbox aria-label="Tümünü seç" checked={allSelected} indeterminate={someSelected} onChange={toggleAll} /></TableHeader>
+      <TableHeader>Fatura</TableHeader>
+      <TableHeader align="end">Tutar</TableHeader>
+    </TableRow>
+  </TableHead>
+  <TableBody>
+    {rows.map((row) => (
+      <TableRow key={row.id} selected={selected.includes(row.id)}>
+        <TableCell><Checkbox aria-label={row.id + " faturasını seç"} checked={selected.includes(row.id)} onChange={() => toggle(row.id)} /></TableCell>
+        <TableCell>{row.id}</TableCell>
+        <TableCell align="end">{row.amount}</TableCell>
+      </TableRow>
+    ))}
+  </TableBody>
+</Table>`}>
+  <TableSelectable />
+</ComponentPreview>
+
+### Sıralanabilir kolonlar
+
+Bir başlığa `sortDirection` ve `onSort` ver: `<th>` üzerine `aria-sort` koyar ve etiketi yön ikonlu gerçek bir butona sarar. Satırları sıralamak senin işin; sıralanabilir ama o an aktif sıralama olmayan kolonlarda `"none"` kullan.
+
+```tsx
+const [sort, setSort] = useState<{ key: "name" | "amount"; dir: "ascending" | "descending" }>({ key: "name", dir: "ascending" });
+const toggle = (key: "name" | "amount") =>
+  setSort((s) => ({ key, dir: s.key === key && s.dir === "ascending" ? "descending" : "ascending" }));
+
+<TableHeader sortDirection={sort.key === "name" ? sort.dir : "none"} onSort={() => toggle("name")}>
+  Ad
+</TableHeader>
+```
+
+## API referansı
+
+Her parça ref'ini karşılık gelen native elemana iletir ve native attribute'ları aktarır.
+
+### Table
+
+Çerçeve `div`'i `<table>`'ı sarar; `className` ve native prop'lar `<table>`'a gider.
+
+<PropsTable rows={[
+  { name: "density", type: '"sm" | "md"', default: '"md"', description: "Satır yoğunluğu: md'de hücreler 14px 16px, sm'de 10px 12px." },
+  { name: "hoverable", type: "boolean", default: "true", description: "Hover'da satırı vurgular." },
+  { name: "scrollLabel", type: "string", description: "Kaydırma sarmalayıcısını bu adla focus alabilen bir bölgeye çevirir. Hiç taşmayan tablolarda verme." },
+]} />
+
+### TableHead, TableBody
+
+`<thead>` (hafif yüzey üzerinde) ve `<tbody>`. Native attribute'lar dışında prop'ları yok.
+
+### TableRow
+
+<PropsTable rows={[
+  { name: "selected", type: "boolean", description: "`data-selected` ile accent-soft dolgu. ARIA eklemez: seçimi seçim kontrolüyle (örneğin işaretli bir checkbox hücresiyle) aktar, `aria-selected`'ı da yalnızca `role=\"grid\"` olan bir tabloda kendin ver." },
+]} />
+
+### TableHeader
+
+<PropsTable rows={[
+  { name: "align", type: '"start" | "center" | "end"', default: '"start"', description: "Metin hizalaması; sayısal kolonlarda end kullan." },
+  { name: "scope", type: '"col" | "row" | "colgroup" | "rowgroup"', default: '"col"', description: "Native başlık scope'u." },
+  { name: "sortDirection", type: '"ascending" | "descending" | "none"', description: "Kolonu sıralanabilir yapar: aria-sort'u ayarlar ve etiketi yön ikonlu bir butonun içinde render'lar." },
+  { name: "onSort", type: "(event) => void", description: "Sıralama butonuna basıldığında çağrılır. Sonraki yönü hesaplamak ve satırları sıralamak sana kalır." },
+]} />
+
+### TableCell
+
+<PropsTable rows={[
+  { name: "align", type: '"start" | "center" | "end"', default: '"start"', description: "Metin hizalaması; sayısal kolonlarda end kullan." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-table-frame</code></td><td>Kaydırılabilen, ince çizgi halkalı sarmalayıcı</td></tr>
+    <tr><td><code>.mrd-table</code></td><td>{"<table>"} elemanı; <code>data-density</code> = <code>sm</code> · <code>md</code>, <code>data-hoverable</code></td></tr>
+    <tr><td><code>.mrd-table__head</code>, <code>.mrd-table__body</code></td><td>Bölümler</td></tr>
+    <tr><td><code>.mrd-table__row</code></td><td>Satırlar; seçiliyken <code>data-selected</code></td></tr>
+    <tr><td><code>.mrd-table__header</code>, <code>.mrd-table__cell</code></td><td>Hücreler; <code>data-align</code> = <code>start</code> · <code>center</code> · <code>end</code></td></tr>
+  </tbody>
+</table>
+
+Component değişkeni: her yoğunluk için ayarlanan `--mrd-table-cell-padding`.
+
+## Erişilebilirlik
+
+- Native bir tablo olduğu için ekran okuyucular satır ve kolon gezintisini hazır alır. `TableHeader` varsayılan olarak `scope="col"`'dur; satır başlıkları için `scope="row"` kullan.
+- Tabloyu tanımlamak için bir `<caption>` (bunu [VisuallyHidden](/tr/docs/components/visually-hidden) ile görsel olarak gizleyebilirsin) ya da tabloya `aria-label` ekle.
+- `TableRow selected` yalnızca görseldir (`data-selected`); düz bir tablonun seçim anlamı yoktur, bu yüzden state'i satırdaki seçim kontrolü taşımalı.
+- Tablo taşabiliyorsa `scrollLabel` ver; çerçeveye Tab ile ulaşılır ve ok tuşlarıyla kaydırılır.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Focus'u kaydırma bölgesine (scrollLabel verildiyse) ve hücrelerdeki etkileşimli içeriğe taşır." },
+  { keys: ["←", "→"], action: "Focus'taki bölgeyi yatayda kaydırır." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Rakamlar alt alta hizalansın diye sayıları <code>align="end"</code> ile sağa yasla; hücreler zaten tabular rakam kullanıyor.</p>}
+  dont={<p>Layout için tablo kullanmak ya da metin kolonlarını ortalamak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Checkbox](/tr/docs/components/checkbox): satır seçimi.
+- [Pagination](/tr/docs/components/pagination): uzun tabloları sayfalamak.
+- [EmptyState](/tr/docs/components/empty-state): tabloda hiç satır olmadığında.

@@ -1,0 +1,119 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/integrations/zod", {
+  title: "Zod ile doğrulama",
+  description: "Merid formlarını bir Zod şemasıyla doğrula: React Hook Form üzerinden ya da düz FormData ve server action'larla.",
+});
+
+# Zod ile doğrulama
+
+Merid kendisi hiçbir şeyi doğrulamaz. `Field` yalnızca ona verdiğin mesajı render'lar, yani her doğrulayıcı çalışır. Bu sayfa [Zod](https://zod.dev)'u en yaygın iki kurulumda gösteriyor. Bu site Zod'a bağımlı olmadığı için kod canlı önizlenmiyor; aynı bağlantıyı kullanan canlı bir form [React Hook Form](/tr/docs/integrations/react-hook-form) sayfasında var.
+
+## React Hook Form ile
+
+```bash
+npm i zod @hookform/resolvers react-hook-form
+```
+
+```tsx
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button, Field, Input, Select, Stack, Switch } from "@merid/react";
+
+const schema = z.object({
+  name: z.string().trim().min(2, "Ad en az 2 karakter olmalı."),
+  email: z.email("E-posta adresi geçersiz."),
+  plan: z.enum(["starter", "team"], { error: "Bir plan seç." }),
+  marketing: z.boolean(),
+});
+type Values = z.infer<typeof schema>;
+
+export function SignupForm() {
+  const { register, control, handleSubmit, formState: { errors, isSubmitting } } = useForm<Values>({
+    resolver: zodResolver(schema),
+    defaultValues: { name: "", email: "", marketing: false },
+  });
+
+  return (
+    <form onSubmit={handleSubmit(async (values) => { await save(values); })} noValidate>
+      <Stack gap={5}>
+        <Field label="Ad" required error={errors.name?.message}>
+          <Input {...register("name")} autoComplete="name" />
+        </Field>
+        <Field label="E-posta" required error={errors.email?.message}>
+          <Input type="email" {...register("email")} autoComplete="email" />
+        </Field>
+        <Controller control={control} name="plan" render={({ field, fieldState }) => (
+          <Field id="plan" label="Plan" required error={fieldState.error?.message}>
+            <Select.Root value={field.value ?? ""} onValueChange={field.onChange} placeholder="Plan seç">
+              <Select.Trigger id="plan" ref={field.ref} invalid={fieldState.invalid} />
+              <Select.Content>
+                <Select.Item value="starter">Başlangıç</Select.Item>
+                <Select.Item value="team">Ekip</Select.Item>
+              </Select.Content>
+            </Select.Root>
+          </Field>
+        )} />
+        <Controller control={control} name="marketing" render={({ field }) => (
+          <Switch checked={field.value} onCheckedChange={field.onChange}>Ürün güncellemeleri</Switch>
+        )} />
+        <Button type="submit" variant="primary" loading={isSubmitting}>Hesap oluştur</Button>
+      </Stack>
+    </form>
+  );
+}
+```
+
+Zod mesajları doğrudan `Field`'ın `error` prop'una gider; o da kontrole `aria-invalid` ve `aria-describedby` koyar.
+
+## Form kütüphanesi olmadan
+
+Küçük formlarda `FormData`'yı `safeParse` ile ayrıştır ve düzleştirilmiş hataları state'te tut.
+
+```tsx
+const [errors, setErrors] = useState<Partial<Record<keyof Values, string>>>({});
+
+function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  event.preventDefault();
+  const result = schema.safeParse(Object.fromEntries(new FormData(event.currentTarget)));
+  if (!result.success) {
+    const fieldErrors = z.flattenError(result.error).fieldErrors;
+    setErrors(Object.fromEntries(Object.entries(fieldErrors).map(([k, v]) => [k, v?.[0]])));
+    return;
+  }
+  setErrors({});
+  submit(result.data);
+}
+```
+
+## Next.js server action'ları
+
+Sunucuda yeniden doğrula: istemci tarafı doğrulama bir kolaylıktır, garanti değildir. Alan hatalarını action'dan döndür ve `useActionState` ile render'la.
+
+```tsx
+// app/signup/actions.ts
+"use server";
+export async function signup(_prev: State, formData: FormData): Promise<State> {
+  const result = schema.safeParse(Object.fromEntries(formData));
+  if (!result.success) return { errors: z.flattenError(result.error).fieldErrors };
+  await createUser(result.data);
+  return { errors: {} };
+}
+```
+
+```tsx
+// app/signup/form.tsx
+"use client";
+const [state, action, pending] = useActionState(signup, { errors: {} });
+
+<form action={action}>
+  <Field label="E-posta" error={state.errors.email?.[0]}>
+    <Input name="email" type="email" />
+  </Field>
+  <Button type="submit" variant="primary" loading={pending}>Hesap oluştur</Button>
+</form>
+```
+
+`Switch`, native bir checkbox gibi, yalnızca açıkken ve bir `name`'i varsa gizli bir input üzerinden gönderilir. Sunucuda `z.coerce.boolean()` ya da `formData.has("marketing")` kullan.

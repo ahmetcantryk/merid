@@ -1,0 +1,142 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import {
+  ToastBasic,
+  ToastTones,
+  ToastAction,
+} from "@/examples/tr/toast";
+import { toastBasicCode, toastTonesCode, toastActionCode } from "@/examples/tr/toast.code";
+
+export const metadata = docMetadata("tr", "/docs/components/toast", {
+  title: "Toast",
+  description: "Ekranın köşesinde üst üste dizilen, akışı engellemeyen kısa bildirimler.",
+});
+
+# Toast
+
+Ekranın köşesinde üst üste dizilen, akışı engellemeyen kısa bildirimler.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/toast">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={toastBasicCode}>
+  <ToastBasic />
+</ComponentPreview>
+
+<Callout tone="success">
+  Bildirim bölgesinin erişilebilir adı varsayılan olarak “Notifications”dır. Türkçe arayüzde `ToastProvider`'a `label="Bildirimler"` ver; ekran okuyucular bölgeyi doğru dilde okusun.
+</Callout>
+
+## Import
+
+```tsx
+import { ToastProvider, useToast } from "@merid/react";
+```
+
+## Anatomi
+
+Toast'lar imperative çalışır. Uygulamayı bir kez `ToastProvider` ile sar, sonra altındaki herhangi bir yerden `useToast` ile gelen `toast()`'u çağır.
+
+```tsx
+<ToastProvider>
+  <App /> {/* const { toast, dismiss } = useToast(); */}
+</ToastProvider>
+```
+
+Her toast bir durum noktası, bir başlık, isteğe bağlı bir açıklama, isteğe bağlı bir aksiyon butonu ve bir kapatma butonu render'lar. Provider, etiketli bir bölgeyi ve içindeki polite live listeyi portal ile viewport'un sağ alt köşesine yerleştirir.
+
+## Örnekler
+
+### Tonlar
+
+Ton yalnızca durum noktasının rengini değiştirir.
+
+<ComponentPreview code={toastTonesCode}>
+  <ToastTones />
+</ComponentPreview>
+
+### Aksiyon, kalıcılık ve kapatma
+
+`duration: Infinity` toast'u kapatılana kadar ekranda tutar. Aksiyonu seçmek `onClick`'i çalıştırır ve toast'u kapatır. Aynı `id`'yi yeniden kullanmak, yeni bir toast eklemek yerine mevcut olanı değiştirir.
+
+<ComponentPreview code={toastActionCode}>
+  <ToastAction />
+</ComponentPreview>
+
+## API referansı
+
+### ToastProvider
+
+<PropsTable rows={[
+  { name: "children", type: "ReactNode", description: "Uygulama içeriği." },
+  { name: "duration", type: "number", default: "5000", description: "Varsayılan otomatik kapanma süresi, ms cinsinden." },
+  { name: "limit", type: "number", default: "3", description: "Aynı anda görünen en fazla toast sayısı; en eskiler düşürülür." },
+  { name: "label", type: "string", default: "\"Notifications\"", description: "Bildirim bölgesinin erişilebilir adı. Türkçe arayüzde Türkçe bir değer ver, örneğin \"Bildirimler\"." },
+]} />
+
+### useToast()
+
+`ToastApi` döndürür. `ToastProvider` dışında çağrılırsa hata fırlatır.
+
+<PropsTable rows={[
+  { name: "toast", type: "(options: ToastOptions) => string", description: "Bir toast gösterir ve id'sini döndürür." },
+  { name: "dismiss", type: "(id?: string) => void", description: "Verilen id'deki toast'u kaldırır; id verilmezse tüm toast'ları kaldırır." },
+]} />
+
+### ToastOptions
+
+<PropsTable rows={[
+  { name: "title", type: "ReactNode", required: true, description: "Kısa başlık." },
+  { name: "description", type: "ReactNode", description: "İsteğe bağlı destekleyici metin." },
+  { name: "tone", type: "\"neutral\" | \"info\" | \"success\" | \"warning\" | \"danger\"", default: "\"neutral\"", description: "Durum noktasının rengi." },
+  { name: "duration", type: "number", default: "provider duration", description: "Bu kadar ms sonra otomatik kapanır; Infinity kapatılana kadar tutar." },
+  { name: "action", type: "{ label: string; onClick: () => void }", description: "İsteğe bağlı aksiyon butonu." },
+  { name: "id", type: "string", description: "Mevcut bir toast'u değiştirmek için aynı id'yi kullan; zamanlayıcısı yeni `duration` ile baştan başlar." },
+]} />
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-toast-region`, `.mrd-toast-region__list` | Bölge ve live liste |
+| `.mrd-toast` | Tek bir toast |
+| `.mrd-toast__dot` | Durum noktası |
+| `.mrd-toast__body`, `.mrd-toast__title`, `.mrd-toast__description` | Metin |
+| `.mrd-toast__action` | Aksiyon butonu |
+| `.mrd-toast__close` | Kapatma butonu |
+
+| Attribute | Nerede | Değerler |
+|---|---|---|
+| `data-tone` | `.mrd-toast` | `neutral`, `info`, `success`, `warning`, `danger` |
+
+## Erişilebilirlik
+
+Toast'lar WAI-ARIA [alert desenini](https://www.w3.org/WAI/ARIA/apg/patterns/alert/) polite biçimiyle izler: liste, etiketli bir `<section>` içindeki `aria-live="polite"` bölgesidir; yeni toast'lar araya girmeden duyurulur. İşaretçi bir toast'un üzerindeyken ya da focus içindeyken otomatik kapanma zamanlayıcısı durur.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Görünen toast'ların aksiyon ve kapatma butonlarına ulaşır." },
+  { keys: ["Enter"], action: "Focus'taki aksiyon ya da kapatma butonunu çalıştırır." },
+  { keys: ["Space"], action: "Focus'taki aksiyon ya da kapatma butonunu çalıştırır." },
+]} />
+
+<Callout tone="warning">
+  Toast'lar kaybolur. Kritik bir aksiyona giden tek yolu ya da ilerlemeyi engelleyen bir hatayı asla bir toast'a koyma; bunun için [Alert](/tr/docs/components/alert) ya da [AlertDialog](/tr/docs/components/alert-dialog) kullan.
+</Callout>
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>Kişinin az önce yaptığı bir aksiyonu birkaç kelimeyle onayla: “Değişiklikler kaydedildi”.</p>}
+  dont={<p>Kişinin ekranda değiştiğini zaten gördüğü bir şey için toast göstermek.</p>}
+/>
+
+<DoDont
+  do={<p>Geri alınabilen yıkıcı aksiyonlarda Geri al seçeneği sun ve o toast'u kapatılana kadar tut.</p>}
+  dont={<p>Tek bir olay için birkaç toast üst üste dizmek ya da uzun açıklamalar kullanmak.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Alert](/tr/docs/components/alert): kalıcı, satır içi bildirim.
+- [AlertDialog](/tr/docs/components/alert-dialog): akışı durduran onay.

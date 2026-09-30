@@ -1,0 +1,46 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { ShadowScale } from "@/components/foundations";
+
+export const metadata = docMetadata("en", "/docs/foundations/elevation", {
+  title: "Elevation",
+  description: "Shadow tokens, surface layering and the focus halo.",
+});
+
+# Elevation
+
+Elevation in Merid comes from surfaces first and shadows second. A card on the page sits on a grey tray; a card on a tray flips to a white surface with a soft shadow. Borders are the last resort.
+
+## Shadow scale
+
+All shadows are long, soft and faint, tinted with ink (`rgb(15 18 25 / …)`) rather than black. The only saturated shadow is the primary button's accent glow.
+
+<ShadowScale />
+
+## Choosing a level
+
+<table>
+  <thead>
+    <tr><th>Surface</th><th>Shadow</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Selected chip in a segmented control</td><td><code>--mrd-shadow-xs</code></td></tr>
+    <tr><td>Card on a tray, interactive card on hover</td><td><code>--mrd-shadow-md</code></td></tr>
+    <tr><td>Popover, toast, tooltip</td><td><code>--mrd-shadow-lg</code></td></tr>
+    <tr><td>Menu</td><td><code>--mrd-shadow-xl</code></td></tr>
+    <tr><td>Dialog</td><td><code>--mrd-shadow-2xl</code></td></tr>
+  </tbody>
+</table>
+
+## In dark mode
+
+Shadows become black at 40–60% opacity, and elevated surfaces add a 1px ring through `--mrd-elevated-ring`. Include it next to the shadow so your own surfaces behave the same way:
+
+```css
+.floating-panel {
+  box-shadow: var(--mrd-shadow-lg), var(--mrd-elevated-ring);
+}
+```
+
+## Focus halo
+
+`--mrd-focus-ring` is a 4px accent halo at low opacity, used together with an accent border on inputs. Other controls use a 2px accent outline offset by 3px.

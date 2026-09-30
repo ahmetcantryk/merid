@@ -1,0 +1,117 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import {
+  ProgressDemo,
+  ProgressSizes,
+  ProgressIndeterminate,
+  ProgressValueText,
+  ProgressLive,
+} from "@/examples/tr/progress";
+
+export const metadata = docMetadata("tr", "/docs/components/progress", {
+  title: "Progress",
+  description: "Süresi belli ve belirsiz işler için yatay ilerleme çubuğu.",
+});
+
+# Progress
+
+Bir işin ne kadar ilerlediğini gösteren yatay çubuk: dosya yükleme, dışa aktarma, ilk kurulum listesi gibi. Değer verilmezse belirsiz bir yükleniyor çubuğuna dönüşür.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/progress">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<Progress aria-label="Yükleme" value={64} />`}>
+  <ProgressDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Progress } from "@merid/react";
+```
+
+## Örnekler
+
+### Boyutlar
+
+Kalınlıklar: `sm` 4px, `md` 6px (varsayılan), `lg` 8px.
+
+<ComponentPreview code={`<Progress aria-label="Küçük" size="sm" value={40} />
+<Progress aria-label="Orta" size="md" value={60} />
+<Progress aria-label="Büyük" size="lg" value={80} />`}>
+  <ProgressSizes />
+</ComponentPreview>
+
+### Belirsiz
+
+Süre bilinmiyorsa `value` verme (ya da `null` ver).
+
+<ComponentPreview code={`<Progress aria-label="Dışa aktarma hazırlanıyor" />`}>
+  <ProgressIndeterminate />
+</ComponentPreview>
+
+### Özel max ve değer metni
+
+`max` ölçeği değiştirir; `valueText`, ekran okuyucuların okuduğu varsayılan yüzdenin yerine geçer.
+
+<ComponentPreview code={`<Progress aria-label="İlk kurulum" value={3} max={5} valueText="5 adımdan 3’ü" />`}>
+  <ProgressValueText />
+</ComponentPreview>
+
+### Değer güncelleme
+
+Değerler 0 ile `max` arasına sıkıştırılır. Çubuk %100'e ulaşınca `data-state="complete"` olur.
+
+<ComponentPreview code={`const [value, setValue] = useState(0);
+// iş ilerledikçe value'yu güncelle
+
+<Progress aria-label="Eşitleniyor" value={value} />`}>
+  <ProgressLive />
+</ComponentPreview>
+
+## API referansı
+
+`role="progressbar"` olan bir `div` render'lar; ref ve diğer div attribute'ları bu elemana iletilir.
+
+<PropsTable rows={[
+  { name: "value", type: "number | null", default: "null", description: "Güncel değer. Belirsiz çubuk için verme ya da null ver." },
+  { name: "max", type: "number", default: "100", description: "En büyük değer. Sıfır ya da negatif değerlerde 100'e döner." },
+  { name: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Çubuk kalınlığı: sm 4px, md 6px, lg 8px." },
+  { name: "valueText", type: "string", description: "Yardımcı teknolojiler için okunabilir değer, örneğin \"5 adımdan 3’ü\". Varsayılanı yüzdedir." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-progress</code></td><td>Kanal (track)</td></tr>
+    <tr><td><code>.mrd-progress__bar</code></td><td>Dolu çubuk</td></tr>
+    <tr><td><code>data-size</code></td><td><code>sm</code> · <code>md</code> · <code>lg</code></td></tr>
+    <tr><td><code>data-state</code></td><td><code>loading</code> · <code>complete</code> · <code>indeterminate</code></td></tr>
+  </tbody>
+</table>
+
+Component değişkenleri: `--mrd-progress-height` (boyuta göre ayarlanır) ve `--mrd-progress-value` (doluluk yüzdesi, inline verilir).
+
+## Erişilebilirlik
+
+- `aria-valuemin`, `aria-valuemax`, `aria-valuenow` ve `aria-valuetext` ile birlikte `role="progressbar"`. Belirsiz state'te hiçbir `aria-value*` attribute'u verilmez.
+- Çubuğa her zaman `aria-label` ya da `aria-labelledby` ile bir ad ver; elemanın kendi metni yoktur.
+- `prefers-reduced-motion` açıkken belirsiz animasyon kaldırılır.
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>İlerlemeyi ölçebiliyorsan süresi belli bir çubuk kullan ve yanına ne olduğunu anlatan görünür bir etiket koy.</p>}
+  dont={<p>%99'da takılıp kalan bir zamanlayıcıyla sahte ilerleme göstermek. Bunun yerine belirsiz çubuğu ya da bir <a href="/tr/docs/components/spinner">Spinner</a> kullan.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Spinner](/tr/docs/components/spinner): küçük, belirsiz yükleniyor göstergesi.
+- [Skeleton](/tr/docs/components/skeleton): içerik yüklenirken yer tutucu.
+- [Stepper](/tr/docs/components/stepper): adları olan adımlar üzerinden ilerleme.

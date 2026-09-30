@@ -1,0 +1,153 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import {
+  NativeSelectDemo,
+  NativeSelectSizes,
+  NativeSelectField,
+  NativeSelectStates,
+  NativeSelectControlled,
+} from "@/examples/native-select";
+
+export const metadata = docMetadata("en", "/docs/components/native-select", {
+  title: "NativeSelect",
+  description: "The platform select element with Merid styling, native keyboard and mobile pickers.",
+});
+
+# NativeSelect
+
+The platform `<select>` with Merid styling. You get the full native keyboard, the operating system's picker on mobile and form participation without any JavaScript.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/native-select">Source</a>
+</div>
+
+<ComponentPreview code={`<NativeSelect aria-label="Country" placeholder="Choose a country">
+  <option value="tr">Türkiye</option>
+  <option value="de">Germany</option>
+  <option value="nl">Netherlands</option>
+</NativeSelect>`}>
+  <NativeSelectDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { NativeSelect } from "@merid/react";
+```
+
+## Examples
+
+### Sizes
+
+`sm` is 36px, `md` 46px (default) and `lg` 50px — the same heights as [Input](/docs/components/input), so they line up in a row.
+
+<ComponentPreview code={`<NativeSelect aria-label="Small" size="sm" defaultValue="a">…</NativeSelect>
+<NativeSelect aria-label="Medium" size="md" defaultValue="a">…</NativeSelect>
+<NativeSelect aria-label="Large" size="lg" defaultValue="a">…</NativeSelect>`}>
+  <NativeSelectSizes />
+</ComponentPreview>
+
+### In a Field
+
+Inside a [Field](/docs/components/field) the select picks up its `id`, `aria-describedby`, `required` and `disabled` from context — no manual wiring.
+
+<ComponentPreview code={`<Field label="Plan" description="You can change plans at any time." required>
+  <NativeSelect placeholder="Select a plan">
+    <option value="free">Free</option>
+    <option value="team">Team</option>
+    <option value="business">Business</option>
+  </NativeSelect>
+</Field>`}>
+  <NativeSelectField />
+</ComponentPreview>
+
+### Invalid and disabled
+
+A Field `error` sets `aria-invalid` on the select and links the message. Outside a Field pass `invalid` directly.
+
+<ComponentPreview code={`<Field label="Region" error="Pick a region to continue.">
+  <NativeSelect placeholder="Select a region">…</NativeSelect>
+</Field>
+
+<Field label="Currency" disabled>
+  <NativeSelect defaultValue="eur">
+    <option value="eur">EUR</option>
+  </NativeSelect>
+</Field>`}>
+  <NativeSelectStates />
+</ComponentPreview>
+
+### Controlled
+
+Use `value` and `onChange` exactly as with a native select.
+
+<ComponentPreview code={`const [value, setValue] = useState("weekly");
+
+<Field label="Digest frequency">
+  <NativeSelect value={value} onChange={(e) => setValue(e.target.value)}>
+    <option value="daily">Daily</option>
+    <option value="weekly">Weekly</option>
+    <option value="monthly">Monthly</option>
+  </NativeSelect>
+</Field>`}>
+  <NativeSelectControlled />
+</ComponentPreview>
+
+## API reference
+
+The ref and all native select attributes go to the `<select>`, except `className` and `style`, which are applied to the outer wrapper. The native `size` attribute is replaced by the `size` prop below.
+
+<PropsTable rows={[
+  { name: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Height: sm 36px, md 46px, lg 50px." },
+  { name: "invalid", type: "boolean", description: "Forces the invalid style (`data-invalid`) and `aria-invalid`. Inside a Field, derived from its error." },
+  { name: "placeholder", type: "string", description: "Adds a disabled, hidden `value=\"\"` first option, shown whenever the value is `\"\"` (uncontrolled start or a controlled `value=\"\"`)." },
+  { name: "children", type: "ReactNode", description: "option and optgroup elements." },
+]} />
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-native-select</code></td><td>Wrapper {"<span>"}; receives <code>className</code> and <code>style</code></td></tr>
+    <tr><td><code>.mrd-native-select__control</code></td><td>The {"<select>"}</td></tr>
+    <tr><td><code>.mrd-native-select__chevron</code></td><td>Decorative chevron icon</td></tr>
+    <tr><td><code>data-size</code></td><td><code>sm</code> · <code>md</code> · <code>lg</code> (on the wrapper)</td></tr>
+    <tr><td><code>data-invalid</code></td><td>On the control when invalid; drives the danger border (<code>aria-invalid</code> carries the semantics)</td></tr>
+  </tbody>
+</table>
+
+Component variable: `--mrd-input-height`, shared with Input.
+
+## Accessibility
+
+- It is a real `<select>`, so screen readers announce it as a combobox or list box with its options, and mobile browsers open the native picker.
+- Give it a name: a surrounding Field, a `Label` with `htmlFor`, or `aria-label`. The `placeholder` option is not a label.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Moves focus to the select." },
+  { keys: ["Space"], action: "Opens the option list (platform dependent)." },
+  { keys: ["↑", "↓"], action: "Changes the selected option." },
+  { keys: ["A–Z"], action: "Jumps to the first option starting with the typed character." },
+]} />
+
+## Guidelines
+
+<DoDont
+  do={<p>Use NativeSelect for plain lists of known options, especially in forms used on phones.</p>}
+  dont={<p>Put rich content, icons or search inside it — reach for <a href="/docs/components/select">Select</a> instead.</p>}
+/>
+
+<DoDont
+  do={<p>Use a <code>placeholder</code> that prompts a choice, like “Select a plan”, when there is no sensible default.</p>}
+  dont={<p>Rely on the placeholder as the only label.</p>}
+/>
+
+## Related
+
+- [Select](/docs/components/select) — custom listbox with richer options.
+- [Field](/docs/components/field) — label, description and error wiring.
+- [Input](/docs/components/input) — single-line text with the same sizes.
+- [SegmentedControl](/docs/components/segmented-control) — for two to five visible options.

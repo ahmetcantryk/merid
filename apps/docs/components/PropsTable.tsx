@@ -1,3 +1,7 @@
+"use client";
+
+import { useDictionary } from "@/lib/i18n/client";
+
 export interface PropRow {
   readonly name: string;
   readonly type: string;
@@ -7,15 +11,16 @@ export interface PropRow {
 }
 
 export function PropsTable({ rows }: { readonly rows: readonly PropRow[] }) {
+  const t = useDictionary().props;
   return (
-    <div className="table-wrap" tabIndex={0} role="region" aria-label="Props">
+    <div className="table-wrap" tabIndex={0} role="region" aria-label={t.region}>
       <table className="doc-table">
         <thead>
           <tr>
-            <th scope="col">Prop</th>
-            <th scope="col">Type</th>
-            <th scope="col">Default</th>
-            <th scope="col">Description</th>
+            <th scope="col">{t.prop}</th>
+            <th scope="col">{t.type}</th>
+            <th scope="col">{t.default}</th>
+            <th scope="col">{t.description}</th>
           </tr>
         </thead>
         <tbody>
@@ -23,7 +28,7 @@ export function PropsTable({ rows }: { readonly rows: readonly PropRow[] }) {
             <tr key={row.name}>
               <td>
                 <code>{row.name}</code>
-                {row.required ? <span className="req">Required</span> : null}
+                {row.required ? <span className="req">{t.required}</span> : null}
               </td>
               <td>
                 <code className="type">{row.type}</code>

@@ -1,0 +1,69 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { RtlPreview } from "@/examples/tr/integrations/rtl";
+
+export const metadata = docMetadata("tr", "/docs/integrations/rtl", {
+  title: "Uluslararasılaştırma ve RTL",
+  description: "Merid'in sağdan sola (RTL) diller, çevrilmiş etiketler ve yerel ayara göre biçimlendirme için neyi yapıp neyi yapmadığı.",
+});
+
+# Uluslararasılaştırma ve RTL
+
+Merid'in kendine ait bir yerel ayar (locale) sistemi yok. Component'ler onlara verdiğin metinleri render'lar, layout da dokümanın yönünü izler. Bu sayfa bunun neyi kapsadığını açıkça anlatıyor.
+
+<ComponentPreview align="start" code={`<div dir="rtl" lang="ar">
+  <Field label="البحث" description="ابحث بالاسم أو المعرّف.">
+    <Input leading={<Search size={14} aria-hidden />} placeholder="ابحث…" />
+  </Field>
+  <Switch defaultChecked>الإشعارات</Switch>
+  <Pagination pageCount={8} defaultPage={3} previousLabel="السابق" nextLabel="التالي" />
+</div>`}>
+  <RtlPreview />
+</ComponentPreview>
+
+## Sağdan sola (RTL)
+
+`<html>`'e ya da herhangi bir alt ağaca `dir="rtl"` (ve `lang`) koy.
+
+| Alan | Durum |
+|---|---|
+| Layout, boşluklar, kenarlıklar, köşe yuvarlaklıkları | Destekleniyor. Component CSS'i yalnızca mantıksal özellikler kullanır (`padding-inline`, `inset-inline-end`, …); fiziksel `left` / `right`'ı bir test yasaklar. |
+| Input'un leading / trailing eklentileri, NativeSelect oku | Destekleniyor: taraf değiştirirler. |
+| Switch topuzu | Destekleniyor: `:dir(rtl)` altında sağdan sola hareket eder. |
+| Pagination okları | Destekleniyor: `:dir(rtl)` altında aynalanır. |
+| RadioGroup ve SegmentedControl'de ok tuşları | Destekleniyor: ArrowLeft görsel olarak soldaki öğeye gider. |
+| Tabs'te ok tuşları | **Henüz değil.** ArrowRight / ArrowLeft DOM sırasını izler; RTL'de ekranda görünenin tersi yönde hareket ederler. Kütüphane hatası olarak takip ediliyor. |
+| Select / Accordion okları, breadcrumb ayırıcısı | Dikey ya da yönden bağımsız; çevrilmeleri gerekmez. |
+| `Drawer side="left" \| "right"` | Tasarım gereği fiziksel. Tarafı yöne göre kendin seç: `side={dir === "rtl" ? "left" : "right"}`. |
+| Kendi ikonların (oklar, "geri" okları) | Kendiliğinden çevrilmez. Yön bildiren ikonları `:dir(rtl) .icon-arrow { transform: scaleX(-1) }` ile aynala. |
+
+## Metinler
+
+Görünen ya da ekran okuyucunun okuduğu her metin bir prop'tur; bunları diğer metinler gibi çevir:
+
+- `Pagination`: `previousLabel`, `nextLabel`, `pageLabel(page)`, `aria-label`.
+- `Spinner` (`label`) ve yalnızca ikonlu kapatma butonlarının İngilizce varsayılan etiketleri var; çevrilmiş `label` / `aria-label` prop'larını ver.
+- `IconButton`: `label` zorunlu, yani her zaman senin metnin.
+- `Avatar`: baş harfler `getInitials(name)`'den gelir; bu fonksiyon ilk ve son kelimenin ilk harflerini alır. Bunun yanlış olduğu yazı sistemlerinde (örneğin CJK adları) `initials` ver.
+
+## Sayılar, tarihler ve para birimi
+
+Render'lamadan önce `Intl` ile biçimlendir:
+
+```tsx
+const money = new Intl.NumberFormat(locale, { style: "currency", currency: "EUR" });
+<TableCell align="end"><Text as="span" numeric>{money.format(amount)}</Text></TableCell>
+```
+
+`align="end"` sayıları iki yönde de doğru tarafa koyar. `Text numeric` tablo rakamlarını (tabular figures) açar.
+
+## Fontlar
+
+Paketteki Geist Latin yazı sistemleri için tasarlandı. Arapça, İbranice, CJK, Devanagari ve diğerleri `--mrd-font-sans` üzerinden sistem fontuna düşer. Tutarlı bir görünüm için kendi yazı sistemine uygun bir fontu başa koy:
+
+```css
+:root:lang(ar) {
+  --mrd-font-sans: "IBM Plex Sans Arabic", "Geist", ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+Başlıklardaki negatif harf aralığı Latin için ayarlandı; bitişik yazı sistemlerinde sıfırla: `:lang(ar) { --mrd-tracking-display: 0; --mrd-tracking-h2: 0; --mrd-tracking-h3: 0; }`.

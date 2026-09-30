@@ -1,0 +1,161 @@
+import Link from "next/link";
+import { CopyButton } from "@/components/CopyButton";
+import { componentCount } from "@/lib/components-catalog";
+import { getDictionary, localizePath, type Locale } from "@/lib/i18n";
+import { site } from "@/lib/site";
+import { ComponentIndex } from "./ComponentIndex";
+import { FoundationIndex } from "./FoundationIndex";
+import { Playground } from "./Playground";
+
+export function HomePage({ locale }: { readonly locale: Locale }) {
+  const t = getDictionary(locale).landing;
+  const href = (path: string) => localizePath(path, locale);
+  return (
+    <div className="board">
+      <section className="band hero" aria-labelledby="hero-title">
+        <div className="frame">
+          <div className="hero__grid">
+            <div>
+              <Link href={href("/docs/changelog")} className="hero__version">
+                <span className="hero__version-tag">v{site.version}</span>
+                <span>{t.releaseBadge}</span>
+                <span aria-hidden="true">→</span>
+              </Link>
+              <h1 id="hero-title">{t.heroTitle}</h1>
+              <p className="hero__lead">{t.heroLead(componentCount)}</p>
+              <div className="hero__actions">
+                <Link href={href("/docs/introduction")} className="btn" data-variant="primary">
+                  {t.getStarted}
+                </Link>
+                <Link href={href("/docs/components")} className="btn" data-variant="secondary">
+                  {t.components}
+                </Link>
+                <div className="install" aria-label={t.installLabel}>
+                  <span className="install__prompt" aria-hidden="true">$</span>
+                  <code>{site.install}</code>
+                  <CopyButton value={site.install} className="install__copy" />
+                </div>
+              </div>
+            </div>
+            <dl className="hero__spec">
+              <div>
+                <dt>{t.spec.components}</dt>
+                <dd>{componentCount}</dd>
+              </div>
+              <div>
+                <dt>{t.spec.stylesheets}</dt>
+                <dd>1</dd>
+              </div>
+              <div>
+                <dt>{t.spec.layers}</dt>
+                <dd>3</dd>
+              </div>
+              <div>
+                <dt>{t.spec.license}</dt>
+                <dd>MIT</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section className="band" aria-labelledby="playground-title">
+        <div className="frame">
+          <div className="band__head">
+            <h2 id="playground-title">{t.playgroundTitle}</h2>
+            <p>{t.playgroundText}</p>
+          </div>
+          <Playground />
+        </div>
+      </section>
+
+      <section className="band" aria-labelledby="index-title">
+        <div className="frame">
+          <div className="band__head">
+            <h2 id="index-title">
+              {t.indexTitle(componentCount)}
+              <span className="band__head-muted">{t.indexTitleMuted}</span>
+            </h2>
+            <p>
+              {t.indexText} <Link href={href("/docs/components")}>{t.indexLink}</Link>
+            </p>
+          </div>
+          <ComponentIndex locale={locale} />
+        </div>
+      </section>
+
+      <section className="band" aria-labelledby="contract-title">
+        <div className="frame">
+          <div className="band__head">
+            <h2 id="contract-title">{t.contractTitle}</h2>
+            <p>
+              {t.contractText} <Link href={href("/docs/foundations/principles")}>{t.contractLink}</Link>
+            </p>
+          </div>
+          <ol className="contract">
+            {t.contract.map((c, i) => (
+              <li key={c.rule}>
+                <span className="contract__index">{String(i + 1).padStart(2, "0")}</span>
+                <span className="contract__rule">{c.rule}</span>
+                <span className="contract__text">{c.text}</span>
+                <code className="contract__spec">{c.spec}</code>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="band" aria-labelledby="foundations-title">
+        <div className="frame">
+          <div className="band__head">
+            <h2 id="foundations-title">{t.foundationsTitle}</h2>
+            <p>{t.foundationsText}</p>
+          </div>
+          <FoundationIndex locale={locale} />
+        </div>
+      </section>
+
+      <section className="band" aria-labelledby="release-title">
+        <div className="frame">
+          <div className="release">
+            <div className="release__meta">
+              <h2 id="release-title">{t.releaseTitle}</h2>
+              <p>
+                <code>v{site.version}</code> · <time dateTime={site.releaseDate}>{t.releaseDate}</time>
+              </p>
+              <Link href={href("/docs/changelog")}>{t.changelog}</Link>
+            </div>
+            <ul className="release__list">
+              {t.releaseNotes(componentCount).map(([area, note]) => (
+                <li key={area}>
+                  <span>{area}</span>
+                  <span>{note}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="band band--end" aria-label={t.closingLabel}>
+        <div className="frame">
+          <div className="closing">
+            <p className="closing__cmd">
+              <span aria-hidden="true">$ </span>
+              {site.install}
+            </p>
+            <p className="closing__text">{t.closingText}</p>
+            <div className="hero__actions">
+              <Link href={href("/docs/installation")} className="btn" data-variant="primary">
+                {t.installation}
+              </Link>
+              <a href={site.repo} className="btn" data-variant="secondary">
+                GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

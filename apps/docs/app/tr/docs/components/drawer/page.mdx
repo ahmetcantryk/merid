@@ -1,0 +1,148 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { DrawerDemo, DrawerSidesDemo, DrawerSizesDemo } from "@/examples/tr/drawer";
+
+export const metadata = docMetadata("tr", "/docs/components/drawer", {
+  title: "Drawer",
+  description: "Sol ya da sağ kenardan kayarak açılan modal bir yan panel (sheet).",
+});
+
+# Drawer
+
+Bir kenardan kayarak açılan modal bir yan panel (sheet). Dialog ile aynı davranışa ve parçalara sahiptir; Content'e ek olarak `side` ve `size` prop'ları gelir.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" /> <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/drawer">Kaynak kodu gör</a>
+</div>
+
+## Import
+
+```tsx
+import { Drawer } from "@merid/react";
+```
+
+<ComponentPreview code={`<Drawer.Root>
+  <Drawer.Trigger asChild>
+    <Button variant="secondary">Sağdan aç</Button>
+  </Drawer.Trigger>
+  <Drawer.Content side="right" closeLabel="Kapat">
+    <Drawer.Title>Filtreler</Drawer.Title>
+    <Drawer.Description>Fatura listesini daralt.</Drawer.Description>
+    <Drawer.Footer>
+      <Drawer.Close>Sıfırla</Drawer.Close>
+      <Drawer.Close asChild>
+        <Button variant="primary">Uygula</Button>
+      </Drawer.Close>
+    </Drawer.Footer>
+  </Drawer.Content>
+</Drawer.Root>`}>
+  <DrawerDemo />
+</ComponentPreview>
+
+<Callout tone="success">
+  Otomatik kapatma butonunun erişilebilir adı varsayılan olarak “Close”dur. Türkçe arayüzde `closeLabel="Kapat"` ver; ekran okuyucular butonu doğru dilde okusun.
+</Callout>
+
+## Anatomi
+
+```tsx
+<Drawer.Root>
+  <Drawer.Trigger />
+  <Drawer.Content side="right">
+    <Drawer.Title />
+    <Drawer.Description />
+    <Drawer.Footer />
+  </Drawer.Content>
+</Drawer.Root>
+```
+
+Root, Trigger, Title, Description, Close ve Footer, [Dialog](/tr/docs/components/dialog) parçalarıdır. Footer sheet'in en altına itilir.
+
+## Örnekler
+
+### Kenarlar
+
+<ComponentPreview code={`<Drawer.Content side="left">…</Drawer.Content>
+<Drawer.Content side="right">…</Drawer.Content>`}>
+  <DrawerSidesDemo />
+</ComponentPreview>
+
+### Boyutlar
+
+`size` sheet'in genişliğini belirler: `sm` 320px, `md` 420px (varsayılan), `lg` 560px. Genişlik her zaman viewport'un 48px eksiğiyle sınırlıdır.
+
+<ComponentPreview code={`<Drawer.Content size="sm">…</Drawer.Content>
+<Drawer.Content size="md">…</Drawer.Content>
+<Drawer.Content size="lg">…</Drawer.Content>`}>
+  <DrawerSizesDemo />
+</ComponentPreview>
+
+### Controlled
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<Drawer.Root open={open} onOpenChange={setOpen}>
+  <Drawer.Content>…</Drawer.Content>
+</Drawer.Root>
+```
+
+## API referansı
+
+### Drawer.Root
+
+<PropsTable rows={[
+  { name: "open", type: "boolean", description: "Controlled açık/kapalı state'i." },
+  { name: "defaultOpen", type: "boolean", default: "false", description: "Uncontrolled kullanımda başlangıç state'i." },
+  { name: "onOpenChange", type: "(open: boolean) => void", description: "Açık/kapalı state'i değişmesi gerektiğinde çağrılır." },
+  { name: "children", type: "ReactNode", description: "Trigger, Content ve bu drawer'ın state'ini paylaşan diğer her şey." },
+]} />
+
+### Drawer.Content
+
+`role` dışındaki tüm `<div>` attribute'larını kabul eder.
+
+<PropsTable rows={[
+  { name: "side", type: "\"left\" | \"right\"", default: "\"right\"", description: "Sheet'in kayarak açıldığı kenar." },
+  { name: "size", type: "DrawerSize", default: "\"md\"", description: "Sheet genişliği: `sm` 320px, `md` 420px, `lg` 560px; viewport'un 48px eksiğiyle sınırlı. `DrawerSize` tipi `\"sm\" | \"md\" | \"lg\"`." },
+  { name: "closeOnOutsidePress", type: "boolean", default: "true", description: "Arka plana basıldığında kapanır." },
+  { name: "closeOnEscape", type: "boolean", default: "true", description: "Escape ile kapanır." },
+  { name: "initialFocus", type: "RefObject<HTMLElement | null>", description: "Açılınca focus alacak eleman. Verilmezse önce [data-autofocus], sonra ilk tab'lanabilir eleman." },
+  { name: "container", type: "Element | null", default: "document.body", description: "Portal hedefi. `undefined` verilirse `document.body` kullanılır; `null` verilirse hedef oluşana kadar hiçbir şey render'lanmaz." },
+  { name: "showClose", type: "boolean", default: "true", description: "Sağ üstteki standart ikonlu kapatma butonunu otomatik render'lar. Kendi ikonlu `Close`'unu render'ladığında atlanır." },
+  { name: "closeLabel", type: "string", default: '"Close"', description: "Otomatik kapatma butonunun erişilebilir adı. Türkçe arayüzde `\"Kapat\"` ver." },
+  { name: "ref", type: "Ref<HTMLDivElement>", description: "Drawer elemanına iletilen ref." },
+]} />
+
+Trigger, Title, Description, Close ve Footer, [Dialog](/tr/docs/components/dialog#api-referansi)'daki prop'ların aynısını alır.
+
+## Stil verme
+
+| Sınıf | Eleman |
+|---|---|
+| `.mrd-drawer__backdrop` | Sabit arka plan; sheet'i kendi kenarına hizalar |
+| `.mrd-drawer` | Sheet: `data-size`'a göre 320 / 420 / 560px, `100vw - 48px` ile sınırlı, tam yükseklik |
+
+İkisi de `data-side="left" | "right"` ve `data-state="open"` taşır; sheet ayrıca `data-size` taşır. Title, description, footer ve close, `.mrd-dialog__*` sınıflarını kullanır. `prefers-reduced-motion` altında hareket kaldırılır.
+
+## Erişilebilirlik
+
+[WAI-ARIA Dialog (Modal) desenini](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) izler: `role="dialog"`, `aria-modal="true"`, focus kapanı, scroll kilidi ve focus'un geri dönmesi.
+
+<KeyboardTable rows={[
+  { keys: ["Space", "Enter"], action: "Tetikleyicideyken drawer'ı açar." },
+  { keys: ["Tab"], action: "Focus'u ileri taşır; drawer içinde sona gelince başa döner." },
+  { keys: ["Shift", "Tab"], action: "Focus'u geri taşır; drawer içinde başa gelince sona döner." },
+  { keys: ["Esc"], action: "Drawer'ı kapatır ve focus'u tetikleyiciye döndürür." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do="Drawer'ı, sayfayı görünür tutmanın işe yaradığı ikincil içerik için kullan: filtreler, detaylar, ayarlar."
+  dont="Çok adımlı bir akışı drawer'a koymak. Bunun için bir sayfa kullan."
+/>
+
+## İlgili sayfalar
+
+- [Dialog](/tr/docs/components/dialog)
+- [SidebarNav](/tr/docs/components/sidebar-nav): kalıcı navigasyon için.

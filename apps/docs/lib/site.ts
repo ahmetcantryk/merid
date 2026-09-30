@@ -11,7 +11,15 @@ export const site = {
   install: "npm i @merid/react",
 } as const;
 
-export function editUrl(pathname: string): string {
+/**
+ * Source folder of a page, relative to `app/`. English pages live in the `(en)` route group,
+ * Turkish pages under `tr/`, so `/docs/usage` maps to `(en)/docs/usage` and `/tr/docs/usage` to `tr/docs/usage`.
+ */
+export function pageSourceDir(pathname: string): string {
   const clean = pathname.replace(/\/$/, "");
-  return `${site.repo}/edit/main/${site.docsSourcePath}${clean}/page.mdx`;
+  return clean === "/tr" || clean.startsWith("/tr/") ? clean : `/(en)${clean}`;
+}
+
+export function editUrl(pathname: string): string {
+  return `${site.repo}/edit/main/${site.docsSourcePath}${pageSourceDir(pathname)}/page.mdx`;
 }

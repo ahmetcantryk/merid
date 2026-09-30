@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDictionary } from "@/lib/i18n/client";
 
 interface TocItem {
   readonly id: string;
@@ -13,6 +14,7 @@ export function OnThisPage() {
   const pathname = usePathname();
   const [items, setItems] = useState<readonly TocItem[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const t = useDictionary().toc;
 
   useEffect(() => {
     const headings = Array.from(document.querySelectorAll<HTMLHeadingElement>(".doc-article h2[id], .doc-article h3[id]"));
@@ -37,8 +39,8 @@ export function OnThisPage() {
 
   return (
     <aside className="docs-toc">
-      <nav aria-label="On this page">
-        <p className="docs-toc__heading">On this page</p>
+      <nav aria-label={t.title}>
+        <p className="docs-toc__heading">{t.title}</p>
         <ul>
           {items.map((item) => (
             <li key={item.id} data-level={item.level}>

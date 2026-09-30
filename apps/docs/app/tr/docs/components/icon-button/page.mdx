@@ -1,0 +1,113 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { IconButtonDemo, IconButtonVariants, IconButtonSizes, IconButtonDisabled } from "@/examples/tr/icon-button";
+
+export const metadata = docMetadata("tr", "/docs/components/icon-button", {
+  title: "IconButton",
+  description: "Erişilebilir etiketi zorunlu, kare ve yalnızca ikonlu bir buton.",
+});
+
+# IconButton
+
+Toolbar'lar, kapatma aksiyonları ve yoğun satırlar için kare, yalnızca ikonlu bir buton. Görünen metin olmadığı için `label` zorunludur ve `aria-label`'a dönüşür.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/icon-button">Kaynak kod</a>
+</div>
+
+<ComponentPreview code={`<IconButton label="Ayarlar" icon={<SettingsIcon />} />`}>
+  <IconButtonDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { IconButton } from "@merid/react";
+```
+
+## Örnekler
+
+### Varyantlar
+
+`ghost` (varsayılan) hover'a kadar şeffaftır; toolbar'lar ve kart köşeleri için doğru seçimdir. `secondary` butona görünür bir yüzey verir; `primary` accent dolgusunu kullanır ve primary bir [Button](/tr/docs/components/button) kadar seyrek kullanılmalıdır.
+
+<ComponentPreview code={`<IconButton variant="ghost" label="Ayarlar" icon={<SettingsIcon />} />
+<IconButton variant="secondary" label="Sil" icon={<TrashIcon />} />
+<IconButton variant="primary" label="Öğe ekle" icon={<PlusIcon />} />`}>
+  <IconButtonVariants />
+</ComponentPreview>
+
+### Boyutlar
+
+32px (`sm`), 36px (`md`, varsayılan) ve 40px (`lg`) kareler.
+
+<ComponentPreview code={`<IconButton size="sm" label="Kapat" icon={<CloseIcon />} />
+<IconButton size="md" label="Kapat" icon={<CloseIcon />} />
+<IconButton size="lg" label="Kapat" icon={<CloseIcon />} />`}>
+  <IconButtonSizes />
+</ComponentPreview>
+
+### Devre dışı
+
+<ComponentPreview code={`<IconButton variant="secondary" label="Sil" icon={<TrashIcon />} disabled />`}>
+  <IconButtonDisabled />
+</ComponentPreview>
+
+## API referansı
+
+Ref'ini `<button>`'a iletir ve native buton attribute'larını olduğu gibi geçirir; `children` ve `aria-label` hariç (onun yerine `label` kullan). `type` varsayılan olarak `"button"`'dır.
+
+<PropsTable rows={[
+  { name: "label", type: "string", required: true, description: "Erişilebilir ad, aria-label olarak render'lanır." },
+  { name: "icon", type: "ReactNode", required: true, description: "İkon. aria-hidden bir span içinde render'lanır." },
+  { name: "variant", type: '"ghost" | "secondary" | "primary"', default: '"ghost"', description: "Görsel stil." },
+  { name: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Kare boyutu: sm 32px, md 36px, lg 40px." },
+  { name: "type", type: '"button" | "submit" | "reset"', default: '"button"', description: "Native buton tipi." },
+  { name: "disabled", type: "boolean", description: "Native disabled attribute'u." },
+]} />
+
+## Stil verme
+
+<table>
+  <thead>
+    <tr><th>Seçici</th><th>Değerler</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-icon-button</code></td><td>Kök <code>{"<button>"}</code></td></tr>
+    <tr><td><code>.mrd-icon-button__icon</code></td><td>İkonu saran eleman (aria-hidden)</td></tr>
+    <tr><td><code>data-variant</code></td><td><code>ghost</code> · <code>secondary</code> · <code>primary</code></td></tr>
+    <tr><td><code>data-size</code></td><td><code>sm</code> · <code>md</code> · <code>lg</code></td></tr>
+  </tbody>
+</table>
+
+Component değişkeni: `--mrd-icon-button-size`, her boyut için `--mrd-icon-button-sm/md/lg` token'larından atanır.
+
+```css
+.toolbar .mrd-icon-button {
+  --mrd-icon-button-size: 28px;
+}
+```
+
+## Erişilebilirlik
+
+- `label` tiplerde zorunludur ve `aria-label`'a dönüşür; ikon `aria-hidden`'dır.
+- Etiketi ikonun şekline göre (“Çöp kutusu”) değil, aksiyona göre (“Faturayı sil”) yaz.
+- Gören fare kullanıcıları da etiketi keşfedebilsin diye [Tooltip](/tr/docs/components/tooltip) ile birlikte kullan.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], action: "Focus'u butona taşır." },
+  { keys: ["Enter"], action: "Butonu tetikler." },
+  { keys: ["Space"], action: "Butonu tetikler." },
+]} />
+
+## Kullanım ilkeleri
+
+<DoDont
+  do={<p>İkon butonları, ikonun tartışmasız olduğu bilinen aksiyonlar için kullan: kapat, ayarlar, daha fazla.</p>}
+  dont={<p>Ana ya da alışılmadık bir aksiyon için ikon buton kullanmak. Kullanıcı tahmin etmek zorunda kalıyorsa etiketli bir <code>Button</code> kullan.</p>}
+/>
+
+## İlgili sayfalar
+
+- [Button](/tr/docs/components/button): görünür etiketli aksiyonlar.
+- [Tooltip](/tr/docs/components/tooltip): etiketi hover ve focus'ta gösterir.

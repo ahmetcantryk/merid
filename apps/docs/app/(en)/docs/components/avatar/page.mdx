@@ -1,0 +1,130 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+import { AvatarDemo, AvatarSizes, AvatarFallback, AvatarGroupDemo } from "@/examples/avatar";
+
+export const metadata = docMetadata("en", "/docs/components/avatar", {
+  title: "Avatar",
+  description: "A circular image or initials that represents a person or organisation.",
+});
+
+# Avatar
+
+A circular image, or initials on a tray fill, that stands for a person or organisation. `AvatarGroup` stacks several with an overflow count.
+
+<div className="doc-meta">
+  <StatusBadge status="stable" />
+  <a href="https://github.com/ahmetcantryk/merid/tree/main/packages/react/src/components/avatar">Source</a>
+</div>
+
+<ComponentPreview code={`<Avatar name="Ada Lovelace" />
+<Avatar name="Grace Hopper" />
+<Avatar name="Linus" />`}>
+  <AvatarDemo />
+</ComponentPreview>
+
+## Import
+
+```tsx
+import { Avatar, AvatarGroup, getInitials } from "@merid/react";
+```
+
+## Examples
+
+### Sizes
+
+`xs` 24px, `sm` 32px, `md` 40px (default), `lg` 48px, `xl` 64px.
+
+<ComponentPreview code={`<Avatar name="Ada Lovelace" size="xs" />
+<Avatar name="Ada Lovelace" size="sm" />
+<Avatar name="Ada Lovelace" size="md" />
+<Avatar name="Ada Lovelace" size="lg" />
+<Avatar name="Ada Lovelace" size="xl" />`}>
+  <AvatarSizes />
+</ComponentPreview>
+
+### Image and fallback
+
+Pass `src` for a photo. When it is missing or fails to load, the avatar falls back to initials derived from `name` — the first letter of the first and last word. `initials` overrides them (at most two characters are shown).
+
+<ComponentPreview code={`<Avatar name="Broken Image" src="/does-not-exist.png" />
+<Avatar name="Acme Corporation" initials="AC" />`}>
+  <AvatarFallback />
+</ComponentPreview>
+
+### Group
+
+`max` limits the visible avatars; the rest collapse into a “+N” chip. Set the group's `size` to match its avatars so the chip lines up.
+
+<ComponentPreview code={`<AvatarGroup label="Project members" max={3} size="sm">
+  <Avatar name="Ada Lovelace" size="sm" />
+  <Avatar name="Grace Hopper" size="sm" />
+  <Avatar name="Alan Turing" size="sm" />
+  <Avatar name="Katherine Johnson" size="sm" />
+  <Avatar name="Edsger Dijkstra" size="sm" />
+</AvatarGroup>`}>
+  <AvatarGroupDemo />
+</ComponentPreview>
+
+## API reference
+
+### Avatar
+
+Renders a `span`; the ref and other span attributes are forwarded.
+
+<PropsTable rows={[
+  { name: "name", type: "string", required: true, description: "Person or entity name. The accessible name and the source of initials." },
+  { name: "src", type: "string", description: "Image URL. Falls back to initials when missing or when loading fails." },
+  { name: "size", type: '"xs" | "sm" | "md" | "lg" | "xl"', default: '"md"', description: "Diameter: 24, 32, 40, 48 or 64px." },
+  { name: "initials", type: "string", description: "Overrides the derived initials (max 2 characters shown)." },
+]} />
+
+### AvatarGroup
+
+Renders a `div` with `role="group"`.
+
+<PropsTable rows={[
+  { name: "label", type: "string", description: "Accessible name of the group, e.g. \"Project members\". Required unless you pass `aria-label` or `aria-labelledby`; a development warning is logged otherwise." },
+  { name: "max", type: "number", description: "Maximum avatars shown; the rest collapse into a +N chip." },
+  { name: "size", type: '"xs" | "sm" | "md" | "lg" | "xl"', default: '"md"', description: "Size of the overflow chip; match the avatars' size." },
+  { name: "children", type: "ReactNode", description: "Avatar elements." },
+]} />
+
+### getInitials
+
+`getInitials(name: string): string` returns up to two upper-case initials — `getInitials("Ada Lovelace")` is `"AL"`, `getInitials("Linus")` is `"L"`.
+
+## Styling
+
+<table>
+  <thead>
+    <tr><th>Hook</th><th>Values</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>.mrd-avatar</code></td><td>Root circle</td></tr>
+    <tr><td><code>.mrd-avatar__image</code></td><td>The {"<img>"}</td></tr>
+    <tr><td><code>.mrd-avatar__fallback</code></td><td>Initials</td></tr>
+    <tr><td><code>.mrd-avatar-group</code>, <code>.mrd-avatar-group__overflow</code></td><td>Group row and +N chip</td></tr>
+    <tr><td><code>data-size</code></td><td><code>xs</code> · <code>sm</code> · <code>md</code> · <code>lg</code> · <code>xl</code></td></tr>
+    <tr><td><code>data-status</code></td><td><code>image</code> · <code>fallback</code></td></tr>
+  </tbody>
+</table>
+
+Component variable: `--mrd-avatar-size`, set per size.
+
+## Accessibility
+
+- Each avatar is `role="img"` named by `name`; the inner image has `alt=""` and the initials are hidden, so the name is read once.
+- The overflow chip is announced as “N more”.
+- The group has `role="group"`; name it with `label` (“Project members”) so the list has context.
+- When an avatar sits next to the person's visible name, the name is read twice; pass `aria-hidden` on the avatar in that case.
+
+## Guidelines
+
+<DoDont
+  do={<p>Always pass the real <code>name</code>, even with an image — it is the fallback and the accessible name.</p>}
+  dont={<p>Pass a placeholder name like “User” or leave initials to guess from an email address.</p>}
+/>
+
+## Related
+
+- [Badge](/docs/components/badge) — status next to an avatar.
+- [Skeleton](/docs/components/skeleton) — circle placeholder while a profile loads.

@@ -1,0 +1,57 @@
+import { docMetadata } from "@/lib/i18n/metadata";
+export const metadata = docMetadata("tr", "/docs/usage", {
+  title: "Kullanım",
+  description: "Component'leri import et, varyantları prop'larla ver ve onları kendi markup'ınla birleştir.",
+});
+
+# Kullanım
+
+Component'ler `@merid/react` paketinden named export olarak gelir. Her biri `mrd-` sınıfı taşıyan semantik HTML render'lar ve varyantlarını prop olarak sunar.
+
+## İlk component'in
+
+```tsx
+import { Button } from "@merid/react";
+
+export function SaveBar() {
+  return (
+    <div style={{ display: "flex", gap: 12 }}>
+      <Button variant="secondary">Vazgeç</Button>
+      <Button variant="primary">Değişiklikleri kaydet</Button>
+    </div>
+  );
+}
+```
+
+## Varyantlar, boyutlar ve state
+
+Varyantlar ve boyutlar prop'tur. Arka planda modifier sınıflarına değil, her zaman data attribute'larına dönüşürler. Bu da onları kendi CSS'inden hedeflemeyi kolaylaştırır.
+
+```tsx
+<Button variant="ghost" size="sm">Filtrele</Button>
+// <button class="mrd-button" data-variant="ghost" data-size="sm"> render'lar
+```
+
+Açık, işaretli, seçili gibi state'ler `data-state` ya da ilgili ARIA attribute'u olarak görünür. Böylece tek bir seçici hem stili hem erişilebilirliği kapsar.
+
+## Controlled ve uncontrolled
+
+State tutan her component iki şekilde de çalışır. State'i component'e bırakmak için `defaultValue`, `defaultChecked` veya `defaultOpen` ver. State'i kendin yönetmek için `value`, `checked` veya `open` değerini, ilgili `on…Change` handler'ıyla birlikte ver.
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<Dialog open={open} onOpenChange={setOpen}>…</Dialog>
+```
+
+## Ref'ler ve native prop'lar
+
+Component'ler ref'i ana DOM elemanlarına iletir ve tanımadıkları prop'ları da o elemana aktarır. `className` component sınıfının yerine geçmez, onunla birleştirilir. `style` olduğu gibi iletilir.
+
+## Birleştirme
+
+Bir component'in birden fazla parçası varsa, parçalar ayrı ayrı export edilir. Örneğin bir dialog'un başlığı ve açıklaması. İhtiyacın olan parçaları kullan, `aria-labelledby` ve `aria-describedby` bağlantılarını component senin için kurar.
+
+<Callout tone="success" title="Sözleşmeye sadık kal">
+  Merid'in yanında kendi component'lerini yazarken değerleri kopyalamak yerine token'ları kullan. `background: var(--mrd-tray)` ve `border-radius: var(--mrd-radius-card)` kullanan bir kart, dark mode'a ve yaptığın her override'a kendiliğinden uyar.
+</Callout>
