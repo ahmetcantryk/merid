@@ -29,13 +29,27 @@ function allDocRoutes(dir = docsApp, base = "/docs"): string[] {
 
 export const componentRoutes = childRoutes("components");
 export const foundationRoutes = ["/docs/foundations", ...childRoutes("foundations")];
-export const a11yRoutes = ["/", "/docs/components", ...componentRoutes, ...foundationRoutes];
+/** Launch pages: blog, comparisons, privacy. Posts published on launch day; later ones are scheduled. */
+export const contentRoutes = [
+  "/blog",
+  "/blog/best-react-component-libraries-ai-coding-2026",
+  "/blog/tag/comparisons",
+  "/compare",
+  "/compare/shadcn-ui-vs-merid",
+  "/compare/mui-vs-merid",
+] as const;
+export const contentRoutesTr = ["/tr/blog", "/tr/compare", "/tr/compare/shadcn-ui-vs-merid", "/tr/gizlilik"] as const;
+
+export const a11yRoutes = ["/", "/docs/components", ...componentRoutes, ...foundationRoutes, ...contentRoutes, "/privacy"];
 
 export function toTurkish(route: string): string {
   return route === "/" ? "/tr" : `/tr${route}`;
 }
 
 /** The same pages in Turkish: the a11y suite runs both locales. */
-export const a11yRoutesTr = a11yRoutes.map(toTurkish);
+export const a11yRoutesTr = [
+  ...a11yRoutes.filter((r) => !(contentRoutes as readonly string[]).includes(r) && r !== "/privacy").map(toTurkish),
+  ...contentRoutesTr,
+];
 
 export const docRoutes = allDocRoutes();
