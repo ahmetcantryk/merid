@@ -10,3 +10,6 @@ coverage
 test-results
 playwright-report
 .claude/worktrees/
+
+# Never commit account recovery codes
+*recovery_codes*
