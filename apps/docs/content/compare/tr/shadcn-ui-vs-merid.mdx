@@ -1,6 +1,6 @@
 ---
 title: "shadcn/ui ve Merid: Dürüst Bir Karşılaştırma"
-description: "shadcn/ui ve Merid: repoya kopyalanan kaynak mı, sürümlü bir paket mi? Tailwind ile sade CSS token'ları ve yapay zekanın yazdığı arayüzde tutarlılık."
+description: "shadcn/ui ve Merid: repoya kopyalanan kaynak mı, sürümlü bir paket mi? Tailwind ile düz CSS token'ları ve yapay zekanın yazdığı arayüzde tutarlılık."
 slug: shadcn-ui-vs-merid
 lang: tr
 canonical: /tr/compare/shadcn-ui-vs-merid
@@ -26,7 +26,7 @@ Kısaca: shadcn/ui sana sahiplenmen için kaynak kod verir. Merid ise sabit bir 
 | | shadcn/ui | Merid |
 |---|---|---|
 | Ne kuruyorsun | Component kaynağını repona kopyalayan bir CLI | npm'den `@meridui/react` |
-| Stil | Tailwind CSS utility sınıfları | Üç cascade layer'da tek bir sade CSS dosyası |
+| Stil | Tailwind CSS utility sınıfları | Üç cascade layer'da tek bir düz CSS dosyası |
 | Tailwind gerekli mi | Evet | Hayır; Tailwind v4 ile birlikte çalışır |
 | Primitive'ler | Radix UI ya da Base UI | Kendi yazdığı; konumlandırma için Floating UI |
 | Token'lar | Tailwind teması + CSS değişkenleri | Her değer bir `--mrd-*` custom property |
@@ -64,7 +64,7 @@ Merid'de `Button` `node_modules` içinde durur. Değerleri bir tasarım sözleş
 
 **shadcn/ui'ı seç**: her satıra sahip olmak istiyorsan, ekibin Tailwind'e hakimse, geniş kapsama hemen ihtiyacın varsa.
 
-**Merid'i seç**: npm ile güncellediğin sürümlü bir paket, specificity savaşı olmadan ezilebilen sade CSS, çok sayıda katkıcıyı (insan ya da yapay zeka) tek tasarımda tutan sıkı token'lar ve hazır kapsamlı tema istiyorsan; 0.x bir kütüphaneyi benimsemek de sorun değilse.
+**Merid'i seç**: npm ile güncellediğin sürümlü bir paket, specificity savaşı olmadan ezilebilen düz CSS, çok sayıda katkıcıyı (insan ya da yapay zeka) tek tasarımda tutan sıkı token'lar ve hazır kapsamlı tema istiyorsan; 0.x bir kütüphaneyi benimsemek de sorun değilse.
 
 **İkisini birlikte kullan**: Merid component'leri ile layout için Tailwind utility'leri desteklenen bir kurulum.
 

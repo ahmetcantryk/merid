@@ -1,6 +1,6 @@
 ---
-title: "MUI ve Merid: Material UI mı, Sade CSS Token'ları mı?"
-description: "MUI ve Merid: MUI X ile olgun bir Material Design paketi mi, sıkı token'lı küçük bir sade CSS kütüphanesi mi? Stil, tema, kapsam ve hangisi ne zaman."
+title: "MUI ve Merid: Material UI mı, Düz CSS Token'ları mı?"
+description: "MUI ve Merid: MUI X ile olgun bir Material Design paketi mi, sıkı token'lı küçük bir düz CSS kütüphanesi mi? Stil, tema, kapsam ve hangisi ne zaman."
 slug: mui-vs-merid
 lang: tr
 canonical: /tr/compare/mui-vs-merid
@@ -26,7 +26,7 @@ Merid'i biz geliştiriyoruz; buna göre değerlendir.
 | | MUI (Material UI) | Merid |
 |---|---|---|
 | Paket | `@mui/material`; grid, picker ve grafik için `@mui/x-*` | `@meridui/react` |
-| Stil | Varsayılan olarak Emotion (runtime CSS-in-JS) | Üç cascade layer'da tek sade CSS dosyası |
+| Stil | Varsayılan olarak Emotion (runtime CSS-in-JS) | Üç cascade layer'da tek düz CSS dosyası |
 | Varsayılan görünüm | Material Design | Sade: ince çizgiler, tek accent, gri yüzeyler |
 | Tema | `createTheme` + `ThemeProvider` | `--mrd-*` değişkenleri; herhangi bir alt ağaçta `data-theme`, `data-accent`, `data-density` |
 | Stil verme yolları | `sx`, `styled()`, tema override'ları, `className`, props | CSS (senin kuralın kütüphane layer'larını ezer), token'lar, varyantlar |
@@ -60,6 +60,6 @@ Data grid, tarih/saat seçici, grafik ve combobox yok. 0.1 sürümünde; API 1.0
 
 **MUI'ı seç**: MUI X'e, kurumsal desteğe ya da en geniş component setine ihtiyacın varsa.
 
-**Merid'i seç**: runtime'sız sade CSS, insanların ve yapay zeka ajanlarının kolayca sapamayacağı küçük bir API ve HTML attribute'larıyla kapsamlı tema istiyorsan; 46 component da yetiyorsa.
+**Merid'i seç**: runtime'sız düz CSS, insanların ve yapay zeka ajanlarının kolayca sapamayacağı küçük bir API ve HTML attribute'larıyla kapsamlı tema istiyorsan; 46 component da yetiyorsa.
 
 **İlgili:** [Material UI mı Ant Design mı?](/tr/blog/material-ui-mi-ant-design-mi) · [shadcn/ui ve Merid](/tr/compare/shadcn-ui-vs-merid)

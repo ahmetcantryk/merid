@@ -1,5 +1,5 @@
 ---
-title: "Radix Themes ve Merid: Sade CSS'li İki React Kütüphanesi"
+title: "Radix Themes ve Merid: Düz CSS'li İki React Kütüphanesi"
 description: "Radix Themes ve Merid: Theme sarmalayıcısı mı, alt ağaç attribute'ları mı? Primitive'ler, kapsam, olgunluk ve hangisinin ne zaman uygun olduğu."
 slug: radix-themes-vs-merid
 lang: tr
@@ -16,7 +16,7 @@ author: Ahmet Can Tiryaki
 
 # Radix Themes ve Merid
 
-Merid'i karşılaştırdığımız kütüphaneler arasında ruhen en yakını Radix Themes. İkisi de Tailwind ya da runtime CSS-in-JS yerine sade CSS gönderen stilli React kütüphaneleri. İkisi de sakin, modern bir varsayılan görünüm hedefliyor ve sayfanın bir bölümünü diğerlerinden farklı temalandırmana izin veriyor.
+Merid'i karşılaştırdığımız kütüphaneler arasında ruhen en yakını Radix Themes. İkisi de Tailwind ya da runtime CSS-in-JS yerine düz CSS gönderen stilli React kütüphaneleri. İkisi de sakin, modern bir varsayılan görünüm hedefliyor ve sayfanın bir bölümünü diğerlerinden farklı temalandırmana izin veriyor.
 
 Merid'i biz geliştiriyoruz; buna göre değerlendir.
 
@@ -26,7 +26,7 @@ Merid'i biz geliştiriyoruz; buna göre değerlendir.
 |---|---|---|
 | Paket | `@radix-ui/themes` | `@meridui/react` + `@meridui/tokens` |
 | Sürüm | 3.x | 0.1 |
-| Stil | Sade CSS | `@layer merid.tokens, merid.base, merid.components` içinde sade CSS |
+| Stil | Düz CSS | `@layer merid.tokens, merid.base, merid.components` içinde düz CSS |
 | Kök gereksinimi | Uygulamayı `<Theme>` component'i sarar | Yok; tek stil dosyası import'u |
 | Kapsamlı tema | Kendi props'larıyla iç içe `<Theme>` | Herhangi bir elemanda `data-theme`, `data-accent`, `data-density`, `dir` |
 | Accent seçimi | Geniş paletten `accentColor` ve `grayColor` | Dört preset (mavi, mor, yeşil, grafit) ya da `--mrd-accent` |
@@ -48,7 +48,7 @@ Yapılandırma bir component'te değil attribute'larda durur. Sade HTML attribut
 
 ## Hangisini seçmeli?
 
-**Radix Themes'i seç**: şirket destekli olgun bir sade CSS kütüphanesi, geniş renk seçenekleri ya da Merid'de henüz olmayan component'ler istiyorsan.
+**Radix Themes'i seç**: şirket destekli olgun bir düz CSS kütüphanesi, geniş renk seçenekleri ya da Merid'de henüz olmayan component'ler istiyorsan.
 
 **Merid'i seç**: sarmalayıcısız, server component'lerde çalışan attribute tabanlı tema, ajanların ve ekip arkadaşlarının kolayca sapamayacağı sabit bir tasarım sözleşmesi istiyorsan; 0.1 bir kütüphaneyi benimsemek de sorun değilse.
 
