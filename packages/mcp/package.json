@@ -1,16 +1,39 @@
 {
   "name": "@meridui/mcp",
   "version": "0.1.0",
-  "description": "MCP server for Merid: components, props, tokens, patterns and setup guides for AI coding agents. Read-only, offline.",
-  "license": "MIT",
-  "type": "module",
-  "homepage": "https://meridui.dev",
+  "description": "MCP server for the Merid React component library. Gives Claude Code, Cursor and VS Code the real components, props, tokens and setup guides. Read-only and offline.",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "ai",
+    "ai-agents",
+    "llm",
+    "claude",
+    "claude-code",
+    "cursor",
+    "vscode",
+    "windsurf",
+    "llms-txt",
+    "react",
+    "component-library",
+    "design-system",
+    "design-tokens",
+    "documentation",
+    "merid"
+  ],
+  "homepage": "https://meridui.dev/docs/ai",
+  "bugs": {
+    "url": "https://github.com/ahmetcantryk/merid/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ahmetcantryk/merid.git",
     "directory": "packages/mcp"
   },
-  "bugs": "https://github.com/ahmetcantryk/merid/issues",
+  "license": "MIT",
+  "author": "Ahmet Can Tiryaki",
+  "type": "module",
   "bin": {
     "merid-mcp": "dist/index.js"
   },
@@ -42,14 +65,6 @@
     "typescript": "^6.0.3",
     "vitest": "^5.0.2"
   },
-  "keywords": [
-    "mcp",
-    "model-context-protocol",
-    "merid",
-    "react",
-    "design-system",
-    "ai"
-  ],
   "publishConfig": {
     "access": "public"
   },

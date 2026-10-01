@@ -1,16 +1,39 @@
 {
   "name": "@meridui/cli",
   "version": "0.1.0",
-  "description": "Set up Merid in a Next.js, Vite or React Router project: install, stylesheet, AI rules, MCP config and page patterns.",
-  "license": "MIT",
-  "type": "module",
-  "homepage": "https://meridui.dev",
+  "description": "Set up the Merid React component library in Next.js, Vite or React Router: install, stylesheet, template CSS cleanup, AI rules, MCP config and page patterns.",
+  "keywords": [
+    "merid",
+    "cli",
+    "scaffold",
+    "setup",
+    "init",
+    "react",
+    "component-library",
+    "design-system",
+    "nextjs",
+    "vite",
+    "react-router",
+    "tailwindcss",
+    "mcp",
+    "model-context-protocol",
+    "ai",
+    "agents-md",
+    "cursor",
+    "claude-code"
+  ],
+  "homepage": "https://meridui.dev/docs/cli",
+  "bugs": {
+    "url": "https://github.com/ahmetcantryk/merid/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ahmetcantryk/merid.git",
     "directory": "packages/cli"
   },
-  "bugs": "https://github.com/ahmetcantryk/merid/issues",
+  "license": "MIT",
+  "author": "Ahmet Can Tiryaki",
+  "type": "module",
   "bin": {
     "merid": "dist/index.js"
   },
@@ -37,14 +60,6 @@
     "typescript": "^6.0.3",
     "vitest": "^5.0.2"
   },
-  "keywords": [
-    "merid",
-    "react",
-    "cli",
-    "design-system",
-    "mcp",
-    "ai"
-  ],
   "publishConfig": {
     "access": "public"
   },

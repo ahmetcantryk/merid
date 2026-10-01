@@ -1,16 +1,37 @@
 {
   "name": "meridui",
   "version": "0.1.0",
-  "description": "Short alias for @meridui/cli: `npx meridui init` sets up Merid in your React project.",
-  "license": "MIT",
-  "type": "module",
-  "homepage": "https://meridui.dev",
+  "description": "Short alias for @meridui/cli. Run npx meridui init to set up the Merid React component library in Next.js, Vite or React Router.",
+  "keywords": [
+    "merid",
+    "meridui",
+    "cli",
+    "init",
+    "scaffold",
+    "setup",
+    "react",
+    "react-components",
+    "component-library",
+    "ui",
+    "design-system",
+    "nextjs",
+    "vite",
+    "react-router",
+    "mcp",
+    "ai"
+  ],
+  "homepage": "https://meridui.dev/docs/cli",
+  "bugs": {
+    "url": "https://github.com/ahmetcantryk/merid/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ahmetcantryk/merid.git",
     "directory": "packages/meridui"
   },
-  "bugs": "https://github.com/ahmetcantryk/merid/issues",
+  "license": "MIT",
+  "author": "Ahmet Can Tiryaki",
+  "type": "module",
   "bin": {
     "meridui": "bin/meridui.js"
   },
@@ -23,5 +44,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "keywords": ["merid", "react", "components", "design-system", "cli"]
+  "engines": {
+    "node": ">=20"
+  }
 }

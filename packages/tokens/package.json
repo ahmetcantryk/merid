@@ -1,8 +1,38 @@
 {
   "name": "@meridui/tokens",
   "version": "0.1.0",
-  "description": "Merid design tokens as W3C DTCG JSON, CSS and JS.",
+  "description": "Merid design tokens as W3C DTCG JSON, typed JavaScript, CSS custom properties and a Tokens Studio file for Figma, with light, dark, accent and density modes.",
+  "keywords": [
+    "design-tokens",
+    "tokens",
+    "dtcg",
+    "w3c-design-tokens",
+    "design-system",
+    "css-variables",
+    "css-custom-properties",
+    "theming",
+    "dark-mode",
+    "figma",
+    "tokens-studio",
+    "style-dictionary",
+    "color",
+    "spacing",
+    "typography",
+    "typescript",
+    "react",
+    "merid"
+  ],
+  "homepage": "https://meridui.dev/docs/integrations/design-tokens",
+  "bugs": {
+    "url": "https://github.com/ahmetcantryk/merid/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahmetcantryk/merid.git",
+    "directory": "packages/tokens"
+  },
   "license": "MIT",
+  "author": "Ahmet Can Tiryaki",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -16,12 +46,21 @@
     "./tokens.css": "./dist/tokens.css",
     "./package.json": "./package.json"
   },
-  "files": ["dist"],
-  "sideEffects": ["**/*.css"],
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "build": "node scripts/build.mjs",
     "test": "node --test test/*.test.mjs",
     "typecheck": "node scripts/build.mjs && tsc --noEmit --strict dist/index.d.ts"
   },
-  "publishConfig": { "access": "public" }
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  }
 }

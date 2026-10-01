@@ -1,8 +1,44 @@
 {
   "name": "@meridui/react",
   "version": "0.2.0",
-  "description": "Quiet, precise React components with plain CSS.",
+  "description": "React component library in plain CSS with cascade layers, so your own CSS wins. 60+ accessible components, design tokens, dark mode, RTL and server components.",
+  "keywords": [
+    "react",
+    "react-components",
+    "component-library",
+    "ui",
+    "ui-kit",
+    "design-system",
+    "accessible",
+    "accessibility",
+    "a11y",
+    "wcag",
+    "aria",
+    "css",
+    "plain-css",
+    "cascade-layers",
+    "design-tokens",
+    "theming",
+    "dark-mode",
+    "rtl",
+    "server-components",
+    "rsc",
+    "nextjs",
+    "vite",
+    "typescript",
+    "merid"
+  ],
+  "homepage": "https://meridui.dev",
+  "bugs": {
+    "url": "https://github.com/ahmetcantryk/merid/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahmetcantryk/merid.git",
+    "directory": "packages/react"
+  },
   "license": "MIT",
+  "author": "Ahmet Can Tiryaki",
   "type": "module",
   "sideEffects": [
     "**/*.css"
@@ -38,13 +74,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "keywords": [
-    "react",
-    "ui",
-    "components",
-    "design-system",
-    "css"
-  ],
   "devDependencies": {
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
