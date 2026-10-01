@@ -44,16 +44,12 @@
 
   .mrd-pin-input__cell:focus {
     outline: none;
-    border-color: var(--mrd-focus-color);
+    border-color: var(--mrd-accent);
     box-shadow: var(--mrd-focus-ring);
   }
 
   .mrd-pin-input[data-invalid] .mrd-pin-input__cell {
     border-color: var(--mrd-danger);
-  }
-
-  .mrd-pin-input[data-invalid] .mrd-pin-input__cell:focus {
-    box-shadow: var(--mrd-focus-ring-invalid);
   }
 
   .mrd-pin-input__cell:disabled {

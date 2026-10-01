@@ -3,16 +3,12 @@ import { TypeSpecimen } from "@/components/foundations";
 
 export const metadata = docMetadata("en", "/docs/foundations/typography", {
   title: "Typography",
-  description: "Merid's typefaces, type scale, weights, widths and typesetting rules.",
+  description: "Merid's typeface, type scale, weights and typesetting rules.",
 });
 
 # Typography
 
-Merid sets interface text and headings in **Archivo** and code in **Chivo Mono**. Both are variable fonts from Omnibus-Type, both are licensed under the SIL Open Font License, and both ship inside `@meridui/react`, so there is nothing to load from a font service. Numbers are tabular everywhere, so figures line up in tables and prices do not shift as they change.
-
-## Why Archivo
-
-Archivo has a real width axis. The same file draws a wide heading, the kind printed across the top of a map sheet, and an ordinary 14px label in a form. Merid uses that instead of pairing a display face with a text face, so headings and interface never look like they came from two different products. Its Turkish letters and the lira sign are drawn glyphs rather than accents stacked by the browser. Chivo Mono comes from the same foundry and shares its proportions, which keeps code samples from looking pasted in.
+Merid sets text in **Geist** and code, labels and token names in **Geist Mono**, both bundled as variable fonts. Numbers are tabular everywhere, so figures line up in tables and prices do not shift as they change.
 
 ## Scale
 
@@ -22,40 +18,13 @@ Sizes are tokens: `--mrd-text-*` for the size, with matching `--mrd-leading-*` f
 
 The display and section sizes use `clamp()` and scale with the viewport. Specimens above show them at a representative desktop size.
 
-## Width
-
-Width is a token, not a second family. Interface text stays at the normal width.
-
-<table>
-  <thead>
-    <tr><th>Token</th><th>Value</th><th>Used by</th></tr>
-  </thead>
-  <tbody>
-    <tr><td><code>--mrd-display-stretch</code></td><td>125%</td><td>The display heading (<code>Heading size="display"</code>)</td></tr>
-    <tr><td><code>--mrd-title-stretch</code></td><td>112%</td><td>Section headings (<code>size="h2"</code>) and dialog titles</td></tr>
-    <tr><td><code>--mrd-label-stretch</code></td><td>112%</td><td>Badges and table column headings</td></tr>
-  </tbody>
-</table>
-
-If you replace `--mrd-font-sans` with a family that has no width axis, these values have no effect and the browser uses the normal width.
-
 ## Weights
 
-- **400** (`--mrd-weight-regular`): body text.
-- **500** (`--mrd-weight-medium`): all interface text, from buttons and labels to navigation and tabs.
-- **600** (`--mrd-weight-semibold`): headings and figures that need emphasis.
+- **400** (`--mrd-weight-regular`) — body text.
+- **500** (`--mrd-weight-medium`) — all interface text: buttons, labels, navigation, tabs.
+- **600** (`--mrd-weight-semibold`) — headings and figures that need emphasis.
 
-Weight 700 is never used, and the bundled files stop at 600, so a `<strong>` or a bold request renders at 600. When 600 is not enough contrast, change the tone instead.
-
-## Capitals and Turkish
-
-Merid adds no decorative small print: no eyebrows above headings and no mono captions. The only uppercase text in the library is the table column heading, at 12px with 0.04em tracking.
-
-`text-transform: uppercase` follows the language of the element, and Merid never writes text of its own, so the result depends on your `lang` attribute. With `lang="tr"`, "Müşteri" becomes "MÜŞTERİ"; with `lang="en"` or no `lang` at all it becomes "MÜŞTERI", which a Turkish reader notices at once. Set `lang` on `<html>`, and on any block that switches language.
-
-```html
-<html lang="tr">
-```
+Weight 700 is never used. When 600 is not enough contrast, change the tone instead.
 
 ## Rules
 
@@ -67,13 +36,6 @@ Merid adds no decorative small print: no eyebrows above headings and no mono cap
 ## Font stacks
 
 ```css
---mrd-font-sans: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
---mrd-font-mono: "Chivo Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
---mrd-font-display: var(--mrd-font-sans);
+--mrd-font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+--mrd-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 ```
-
-`--mrd-font-display` is the face of the display heading. It points at the sans by default; set it to change the hero face without touching the rest of the interface.
-
-## What ships
-
-Each family is two woff2 files, a latin and a latin-ext subset, and the browser downloads the second one only when the page uses a character from it. The dotless ı is in the latin file; ğ, ş, İ and ₺ are in latin-ext. The files are cut down to the axes Merid uses, weight 400 to 600 and, for Archivo, width 100% to 125%, which brings all four to 120 KB. The Geist pair they replaced was 141 KB. Browsers only fetch a face that is actually used, so if you set your own `--mrd-font-sans` and `--mrd-font-mono`, none of these files is requested.

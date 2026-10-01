@@ -8,18 +8,18 @@ export const metadata = docMetadata("en", "/docs/foundations/motion", {
 
 # Motion
 
-Motion in Merid is quiet and short. It confirms that something happened and never asks to be watched. Every transition uses one curve that starts fast and settles without a bounce.
+Motion in Merid is quiet. It confirms that something happened and never asks to be watched.
 
 ## Tokens
 
 <MotionTable />
 
-Enter animations use a 180ms fade: opacity from 0 to 1 while the element rises 4px into place. Overlays only ever move vertically.
+Enter animations use a 220ms fade: opacity from 0 to 1 while the element rises 4px into place.
 
 ## Patterns
 
-- **Hover** tints the background. Interactive cards also lift by 3px.
-- **Press** moves the control down by 1px (`--mrd-press`) over 80ms, as if it were pushed into the page. Nothing shrinks.
+- **Hover** tints the background or lifts the element by 2–3px.
+- **Press** scales to `.97` over 100ms.
 - **Open** fades and rises; overlays fade their backdrop at the same time.
 - **Rotate** is reserved for disclosure icons, such as the accordion plus turning 45°.
 

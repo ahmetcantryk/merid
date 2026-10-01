@@ -16,8 +16,6 @@ Yeni bir sayfa çevirirken veya mevcut bir çeviriyi düzeltirken önce buraya b
 8. **Kod İngilizce kalır.** Değişken, fonksiyon, prop, dosya adı, CSS sınıfı, token adı çevrilmez. Kod içindeki yorumlar ve örnek arayüz metinleri (buton etiketi, placeholder, toast mesajı) Türkçeleşir.
 9. **Component adları özel isimdir.** `Button`, `Dialog`, `AlertDialog`, `DropdownMenu` olduğu gibi kalır; sayfa başlığı da component'in adıdır. Genel kavramdan bahsederken küçük harf ve İngilizce terim kullanılır: "dialog açıldığında", "bir tooltip".
 10. **Linkler `/tr/docs/...`** ile başlar. Anchor'lar Türkçe başlıktan üretilir.
-11. **Pazarlama metni ayrı.** Landing, meta açıklamaları, OG görselleri ve sosyal medyada "component" yerine "bileşen", "accent" yerine "vurgu rengi" kullanılır; okur orada daha geniş. Kod, menü etiketleri ve doküman sayfaları bu sözlüğe uyar.
-12. **"Plain CSS" her yerde "düz CSS".** Türk geliştirici "sade CSS" demiyor.
 
 ## Çevrilmeyen terimler
 

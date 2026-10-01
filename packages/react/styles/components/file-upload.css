@@ -89,13 +89,13 @@
   }
 
   .mrd-file-upload__button:active:not(:disabled) {
-    transform: var(--mrd-press);
+    transform: scale(0.97);
   }
 
   .mrd-file-upload__button:focus-visible,
   .mrd-file-upload__remove:focus-visible {
-    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
-    outline-offset: var(--mrd-focus-offset);
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 2px;
   }
 
   .mrd-file-upload__button:disabled {

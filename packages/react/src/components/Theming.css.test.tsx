@@ -28,7 +28,7 @@ describe("theme tokens", () => {
 
   it("scopes dark to any [data-theme=dark] subtree and follows prefers-color-scheme on :root", () => {
     const dark = block(tokens, '[data-theme="dark"]');
-    expect(dark).toMatch(/--mrd-bg:\s*#0d0e10/);
+    expect(dark).toMatch(/--mrd-bg:\s*#0b0d12/);
     expect(dark).toMatch(/color-scheme:\s*dark/);
     expect(tokens).toMatch(/@media \(prefers-color-scheme: dark\)\s*\{\s*:root:not\(\[data-theme="light"\]\)/);
   });
@@ -40,27 +40,14 @@ describe("theme tokens", () => {
 
   it("re-resolves accent tokens wherever theme or accent changes", () => {
     const resolver = block(tokens, ":root,\n  [data-theme],\n  [data-accent]");
-    for (const token of [
-      "accent",
-      "accent-hover",
-      "accent-soft",
-      "accent-strong",
-      "accent-solid",
-      "accent-solid-hover",
-      "warning-soft",
-      "warning-strong",
-      "focus-color",
-      "focus-ring",
-      "focus-ring-invalid",
-      "shadow-accent",
-    ]) {
+    for (const token of ["accent", "accent-hover", "accent-soft", "accent-strong", "accent-solid", "accent-solid-hover", "focus-ring", "shadow-accent"]) {
       expect(resolver).toContain(`--mrd-${token}:`);
     }
   });
 });
 
 describe("accent presets", () => {
-  it.each(["blue", "violet", "green", "graphite", "petrol", "brass"])("defines [data-accent=%s] with light and dark values", (name) => {
+  it.each(["violet", "green", "graphite"])("defines [data-accent=%s] with light and dark values", (name) => {
     const preset = block(tokens, `[data-accent="${name}"]`);
     expect(preset).toContain(`--mrd-accent-light: var(--mrd-${name}-600)`);
     expect(preset).toContain("--mrd-accent-dark:");
@@ -68,40 +55,8 @@ describe("accent presets", () => {
     expect(tokens).toContain(`--mrd-${name}-50:`);
   });
 
-  it("magenta is the default preset", () => {
-    expect(block(tokens, ':root,\n  [data-accent="magenta"]')).toContain("var(--mrd-magenta-600)");
-  });
-
-  it("brass moves the warning tone away from its own amber", () => {
-    const base = block(tokens, ":root,\n  [data-accent]");
-    const brass = block(tokens, '[data-accent="brass"]');
-    expect(base).toContain("--mrd-warning-light-strong: #93580a");
-    expect(brass).toContain("--mrd-warning-light-strong: #9e4500");
-    expect(brass).toContain("--mrd-warning-dark-strong: #f9a870");
-    // The defaults come first, so the preset wins at equal specificity.
-    expect(tokens.indexOf(":root,\n  [data-accent] {")).toBeLessThan(tokens.indexOf('[data-accent="brass"] {'));
-  });
-});
-
-describe("focus and press", () => {
-  it("every component focus outline reads the focus tokens", () => {
-    const hardCoded = componentCss.filter(({ css }) => /outline:\s*\d+px\s+solid\s+var\(--mrd-accent\)/.test(css));
-    expect(hardCoded.map((c) => c.file)).toEqual([]);
-    const outlines = [...allComponents.matchAll(/outline:\s*([^;]+);/g)].map((m) => m[1]?.trim() ?? "");
-    const accentOutlines = outlines.filter((v) => v !== "none" && v !== "0" && !/Highlight/.test(v));
-    expect(new Set(accentOutlines)).toEqual(new Set(["var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color)"]));
-  });
-
-  it("press feedback is the --mrd-press token, never a hard-coded scale", () => {
-    expect(allComponents).not.toMatch(/scale\(0?\.97\)/);
-    expect(allComponents.match(/transform:\s*var\(--mrd-press\)/g)?.length).toBeGreaterThanOrEqual(6);
-  });
-
-  it("badges and avatars are square-cut, not round", () => {
-    const badge = componentCss.find((c) => c.file === "badge.css")?.css ?? "";
-    const avatar = componentCss.find((c) => c.file === "avatar.css")?.css ?? "";
-    expect(badge).not.toContain("--mrd-radius-full");
-    expect(avatar).not.toContain("--mrd-radius-full");
+  it("blue is the default preset", () => {
+    expect(block(tokens, ':root,\n  [data-accent="blue"]')).toContain("var(--mrd-blue-600)");
   });
 });
 

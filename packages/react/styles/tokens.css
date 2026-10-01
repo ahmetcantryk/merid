@@ -1,76 +1,42 @@
 /*
  * Merid tokens.
- * Archivo and Chivo Mono (SIL OFL 1.1, The Archivo / Chivo Project Authors) ship in the package
- * under `@meridui/react/fonts/`, each as a latin and a latin-ext file selected by unicode-range
- * (Turkish ı is in latin; ğ, ş, İ and ₺ are in latin-ext). The faces are cut down to the axes
- * Merid uses: weight 400-600, and width 100-125% for Archivo.
+ * Geist and Geist Mono (SIL OFL 1.1, (c) Vercel) ship in the package at
+ * `@meridui/react/fonts/Geist-Variable.woff2` and `GeistMono-Variable.woff2`.
  * The @font-face rules resolve them relative to dist/ (`../fonts/...`).
  * The fonts are opt-out: set `--mrd-font-sans` / `--mrd-font-mono` to your own
  * stack and the bundled faces are never requested (browsers only fetch faces that are actually used).
  *
  * Subtree attributes (work on :root or any element, and nest):
- *   data-theme="light" | "dark"                                              (default: prefers-color-scheme)
- *   data-accent="magenta" | "blue" | "violet" | "green" | "graphite" | "petrol" | "brass" (default: magenta)
- *   data-density="compact" | "default" | "comfortable"                        (default: default)
+ *   data-theme="light" | "dark"                          (default: prefers-color-scheme)
+ *   data-accent="blue" | "violet" | "green" | "graphite"  (default: blue)
+ *   data-density="compact" | "default" | "comfortable"    (default: default)
  */
 @layer merid.tokens {
   @font-face {
-    font-family: Archivo;
+    font-family: Geist;
     font-style: normal;
-    font-weight: 400 600;
-    font-stretch: 100% 125%;
+    font-weight: 100 900;
     font-display: swap;
-    src: url("../fonts/Archivo-latin-ext.woff2") format("woff2");
-    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    src: url("../fonts/Geist-Variable.woff2") format("woff2");
   }
 
   @font-face {
-    font-family: Archivo;
+    font-family: "Geist Mono";
     font-style: normal;
-    font-weight: 400 600;
-    font-stretch: 100% 125%;
+    font-weight: 100 900;
     font-display: swap;
-    src: url("../fonts/Archivo-latin.woff2") format("woff2");
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-
-  @font-face {
-    font-family: "Chivo Mono";
-    font-style: normal;
-    font-weight: 400 600;
-    font-display: swap;
-    src: url("../fonts/ChivoMono-latin-ext.woff2") format("woff2");
-    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-  }
-
-  @font-face {
-    font-family: "Chivo Mono";
-    font-style: normal;
-    font-weight: 400 600;
-    font-display: swap;
-    src: url("../fonts/ChivoMono-latin.woff2") format("woff2");
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    src: url("../fonts/GeistMono-Variable.woff2") format("woff2");
   }
 
   :root {
     /* primitive palettes (accent presets) */
-    --mrd-magenta-50: #fef0f4;
-    --mrd-magenta-100: #fedee8;
-    --mrd-magenta-200: #fcbfd3;
-    --mrd-magenta-300: #f7a0bf;
-    --mrd-magenta-400: #ef86ae;
-    --mrd-magenta-500: #d25388;
-    --mrd-magenta-600: #b20965;
-    --mrd-magenta-700: #990155;
-    --mrd-magenta-800: #830549;
-    --mrd-magenta-900: #58002f;
     --mrd-blue-50: #eef1ff;
     --mrd-blue-100: #dfe5ff;
     --mrd-blue-200: #c3cfff;
     --mrd-blue-300: #a9bbff;
     --mrd-blue-400: #8aa2ff;
     --mrd-blue-500: #6b8aff;
-    --mrd-blue-600: #3d61f2;
+    --mrd-blue-600: #3f63f5;
     --mrd-blue-700: #3355e6;
     --mrd-blue-800: #2c46b8;
     --mrd-blue-900: #1f3285;
@@ -104,54 +70,27 @@
     --mrd-graphite-700: #2e333d;
     --mrd-graphite-800: #22262e;
     --mrd-graphite-900: #15181e;
-    --mrd-petrol-50: #e9f6f9;
-    --mrd-petrol-100: #dcebf0;
-    --mrd-petrol-200: #b6e0e8;
-    --mrd-petrol-300: #95d3df;
-    --mrd-petrol-400: #75c4d2;
-    --mrd-petrol-500: #458fa4;
-    --mrd-petrol-600: #035f73;
-    --mrd-petrol-700: #025061;
-    --mrd-petrol-800: #044553;
-    --mrd-petrol-900: #003440;
-    --mrd-brass-50: #f9f5eb;
-    --mrd-brass-100: #f0e6d7;
-    --mrd-brass-200: #ecd9ae;
-    --mrd-brass-300: #e5c68a;
-    --mrd-brass-400: #d9b165;
-    --mrd-brass-500: #b0853b;
-    --mrd-brass-600: #855c01;
-    --mrd-brass-700: #744e01;
-    --mrd-brass-800: #624003;
-    --mrd-brass-900: #3e2901;
 
-    /* radius: square-cut. Only the radio and the switch stay round, because there the shape means something. */
-    --mrd-radius-xs: 2px;
-    --mrd-radius-sm: 2px;
-    --mrd-radius-md: 2px;
-    --mrd-radius-lg: 2px;
-    --mrd-radius-xl: 2px;
-    --mrd-radius-2xl: 3px;
-    --mrd-radius-card: 3px;
-    --mrd-radius-3xl: 4px;
+    /* radius */
+    --mrd-radius-xs: 4px;
+    --mrd-radius-sm: 6px;
+    --mrd-radius-md: 6px;
+    --mrd-radius-lg: 8px;
+    --mrd-radius-xl: 10px;
+    --mrd-radius-2xl: 12px;
+    --mrd-radius-card: 14px;
+    --mrd-radius-3xl: 16px;
     --mrd-radius-full: 999px;
 
     /* typography */
-    --mrd-font-sans: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-    --mrd-font-mono: "Chivo Mono", ui-monospace, sfmono-regular, menlo, monospace;
-    --mrd-font-display: var(--mrd-font-sans);
-    --mrd-display-stretch: 125%;
-    --mrd-title-stretch: 112%;
-    --mrd-label-stretch: 112%;
-    --mrd-label-size: 12px;
-    --mrd-label-tracking: 0.04em;
-    --mrd-label-transform: uppercase;
+    --mrd-font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mrd-font-mono: "Geist Mono", ui-monospace, sfmono-regular, menlo, monospace;
     --mrd-text-display: clamp(36px, 5vw, 60px);
-    --mrd-leading-display: 1;
-    --mrd-tracking-display: -0.035em;
+    --mrd-leading-display: 1.05;
+    --mrd-tracking-display: -0.045em;
     --mrd-text-h2: clamp(26px, 3vw, 34px);
     --mrd-leading-h2: 1.15;
-    --mrd-tracking-h2: -0.025em;
+    --mrd-tracking-h2: -0.035em;
     --mrd-text-h3: 17px;
     --mrd-leading-h3: 1.35;
     --mrd-tracking-h3: -0.015em;
@@ -208,18 +147,12 @@
     --mrd-control-pad-lg: 16px;
     --mrd-input-pad: 10px;
 
-    /* focus: one square accent outline everywhere (colour is resolved per theme and preset below) */
-    --mrd-focus-width: 2px;
-    --mrd-focus-style: solid;
-    --mrd-focus-offset: 2px;
-
     /* motion */
-    --mrd-duration-fast: 80ms;
-    --mrd-duration: 120ms;
-    --mrd-duration-slow: 160ms;
-    --mrd-duration-enter: 180ms;
-    --mrd-ease: cubic-bezier(0.25, 0, 0, 1);
-    --mrd-press: translateY(1px);
+    --mrd-duration-fast: 100ms;
+    --mrd-duration: 150ms;
+    --mrd-duration-slow: 200ms;
+    --mrd-duration-enter: 220ms;
+    --mrd-ease: cubic-bezier(0.2, 0, 0, 1);
 
     /* z-index */
     --mrd-z-sticky: 50;
@@ -254,8 +187,8 @@
   /*
    * Theme. Light is the default and can be re-applied to any subtree with
    * data-theme="light"; data-theme="dark" likewise. Without an attribute, :root follows
-   * prefers-color-scheme. Neutral tokens are set here; accent and warning tokens are resolved
-   * further down from the nearest theme and the nearest [data-accent], so the two nest independently.
+   * prefers-color-scheme. Neutral tokens are set here; accent tokens are resolved further
+   * down from the nearest theme and the nearest [data-accent], so the two nest independently.
    * --mrd-if-light / --mrd-if-dark are mode switches: empty when that mode is active,
    * `initial` (guaranteed-invalid) otherwise.
    */
@@ -263,35 +196,36 @@
   [data-theme="light"] {
     --mrd-bg: #fff;
     --mrd-surface: #fff;
-    --mrd-tray: #f4f6f8;
-    --mrd-tray-2: #ebedf0;
-    --mrd-subtle: #f9fafc;
-    --mrd-line: #dde0e3;
-    --mrd-line-strong: #babec3;
-    --mrd-rule: #121417;
-    --mrd-ink: #121417;
-    --mrd-body: #474b51;
-    --mrd-muted: #5f636a;
-    --mrd-placeholder: #64686d;
-    --mrd-control-off: #ced1d5;
-    --mrd-danger: #de3f20;
-    --mrd-danger-soft: #fef2ee;
-    --mrd-danger-strong: #a52205;
-    --mrd-danger-solid: #c12b09;
-    --mrd-danger-solid-hover: #a52205;
+    --mrd-tray: #f5f6f8;
+    --mrd-tray-2: #eceef2;
+    --mrd-subtle: #fbfbfc;
+    --mrd-line: #e6e8ec;
+    --mrd-line-strong: #cfd4dc;
+    --mrd-ink: #0f1219;
+    --mrd-body: #535a67;
+    --mrd-muted: #646b78;
+    --mrd-placeholder: #6e7581;
+    --mrd-control-off: #d7dbe2;
+    --mrd-danger: #e5484d;
+    --mrd-danger-soft: #fff0f0;
+    --mrd-danger-strong: #b42318;
+    --mrd-danger-solid: #c92a30;
+    --mrd-danger-solid-hover: #b42318;
+    --mrd-warning-soft: #fff8eb;
+    --mrd-warning-strong: #93580a;
     --mrd-success: #1f9d63;
     --mrd-success-soft: #ecf8f1;
     --mrd-success-strong: #17744a;
-    --mrd-tooltip-bg: #121417;
+    --mrd-tooltip-bg: #0f1219;
     --mrd-tooltip-fg: #fff;
-    --mrd-backdrop: rgb(18 20 23 / 36%);
-    --mrd-shadow-xs: 0 0 0 0 transparent;
-    --mrd-shadow-sm: 0 0 0 0 transparent;
-    --mrd-shadow-md: 0 1px 0 rgb(18 20 23 / 6%);
-    --mrd-shadow-lg: 0 18px 36px -18px rgb(18 20 23 / 28%);
-    --mrd-shadow-xl: 0 18px 36px -18px rgb(18 20 23 / 28%);
-    --mrd-shadow-2xl: 0 32px 64px -24px rgb(18 20 23 / 34%);
-    --mrd-elevated-ring: 0 0 0 1px var(--mrd-line);
+    --mrd-backdrop: rgb(15 18 25 / 40%);
+    --mrd-shadow-xs: 0 1px 3px rgb(15 18 25 / 10%);
+    --mrd-shadow-sm: 0 2px 6px rgb(15 18 25 / 5%);
+    --mrd-shadow-md: 0 12px 32px rgb(15 18 25 / 6%);
+    --mrd-shadow-lg: 0 10px 28px rgb(15 18 25 / 10%);
+    --mrd-shadow-xl: 0 16px 40px rgb(15 18 25 / 10%);
+    --mrd-shadow-2xl: 0 24px 64px rgb(15 18 25 / 18%);
+    --mrd-elevated-ring: 0 0 0 0 transparent;
     --mrd-if-light: ;
     --mrd-if-dark: initial;
 
@@ -299,36 +233,37 @@
   }
 
   [data-theme="dark"] {
-    --mrd-bg: #0d0e10;
-    --mrd-surface: #141518;
-    --mrd-tray: #181a1d;
-    --mrd-tray-2: #202225;
-    --mrd-subtle: #111214;
-    --mrd-line: #292b2f;
-    --mrd-line-strong: #3f4348;
-    --mrd-rule: #eef0f3;
-    --mrd-ink: #eef0f3;
-    --mrd-body: #b7bbc1;
-    --mrd-muted: #9a9fa6;
-    --mrd-placeholder: #989ca2;
-    --mrd-control-off: #35383d;
-    --mrd-danger: #f96c4a;
-    --mrd-danger-soft: rgb(222 63 32 / 14%);
-    --mrd-danger-strong: #fea387;
-    --mrd-danger-solid: #c12b09;
-    --mrd-danger-solid-hover: #a52205;
+    --mrd-bg: #0b0d12;
+    --mrd-surface: #12151c;
+    --mrd-tray: #161a22;
+    --mrd-tray-2: #1d222c;
+    --mrd-subtle: #10131a;
+    --mrd-line: #262b35;
+    --mrd-line-strong: #3a404c;
+    --mrd-ink: #eef0f4;
+    --mrd-body: #a3a9b5;
+    --mrd-muted: #858c98;
+    --mrd-placeholder: #7c8390;
+    --mrd-control-off: #343a46;
+    --mrd-danger: #ff6369;
+    --mrd-danger-soft: rgb(229 72 77 / 12%);
+    --mrd-danger-strong: #ff8a8e;
+    --mrd-danger-solid: #c92a30;
+    --mrd-danger-solid-hover: #b42318;
+    --mrd-warning-soft: rgb(245 166 35 / 12%);
+    --mrd-warning-strong: #f5c46b;
     --mrd-success: #3ecf8e;
     --mrd-success-soft: rgb(62 207 142 / 12%);
     --mrd-success-strong: #7ee2b0;
-    --mrd-tooltip-bg: #eef0f3;
-    --mrd-tooltip-fg: #0d0e10;
-    --mrd-backdrop: rgb(0 0 0 / 62%);
-    --mrd-shadow-xs: 0 0 0 0 transparent;
-    --mrd-shadow-sm: 0 0 0 0 transparent;
-    --mrd-shadow-md: 0 1px 0 rgb(0 0 0 / 30%);
-    --mrd-shadow-lg: 0 18px 36px -18px rgb(0 0 0 / 70%);
-    --mrd-shadow-xl: 0 18px 36px -18px rgb(0 0 0 / 70%);
-    --mrd-shadow-2xl: 0 32px 64px -24px rgb(0 0 0 / 80%);
+    --mrd-tooltip-bg: #eef0f4;
+    --mrd-tooltip-fg: #0f1219;
+    --mrd-backdrop: rgb(0 0 0 / 60%);
+    --mrd-shadow-xs: 0 1px 3px rgb(0 0 0 / 40%);
+    --mrd-shadow-sm: 0 2px 6px rgb(0 0 0 / 40%);
+    --mrd-shadow-md: 0 12px 32px rgb(0 0 0 / 40%);
+    --mrd-shadow-lg: 0 10px 28px rgb(0 0 0 / 50%);
+    --mrd-shadow-xl: 0 16px 40px rgb(0 0 0 / 50%);
+    --mrd-shadow-2xl: 0 24px 64px rgb(0 0 0 / 60%);
     --mrd-elevated-ring: 0 0 0 1px var(--mrd-line);
     --mrd-if-light: initial;
     --mrd-if-dark: ;
@@ -338,36 +273,37 @@
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --mrd-bg: #0d0e10;
-      --mrd-surface: #141518;
-      --mrd-tray: #181a1d;
-      --mrd-tray-2: #202225;
-      --mrd-subtle: #111214;
-      --mrd-line: #292b2f;
-      --mrd-line-strong: #3f4348;
-      --mrd-rule: #eef0f3;
-      --mrd-ink: #eef0f3;
-      --mrd-body: #b7bbc1;
-      --mrd-muted: #9a9fa6;
-      --mrd-placeholder: #989ca2;
-      --mrd-control-off: #35383d;
-      --mrd-danger: #f96c4a;
-      --mrd-danger-soft: rgb(222 63 32 / 14%);
-      --mrd-danger-strong: #fea387;
-      --mrd-danger-solid: #c12b09;
-      --mrd-danger-solid-hover: #a52205;
+      --mrd-bg: #0b0d12;
+      --mrd-surface: #12151c;
+      --mrd-tray: #161a22;
+      --mrd-tray-2: #1d222c;
+      --mrd-subtle: #10131a;
+      --mrd-line: #262b35;
+      --mrd-line-strong: #3a404c;
+      --mrd-ink: #eef0f4;
+      --mrd-body: #a3a9b5;
+      --mrd-muted: #858c98;
+      --mrd-placeholder: #7c8390;
+      --mrd-control-off: #343a46;
+      --mrd-danger: #ff6369;
+      --mrd-danger-soft: rgb(229 72 77 / 12%);
+      --mrd-danger-strong: #ff8a8e;
+      --mrd-danger-solid: #c92a30;
+      --mrd-danger-solid-hover: #b42318;
+      --mrd-warning-soft: rgb(245 166 35 / 12%);
+      --mrd-warning-strong: #f5c46b;
       --mrd-success: #3ecf8e;
       --mrd-success-soft: rgb(62 207 142 / 12%);
       --mrd-success-strong: #7ee2b0;
-      --mrd-tooltip-bg: #eef0f3;
-      --mrd-tooltip-fg: #0d0e10;
-      --mrd-backdrop: rgb(0 0 0 / 62%);
-      --mrd-shadow-xs: 0 0 0 0 transparent;
-      --mrd-shadow-sm: 0 0 0 0 transparent;
-      --mrd-shadow-md: 0 1px 0 rgb(0 0 0 / 30%);
-      --mrd-shadow-lg: 0 18px 36px -18px rgb(0 0 0 / 70%);
-      --mrd-shadow-xl: 0 18px 36px -18px rgb(0 0 0 / 70%);
-      --mrd-shadow-2xl: 0 32px 64px -24px rgb(0 0 0 / 80%);
+      --mrd-tooltip-bg: #eef0f4;
+      --mrd-tooltip-fg: #0f1219;
+      --mrd-backdrop: rgb(0 0 0 / 60%);
+      --mrd-shadow-xs: 0 1px 3px rgb(0 0 0 / 40%);
+      --mrd-shadow-sm: 0 2px 6px rgb(0 0 0 / 40%);
+      --mrd-shadow-md: 0 12px 32px rgb(0 0 0 / 40%);
+      --mrd-shadow-lg: 0 10px 28px rgb(0 0 0 / 50%);
+      --mrd-shadow-xl: 0 16px 40px rgb(0 0 0 / 50%);
+      --mrd-shadow-2xl: 0 24px 64px rgb(0 0 0 / 60%);
       --mrd-elevated-ring: 0 0 0 1px var(--mrd-line);
       --mrd-if-light: initial;
       --mrd-if-dark: ;
@@ -376,33 +312,8 @@
     }
   }
 
-  /*
-   * Warning tone. Amber by default; a preset whose accent is itself amber (brass) moves it to
-   * orange so a warning never reads as the accent. Declared before the presets so they can override it.
-   */
+  /* Accent presets: data-accent="blue" (default) | "violet" | "green" | "graphite". */
   :root,
-  [data-accent] {
-    --mrd-warning-light-soft: #fff8eb;
-    --mrd-warning-light-strong: #93580a;
-    --mrd-warning-dark-soft: rgb(245 166 35 / 12%);
-    --mrd-warning-dark-strong: #f5c46b;
-  }
-
-  /* Accent presets: data-accent="magenta" (default) | "blue" | "violet" | "green" | "graphite" | "petrol" | "brass". */
-  :root,
-  [data-accent="magenta"] {
-    --mrd-accent-light: var(--mrd-magenta-600);
-    --mrd-accent-light-hover: var(--mrd-magenta-700);
-    --mrd-accent-light-strong: var(--mrd-magenta-800);
-    --mrd-accent-light-soft: var(--mrd-magenta-50);
-    --mrd-accent-dark: var(--mrd-magenta-400);
-    --mrd-accent-dark-hover: var(--mrd-magenta-300);
-    --mrd-accent-dark-strong: var(--mrd-magenta-200);
-    --mrd-accent-dark-soft: rgb(239 134 174 / 16%);
-    --mrd-accent-fill: var(--mrd-magenta-600);
-    --mrd-accent-fill-hover: var(--mrd-magenta-700);
-  }
-
   [data-accent="blue"] {
     --mrd-accent-light: var(--mrd-blue-600);
     --mrd-accent-light-hover: var(--mrd-blue-700);
@@ -455,40 +366,10 @@
     --mrd-accent-fill-hover: var(--mrd-graphite-700);
   }
 
-  [data-accent="petrol"] {
-    --mrd-accent-light: var(--mrd-petrol-600);
-    --mrd-accent-light-hover: var(--mrd-petrol-700);
-    --mrd-accent-light-strong: var(--mrd-petrol-800);
-    --mrd-accent-light-soft: var(--mrd-petrol-50);
-    --mrd-accent-dark: var(--mrd-petrol-400);
-    --mrd-accent-dark-hover: var(--mrd-petrol-300);
-    --mrd-accent-dark-strong: var(--mrd-petrol-200);
-    --mrd-accent-dark-soft: rgb(117 196 210 / 14%);
-    --mrd-accent-fill: var(--mrd-petrol-600);
-    --mrd-accent-fill-hover: var(--mrd-petrol-700);
-  }
-
-  [data-accent="brass"] {
-    --mrd-accent-light: var(--mrd-brass-600);
-    --mrd-accent-light-hover: var(--mrd-brass-700);
-    --mrd-accent-light-strong: var(--mrd-brass-800);
-    --mrd-accent-light-soft: var(--mrd-brass-50);
-    --mrd-accent-dark: var(--mrd-brass-400);
-    --mrd-accent-dark-hover: var(--mrd-brass-300);
-    --mrd-accent-dark-strong: var(--mrd-brass-200);
-    --mrd-accent-dark-soft: rgb(217 177 101 / 14%);
-    --mrd-accent-fill: var(--mrd-brass-600);
-    --mrd-accent-fill-hover: var(--mrd-brass-700);
-    --mrd-warning-light-soft: #fff3e9;
-    --mrd-warning-light-strong: #9e4500;
-    --mrd-warning-dark-soft: rgb(239 121 38 / 13%);
-    --mrd-warning-dark-strong: #f9a870;
-  }
-
   /*
    * Resolve the public accent tokens for the active mode. Exactly one of each
    * var(--mrd-if-*, …) pair survives. Re-evaluated on every element that changes
-   * theme or preset, so a light card in a dark page (or a petrol panel in a magenta app) is correct.
+   * theme or preset, so a light card in a dark page (or a green panel in a blue app) is correct.
    */
   :root,
   [data-theme],
@@ -500,14 +381,10 @@
     --mrd-accent-solid: var(--mrd-accent-fill);
     --mrd-accent-solid-hover: var(--mrd-accent-fill-hover);
     --mrd-on-accent: #fff;
-    --mrd-warning-soft: var(--mrd-if-light, var(--mrd-warning-dark-soft)) var(--mrd-if-dark, var(--mrd-warning-light-soft));
-    --mrd-warning-strong: var(--mrd-if-light, var(--mrd-warning-dark-strong)) var(--mrd-if-dark, var(--mrd-warning-light-strong));
-    --mrd-focus-color: var(--mrd-accent);
-
-    /* Fields do not get a halo: on focus the border turns accent and the bottom edge thickens to 2px. */
-    --mrd-focus-ring: inset 0 -1px 0 var(--mrd-accent);
-    --mrd-focus-ring-invalid: inset 0 -1px 0 var(--mrd-danger);
-    --mrd-shadow-accent: none;
+    --mrd-focus-ring: 0 0 0 3px color-mix(in srgb, var(--mrd-accent) var(--mrd-if-light, 28%) var(--mrd-if-dark, 18%), transparent);
+    --mrd-shadow-accent:
+      inset 0 1px 0 rgb(255 255 255 / 12%),
+      0 1px 2px color-mix(in srgb, var(--mrd-accent-fill) 30%, rgb(var(--mrd-if-light, 0 0 0) var(--mrd-if-dark, 15 18 25) / 30%));
   }
 
   /* Density: data-density="compact" | "default" | "comfortable" on any subtree (fine pointers only). */

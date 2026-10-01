@@ -158,8 +158,8 @@ export function Playground() {
               {layer("dark", true)}
               <div className="studio-meridian" aria-hidden="true">
                 <div className="studio-meridian__grip" onPointerDown={dragMeridian} />
-                <span className="studio-meridian__tag" data-side="light" data-theme="light">{t.splitLight}</span>
-                <span className="studio-meridian__tag" data-side="dark" data-theme="dark">{t.splitDark}</span>
+                <span className="studio-meridian__tag" data-side="light">{t.splitLight}</span>
+                <span className="studio-meridian__tag" data-side="dark">{t.splitDark}</span>
               </div>
             </>
           ) : null}

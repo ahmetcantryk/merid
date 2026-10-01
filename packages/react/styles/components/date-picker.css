@@ -41,16 +41,12 @@
   }
 
   .mrd-date-picker__field:focus-within {
-    border-color: var(--mrd-focus-color);
+    border-color: var(--mrd-accent);
     box-shadow: var(--mrd-focus-ring);
   }
 
   .mrd-date-picker[data-invalid] .mrd-date-picker__field {
     border-color: var(--mrd-danger);
-  }
-
-  .mrd-date-picker[data-invalid] .mrd-date-picker__field:focus-within {
-    box-shadow: var(--mrd-focus-ring-invalid);
   }
 
   .mrd-date-picker[data-disabled] .mrd-date-picker__field {
@@ -118,8 +114,8 @@
   }
 
   .mrd-date-picker__trigger:focus-visible {
-    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
-    outline-offset: calc(var(--mrd-focus-offset) / 2);
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 1px;
   }
 
   .mrd-date-picker__trigger:disabled {

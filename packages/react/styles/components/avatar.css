@@ -10,7 +10,7 @@
     width: var(--mrd-avatar-size);
     height: var(--mrd-avatar-size);
     overflow: hidden;
-    border-radius: var(--mrd-radius-sm);
+    border-radius: var(--mrd-radius-full);
     background: var(--mrd-tray-2);
     color: var(--mrd-body);
     font-size: calc(var(--mrd-avatar-size) * 0.38);

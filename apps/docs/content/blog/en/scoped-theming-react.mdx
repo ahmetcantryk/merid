@@ -59,11 +59,11 @@ The theme lives in CSS custom properties, switched by an attribute (or class) on
 :root,
 [data-theme="light"] {
   --bg: #ffffff;
-  --text: #121417;
+  --text: #0f1219;
 }
 [data-theme="dark"] {
-  --bg: #0d0e10;
-  --text: #eef0f3;
+  --bg: #0b0d12;
+  --text: #eef0f4;
 }
 .card {
   background: var(--bg);
@@ -164,7 +164,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
 }
 ```
 
-`data-theme` accepts `light` or `dark` and also sets `color-scheme`; `data-accent` accepts `magenta` (the default), `petrol`, `brass`, `graphite`, `blue`, `violet` or `green`; `data-density` accepts `compact`, `default` or `comfortable` (compact only applies to fine pointers, so touch targets stay large). In a server component file, use the flat exports (`DropdownMenuRoot` etc.) instead of the dot syntax. Details are in the [subtree attributes guide](https://meridui.dev/docs/integrations/subtree-attributes) and the [dark mode guide](https://meridui.dev/docs/integrations/dark-mode). Merid is at 0.1, so check the component list before adopting it.
+`data-theme` accepts `light` or `dark` and also sets `color-scheme`; `data-accent` accepts `blue`, `violet`, `green` or `graphite`; `data-density` accepts `compact`, `default` or `comfortable` (compact only applies to fine pointers, so touch targets stay large). In a server component file, use the flat exports (`DropdownMenuRoot` etc.) instead of the dot syntax. Details are in the [subtree attributes guide](https://meridui.dev/docs/integrations/subtree-attributes) and the [dark mode guide](https://meridui.dev/docs/integrations/dark-mode). Merid is at 0.1, so check the component list before adopting it.
 
 ## Testing checklist
 

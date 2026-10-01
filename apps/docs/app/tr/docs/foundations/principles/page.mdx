@@ -1,38 +1,36 @@
 import { docMetadata } from "@/lib/i18n/metadata";
 export const metadata = docMetadata("tr", "/docs/foundations/principles", {
   title: "İlkeler",
-  description: "Her Merid component'inin ve sayfasının uyduğu on bir kural.",
+  description: "Her Merid component'inin ve sayfasının uyduğu on kural.",
 });
 
 # İlkeler
 
-Bu on bir kural tasarım sözleşmesidir. Her component, doküman sayfası ve örnek bunlara uyar. Bir değer bir token'la tanımlı değilse mevcut bir token'dan türetilir, asla uydurulmaz.
-
-Kuralların hepsi tek bir fikirden çıkıyor. Meridyen bir harita çizgisidir; Merid de paftalardan ödünç alır: keskin köşeli çerçeveler, mürekkep çizgileri, bir bakışta okunan bir lejant ve önemli olan şey için magenta.
+Bu on kural tasarım sözleşmesidir. Her component, doküman sayfası ve örnek bunlara uyar. Bir değer bir token'la tanımlı değilse mevcut bir token'dan türetilir, asla uydurulmaz.
 
 ## 1. Tek accent, ölçülü kullanım
 
-Etkileşimi ve seçimi tek bir accent taşır. Varsayılan accent harita magentası; blue, violet, green, graphite, petrol ve brass preset olarak kullanılabilir. Geri kalan her şey mürekkep tonlu nötrlerdir.
+Etkileşimi ve seçimi tek bir soğuk mavi taşır. Geri kalan her şey mürekkep tonlu nötrlerdir.
 
-## 2. Gölgeden önce yüzey ve çizgi
+## 2. Önce yüzey, sonra kenarlık
 
-Bölgeler önce tonla, sayfanın altındaki gri yüzeyle (tray) ayrılır; sonra çizgiyle. Gölge, o şeyin sayfanın üstünde süzüldüğü anlamına gelir; bu yüzden yalnızca menülerde, popover'larda, toast'larda, tooltip'lerde ve dialog'larda gölge var.
+Kartlar sayfanın üzerindeki gri yüzeyde durur; gri yüzeyli bir bölümde ise beyaz yüzeye ve yumuşak bir gölgeye dönerler. Kenarlık son çaredir.
 
-## 3. İki çizgi kalınlığı
+## 3. Yalnızca ince çizgiler
 
-Her kenarlık 1px'lik bir `--mrd-line` çizgisidir. Mürekkep çizgisi `--mrd-rule` tabloyu üstten ve alttan kapatır, sütun başlıklarının altında durur. Seçim, bir kartın çevresinde 1.5px'lik bir accent halkası ya da bir satırın veya navigasyon öğesinin baş kenarında 2px'lik bir accent çizgisidir.
+Her kenarlık 1px `--mrd-line`'dır. Seçim 1.5px'lik bir accent halkasıdır. Asla 2px, asla koyu kenarlık yok.
 
-## 4. Gölge yalnızca süzülen yüzeylere
+## 4. Yumuşak, uzun, silik gölgeler
 
-Gölgeler uzun ve siliktir; yüzeyin çevresinde parlamaz, altına düşer. Süzülen her yüzeyin ayrıca 1px'lik kendi ince çizgisi vardır. Butonlarda gölge yok.
+Gölgeler her zaman mürekkep tonuyla renklendirilir, asla siyah olmaz. Tek doygun gölge birincil butonun parıltısıdır.
 
-## 5. Keskin köşeler
+## 5. İç içe geçtikçe küçülen cömert köşeler
 
-Kontroller, menüler ve tooltip'ler 2px, kartlar 3px, dialog'lar 4px. Tam yuvarlaklık yalnızca yuvarlak şeklin bir anlam taşıdığı yerlerde kalır: radio, switch, slider tutamağı, adım işaretleri ve durum noktaları.
+Yüzeyler iç içe geçtikçe köşe yuvarlaklığı küçülür: 20, sonra 14, sonra 12, sonra 8.
 
-## 6. Geniş başlıklar, sade gövde
+## 6. Sıkı başlıklar, ferah gövde
 
-Display başlıklar Archivo'nun geniş kesimini 600 ağırlıkta, negatif harf aralığı ve dengeli satır kırılımıyla kullanır; bölüm başlıkları biraz geniştir. Gövde metni 400 ağırlıkta ve 1.6 satır yüksekliğindedir. 700 ağırlığı hiç kullanılmaz.
+Başlıklar negatif harf aralığı ve dengeli satır kırılımıyla 600 ağırlığındadır; gövde metninin satır yüksekliği 1.6'dır. 700 ağırlığı hiç kullanılmaz.
 
 ## 7. Üç metin tonu
 
@@ -40,7 +38,7 @@ Ink, body ve muted. Hiyerarşi renkten değil, ton ve ağırlıktan gelir.
 
 ## 8. Sakin etkileşim
 
-Hover bir arka plan tonudur. Basılan kontrol 80ms içinde 1px aşağı iner; geri kalan her şey tek bir eğriyle 120–160ms sürer. Azaltılmış hareket hepsini kaldırır.
+Hover bir arka plan tonu ya da 2–3px'lik bir yükselmedir; basma `.97`'lik bir küçülmedir; hepsi 150–200ms sürer. Azaltılmış hareket hepsini kaldırır.
 
 ## 9. Ferahlık
 
@@ -49,7 +47,3 @@ Büyük bölüm padding'leri, geniş aralıklar, en fazla 1160px içerik ve en f
 ## 10. Sayfa başına tek dolgu blok
 
 Bir sayfada en fazla bir dolgu renkli blok olur. Gradient yok; tek istisna skeleton shimmer.
-
-## 11. Süs amaçlı küçük yazı yok
-
-Component'ler başlıkların üstüne eyebrow ya da süs olsun diye mono açıklama satırı eklemez. Büyük harfle yazılan tek metin tablo sütun başlıklarıdır; okunabilir bir boyutta, 12px'te dizilir ve Türkçe büyük harfler doğru çıksın diye sayfanın `lang` değerine uyar.

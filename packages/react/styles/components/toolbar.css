@@ -70,8 +70,8 @@
 
   .mrd-toolbar__button:focus-visible,
   .mrd-toolbar__link:focus-visible {
-    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
-    outline-offset: calc(var(--mrd-focus-offset) / 2);
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 1px;
   }
 
   .mrd-toolbar__separator {

@@ -76,14 +76,8 @@
 
     .mrd-pagination__page[aria-current="page"],
     .mrd-tabs__trigger[aria-selected="true"],
-    .mrd-segmented__item[data-state="on"],
-    .mrd-sidebar-nav__item[aria-current="page"] {
+    .mrd-segmented__item[data-state="on"] {
       outline: 2px solid Highlight;
-    }
-
-    /* The table ink rules are box-shadows, which forced colours drop. */
-    .mrd-table-frame {
-      border-block: 1px solid CanvasText;
     }
   }
 
@@ -109,10 +103,6 @@
     .mrd-card {
       border: 1px solid var(--mrd-line);
       break-inside: avoid;
-    }
-
-    .mrd-table-frame {
-      border-block: 1px solid var(--mrd-rule);
     }
   }
 }

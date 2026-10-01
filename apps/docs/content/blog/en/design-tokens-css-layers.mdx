@@ -31,7 +31,7 @@ A token is a named design decision. The mistake most teams make is having only o
 Three tiers fix that:
 
 1. **Primitive tokens.** The raw palette and scales. They describe what a value *is*.
-   `--mrd-magenta-600`
+   `--mrd-blue-500`
 2. **Semantic tokens.** What a value is *for*. Components read these.
    `--mrd-accent`, `--mrd-line`, `--mrd-ink`, `--mrd-surface`
 3. **Component tokens.** Values specific to one component, defaulting to semantic ones.
@@ -42,9 +42,9 @@ In CSS:
 ```css
 :root {
   /* semantic */
-  --mrd-accent: #b20965;
-  --mrd-line: #dde0e3;
-  --mrd-ink: #121417;
+  --mrd-accent: #3f63f5;
+  --mrd-line: #e6e8ec;
+  --mrd-ink: #0f1219;
   --mrd-surface: #ffffff;
 }
 
@@ -68,21 +68,21 @@ Semantic tokens are what make dark mode cheap. Components do not change; the val
 :root,
 [data-theme="light"] {
   --mrd-bg: #ffffff;
-  --mrd-ink: #121417;
-  --mrd-line: #dde0e3;
+  --mrd-ink: #0f1219;
+  --mrd-line: #e6e8ec;
 }
 
 [data-theme="dark"] {
-  --mrd-bg: #0d0e10;
-  --mrd-ink: #eef0f3;
-  --mrd-line: #292b2f;
+  --mrd-bg: #0b0d12;
+  --mrd-ink: #eef0f4;
+  --mrd-line: #262b35;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --mrd-bg: #0d0e10;
-    --mrd-ink: #eef0f3;
-    --mrd-line: #292b2f;
+    --mrd-bg: #0b0d12;
+    --mrd-ink: #eef0f4;
+    --mrd-line: #262b35;
   }
 }
 ```
@@ -92,7 +92,7 @@ Because custom properties inherit, the attribute works on any element, not just 
 | Attribute | Values |
 |---|---|
 | `data-theme` | `light`, `dark` |
-| `data-accent` | `magenta`, `petrol`, `brass`, `graphite`, `blue`, `violet`, `green` |
+| `data-accent` | `blue`, `violet`, `green`, `graphite` |
 | `data-density` | `compact`, `default`, `comfortable` |
 
 ```html
@@ -120,7 +120,7 @@ Merid declares:
 @layer merid.tokens, merid.base, merid.components;
 
 @layer merid.tokens {
-  :root { --mrd-accent: #b20965; }
+  :root { --mrd-accent: #3f63f5; }
 }
 
 @layer merid.components {

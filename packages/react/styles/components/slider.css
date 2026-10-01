@@ -62,9 +62,9 @@
   }
 
   .mrd-slider__thumb:focus-visible {
-    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
-    outline-offset: var(--mrd-focus-offset);
+    outline: none;
     border-color: var(--mrd-accent);
+    box-shadow: var(--mrd-focus-ring), var(--mrd-shadow-xs);
   }
 
   .mrd-slider__thumb:active {

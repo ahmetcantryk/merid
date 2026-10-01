@@ -39,14 +39,10 @@ const SCOPES = new Map([
   [':root, [data-theme="light"]', "light"],
   ['[data-theme="dark"]', "dark"],
   ['@media (prefers-color-scheme: dark) | :root:not([data-theme="light"])', "dark-system"],
-  [":root, [data-accent]", "accent-base"],
-  [':root, [data-accent="magenta"]', "accent-magenta"],
-  ['[data-accent="blue"]', "accent-blue"],
+  [':root, [data-accent="blue"]', "accent-blue"],
   ['[data-accent="violet"]', "accent-violet"],
   ['[data-accent="green"]', "accent-green"],
   ['[data-accent="graphite"]', "accent-graphite"],
-  ['[data-accent="petrol"]', "accent-petrol"],
-  ['[data-accent="brass"]', "accent-brass"],
   [":root, [data-theme], [data-accent]", "resolve"],
   ['@media not (pointer: coarse) | [data-density="compact"]', "density-compact"],
   ['@media not (pointer: coarse) | [data-density="default"]', "density-default"],
@@ -114,7 +110,7 @@ export function resolveValue(value, env, depth = 0) {
 }
 
 const TYPE_RULES = [
-  [/^--mrd-font-(sans|mono|display)$/, "fontFamily"],
+  [/^--mrd-font-(sans|mono)$/, "fontFamily"],
   [/^--mrd-weight-/, "fontWeight"],
   [/^--mrd-duration/, "duration"],
   [/^--mrd-ease/, "cubicBezier"],
@@ -140,11 +136,10 @@ export function groupOf(name, type) {
     ["z-", "z"],
   ];
   for (const [prefix, group] of prefixed) if (bare.startsWith(prefix)) return [group, bare.slice(prefix.length)];
-  if (/^(magenta|blue|violet|green|graphite|petrol|brass)-\d+$/.test(bare)) return ["palette", bare];
+  if (/^(blue|violet|green|graphite)-\d+$/.test(bare)) return ["palette", bare];
   if (type === "color") return ["color", bare];
   if (type === "shadow") return ["shadow", bare.replace(/^shadow-/, "")];
-  if (type === "duration" || type === "cubicBezier" || bare === "press") return ["motion", bare];
-  if (/^(font|text|leading|tracking|weight|display|title|label)-/.test(bare)) return ["typography", bare];
-  if (bare.startsWith("focus-")) return ["focus", bare.slice("focus-".length)];
+  if (type === "duration" || type === "cubicBezier") return ["motion", bare];
+  if (/^(font|text|leading|tracking|weight)-/.test(bare)) return ["typography", bare];
   return ["size", bare];
 }

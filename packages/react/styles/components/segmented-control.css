@@ -4,7 +4,7 @@
     align-items: center;
     gap: 2px;
     padding: 2px;
-    border-radius: var(--mrd-radius-xs);
+    border-radius: var(--mrd-radius-full);
     background: var(--mrd-tray);
     max-width: 100%;
   }
@@ -26,7 +26,7 @@
     height: var(--mrd-pill);
     padding: 0 10px;
     border: 0;
-    border-radius: var(--mrd-radius-xs);
+    border-radius: var(--mrd-radius-full);
     background: transparent;
     color: var(--mrd-body);
     font-family: inherit;
@@ -44,16 +44,15 @@
     color: var(--mrd-ink);
   }
 
-  /* The chosen segment is a surface tab drawn with a hairline, not a floating pill. */
   .mrd-segmented__item[data-state="on"] {
     background: var(--mrd-surface);
     color: var(--mrd-ink);
-    box-shadow: 0 0 0 1px var(--mrd-line);
+    box-shadow: var(--mrd-shadow-xs);
   }
 
   .mrd-segmented__item:focus-visible {
-    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
-    outline-offset: var(--mrd-focus-offset);
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 2px;
   }
 
   .mrd-segmented__item:disabled {

@@ -3,20 +3,18 @@ import { ShadowScale } from "@/components/foundations";
 
 export const metadata = docMetadata("tr", "/docs/foundations/elevation", {
   title: "Yükselti",
-  description: "Gölge token'ları, yüzey katmanları, mürekkep çizgisi ve focus göstergeleri.",
+  description: "Gölge token'ları, yüzey katmanları ve focus halesi.",
 });
 
 # Yükselti
 
-Merid'de yükselti yüzeylerden ve çizgilerden gelir. Sayfadaki bir kart gri yüzeyin (tray) üzerinde durur, bir tablo iki mürekkep çizgisiyle kapanır. Gölge yalnızca gerçekten sayfanın üstünde süzülen bir şey olduğunda görünür: menü, popover, toast, tooltip ya da dialog.
+Merid'de yükselti önce yüzeylerden, sonra gölgelerden gelir. Sayfadaki bir kart gri yüzeyin (tray) üzerinde durur; gri yüzey üzerindeki bir kart ise yumuşak gölgeli beyaz bir yüzeye döner. Kenarlık son çaredir.
 
 ## Gölge ölçeği
 
-Gölgeler uzun ve silik, negatif yayılımlıdır; yüzeyin çevresinde parlamak yerine altına düşerler. Siyahla değil mürekkep tonuyla (`rgb(18 20 23 / …)`) renklendirilirler ve süzülen her yüzeyin ayrıca 1px'lik kendi ince çizgisi vardır. Butonlarda gölge yok; `--mrd-shadow-accent` değeri `none`.
+Tüm gölgeler uzun, yumuşak ve silik; siyahla değil mürekkep tonuyla (`rgb(15 18 25 / …)`) renklendirilir. Tek doygun gölge, birincil butonun accent parıltısıdır.
 
 <ShadowScale locale="tr" />
-
-`--mrd-shadow-xs` ve `--mrd-shadow-sm` bu kimlikte boş bir gölgeye çözülür. Kendi temanda onları geri koyabilmen için ölçekte duruyorlar.
 
 ## Seviye seçme
 
@@ -25,20 +23,17 @@ Gölgeler uzun ve silik, negatif yayılımlıdır; yüzeyin çevresinde parlamak
     <tr><th>Yüzey</th><th>Gölge</th></tr>
   </thead>
   <tbody>
-    <tr><td>Yükseltilmiş kart, hover'daki etkileşimli kart</td><td><code>--mrd-shadow-md</code></td></tr>
+    <tr><td>Segmented control'deki seçili chip</td><td><code>--mrd-shadow-xs</code></td></tr>
+    <tr><td>Gri yüzey üzerindeki kart, hover'daki etkileşimli kart</td><td><code>--mrd-shadow-md</code></td></tr>
     <tr><td>Popover, toast, tooltip</td><td><code>--mrd-shadow-lg</code></td></tr>
     <tr><td>Menü</td><td><code>--mrd-shadow-xl</code></td></tr>
     <tr><td>Dialog</td><td><code>--mrd-shadow-2xl</code></td></tr>
   </tbody>
 </table>
 
-## Mürekkep çizgisi
+## Dark mode'da
 
-`--mrd-rule`, mürekkep renginde 1px'lik bir çizgidir. Bir defter cetvellenir gibi tabloyu üstten ve alttan kapatır, sütun başlıklarının altında durur. Sistemdeki tek koyu çizgi budur; geri kalan her şey `--mrd-line` ince çizgisidir. Dark mode'da açık mürekkep rengine döner.
-
-## İnce çizgi halkası
-
-`--mrd-elevated-ring` iki temada da `0 0 0 1px var(--mrd-line)` değerindedir. Gölgenin zor seçildiği yerlerde de kendi süzülen yüzeylerinin bir kenarı olsun diye bunu gölgenin yanına ekle:
+Gölgeler %40–60 opaklıkta siyaha döner ve yükseltilmiş yüzeyler `--mrd-elevated-ring` ile 1px'lik bir halka ekler. Kendi yüzeylerin de aynı davransın diye bunu gölgenin yanına ekle:
 
 ```css
 .floating-panel {
@@ -46,15 +41,6 @@ Gölgeler uzun ve silik, negatif yayılımlıdır; yüzeyin çevresinde parlamak
 }
 ```
 
-Dark mode'da gölgeler %30–80 opaklıkta siyah kullanır.
+## Focus halesi
 
-## Focus
-
-Klavye focus'u, kontrolden 2px uzakta duran, accent renginde, köşeleri keskin 2px'lik bir outline'dır. Dört token'dan kurulur; bir ürün tüm focus göstergelerini tek seferde yeniden biçimlendirebilir:
-
-```css
-outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
-outline-offset: var(--mrd-focus-offset);
-```
-
-Form alanlarında durum farklı. Alanlar hale almaz: focus'ta kenarlık accent rengine döner ve `--mrd-focus-ring` (accent renginde `inset 0 -1px 0`) alt kenarı 2px'e kalınlaştırır, sanki alanın altına bir çizgi çekilmiş gibi. Geçersiz bir alan `--mrd-focus-ring-invalid` kullanır; aynı çizgi, danger renginde.
+`--mrd-focus-ring`, düşük opaklıkta 4px'lik bir accent halesidir ve input'larda accent kenarlıkla birlikte kullanılır. Diğer kontroller 3px ofsetli 2px'lik bir accent outline kullanır.

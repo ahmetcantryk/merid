@@ -65,8 +65,8 @@
   }
 
   .mrd-switch__track:focus-visible {
-    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
-    outline-offset: var(--mrd-focus-offset);
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 3px;
   }
 
   .mrd-switch__label {

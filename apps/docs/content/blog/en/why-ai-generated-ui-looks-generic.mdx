@@ -58,12 +58,11 @@ Merid keeps one at the root of its repository, `DESIGN.md`, and treats it as bin
 ## Principles
 
 1. One accent, used sparingly. Everything else is ink-tinted neutrals.
-3. Two line weights. Every border is a 1px --mrd-line hairline;
-   the 1px ink rule (--mrd-rule) closes a table at the top and the bottom.
-5. Square-cut corners, never sharper outside than inside:
-   4 (dialog) → 3 (card) → 2 (control, menu, tooltip).
+3. Hairlines only. Every border is 1px --mrd-line. Never 2px, never dark borders.
+5. Compact, consistent rounding that steps down when nested:
+   16 (dialog) → 14 (card) → 12 (menu) → 8 (control) → 6 (item).
 7. Three text tones — ink, body, muted. Hierarchy from tone and weight, not colour.
-8. Quiet interaction. Hover = background tint; a pressed control sinks 1px (--mrd-press) over 80ms.
+8. Quiet interaction. Hover = background tint or 2–3px lift; press = scale(.97) at 100ms.
 
 If a value is not here, derive it from an existing one —
 do not invent a new colour, radius or shadow.

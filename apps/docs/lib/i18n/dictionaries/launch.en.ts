@@ -42,7 +42,7 @@ export const launchEn = {
     by: "By",
     readPost: "Read",
     ctaTitle: "Try Merid",
-    ctaText: "Accessible React components in plain CSS. MIT licensed.",
+    ctaText: "Accessible React components in plain CSS, with one set of tokens. MIT licensed.",
     ctaDocs: "Read the docs",
     ctaGithub: "Star on GitHub",
     pendingLinkNote: "Links to posts that are not published yet appear as plain text.",

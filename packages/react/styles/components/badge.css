@@ -1,27 +1,24 @@
 @layer merid.components {
-  /* Rectangular, not a pill: badges read as legend keys. */
   .mrd-badge {
     display: inline-flex;
     align-items: center;
     gap: 4px;
     height: 20px;
-    padding: 0 6px;
-    border-radius: var(--mrd-radius-xs);
+    padding: 0 var(--mrd-space-2);
+    border-radius: var(--mrd-radius-full);
     background: var(--mrd-tray);
     color: var(--mrd-body);
     font-size: var(--mrd-text-3xs);
     font-weight: var(--mrd-weight-medium);
-    font-stretch: var(--mrd-label-stretch);
     line-height: 1;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
   }
 
-  /* A square swatch, like the key on a map legend. */
   .mrd-badge__dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: var(--mrd-radius-full);
     background: currentcolor;
   }
 

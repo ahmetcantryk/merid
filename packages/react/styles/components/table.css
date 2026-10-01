@@ -1,16 +1,15 @@
 @layer merid.components {
-  /* A ledger, not a card: an ink rule closes the table at the top and the bottom, with no side walls. */
   .mrd-table-frame {
     width: 100%;
     overflow-x: auto;
-    box-shadow:
-      inset 0 1px 0 var(--mrd-rule),
-      inset 0 -1px 0 var(--mrd-rule);
+    border-radius: var(--mrd-radius-lg);
+    box-shadow: inset 0 0 0 1px var(--mrd-line);
+    background: var(--mrd-surface);
   }
 
   .mrd-table-frame:focus-visible {
-    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
-    outline-offset: var(--mrd-focus-offset);
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 3px;
   }
 
   .mrd-table {
@@ -37,22 +36,20 @@
   }
 
   .mrd-table__header {
+    background: var(--mrd-subtle);
+    border-bottom: 1px solid var(--mrd-line);
     color: var(--mrd-muted);
     font-size: var(--mrd-text-3xs);
     font-weight: var(--mrd-weight-medium);
     white-space: nowrap;
   }
 
-  /*
-   * Column headings sit over a second ink rule, set wide and in capitals at a readable size.
-   * text-transform follows the nearest lang attribute, so Turkish headings need lang="tr" to get İ.
-   */
-  .mrd-table__head .mrd-table__header {
-    border-bottom: 1px solid var(--mrd-rule);
-    font-size: var(--mrd-label-size);
-    font-stretch: var(--mrd-label-stretch);
-    letter-spacing: var(--mrd-label-tracking);
-    text-transform: var(--mrd-label-transform);
+  .mrd-table__head .mrd-table__row:first-child .mrd-table__header:first-child {
+    border-start-start-radius: var(--mrd-radius-lg);
+  }
+
+  .mrd-table__head .mrd-table__row:first-child .mrd-table__header:last-child {
+    border-start-end-radius: var(--mrd-radius-lg);
   }
 
   .mrd-table__header[data-align="center"],
@@ -90,15 +87,6 @@
     color: var(--mrd-ink);
   }
 
-  /* The selected row carries an accent rule on its leading edge. */
-  .mrd-table__row[data-selected] > :first-child {
-    box-shadow: inset 2px 0 0 var(--mrd-accent);
-  }
-
-  .mrd-table__row[data-selected] > :first-child:dir(rtl) {
-    box-shadow: inset -2px 0 0 var(--mrd-accent);
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .mrd-table__body .mrd-table__row {
       transition: none;
@@ -129,8 +117,8 @@
   }
 
   .mrd-table__sort:focus-visible {
-    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
-    outline-offset: calc(var(--mrd-focus-offset) / 2);
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 1px;
   }
 
   .mrd-table__header:is([data-sort="ascending"], [data-sort="descending"]) .mrd-table__sort {

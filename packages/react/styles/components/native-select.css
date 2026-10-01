@@ -44,16 +44,12 @@
 
   .mrd-native-select__control:focus {
     outline: none;
-    border-color: var(--mrd-focus-color);
+    border-color: var(--mrd-accent);
     box-shadow: var(--mrd-focus-ring);
   }
 
   .mrd-native-select__control[data-invalid] {
     border-color: var(--mrd-danger);
-  }
-
-  .mrd-native-select__control[data-invalid]:focus {
-    box-shadow: var(--mrd-focus-ring-invalid);
   }
 
   .mrd-native-select__control:disabled {

@@ -15,7 +15,7 @@ const OPTIONAL = new Set(["/docs/changelog", "/docs/roadmap", "/docs/contributin
 const COPY = {
   en: {
     summary:
-      "Merid is an accessible React component library (`@meridui/react`) built on plain CSS, cascade layers and `--mrd-*` design tokens: 1px hairlines and ink rules, one magenta accent, square-cut 2px corners and short motion. React 18 and 19, server components, light and dark themes.",
+      "Merid is an accessible React component library (`@meridui/react`) built on plain CSS, cascade layers and `--mrd-*` design tokens: 1px hairlines, one cool accent, soft grey trays and calm motion. React 18 and 19, server components, light and dark themes.",
     intro: [
       "Install with `npm i @meridui/react` and import `@meridui/react/styles.css` once at the app entry, or run `npx @meridui/cli init`. Every component is imported from the package root.",
       "Write Merid code with semantic `--mrd-*` tokens only: no raw hex colours, arbitrary spacing or inline styles. Compose existing components before creating new ones. The full rules are in [Using Merid with AI](" + SITE_URL + "/docs/ai.md) and at the top of [llms-full.txt](" + SITE_URL + "/llms-full.txt).",
@@ -27,7 +27,7 @@ const COPY = {
   },
   tr: {
     summary:
-      "Merid, düz CSS, cascade layer'lar ve `--mrd-*` design token'ları üzerine kurulu, erişilebilir bir React component kütüphanesi (`@meridui/react`): 1px çizgiler ve koyu mürekkep çizgileri, tek bir magenta accent, 2px köşeler ve kısa hareketler. React 18 ve 19, server component'ler, açık ve koyu tema.",
+      "Merid, düz CSS, cascade layer'lar ve `--mrd-*` design token'ları üzerine kurulu, erişilebilir bir React component kütüphanesi (`@meridui/react`): 1px çizgiler, tek bir soğuk accent, yumuşak gri tray'ler ve sakin hareket. React 18 ve 19, server component'ler, açık ve koyu tema.",
     intro: [
       "`npm i @meridui/react` ile kur ve `@meridui/react/styles.css` dosyasını uygulamanın girişinde bir kez import et ya da `npx @meridui/cli init` çalıştır. Tüm component'ler paket kökünden import edilir.",
       "Merid kodunu yalnızca semantik `--mrd-*` token'larıyla yaz: ham hex renk, keyfi boşluk ve inline stil yok. Yeni component yazmadan önce var olanları birleştir. Kuralların tamamı [AI ile kullanım](" + SITE_URL + "/tr/docs/ai.md) sayfasında.",

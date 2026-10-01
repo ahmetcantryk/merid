@@ -8,16 +8,14 @@ export const metadata = docMetadata("tr", "/docs/foundations/color", {
 
 # Renk
 
-Merid'in paleti tek bir accent ve mürekkep tonlu nötrlerden oluşur. Varsayılan accent harita magentası: deniz ve havacılık haritalarında en önemli bilgiye ayrılan renk. Accent etkileşimi ve seçimi işaret eder, geri kalan her şeyi nötrler taşır. Durum renkleri büyük, doygun dolgular olarak değil, güçlü metinli yumuşak tonlar olarak görünür.
+Merid'in paleti tek bir soğuk mavi ve mürekkep tonlu nötrlerden oluşur. Accent etkileşimi ve seçimi işaret eder, geri kalan her şeyi nötrler taşır. Durum renkleri hiçbir zaman büyük, doygun dolgular olarak görünmez; güçlü metinli yumuşak tonlar olarak görünür.
 
 ## Kurallar
 
 - Accent'i kullanıcının etkileşime girebileceği şeyler ve mevcut seçim için kullan. Süsleme ya da vurgu için kullanma.
-- Çizgiye başvurmadan önce bölgeleri `--mrd-tray` ile ayır. İnce çizgiler 1px `--mrd-line` olur; mürekkep çizgisi `--mrd-rule` tabloları kapatmak için ayrılmıştır.
+- Kenarlığa başvurmadan önce bölgeleri `--mrd-tray` ile ayır. Kenarlık gerekiyorsa 1px `--mrd-line` olur.
 - Hiyerarşiyi renkle değil, üç metin tonu (`ink`, `body`, `muted`) ve font ağırlığıyla kur.
 - Bir sayfada en fazla bir dolgu renkli blok olur.
-
-Danger rengi koyu kırmızı değil, turuncuya kaydırılmış bir zincifre kırmızısıdır. Magenta accent'in yanında koyu bir kırmızı hata mesajı link ya da seçim gibi okunurdu; bu kaydırma ikisini birbirinden ayırır.
 
 ## Token'lar
 
@@ -25,50 +23,27 @@ Danger rengi koyu kırmızı değil, turuncuya kaydırılmış bir zincifre kır
 
 ## Kontrast
 
-Aşağıdaki oranlar varsayılan magenta preset'i içindir ve aksi belirtilmedikçe sayfa arka planına (`--mrd-bg`) göre ölçülmüştür. Koyu temadaki yarı saydam tonlar, üzerinde durdukları yüzeyle birleştirildikten sonra ölçülür. Her çift, normal boyutlu metin için AA eşiği olan 4.5:1'i iki temada da geçer.
+Aşağıdaki oranlar, aksi belirtilmedikçe sayfa arka planına (`--mrd-bg`) göre ölçülmüştür. AA eşikleri normal metin için 4.5:1, büyük metin ve arayüz component'leri için 3:1'dir.
 
 <table>
   <thead>
     <tr><th>Çift</th><th>Açık</th><th>Koyu</th><th>Kullanım</th></tr>
   </thead>
   <tbody>
-    <tr><td>ink, bg üzerinde</td><td>18.45</td><td>16.92</td><td>Başlıklar, vurgulu metin</td></tr>
-    <tr><td>body, bg üzerinde</td><td>8.77</td><td>10.02</td><td>Gövde metni</td></tr>
-    <tr><td>body, tray üzerinde</td><td>8.10</td><td>9.04</td><td>İçe gömük bölümlerdeki metin</td></tr>
-    <tr><td>muted, bg üzerinde</td><td>6.04</td><td>7.25</td><td>Meta metin, ikonlar</td></tr>
-    <tr><td>muted, tray üzerinde</td><td>5.57</td><td>6.55</td><td>İçe gömük bölümlerdeki meta metin</td></tr>
-    <tr><td>placeholder, surface üzerinde</td><td>5.61</td><td>6.62</td><td>Input placeholder'ları</td></tr>
-    <tr><td>accent, bg üzerinde</td><td>6.73</td><td>7.99</td><td>Linkler, focus çizgisi, kontroller</td></tr>
-    <tr><td>accent, tray üzerinde</td><td>6.21</td><td>7.22</td><td>İçe gömük bölümlerdeki linkler ve kontroller</td></tr>
-    <tr><td>on-accent, accent-solid üzerinde</td><td>6.73</td><td>6.73</td><td>Birincil buton etiketi</td></tr>
-    <tr><td>accent-strong, accent-soft üzerinde</td><td>9.11</td><td>9.05</td><td>Seçili öğeler, bilgi tonları</td></tr>
-    <tr><td>danger / warning / success strong, soft üzerinde</td><td>6.76 / 5.46 / 5.30</td><td>8.33 / 9.20 / 9.47</td><td>Bildirimler</td></tr>
-    <tr><td>beyaz, danger-solid üzerinde</td><td>5.81</td><td>5.81</td><td>Tehlikeli buton etiketi</td></tr>
+    <tr><td>ink, bg üzerinde</td><td>18.74</td><td>17.03</td><td>Başlıklar, vurgulu metin</td></tr>
+    <tr><td>body, bg üzerinde</td><td>6.94</td><td>8.24</td><td>Gövde metni</td></tr>
+    <tr><td>body, tray üzerinde</td><td>6.42</td><td>7.39</td><td>İçe gömük bölümlerdeki metin</td></tr>
+    <tr><td>accent-strong, accent-soft üzerinde</td><td>6.98</td><td>—</td><td>Seçili öğeler, bilgi tonları</td></tr>
+    <tr><td>danger / warning / success strong, soft üzerinde</td><td>5.94 / 5.46 / 5.30</td><td>—</td><td>Bildirimler</td></tr>
+    <tr><td>muted, bg üzerinde</td><td>3.21</td><td>4.25</td><td>Yalnızca meta metin</td></tr>
+    <tr><td>accent, bg üzerinde</td><td>4.32</td><td>6.20</td><td>Linkler, focus halkası, kontroller</td></tr>
+    <tr><td>on-accent, accent üzerinde</td><td>4.32</td><td>3.13</td><td>Birincil buton etiketi</td></tr>
   </tbody>
 </table>
 
-## Accent preset'leri
-
-`data-accent` bir alt ağacın accent'ini değiştirir; ayrıntılar [Markaya göre tema](/tr/docs/integrations/theming) sayfasında. Yedi preset'in hepsi iki temada da aynı kontrolleri geçer. Aşağıda her birinin en düşük oranlı çifti var; bu çift neredeyse her zaman tray üzerinde metin olarak kullanılan accent'tir.
-
-<table>
-  <thead>
-    <tr><th>Preset</th><th>Açık accent</th><th>Koyu accent</th><th>En düşük oran</th></tr>
-  </thead>
-  <tbody>
-    <tr><td><code>magenta</code> (varsayılan)</td><td><code>#b20965</code></td><td><code>#ef86ae</code></td><td>6.21</td></tr>
-    <tr><td><code>blue</code></td><td><code>#3d61f2</code></td><td><code>#6b8aff</code></td><td>4.63</td></tr>
-    <tr><td><code>violet</code></td><td><code>#6e4ef0</code></td><td><code>#9d85ff</code></td><td>4.83</td></tr>
-    <tr><td><code>green</code></td><td><code>#13804d</code></td><td><code>#3ecf8e</code></td><td>4.59</td></tr>
-    <tr><td><code>graphite</code></td><td><code>#3d4350</code></td><td><code>#c9cdd4</code></td><td>9.16</td></tr>
-    <tr><td><code>petrol</code></td><td><code>#035f73</code></td><td><code>#75c4d2</code></td><td>6.71</td></tr>
-    <tr><td><code>brass</code></td><td><code>#855c01</code></td><td><code>#d9b165</code></td><td>5.49</td></tr>
-  </tbody>
-</table>
-
-Bir durum rengini de değiştiren tek preset brass (pirinç). Accent'i amber tonunda olduğu için `data-accent="brass"` altında warning tonu turuncuya kayar (açıkta `#9e4500`, koyuda `#f9a870`); böylece bir uyarı badge'i accent badge'iyle karışmaz.
-
-Sayılar `packages/react/scripts/contrast.mjs` çıktısından alındı. Script her çifti yazdırır ve 4.5:1'in altındaki bir çiftte hatayla çıkar. Script ile stil dosyası bir renkte ayrışırsa paketteki bir test de başarısız olur.
+<Callout tone="warning" title="0.1'deki bilinen kontrast eksikleri">
+  Üç çift, normal boyuttaki metin için 4.5:1'in altında kalıyor: sayfa üzerindeki muted ton, link metni olarak kullanılan açık accent ve accent dolgu üzerindeki beyaz etiketler (en belirgin olarak dark mode'da). Bu çiftler büyük metin ve arayüz component'leri için 3:1 eşiğini karşılıyor. `--mrd-muted`, `--mrd-accent` ve koyu `--mrd-on-accent` düzeltmeleri bir sonraki minor sürüm için takipte ve changelog'da listelenecek. O zamana kadar okuyucunun mutlaka anlaması gereken hiçbir metinde muted tonu kullanma.
+</Callout>
 
 ## Kendi component'lerinde renk kullanma
 

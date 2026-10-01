@@ -1,4 +1,3 @@
-import { Button } from "@meridui/react";
 import { colorGroups, motion, radii, shadows, spacing, typeScale } from "@/lib/tokens";
 import type { Locale } from "@/lib/i18n/config";
 import { colorGroupTitlesTr, colorRolesTr, foundationsUiTr, tokenUsesTr, type FoundationsUi } from "@/lib/i18n/tokens.tr";
@@ -18,7 +17,7 @@ const foundationsUiEn: FoundationsUi = {
   motionTokens: "Motion tokens",
   specimen: "Precise by default",
   lift: "Hover to lift 3px",
-  press: "Press to sink 1px",
+  press: "Press to scale .97",
   tint: "Hover to tint",
 };
 
@@ -84,7 +83,7 @@ export function TypeSpecimen({ locale = "en" }: LocaleProps = {}) {
         <div key={t.name} className="type-specimen__row">
           <p
             className="type-specimen__sample"
-            style={{ fontSize: t.size, lineHeight: t.lh, letterSpacing: t.track, fontWeight: t.weight, fontStretch: t.stretch }}
+            style={{ fontSize: t.size, lineHeight: t.lh, letterSpacing: t.track, fontWeight: t.weight }}
           >
             {ui.specimen}
           </p>
@@ -177,8 +176,7 @@ export function MotionDemo({ locale = "en" }: LocaleProps = {}) {
   return (
     <div className="motion-demo">
       <button type="button" className="motion-demo__target" data-kind="lift">{ui.lift}</button>
-      {/* The real Button, so the demo shows the --mrd-press token rather than a copy of it. */}
-      <Button variant="secondary">{ui.press}</Button>
+      <button type="button" className="motion-demo__target" data-kind="press">{ui.press}</button>
       <button type="button" className="motion-demo__target" data-kind="tint">{ui.tint}</button>
     </div>
   );

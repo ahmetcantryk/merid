@@ -52,37 +52,10 @@ const svg = (viewBox, body, size = "") =>
 const pathEl = (d, fill, transform) => `<path fill="${fill}"${transform ? ` transform="${transform}"` : ""} d="${d}"/>`;
 const markBody = (waveFill, shadowFill) => pathEl(wave, waveFill) + shadows.map((d) => pathEl(d, shadowFill)).join("");
 
-// Pafta: the wave is the map magenta; where the line passes under itself it is ink (light)
-// or a deep magenta (dark). The wordmark is ink. Values match the --mrd-magenta-* and ink tokens.
-const BRAND = {
-  accent: "#b20965",
-  accentStrong: "#830549",
-  ink: "#121417",
-  body: "#474b51",
-  line: "#dde0e3",
-  lineStrong: "#babec3",
-  paper: "#ffffff",
-};
 const THEMES = {
-  light: { wave: BRAND.accent, shadow: BRAND.ink, ink: BRAND.ink, tile: BRAND.accent, tileWave: "#ffffff", tileShadow: BRAND.accentStrong },
-  dark: { wave: "#ef86ae", shadow: "#671d3e", ink: "#eef0f3", tile: "#0d0e10", tileWave: "#ef86ae", tileShadow: "#671d3e" },
+  light: { wave: "#3f63f5", shadow: "#0f1219", ink: "#0f1219" },
+  dark: { wave: "#6b8aff", shadow: "#1a2a6e", ink: "#eef0f4" },
 };
-
-// The app icon sources carry their own fills; recolour them from the table above.
-const recolourIcon = (file, t) => {
-  const svg = read(join(src, file));
-  const [first, ...rest] = svg.split(/(?=<path\b)/);
-  const tile = first.replace(/(<rect[^>]*fill=")[^"]*(")/, `$1${t.tile}$2`);
-  const body = rest.map((p, i) => p.replace(/fill="[^"]*"/, `fill="${i === 0 ? t.tileWave : t.tileShadow}"`));
-  writeFileSync(join(src, file), tile + body.join(""));
-};
-recolourIcon("wave-21/icon.svg", THEMES.light);
-recolourIcon("wave-21/icon-dark.svg", THEMES.dark);
-for (const [name, t] of Object.entries(THEMES)) {
-  const file = join(src, `wave-21/mark-${name}.svg`);
-  const [first, ...rest] = read(file).split(/(?=<path\b)/);
-  writeFileSync(file, first + rest.map((p, i) => p.replace(/fill="[^"]*"/, `fill="${i === 0 ? t.wave : t.shadow}"`)).join(""));
-}
 
 for (const [name, t] of Object.entries(THEMES)) {
   writeFileSync(join(out, `mark-${name}.svg`), svg(WAVE_VIEWBOX, markBody(t.wave, t.shadow)));
@@ -118,9 +91,7 @@ export const lockup = {
   wordTransform: ${JSON.stringify(wordTransform)},
 } as const;
 /** App icon (512 × 512): white wave with accent-strong shadows on the accent tile. */
-export const icon = { tile: ${JSON.stringify(THEMES.light.tile)}, wave: ${JSON.stringify(THEMES.light.tileWave)}, shadow: ${JSON.stringify(THEMES.light.tileShadow)}, transform: "translate(70.4 70.4) scale(0.1813)" } as const;
-/** Fixed brand colours for images rendered outside the page (Open Graph, app icons), where tokens do not reach. */
-export const brandColors = ${JSON.stringify(BRAND)} as const;
+export const icon = { tile: "#3f63f5", wave: "#ffffff", shadow: "#2c46b8", transform: "translate(70.4 70.4) scale(0.1813)" } as const;
 `;
 writeFileSync(join(docs, "lib/brand-paths.ts"), ts);
 console.log(`build-brand: lockup ${LOCKUP_VIEWBOX}, mark ${r(markW)}×${r(markH)}, gap ${r(gap)}`);

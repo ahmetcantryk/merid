@@ -12,19 +12,19 @@ export function SiteFooter({ locale }: { readonly locale: Locale }) {
     <footer className="site-footer">
       <div className="container site-footer__inner">
         <div className="site-footer__brand">
-          <Logo height={18} />
+          <Logo />
           <p>{dict.meta.tagline}</p>
         </div>
         <nav className="site-footer__links" aria-label={t.navLabel}>
           <Link href={localizePath("/docs/introduction", locale)}>{t.docs}</Link>
+          <a href={site.repo} {...trackAttrs("github_click", { location: "footer" })}>GitHub</a>
+          <a href={`${site.repo}/blob/main/LICENSE`}>{t.license}</a>
           <Link href={localizePath("/docs/changelog", locale)}>{t.changelog}</Link>
           <Link href={localizePath("/docs/brand", locale)}>{t.brand}</Link>
           {/* launch: blog, comparisons, privacy */}
           <Link href={localizePath("/blog", locale)}>{launch.blog}</Link>
           <Link href={localizePath("/compare", locale)}>{launch.compare}</Link>
           <Link href={locale === "tr" ? "/tr/gizlilik" : "/privacy"}>{launch.privacy}</Link>
-          <a href={site.repo} {...trackAttrs("github_click", { location: "footer" })}>GitHub</a>
-          <a href={`${site.repo}/blob/main/LICENSE`}>{t.license}</a>
         </nav>
         <p className="site-footer__copy">© 2026 Merid</p>
       </div>

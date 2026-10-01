@@ -75,8 +75,8 @@
   }
 
   .mrd-tabs__trigger:focus-visible {
-    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
-    outline-offset: calc(var(--mrd-focus-width) * -1);
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: -2px;
     border-radius: var(--mrd-radius-xs);
   }
 
@@ -90,8 +90,8 @@
   }
 
   .mrd-tabs__panel:focus-visible {
-    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
-    outline-offset: var(--mrd-focus-offset);
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 3px;
     border-radius: var(--mrd-radius-xs);
   }
 

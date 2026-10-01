@@ -33,8 +33,8 @@
   }
 
   .mrd-link:focus-visible {
-    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
-    outline-offset: var(--mrd-focus-offset);
+    outline: 2px solid var(--mrd-accent);
+    outline-offset: 3px;
   }
 
   @media (prefers-reduced-motion: reduce) {
