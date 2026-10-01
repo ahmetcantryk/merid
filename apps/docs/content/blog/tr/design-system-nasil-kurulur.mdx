@@ -42,11 +42,11 @@ Bu dosya AI ile kod yazıyorsan ayrıca önemli. Cursor ya da Claude Code gibi a
 
 ## 2. Token'ları katmanlara ayır
 
-Design token, bir tasarım kararının isimlendirilmiş hali. `#3f63f5` bir değer; `--mrd-accent` bir karar. Token'ları üç katmanda düşünmek işi kolaylaştırır:
+Design token, bir tasarım kararının isimlendirilmiş hali. `#b20965` bir değer; `--mrd-accent` bir karar. Token'ları üç katmanda düşünmek işi kolaylaştırır:
 
 | Katman | Ne anlatır | Örnek |
 |---|---|---|
-| Primitive | Ham palet | `--mrd-blue-500` |
+| Primitive | Ham palet | `--mrd-magenta-600` |
 | Semantic | Rol | `--mrd-accent`, `--mrd-line`, `--mrd-ink` |
 | Component | Tek bir component'in ayarı | `--mrd-button-height` |
 
@@ -55,22 +55,22 @@ Kural şu: component'ler primitive'e değil semantic token'a bakar. Böylece dar
 ```css
 :root {
   /* primitive */
-  --mrd-blue-500: #3f63f5;
+  --mrd-magenta-600: #b20965;
 
   /* semantic */
-  --mrd-accent: var(--mrd-blue-500);
-  --mrd-line: #e6e8ec;
-  --mrd-ink: #0f1219;
-  --mrd-body: #535a67;
-  --mrd-muted: #646b78;
+  --mrd-accent: var(--mrd-magenta-600);
+  --mrd-line: #dde0e3;
+  --mrd-ink: #121417;
+  --mrd-body: #474b51;
+  --mrd-muted: #5f636a;
 }
 
 [data-theme="dark"] {
-  --mrd-accent: #6b8aff;
-  --mrd-line: #262b35;
-  --mrd-ink: #eef0f4;
-  --mrd-body: #a3a9b5;
-  --mrd-muted: #858c98;
+  --mrd-accent: #ef86ae;
+  --mrd-line: #292b2f;
+  --mrd-ink: #eef0f3;
+  --mrd-body: #b7bbc1;
+  --mrd-muted: #9a9fa6;
 }
 
 .mrd-button {

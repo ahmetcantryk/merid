@@ -25,10 +25,10 @@ npm i @meridui/tokens
 
 ```json
 "accent": {
-  "$value": "#3f63f5",
+  "$value": "#b20965",
   "$type": "color",
   "$extensions": {
-    "com.merid": { "cssVariable": "--mrd-accent", "modes": { "dark": "#6b8aff" } }
+    "com.merid": { "cssVariable": "--mrd-accent", "modes": { "dark": "#ef86ae" } }
   }
 }
 ```
@@ -69,8 +69,8 @@ For a dark build, add a small preprocessor that swaps `$value` for `$extensions[
 ```ts
 import { tokens, cssVar } from "@meridui/tokens";
 
-tokens.light.accent; // "#3f63f5"
-tokens.dark.accent; // "#6b8aff"
+tokens.light.accent; // "#b20965"
+tokens.dark.accent; // "#ef86ae"
 cssVar.accent; // "var(--mrd-accent)"
 ```
 
