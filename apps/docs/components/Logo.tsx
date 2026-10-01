@@ -20,7 +20,7 @@ function WaveBody() {
 
 /**
  * The Merid mark: a wave whose two crests form an M, a signal riding the meridian.
- * The wave takes the accent; the shadows where the line passes under itself are ink (light) or deep blue (dark).
+ * The wave takes the accent; the shadows where the line passes under itself are ink (light) or deep magenta (dark).
  */
 export function LogoMark({ height = 12, title }: LogoMarkProps) {
   const width = Math.round((height * VB_W) / VB_H);
