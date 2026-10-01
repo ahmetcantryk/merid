@@ -6,8 +6,7 @@ export function NotFoundView({ locale }: { readonly locale: Locale }) {
   return (
     <section className="not-found">
       <div className="container">
-        <p className="not-found__code">404</p>
-        <h1>{t.heading}</h1>
+        <h1 className="t-display">{t.heading}</h1>
         <p>{t.body}</p>
         <div className="not-found__actions">
           <Link href={localizePath("/docs/introduction", locale)} className="btn" data-variant="primary">
