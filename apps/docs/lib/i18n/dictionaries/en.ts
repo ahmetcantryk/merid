@@ -136,10 +136,10 @@ export const en = {
     /** Rows link, in order, to the color, elevation, radius, typography, motion and styling pages. */
     contract: [
       { rule: "One accent, used sparingly", text: "A single accent marks what you can click and what's selected. Everything else stays neutral grey.", spec: "--mrd-accent" },
-      { rule: "Lines instead of shadows", text: "Regions are divided by 1px lines. Tables and sections close on an ink line, and only overlays cast a shadow.", spec: "--mrd-rule" },
-      { rule: "Small corners", text: "Controls have 2px corners, cards and dialogs 3 to 4px. Only radios and switches are round.", spec: "--mrd-radius-*" },
-      { rule: "Hierarchy from tone", text: "Three text tones and two weights. Colour is never a crutch for emphasis.", spec: "ink · body · muted" },
-      { rule: "Short motion", text: "A pressed button moves down 1px. Transitions take 80 to 160 milliseconds, and reduced motion turns them off.", spec: "--mrd-press" },
+      { rule: "Rules before shadows", text: "Regions separate by tone first, then by a 1px line. Tables close on an ink rule, and only surfaces that float above the page cast a shadow.", spec: "--mrd-rule" },
+      { rule: "Square-cut corners", text: "Controls are 2px, cards 3px and dialogs 4px, so a container is never sharper than what it holds. Only radios, switches and status dots are round.", spec: "--mrd-radius-*" },
+      { rule: "Hierarchy from tone", text: "Three text tones. Hierarchy comes from tone and weight; colour is never a crutch for emphasis.", spec: "ink · body · muted" },
+      { rule: "Short motion", text: "A pressed control sinks 1px in 80 milliseconds; everything else takes 120 to 160. Reduced motion turns all of it off.", spec: "--mrd-press" },
       { rule: "Open cascade", text: "Every rule lives in a named layer, so your styles win without !important.", spec: "@layer merid.*" },
     ],
     releaseDate: "28 September 2026",

@@ -193,7 +193,7 @@ To go further, override tokens in your own CSS. It always wins over Merid's laye
 
 | Package | Description |
 | :-- | :-- |
-| [`@meridui/react`](packages/react) | React components, stylesheet and the bundled Archivo and Chivo Mono fonts |
+| [`@meridui/react`](packages/react) | React components, stylesheet and bundled Archivo and Chivo Mono fonts |
 | [`@meridui/tokens`](packages/tokens) | Design tokens as CSS custom properties and typed JS |
 | [`@meridui/cli`](packages/cli) | `npx meridui init`: install, stylesheet, AI rules, MCP config and page patterns |
 | [`@meridui/mcp`](packages/mcp) | Read-only MCP server so AI agents can look up components, tokens and the design contract |

@@ -6,7 +6,7 @@ export const metadata = docMetadata("tr", "/docs/installation", {
 
 # Kurulum
 
-Merid tek bir paket olarak yayınlanır: `@meridui/react`. Component'ler, stil dosyası ve paketle gelen Geist ile Geist Mono variable font'ları bu pakettedir.
+Merid tek bir paket olarak yayınlanır: `@meridui/react`. Component'ler, stil dosyası ve paketle gelen Archivo ile Chivo Mono font'ları bu pakettedir.
 
 ## CLI ile hızlı kurulum
 
@@ -84,7 +84,7 @@ createRoot(document.getElementById("root")!).render(<App />);
 
 ## Font
 
-Geist ve Geist Mono variable font'ları paketle birlikte gelir (`@meridui/react/fonts/Geist-Variable.woff2` ve `GeistMono-Variable.woff2`) ve paketin içinden `@font-face` ile yüklenir. Tarayıcılar bir font'u yalnızca onu kullanan metin olduğunda indirir. Kendi font aileni tanımlarsan dosya hiç istenmez:
+Archivo ve Chivo Mono, variable woff2 dosyaları olarak paketle birlikte gelir (`@meridui/react/fonts/Archivo-latin.woff2`, `ChivoMono-latin.woff2` ve Türkçe karakterler için `-latin-ext` alt kümeleri) ve paketin içinden `@font-face` ile yüklenir. Tarayıcılar bir font'u yalnızca onu kullanan metin olduğunda indirir. Kendi font aileni tanımlarsan dosya hiç istenmez:
 
 ```css
 :root {
@@ -93,5 +93,5 @@ Geist ve Geist Mono variable font'ları paketle birlikte gelir (`@meridui/react/
 ```
 
 <Callout title="Lisans">
-  Geist ve Geist Mono (© Vercel), SIL Open Font License 1.1 ile dağıtılır. Lisans metni (`GEIST-LICENSE.txt`) pakette, font dosyalarının yanında gelir.
+  Archivo (© The Archivo Project Authors) ve Chivo Mono (© The Chivo Project Authors), SIL Open Font License 1.1 ile dağıtılır. Lisans metinleri (`ARCHIVO-OFL.txt`, `CHIVO-MONO-OFL.txt`) pakette, font dosyalarının yanında gelir.
 </Callout>

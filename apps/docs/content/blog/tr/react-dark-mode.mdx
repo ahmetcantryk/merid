@@ -33,20 +33,20 @@ Component'lerde renk yazma, değişken yaz. Dark mode aslında değişkenlerin d
 :root {
   --bg: #ffffff;
   --surface: #ffffff;
-  --ink: #0f1219;
+  --ink: #121417;
   --body: #535a67;
   --line: #e6e8ec;
-  --accent: #3f63f5;
+  --accent: #b20965;
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --bg: #0b0d12;
+  --bg: #0d0e10;
   --surface: #12151c;
-  --ink: #eef0f4;
+  --ink: #eef0f3;
   --body: #a3a9b5;
   --line: #262b35;
-  --accent: #6b8aff;
+  --accent: #ef86ae;
   color-scheme: dark;
 }
 
@@ -67,12 +67,12 @@ Kullanıcı hiçbir şey seçmediyse işletim sisteminin tercihini kullan. Bunu 
 ```css
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0b0d12;
+    --bg: #0d0e10;
     --surface: #12151c;
-    --ink: #eef0f4;
+    --ink: #eef0f3;
     --body: #a3a9b5;
     --line: #262b35;
-    --accent: #6b8aff;
+    --accent: #ef86ae;
     color-scheme: dark;
   }
 }
@@ -187,7 +187,7 @@ Değişkenler o alt ağaçta koyu değerlerini alır. Dikkat etmen gereken tek y
 
 ## Merid ile
 
-Merid bu modeli hazır getiriyor, o yüzden kısaca bahsedeyim (kendi projem). Tüm renkler `--mrd-*` token'ları olarak açık ve koyu değerleriyle tanımlı; `data-theme="light" | "dark"` `html`'e ya da herhangi bir elemana konabiliyor, attribute yoksa `prefers-color-scheme` kullanılıyor. `data-accent` (blue, violet, green, graphite) ve `data-density` de aynı şekilde çalışıyor. Portal ile açılan overlay'ler geldikleri alt ağacın temasını koruyor. Provider gerekmiyor.
+Merid bu modeli hazır getiriyor, o yüzden kısaca bahsedeyim (kendi projem). Tüm renkler `--mrd-*` token'ları olarak açık ve koyu değerleriyle tanımlı; `data-theme="light" | "dark"` `html`'e ya da herhangi bir elemana konabiliyor, attribute yoksa `prefers-color-scheme` kullanılıyor. `data-accent` (magenta, petrol, brass, graphite, blue, violet, green) ve `data-density` de aynı şekilde çalışıyor. Portal ile açılan overlay'ler geldikleri alt ağacın temasını koruyor. Provider gerekmiyor.
 
 ```tsx
 import "@meridui/react/styles.css";
