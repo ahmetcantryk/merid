@@ -9,5 +9,5 @@ interface CodeBlockProps {
 
 export async function CodeBlock({ code, lang = "tsx", title }: CodeBlockProps) {
   const html = await highlight(code, lang);
-  return <CodeFrame html={html} code={code.replace(/\n$/, "")} name={title ?? lang} />;
+  return <CodeFrame html={html} code={code.replace(/\n$/, "")} lang={lang} title={title} />;
 }

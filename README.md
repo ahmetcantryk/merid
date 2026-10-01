@@ -7,9 +7,7 @@
   <img src="apps/docs/public/brand/logo-light.svg" alt="Merid" width="220">
 </picture>
 
-<h3>Quiet, precise components for React.</h3>
-
-<p>60+ accessible components · plain CSS · design tokens · server-component friendly</p>
+<h3>React components that don’t fight your CSS.</h3>
 
 <p>
   <a href="https://github.com/ahmetcantryk/merid/actions/workflows/ci.yml"><img src="https://github.com/ahmetcantryk/merid/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
@@ -31,46 +29,25 @@
 
 </div>
 
-Merid is an accessible React component library written in **plain CSS** and a small set of **design tokens**. Hairline borders, one cool accent, soft grey trays and calm motion — so your product reads as *considered*, not decorated.
+Merid is an open source React component library. Its 60+ components are styled by one **plain CSS** file, and every rule in it sits in a cascade layer, so the CSS you write overrides Merid without `!important`. The design rules behind it, down to the 1px borders and the corners that get smaller as surfaces nest, are written up in [DESIGN.md](DESIGN.md). The docs at [meridui.dev](https://meridui.dev) are complete in English and [Turkish](https://meridui.dev/tr).
 
-> The name comes from ***meridian*** — a thin, precise reference line.
+The name comes from ***meridian***, a thin reference line.
 
 <br>
 
-## Why Merid
+## Decisions
 
-<table>
-  <tr>
-    <td width="50%" valign="top">
-      <h4>Accessible by default</h4>
-      WCAG 2.2 AA target, WAI-ARIA patterns, full keyboard support, visible focus and reduced motion. An axe suite runs on every change.
-    </td>
-    <td width="50%" valign="top">
-      <h4>Plain CSS, your CSS wins</h4>
-      One stylesheet in three cascade layers. Override anything without <code>!important</code>. No runtime styling, no build plugin.
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <h4>Tokens all the way down</h4>
-      Every value is a <code>--mrd-*</code> custom property with light and dark values — ship as CSS or JS via <code>@meridui/tokens</code>.
-    </td>
-    <td width="50%" valign="top">
-      <h4>Server-component friendly</h4>
-      Static parts render on the server; interactive modules carry <code>"use client"</code>. Import any component straight into an RSC.
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <h4>Scoped themes</h4>
-      Dark mode, accent presets, density and direction — per app or per subtree. Portals inherit the scope they came from.
-    </td>
-    <td width="50%" valign="top">
-      <h4>RTL &amp; forced colors</h4>
-      Logical properties throughout, mirrored keyboard navigation, and a first-class Windows High Contrast experience.
-    </td>
-  </tr>
-</table>
+**Your stylesheet wins.** Merid ships one stylesheet split into three cascade layers (`merid.tokens`, `merid.base`, `merid.components`). Anything you write outside those layers takes precedence, so restyling a component is ordinary CSS. Nothing is generated at runtime and there is no build plugin to configure.
+
+**The look stays in the background.** Type is set in Geist, with Geist Mono for code. One cool blue marks what can be clicked and what is selected; apart from the status colours, the rest of the interface is grey. Regions are separated by grey trays before a border is reached for, and borders are always 1px. The aim is an interface that leaves the attention to your content.
+
+**Every value is a token.** Colour, spacing, radius, type and motion are `--mrd-*` custom properties with light and dark values. `@meridui/tokens` publishes the same values as CSS and as typed JS, for code that needs them outside a stylesheet.
+
+**Themes are attributes.** Dark mode, the accent preset, density and text direction are set with `data-*` attributes and `dir`, on the whole app or on a single panel. Overlays rendered in a portal keep the theme of the place they were opened from.
+
+**Server components need no wrapper.** Static parts render on the server and interactive modules carry `"use client"`, so a React Server Component can import any of them directly.
+
+**Accessibility is tested on every change.** Interactive parts follow the WAI-ARIA keyboard patterns, focus is always visible and reduced motion is respected. An axe suite runs in CI on every pull request against light and dark themes, in English and Turkish. Layouts use logical properties so right-to-left works, and in Windows contrast themes controls switch to system colours for their borders.
 
 <br>
 
@@ -105,7 +82,7 @@ export function DeleteProject({ onDelete }: { onDelete: () => void }) {
 }
 ```
 
-One stylesheet import. No theme provider — only toasts need a <code>ToastProvider</code>.
+Import the stylesheet once. There is no theme provider; only toasts need a <code>ToastProvider</code>.
 
 <br>
 
@@ -181,7 +158,7 @@ One stylesheet import. No theme provider — only toasts need a <code>ToastProvi
 | **Layout** | Container · Section · Stack · Grid · ScrollArea · Separator |
 | **Typography** | Heading · Text · VisuallyHidden |
 
-Every component has a page with live examples, props and keyboard notes at **[meridui.dev](https://meridui.dev)**, in English and [Turkish](https://meridui.dev/tr).
+Each component has a page at **[meridui.dev](https://meridui.dev)** with live examples, props and accessibility notes, plus a keyboard map for the interactive ones. Every page is also in [Turkish](https://meridui.dev/tr).
 
 ## Use it with AI
 
@@ -189,21 +166,21 @@ Every component has a page with live examples, props and keyboard notes at **[me
 npx meridui init
 ```
 
-Installs `@meridui/react`, imports the stylesheet, and can add an AI rules file (`AGENTS.md`, Cursor rules) and the Merid MCP server config for Claude Code, Cursor and VS Code. The docs also ship [`llms.txt`](https://meridui.dev/llms.txt). See [Using Merid with AI](https://meridui.dev/docs/ai).
+This installs `@meridui/react` and imports the stylesheet. If you want, it also adds an AI rules file (`AGENTS.md` or Cursor rules) and the config for the Merid MCP server in Claude Code, Cursor or VS Code. The docs publish [`llms.txt`](https://meridui.dev/llms.txt) as well. More in [Using Merid with AI](https://meridui.dev/docs/ai).
 
 <br>
 
 ## Theming
 
-Themes are plain attributes, so they scope to any subtree.
+Themes are plain attributes, so they can be scoped to any part of the page.
 
 ```tsx
 <div data-theme="dark" data-accent="violet" data-density="compact" dir="rtl">
-  {/* everything in here, including portaled overlays, follows */}
+  {/* everything in here, including portalled overlays, follows */}
 </div>
 ```
 
-Need to go deeper? Override tokens in your own CSS — it always wins over Merid's layers:
+To change a value everywhere, override its token in your own CSS. Rules outside Merid's layers always win:
 
 ```css
 :root {
@@ -220,17 +197,16 @@ Need to go deeper? Override tokens in your own CSS — it always wins over Merid
 | :-- | :-- |
 | [`@meridui/react`](packages/react) | React components, stylesheet and bundled Geist fonts |
 | [`@meridui/tokens`](packages/tokens) | Design tokens as CSS custom properties and typed JS |
-| [`@meridui/cli`](packages/cli) | `npx meridui init`: install, stylesheet, AI rules, MCP config and page patterns |
-| [`@meridui/mcp`](packages/mcp) | Read-only MCP server so AI agents can look up components, tokens and the design contract |
+| [`@meridui/cli`](packages/cli) | `npx meridui init`: installs the package and stylesheet, and can add AI rules, MCP config and page patterns |
+| [`@meridui/mcp`](packages/mcp) | Read-only MCP server that lets AI agents look up components, tokens and the design contract |
 
 <br>
 
 ## Works with
 
-**Next.js** (App Router & RSC) · **Vite** · **React Router** · **Tailwind** · **React Hook Form** · **Zod**
-&nbsp;—&nbsp; see [`examples/`](examples) for a Next.js app and a Vite dashboard.
+**Next.js** (App Router and RSC) · **Vite** · **React Router** · **Tailwind** · **React Hook Form** · **Zod**. The [`examples/`](examples) folder has a Next.js app and a Vite dashboard.
 
-**Browsers:** Chrome & Edge 111+ · Firefox 113+ · Safari 16.4+ &nbsp;·&nbsp; **React:** 18.2 and 19
+**Browsers:** Chrome and Edge 111+ · Firefox 113+ · Safari 16.4+ &nbsp;·&nbsp; **React:** 18.2 and 19
 
 <br>
 
@@ -243,7 +219,7 @@ npm test           # unit + SSR
 npm run test:e2e   # a11y, interactions, playground
 ```
 
-Contributions are welcome — read [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md) first. Security issues go through [SECURITY.md](SECURITY.md), not public issues.
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md) first, and report security issues through [SECURITY.md](SECURITY.md) instead of a public issue.
 
 <br>
 
@@ -254,6 +230,6 @@ Contributions are welcome — read [CONTRIBUTING.md](CONTRIBUTING.md) and the [C
   <img src="apps/docs/public/brand/mark-light.svg" alt="" width="40">
 </picture>
 
-<sub>[MIT](LICENSE) © 2026 Ahmet Can Tiryaki · Geist & Geist Mono © Vercel, bundled under the SIL OFL 1.1 — see [NOTICE](NOTICE)</sub>
+<sub>[MIT](LICENSE) © 2026 Ahmet Can Tiryaki · Geist and Geist Mono © Vercel, bundled under the SIL OFL 1.1 (see [NOTICE](NOTICE))</sub>
 
 </div>

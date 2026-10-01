@@ -25,9 +25,7 @@
 .studio-controls__title { color: var(--mrd-ink); font-size: var(--mrd-text-sm); font-weight: var(--mrd-weight-medium); }
 .studio-controls__note { margin-top: auto; color: var(--mrd-muted); font-size: var(--mrd-text-2xs); line-height: var(--mrd-leading-2xs); }
 .studio-ctl { display: grid; gap: 8px; }
-.studio-ctl__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .studio-ctl__label { color: var(--mrd-muted); font-size: var(--mrd-text-xs); }
-.studio-ctl__hint { display: inline-flex; align-items: center; gap: 2px; color: var(--mrd-muted); font-size: var(--mrd-text-3xs); }
 .studio-ctl .mrd-segmented { width: 100%; }
 
 .studio-swatches { display: flex; gap: 10px; padding-block: 2px; }
@@ -40,15 +38,11 @@
 .studio-swatch[aria-checked="true"] { box-shadow: 0 0 0 2px var(--mrd-subtle), 0 0 0 3.5px var(--swatch); }
 .studio-swatch:focus-visible { outline: 2px solid var(--mrd-accent); outline-offset: 4px; }
 
-/* Window: an address bar instead of a browser tab, and the live attribute readout */
+/* Window: a bar with the live attribute readout, or the split slider */
 .studio-window { grid-area: window; display: grid; grid-template-rows: auto minmax(0, 1fr); min-width: 0; }
 .studio-window__bar {
   display: flex; align-items: center; gap: 12px; min-height: 40px; padding: 6px 12px;
   border-bottom: 1px solid var(--mrd-line); background: var(--mrd-bg);
-}
-.studio-window__address {
-  flex: none; padding: 2px 10px; border: 1px solid var(--mrd-line); border-radius: var(--mrd-radius-full);
-  color: var(--mrd-body); font-family: var(--mrd-font-mono); font-size: var(--mrd-text-3xs);
 }
 .studio-window__attrs {
   min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;

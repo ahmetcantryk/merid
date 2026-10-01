@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import type { Mock } from "vitest";
 import { axe } from "vitest-axe";
 import { Command } from "./Command";
 import { defaultCommandFilter } from "./command-filter";
@@ -150,5 +151,73 @@ describe("Command", () => {
     expect(await axe(container)).toHaveNoViolations();
     await user.type(screen.getByRole("combobox"), "zzz");
     expect(await axe(container)).toHaveNoViolations();
+  });
+});
+
+describe("Command list scrolling", () => {
+  // jsdom has no layout: the list shows 100px and every option is a 40px row.
+  const VIEW = 100;
+  const ROW = 40;
+  const rect = (top: number, bottom: number) =>
+    ({ top, bottom, left: 0, right: 200, width: 200, height: bottom - top, x: 0, y: top, toJSON: () => ({}) }) as DOMRect;
+  let scrollIntoView: Mock<Element["scrollIntoView"]>;
+
+  beforeEach(() => {
+    // Element.scrollIntoView moves every scrollable ancestor, the page included; any call is a page scroll.
+    scrollIntoView = vi.fn<Element["scrollIntoView"]>();
+    Element.prototype.scrollIntoView = scrollIntoView;
+    vi.spyOn(HTMLElement.prototype, "clientHeight", "get").mockImplementation(function (this: HTMLElement) {
+      return this.classList.contains("mrd-command__list") ? VIEW : 0;
+    });
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
+      if (this.classList.contains("mrd-command__list")) return rect(0, VIEW);
+      const list = this.closest<HTMLElement>(".mrd-command__list");
+      if (!list || this.getAttribute("role") !== "option") return rect(0, 0);
+      const top = Array.from(list.querySelectorAll('[role="option"]')).indexOf(this) * ROW - list.scrollTop;
+      return rect(top, top + ROW);
+    });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    Reflect.deleteProperty(Element.prototype, "scrollIntoView");
+  });
+
+  function LongList() {
+    return (
+      <Command.Root>
+        <Command.Input />
+        <Command.List>
+          {["One", "Two", "Three", "Four", "Five", "Six"].map((name) => (
+            <Command.Item key={name}>{name}</Command.Item>
+          ))}
+        </Command.List>
+      </Command.Root>
+    );
+  }
+
+  it("does not scroll the page when it first renders the active item", () => {
+    render(<LongList />);
+    expect(screen.getByRole("option", { name: "One" })).toHaveAttribute("aria-selected", "true");
+    expect(scrollIntoView).not.toHaveBeenCalled();
+    expect(screen.getByRole("listbox").scrollTop).toBe(0);
+  });
+
+  it("scrolls only the list to keep the active item in view", async () => {
+    const user = userEvent.setup();
+    render(<LongList />);
+    const list = screen.getByRole("listbox");
+    screen.getByRole("combobox").focus();
+
+    await user.keyboard("{ArrowDown}");
+    expect(list.scrollTop).toBe(0); // "Two" (40–80) is already visible
+
+    await user.keyboard("{ArrowDown}{ArrowDown}");
+    expect(screen.getByRole("option", { name: "Four" })).toHaveAttribute("aria-selected", "true");
+    expect(list.scrollTop).toBe(4 * ROW - VIEW); // the bottom of "Four" meets the bottom of the list
+
+    await user.keyboard("{PageUp}");
+    expect(list.scrollTop).toBe(0);
+    expect(scrollIntoView).not.toHaveBeenCalled();
   });
 });
