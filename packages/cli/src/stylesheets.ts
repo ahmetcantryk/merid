@@ -122,6 +122,10 @@ export type TailwindProblem = "layer-order" | "import-order";
 export function tailwindProblems(styles: Stylesheets): TailwindProblem[] {
   const tailwind = styles.tailwind;
   if (!tailwind?.specifier) return [];
+  // `@import "tailwindcss"` followed by `@import "@meridui/react/styles.css"` already declares Tailwind's layers first.
+  const tailwindAt = tailwind.source.search(TAILWIND_IMPORT);
+  const meridAt = tailwind.source.search(/@import\s+["']@meridui\/react\/(styles|components|tokens)\.css["']/);
+  if (meridAt > tailwindAt) return [];
   const problems: TailwindProblem[] = [];
   if (!hasLayerOrder(tailwind.source)) problems.push("layer-order");
   if (!styles.meridInCss && importsMerid(styles.entrySource)) {

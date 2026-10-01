@@ -203,6 +203,13 @@ describe("doctor on generator templates", () => {
     expect(find(dir, "Tailwind layer order")?.level).toBe("ok");
   });
 
+  it("accepts Merid imported with @import after Tailwind", () => {
+    const dir = copyFixture("templates/next");
+    writeFileSync(path.join(dir, "app/globals.css"), '@import "tailwindcss";\n@import "@meridui/react/styles.css";\n');
+    expect(find(dir, "Preflight overrides")).toBeUndefined();
+    expect(find(dir, "Stylesheet imported")?.label).toBe("Stylesheet imported in app/globals.css");
+  });
+
   it("does not report the package itself as an old name", async () => {
     const dir = copyFixture("templates/vite");
     await init(dir, "--yes");
