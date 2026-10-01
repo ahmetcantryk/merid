@@ -34,15 +34,29 @@ npx @meridui/cli init
 1. Detects the framework: Next.js (App Router), Vite or React Router (framework mode).
 2. Detects the package manager from `packageManager` in `package.json` or the lockfile: npm, pnpm, Yarn or Bun.
 3. Installs `@meridui/react`, unless it is already a dependency.
-4. Adds `import "@meridui/react/styles.css";` to the app entry, before your own CSS imports.
-5. Asks whether to add the rules file (`AGENTS.md`, `.cursor/rules/merid.mdc`, `CLAUDE.md`).
-6. Asks whether to add the MCP config (`.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`). Other servers in those files are kept.
+4. Adds `import "@meridui/react/styles.css";` to the app entry, before your own CSS imports. When one of those loads Tailwind v4, the import goes after it instead, and the Tailwind file gets `@layer theme, base, merid, components, utilities;` so Preflight cannot override Merid.
+5. Removes the global styles the project generator wrote that would override Merid (see below).
+6. Asks whether to add the rules file (`AGENTS.md`, `.cursor/rules/merid.mdc`, `CLAUDE.md`). A `CLAUDE.md` that already imports `@AGENTS.md` is left as it is.
+7. Asks whether to add the MCP config (`.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`). Other servers in those files are kept.
 
 | Framework | Detected by | Stylesheet goes into |
 | --- | --- | --- |
 | Next.js | `next` dependency | `app/layout.tsx` or `src/app/layout.tsx` |
 | React Router | `@react-router/dev` or `react-router.config.ts` | `app/root.tsx` |
 | Vite | `vite` dependency or `vite.config.*` | `src/main.tsx` |
+
+#### Template styles
+
+`create-vite`, `create-next-app` and `create-react-router` write global CSS outside any cascade layer, so it beats Merid's. `init` knows the rules each generator writes and removes the ones that clash with Merid:
+
+| Template | File | Removed |
+| --- | --- | --- |
+| Vite | `src/index.css`, `src/App.css` | `:root` font and colours, heading sizes, `p`, `code`, `#root` column; in templates before create-vite 9 also `a`, `button` and the flex-centred `body` |
+| Next.js with Tailwind | `app/globals.css` | the Arial `body` rule |
+| Next.js without Tailwind | `app/globals.css` | `* { padding: 0; margin: 0 }`, `a { color: inherit }`, Arial and colours on `body`, dark `color-scheme` |
+| React Router | `app/app.css` | the `html, body` background |
+
+A rule is only removed while it still matches what the generator wrote; once you edit it, it is yours. `body { margin: 0 }` and layout rules unrelated to Merid are kept. The file is shown as a diff and changed only after a yes, or with `--yes`. The [installation guide](/docs/installation#styles-from-your-project-template) explains why the rules are removed rather than moved into a layer.
 
 ### add
 
@@ -76,7 +90,7 @@ Writes the [MCP server](/docs/ai#mcp-server) config only. `--client` takes `clau
 npx @meridui/cli doctor
 ```
 
-Checks that `@meridui/react` and React 18+ are installed, the stylesheet is imported, and whether the rules file and MCP config are present. Exits with code 1 when a required check fails, so it can run in CI.
+Checks that `@meridui/react` and React 18+ are installed, the stylesheet is imported, and whether the rules file and MCP config are present. It also warns when template styles that override Merid are still in your CSS, and when Tailwind's Preflight is layered above Merid. Exits with code 1 when a required check fails, so it can run in CI; the style warnings do not fail it.
 
 ## Options
 

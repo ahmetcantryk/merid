@@ -9,8 +9,10 @@ export const metadata = docMetadata("en", "/docs/integrations/vite", {
 ```bash
 npm create vite@latest my-app -- --template react-ts
 cd my-app
-npm i @meridui/react
+npx @meridui/cli init
 ```
+
+`init` installs `@meridui/react`, adds the stylesheet import below and removes the template styles that would override Merid (next section). It shows every change as a diff and asks first. To set up by hand, run `npm i @meridui/react` and follow the rest of this page.
 
 ## Entry file
 
@@ -34,7 +36,20 @@ createRoot(document.getElementById("root")!).render(
 
 The base layer styles the document itself; `mrd-root` is only needed to re-apply it to a subtree inside a host page with other styles.
 
-Delete the template's `index.css` and `App.css` rules that style `body`, `button` and `a` — they are unlayered and will beat Merid's layered rules. That is by design (see [Styling and CSS layers](/docs/styling)), but the template's defaults are not what you want.
+## The template's index.css
+
+The Vite template's `src/index.css` is written for its starter page. It sets the page font, size and colours on `:root`, sizes `h1` and `h2`, styles `code`, sets `p { margin: 0 }` and turns `#root` into a centred 1126px column with centred text. Templates before create-vite 9 also style every `button` and `a`, and centre `body` with flexbox. These rules are not in a cascade layer, so they beat Merid's (see [Styling and CSS layers](/docs/styling)): headings take the template's sizes, and with the older template a primary button gets a grey background.
+
+`npx @meridui/cli init` removes them and leaves `body { margin: 0 }`, which is what most apps want:
+
+```css
+/* src/index.css after init */
+body {
+  margin: 0;
+}
+```
+
+It only removes rules that still match the template, so anything you have edited or added stays. `App.css` is left alone unless it has the older template's `#root` rule; the rest of it only styles the starter page's own classes. To clean up by hand, delete the same rules. `npx @meridui/cli doctor` warns while any of them are left.
 
 ## Fonts
 

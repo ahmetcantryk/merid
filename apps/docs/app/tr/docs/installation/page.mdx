@@ -10,7 +10,7 @@ Merid tek bir paket olarak yayınlanır: `@meridui/react`. Component'ler, stil d
 
 ## CLI ile hızlı kurulum
 
-Next.js, Vite ya da React Router projesinde tek komut yeter. Paket yöneticini algılar, paketi kurar, stil dosyasını import eder ve istersen AI kural dosyasını ve MCP config'ini ekler. Her değişikliği yazmadan önce diff olarak gösterir.
+Next.js, Vite ya da React Router projesinde tek komut yeter. Paket yöneticini algılar, paketi kurar, stil dosyasını import eder, Merid'i ezecek [şablon stillerini](#proje-sablonundan-gelen-stiller) kaldırır ve istersen AI kural dosyasını ve MCP config'ini ekler. Her değişikliği yazmadan önce diff olarak gösterir.
 
 ```bash
 npx @meridui/cli init
@@ -48,6 +48,35 @@ import "@meridui/react/styles.css";
 Yalnızca design token'ları istiyorsan, örneğin renkleri ve boşlukları kendi component'lerinde kullanmak için, onun yerine `@meridui/react/tokens.css` dosyasını import et. Bu dosyada custom property'ler ve font tanımı vardır, component kuralı yoktur.
 
 `styles.css` küçük bir base layer içerir: `box-sizing: border-box`, doküman font'u, renkler, başlık kalınlığı ve focus halkası. Bunlar `:root`'a sıfır specificity ile uygulanır, yani senin yazdığın her kural kazanır. Uygulaman kendi doküman stillerini getiriyorsa ve bunların hiçbirini istemiyorsan, onun yerine `@meridui/react/components.css` dosyasını (token'lar + component'ler, base yok) import et. Component'ler `box-sizing`'i kendi elemanlarına kendileri verir, bu yüzden iki durumda da aynı görünürler.
+
+## Proje şablonundan gelen stiller
+
+`create-vite`, `create-next-app` ve `create-react-router` projeye bir global stil dosyasıyla başlar (`src/index.css`, `app/globals.css`, `app/app.css`). Bu dosyadaki kurallar hiçbir cascade layer'ın içinde değildir, bu yüzden Merid'i ezer. Vite şablonu sayfanın font'unu ve renklerini belirler, eski sürümlerinde her `button`'a da stil verir. Next.js `body`'ye Arial koyar; Tailwind'siz şablonda bir de `* { padding: 0; margin: 0 }` ekler ve bu kural her component'in iç boşluğunu sıfırlar. Cascade burada [Stil ve CSS layer'ları](/tr/docs/styling) sayfasında anlatıldığı gibi çalışıyor; ama bunlar senin stillerin değil, şablonun varsayılanları.
+
+`npx @meridui/cli init` bu kuralları bulur ve kaldırmayı önerir. Önce diff'i gösterip sorar, `--yes` ile sormadan uygular. Yalnızca şablondaki haliyle duran kurallara dokunur; değiştirdiğin bir kural da, kendi eklediklerin de olduğu gibi kalır. Geride kalanları `npx @meridui/cli doctor` listeler.
+
+Elle temizlemek istersen şablonun `:root`, `body`, başlıklar, `a`, `button`, `code` ve `#root` kurallarını sil, `body { margin: 0 }`'ı bırak.
+
+Bu kuralları Merid'in altındaki bir layer'a taşımak yerine siliyoruz. Layer yalnızca Merid'in de verdiği özelliklerde işe yarardı. `#root` üzerindeki `text-align: center` ya da `body` üzerindeki `display: flex` gibi Merid'in hiç dokunmadığı kurallar, uygulamanı başlangıç sayfası gibi dizmeye devam ederdi.
+
+### Tailwind CSS ile
+
+Next.js ve React Router'ın varsayılan şablonları Tailwind v4 kullanır. Tailwind'in reset'i Preflight, `base` adlı bir layer'dadır. Layer'lar ilk göründükleri sırayla dizilir; Merid'in stil dosyası önce yüklenirse Preflight onun üstüne çıkar ve butonlarla input'ların padding'ini, kenarlığını ve arka planını siler. Sırayı Tailwind dosyasının en üstünde tanımla ve bu dosyayı Merid'inkinden önce import et:
+
+```css
+/* app/globals.css */
+@layer theme, base, merid, components, utilities;
+
+@import "tailwindcss";
+```
+
+```tsx
+// app/layout.tsx
+import "./globals.css";
+import "@meridui/react/styles.css";
+```
+
+`init` ikisini de yapar. Ayrıntılar [Tailwind CSS](/tr/docs/integrations/tailwind) sayfasında.
 
 ## Next.js (App Router)
 

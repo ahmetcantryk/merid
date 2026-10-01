@@ -9,8 +9,10 @@ export const metadata = docMetadata("tr", "/docs/integrations/vite", {
 ```bash
 npm create vite@latest my-app -- --template react-ts
 cd my-app
-npm i @meridui/react
+npx @meridui/cli init
 ```
+
+`init`, `@meridui/react`'i kurar, aşağıdaki stil import'unu ekler ve Merid'i ezecek şablon stillerini kaldırır (bir sonraki bölüm). Her değişikliği diff olarak gösterir ve önce sorar. Elle kurmak istersen `npm i @meridui/react` çalıştır ve sayfanın devamını izle.
 
 ## Giriş dosyası
 
@@ -34,7 +36,20 @@ createRoot(document.getElementById("root")!).render(
 
 Base layer dokümanın kendisine stil verir; `mrd-root` yalnızca, başka stilleri olan bir sayfanın içindeki bir alt ağaca bunu yeniden uygulamak için gerekir.
 
-Şablondaki `index.css` ve `App.css` içinde `body`, `button` ve `a`'ya stil veren kuralları sil: bunlar layer dışındadır ve Merid'in layer'lı kurallarını ezer. Bu bilinçli bir tasarım (bkz. [Stil ve CSS layer'ları](/tr/docs/styling)), ama şablonun varsayılanları senin istediğin şey değil.
+## Şablonun index.css dosyası
+
+Vite şablonundaki `src/index.css`, şablonun başlangıç sayfası için yazılmıştır. `:root`'ta sayfanın font'unu, boyutunu ve renklerini belirler, `h1` ve `h2`'yi boyutlandırır, `code`'a stil verir, `p { margin: 0 }` ekler ve `#root`'u ortalanmış, 1126px genişliğinde, metni ortalı bir kolona çevirir. create-vite 9'dan önceki şablonlar ayrıca her `button`'a ve `a`'ya stil verir, `body`'yi de flexbox ile ortalar. Bu kurallar bir cascade layer'da olmadığı için Merid'inkileri ezer (bkz. [Stil ve CSS layer'ları](/tr/docs/styling)): başlıklar şablonun boyutlarını alır, eski şablonda primary buton gri bir arka planla görünür.
+
+`npx @meridui/cli init` bu kuralları kaldırır ve çoğu uygulamanın zaten istediği `body { margin: 0 }`'ı bırakır:
+
+```css
+/* init sonrası src/index.css */
+body {
+  margin: 0;
+}
+```
+
+Yalnızca şablondaki haliyle duran kuralları kaldırır; değiştirdiğin ya da eklediğin her şey kalır. `App.css`'e, eski şablonun `#root` kuralı yoksa dokunmaz; geri kalanı yalnızca başlangıç sayfasının kendi sınıflarına stil verir. Elle temizlemek istersen aynı kuralları sil. Bu kurallardan biri kaldıkça `npx @meridui/cli doctor` uyarır.
 
 ## Fontlar
 

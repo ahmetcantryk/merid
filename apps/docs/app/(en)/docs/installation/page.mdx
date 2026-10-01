@@ -10,7 +10,7 @@ Merid is published as a single package, `@meridui/react`. It contains the compon
 
 ## Quick start with the CLI
 
-In a Next.js, Vite or React Router project, one command does it all. It detects your package manager, installs the package, imports the stylesheet and, if you want, adds the AI rules file and MCP config. Every change is shown as a diff before it is written.
+In a Next.js, Vite or React Router project, one command does it all. It detects your package manager, installs the package, imports the stylesheet, removes the [template styles](#styles-from-your-project-template) that would override Merid and, if you want, adds the AI rules file and MCP config. Every change is shown as a diff before it is written.
 
 ```bash
 npx @meridui/cli init
@@ -48,6 +48,35 @@ import "@meridui/react/styles.css";
 If you only want the design tokens — for example, to use the colours and spacing in your own components — import `@meridui/react/tokens.css` instead. It contains the custom properties and the font face, and no component rules.
 
 `styles.css` includes a small base layer: `box-sizing: border-box`, the document font, colours, heading weight and focus ring, applied to `:root` at zero specificity (so any rule of yours wins). If your app brings its own document styles and you want none of it, import `@meridui/react/components.css` (tokens + components, no base) instead. Components set `box-sizing` on their own elements, so they render the same either way.
+
+## Styles from your project template
+
+`create-vite`, `create-next-app` and `create-react-router` give you a global stylesheet (`src/index.css`, `app/globals.css`, `app/app.css`). Its rules sit outside any cascade layer, so they beat Merid. The Vite template sets the page font and colours and, in older versions, styles every `button`. Next.js puts Arial on `body`, and without Tailwind it also adds `* { padding: 0; margin: 0 }`, which takes the padding off every component. That is the cascade doing what [Styling](/docs/styling) describes, but these are the template's defaults, not your styles.
+
+`npx @meridui/cli init` finds these rules and offers to remove them. It prints the diff and asks first, or applies it with `--yes`. It only removes rules that still match what the generator wrote; a rule you have edited stays, and so does everything you added. `npx @meridui/cli doctor` lists any that are left.
+
+To do it by hand, delete the template's rules for `:root`, `body`, headings, `a`, `button`, `code` and `#root`, and keep `body { margin: 0 }`.
+
+We remove them instead of moving them into a layer below Merid. A layer would only stop them where Merid sets the same property. Rules Merid never sets, such as `text-align: center` on `#root` or `display: flex` on `body`, would keep laying out your app like the starter page.
+
+### With Tailwind CSS
+
+The default Next.js and React Router templates use Tailwind v4, whose reset (Preflight) lives in a cascade layer called `base`. Layers are ordered by first appearance, so when Merid's stylesheet loads first, Preflight lands above it and removes the padding, borders and background of buttons and inputs. Declare the order at the top of the Tailwind stylesheet and import that file before Merid's:
+
+```css
+/* app/globals.css */
+@layer theme, base, merid, components, utilities;
+
+@import "tailwindcss";
+```
+
+```tsx
+// app/layout.tsx
+import "./globals.css";
+import "@meridui/react/styles.css";
+```
+
+`init` makes both changes. More in [Tailwind CSS](/docs/integrations/tailwind).
 
 ## Next.js (App Router)
 

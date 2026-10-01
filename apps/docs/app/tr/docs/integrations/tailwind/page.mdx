@@ -26,7 +26,7 @@ Bu sırayla:
 - Tailwind utility'leri en son gelir; bir Merid component'indeki `className="mt-4 w-full"`, `!important` olmadan component'in kendi boşluğunu ve genişliğini ezer.
 - Layer dışındaki kendi CSS'in yine ikisini de ezer.
 
-Merid'i bunun yerine JavaScript'ten import ediyorsan (`import "@meridui/react/styles.css"`), `@layer` satırını Tailwind'in işlediği CSS dosyasının en üstünde tut ve o dosyanın ilk yüklendiğinden emin ol.
+Merid'i bunun yerine JavaScript'ten import ediyorsan (`import "@meridui/react/styles.css"`), `@layer` satırını Tailwind'in işlediği CSS dosyasının en üstünde tut ve o dosyanın ilk yüklendiğinden emin ol. Bu satır yoksa ya da Merid önce yükleniyorsa Preflight Merid'in üstüne çıkar; butonlar ve input'lar padding'ini, kenarlığını ve arka planını kaybeder. `npx @meridui/cli init` bunu Next.js, Vite ve React Router projelerinde senin yerine ayarlar, sıra yanlışsa `npx @meridui/cli doctor` uyarır.
 
 ## Preflight
 

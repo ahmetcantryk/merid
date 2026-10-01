@@ -34,15 +34,29 @@ npx @meridui/cli init
 1. Framework'ü algılar: Next.js (App Router), Vite ya da React Router (framework modu).
 2. Paket yöneticisini `package.json` içindeki `packageManager` alanından ya da lock dosyasından algılar: npm, pnpm, Yarn veya Bun.
 3. Bağımlılık olarak yoksa `@meridui/react`'i kurar.
-4. Uygulamanın giriş dosyasına, senin CSS import'larından önce `import "@meridui/react/styles.css";` ekler.
-5. Kural dosyasını (`AGENTS.md`, `.cursor/rules/merid.mdc`, `CLAUDE.md`) ekleyip eklemeyeceğini sorar.
-6. MCP config'ini (`.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`) ekleyip eklemeyeceğini sorar. Bu dosyalardaki diğer server'lar korunur.
+4. Uygulamanın giriş dosyasına, senin CSS import'larından önce `import "@meridui/react/styles.css";` ekler. Bu dosyalardan biri Tailwind v4'ü yüklüyorsa import onun arkasına gelir ve Tailwind dosyasına `@layer theme, base, merid, components, utilities;` eklenir; böylece Preflight Merid'i ezemez.
+5. Proje şablonunun yazdığı ve Merid'i ezecek global stilleri kaldırır (aşağıda).
+6. Kural dosyasını (`AGENTS.md`, `.cursor/rules/merid.mdc`, `CLAUDE.md`) ekleyip eklemeyeceğini sorar. Zaten `@AGENTS.md`'yi import eden bir `CLAUDE.md`'ye dokunmaz.
+7. MCP config'ini (`.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`) ekleyip eklemeyeceğini sorar. Bu dosyalardaki diğer server'lar korunur.
 
 | Framework | Nasıl algılanır | Stil import'u nereye eklenir |
 | --- | --- | --- |
 | Next.js | `next` bağımlılığı | `app/layout.tsx` ya da `src/app/layout.tsx` |
 | React Router | `@react-router/dev` ya da `react-router.config.ts` | `app/root.tsx` |
 | Vite | `vite` bağımlılığı ya da `vite.config.*` | `src/main.tsx` |
+
+#### Şablon stilleri
+
+`create-vite`, `create-next-app` ve `create-react-router`, hiçbir cascade layer'a girmeyen global CSS yazar; bu CSS de Merid'inkini ezer. `init` her şablonun yazdığı kuralları tanır ve Merid'le çakışanları kaldırır:
+
+| Şablon | Dosya | Kaldırılanlar |
+| --- | --- | --- |
+| Vite | `src/index.css`, `src/App.css` | `:root` font'u ve renkleri, başlık boyutları, `p`, `code`, `#root` kolonu; create-vite 9'dan önceki şablonlarda ayrıca `a`, `button` ve flex ile ortalanan `body` |
+| Tailwind'li Next.js | `app/globals.css` | Arial'lı `body` kuralı |
+| Tailwind'siz Next.js | `app/globals.css` | `* { padding: 0; margin: 0 }`, `a { color: inherit }`, `body`'deki Arial ve renkler, koyu `color-scheme` |
+| React Router | `app/app.css` | `html, body` arka planı |
+
+Bir kural ancak şablonun yazdığı haliyle duruyorsa kaldırılır; düzenlediğin anda senindir. `body { margin: 0 }` ve Merid'le ilgisi olmayan layout kuralları kalır. Dosya diff olarak gösterilir ve ancak onay verirsen ya da `--yes` ile değişir. Kuralların neden bir layer'a taşınmak yerine silindiği [kurulum rehberinde](/tr/docs/installation#proje-sablonundan-gelen-stiller) anlatılıyor.
 
 ### add
 
@@ -76,7 +90,7 @@ Yalnızca [MCP server](/tr/docs/ai#mcp-server) config'ini yazar. `--client`, vir
 npx @meridui/cli doctor
 ```
 
-`@meridui/react` ve React 18+ kurulu mu, stil dosyası import edilmiş mi, kural dosyası ve MCP config'i var mı diye kontrol eder. Zorunlu bir kontrol başarısız olursa 1 koduyla çıkar; bu yüzden CI'da çalıştırabilirsin.
+`@meridui/react` ve React 18+ kurulu mu, stil dosyası import edilmiş mi, kural dosyası ve MCP config'i var mı diye kontrol eder. CSS'inde Merid'i ezen şablon stilleri kaldıysa ya da Tailwind'in Preflight'ı Merid'in üstündeki bir layer'daysa uyarır. Zorunlu bir kontrol başarısız olursa 1 koduyla çıkar, bu yüzden CI'da çalıştırabilirsin; stil uyarıları komutu başarısız saymaz.
 
 ## Seçenekler
 

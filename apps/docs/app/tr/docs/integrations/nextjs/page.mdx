@@ -8,13 +8,21 @@ export const metadata = docMetadata("tr", "/docs/integrations/nextjs", {
 
 Merid, App Router'da hiçbir ayar gerektirmeden çalışır. Bu site de Merid ile yapılmış bir Next.js 16 uygulaması.
 
+```bash
+npx create-next-app@latest my-app
+cd my-app
+npx @meridui/cli init
+```
+
+`init`, `@meridui/react`'i kurar, stil dosyasını `app/layout.tsx`'te import eder ve şablonun `globals.css` dosyasını düzeltir ([aşağıda](#sablonun-globals-css-dosyasi)). Her değişikliği yazmadan önce diff olarak gösterir.
+
 ## Kurulum
 
 ```tsx
 // app/layout.tsx
 import type { Metadata, Viewport } from "next";
 import "@meridui/react/styles.css";
-import "./globals.css"; // kendi CSS'in Merid'inkinden sonra
+import "./globals.css"; // kendi CSS'in Merid'inkinden sonra (Tailwind'de tersi, aşağıya bak)
 
 export const metadata: Metadata = {
   title: { default: "Acme", template: "%s — Acme" },
@@ -38,6 +46,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ```
 
 Base layer tipografi, arka plan ve focus stillerini dokümana sıfır specificity ile uygular; hiçbir sınıf gerekmez. `transpilePackages` girdisi de gerekmez. Server component dosyalarında düz parça adlarını (`DialogRoot`, `TabsList`, …) ve router linkleri için `asChild`'ı kullan; ayrıntılar [Server component'ler](/tr/docs/server-components) sayfasında.
+
+## Şablonun globals.css dosyası
+
+`create-next-app`'in yazdığı `app/globals.css` dosyasındaki kurallar bir cascade layer'da olmadığı için Merid'inkileri ezer.
+
+Tailwind'li şablonda (varsayılan) iki şeyi değiştirmen gerekir. `body` kuralı Arial'ı ve şablonun renklerini koyar; onu sil. Tailwind'in reset'i Preflight ise `base` adlı bir layer'dadır: Merid'in stil dosyası önce yüklenirse bu layer Merid'in üstüne çıkar ve butonlarla input'ların padding'ini, kenarlığını ve arka planını siler. Layer sırasını `globals.css`'in en üstüne yaz ve `globals.css`'i Merid'den önce import et:
+
+```css
+/* app/globals.css */
+@layer theme, base, merid, components, utilities;
+
+@import "tailwindcss";
+```
+
+```tsx
+// app/layout.tsx
+import "./globals.css";
+import "@meridui/react/styles.css";
+```
+
+Tailwind'siz şablonda üç kural sorun çıkarır: her component'in iç boşluğunu sıfırlayan `* { padding: 0; margin: 0 }`, `Link`'i görünmez yapan `a { color: inherit; text-decoration: none }` ve `body`'deki Arial. Bunları sil, `body { margin: 0 }`'ı bırak. `--background` ve `--foreground` değişkenleri kalabilir; Merid onları kullanmaz.
+
+`npx @meridui/cli init` bu değişiklikleri yapar ve yazmadan önce sorar. Yalnızca şablondaki haliyle duran kuralları kaldırır, senin düzenlemelerin kalır. Bu kurallardan biri kaldıkça `npx @meridui/cli doctor` uyarır. Merid'in token'larını Tailwind temana taşımak için [Tailwind CSS](/tr/docs/integrations/tailwind) sayfasına bak.
 
 ## Server component'ler
 
@@ -78,19 +109,19 @@ import { Breadcrumb, Card, SidebarNav } from "@meridui/react";
 
 Overlay tetikleyicileri (`Dialog.Trigger`, `Popover.Trigger`, `DropdownMenu.Trigger`, `Tooltip`) `asChild` alır; yani bir `next/link` aynı zamanda bir tooltip'in ya da menünün tetikleyicisi olabilir.
 
-`Button` ve `Link` şu an `as` ya da `asChild` almıyor. Yönlendirme yapan bir buton ya da metin linki için Merid'in sınıflarını ve data attribute'larını doğrudan `next/link`'e koy; stiller yalnızca bunlara bağlı:
+`Button`, `Link` ve `Breadcrumb.Link` `asChild` alır. Bu, `as={NextLink}` geçilemeyen server component dosyalarında da çalışır:
 
 ```tsx
-<NextLink href="/new" className="mrd-button" data-variant="primary" data-size="md">
-  <span className="mrd-button__content">Yeni proje</span>
-</NextLink>
+<Button asChild variant="primary">
+  <NextLink href="/new">Yeni proje</NextLink>
+</Button>
 
-<NextLink href="/pricing" className="mrd-link" data-tone="accent" data-underline="hover">
-  Fiyatlandırma
-</NextLink>
+<Link asChild>
+  <NextLink href="/pricing">Fiyatlandırma</NextLink>
+</Link>
 ```
 
-`getHref` verilen `Pagination` düz anchor'lar render'lar (sayfa baştan yüklenir). Uygulama içinde `onPageChange` ve `router.push`'u tercih et; `getHref`'i herkese açık sayfalarda taranabilir sayfalama için sakla.
+`getHref` verilen `Pagination` düz anchor'lar render'lar (sayfa baştan yüklenir). Bunları `next/link` üzerinden yönlendirmek için `renderLink` ver: `renderLink={({ page, ...props }) => <NextLink {...props} />}`. Uygulama içinde `onPageChange` ve `router.push` da kullanabilirsin; `getHref`'i herkese açık sayfalarda taranabilir sayfalama için sakla.
 
 ## Fontlar
 

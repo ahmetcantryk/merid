@@ -26,7 +26,7 @@ With this order:
 - Tailwind utilities come last, so `className="mt-4 w-full"` on a Merid component overrides the component's own spacing and width — without `!important`.
 - Your own unlayered CSS still beats both.
 
-If you import Merid from JavaScript instead (`import "@meridui/react/styles.css"`), keep the `@layer` statement at the top of the CSS file that Tailwind processes, and make sure that file loads first.
+If you import Merid from JavaScript instead (`import "@meridui/react/styles.css"`), keep the `@layer` statement at the top of the CSS file that Tailwind processes, and make sure that file loads first. Without the statement, or with Merid imported first, Preflight ends up above Merid and buttons and inputs lose their padding, borders and background. `npx @meridui/cli init` sets this up in Next.js, Vite and React Router projects, and `npx @meridui/cli doctor` warns when the order is wrong.
 
 ## Preflight
 

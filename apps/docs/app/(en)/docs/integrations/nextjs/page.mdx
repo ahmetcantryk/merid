@@ -8,13 +8,21 @@ export const metadata = docMetadata("en", "/docs/integrations/nextjs", {
 
 Merid works in the App Router without configuration. This site is itself a Next.js 16 app built with it.
 
+```bash
+npx create-next-app@latest my-app
+cd my-app
+npx @meridui/cli init
+```
+
+`init` installs `@meridui/react`, imports the stylesheet in `app/layout.tsx` and fixes the template's `globals.css` (see [below](#the-templates-globals-css)). Every change is shown as a diff before it is written.
+
 ## Set up
 
 ```tsx
 // app/layout.tsx
 import type { Metadata, Viewport } from "next";
 import "@meridui/react/styles.css";
-import "./globals.css"; // your CSS after Merid's
+import "./globals.css"; // your CSS after Merid's (with Tailwind, the other way round; see below)
 
 export const metadata: Metadata = {
   title: { default: "Acme", template: "%s — Acme" },
@@ -38,6 +46,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ```
 
 The base layer applies typography, background and focus styles to the document at zero specificity; no class is needed. No `transpilePackages` entry is needed. In server component files use the flat part names (`DialogRoot`, `TabsList`, …) and `asChild` for router links; see [Server components](/docs/server-components).
+
+## The template's globals.css
+
+`create-next-app` writes an `app/globals.css` whose rules are not in a cascade layer, so they beat Merid's.
+
+With Tailwind (the default), two things need changing. The `body` rule sets Arial and the template's colours; remove it. And Tailwind's reset, Preflight, is in a layer named `base`: when Merid's stylesheet loads first, that layer ends up above Merid's and strips the padding, borders and background from buttons and inputs. Put the layer order at the top of `globals.css` and import `globals.css` before Merid:
+
+```css
+/* app/globals.css */
+@layer theme, base, merid, components, utilities;
+
+@import "tailwindcss";
+```
+
+```tsx
+// app/layout.tsx
+import "./globals.css";
+import "@meridui/react/styles.css";
+```
+
+Without Tailwind, the template adds `* { padding: 0; margin: 0 }`, which takes the padding off every component, `a { color: inherit; text-decoration: none }`, which hides `Link`, and Arial on `body`. Remove those and keep `body { margin: 0 }`. The `--background` and `--foreground` variables can stay; Merid does not use them.
+
+`npx @meridui/cli init` makes these changes and asks before writing. It only removes rules that still match the template, so your own edits stay. `npx @meridui/cli doctor` warns while any of them are left. See [Tailwind CSS](/docs/integrations/tailwind) for mapping Merid's tokens into your Tailwind theme.
 
 ## Server components
 
@@ -78,19 +109,19 @@ import { Breadcrumb, Card, SidebarNav } from "@meridui/react";
 
 Overlay triggers (`Dialog.Trigger`, `Popover.Trigger`, `DropdownMenu.Trigger`, `Tooltip`) take `asChild`, so a `next/link` can also be a tooltip or menu anchor.
 
-`Button` and `Link` do not take `as` or `asChild` today. For a routed button or text link, put Merid's classes and data attributes on `next/link` directly — the styles only depend on them:
+`Button`, `Link` and `Breadcrumb.Link` take `asChild`, which also works in server component files where `as={NextLink}` cannot be passed:
 
 ```tsx
-<NextLink href="/new" className="mrd-button" data-variant="primary" data-size="md">
-  <span className="mrd-button__content">New project</span>
-</NextLink>
+<Button asChild variant="primary">
+  <NextLink href="/new">New project</NextLink>
+</Button>
 
-<NextLink href="/pricing" className="mrd-link" data-tone="accent" data-underline="hover">
-  Pricing
-</NextLink>
+<Link asChild>
+  <NextLink href="/pricing">Pricing</NextLink>
+</Link>
 ```
 
-`Pagination` with `getHref` renders plain anchors (full page loads). In an app, prefer `onPageChange` and `router.push`, or keep `getHref` for crawlable pagination on public pages.
+`Pagination` with `getHref` renders plain anchors (full page loads). Pass `renderLink` to route them through `next/link`: `renderLink={({ page, ...props }) => <NextLink {...props} />}`. Or use `onPageChange` and `router.push` in an app, and keep `getHref` for crawlable pagination on public pages.
 
 ## Fonts
 
