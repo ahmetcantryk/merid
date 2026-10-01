@@ -5,6 +5,7 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState, type Keyboard
 import { useDictionary, useLocale } from "@/lib/i18n/client";
 import { localizePath } from "@/lib/i18n/config";
 import { searchIndex, type SearchEntry } from "@/lib/search";
+import { SiteLoader } from "./SiteLoader";
 
 export function SearchDialog() {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -143,6 +144,7 @@ export function SearchDialog() {
           ))}
         </ul>
         {error ? <p className="search-dialog__empty">{t.loadError}</p> : null}
+        {!error && !entries ? <SiteLoader label={t.loading} compact id="search-loader" /> : null}
         {!error && entries && query.trim() && results.length === 0 ? (
           <p className="search-dialog__empty">{t.noResults(query.trim())}</p>
         ) : null}

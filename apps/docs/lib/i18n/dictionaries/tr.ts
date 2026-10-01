@@ -38,6 +38,7 @@ export const tr: Dictionary = {
     placeholder: "Sayfa ve bölüm ara",
     results: "Sonuçlar",
     loadError: "Arama dizini yüklenemedi. Sayfayı yenileyip tekrar dene.",
+    loading: "Arama dizini yükleniyor",
     noResults: (query: string) => `“${query}” için sonuç yok.`,
     hintMove: "ile gez,",
     hintOpen: "ile aç",

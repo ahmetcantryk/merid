@@ -38,6 +38,7 @@ export const en = {
     placeholder: "Search pages and sections",
     results: "Results",
     loadError: "The search index could not be loaded. Try again after a refresh.",
+    loading: "Loading the search index",
     noResults: (query: string) => `No results for “${query}”.`,
     hintMove: "to move,",
     hintOpen: "to open",

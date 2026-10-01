@@ -210,3 +210,38 @@ kbd {
 .not-found h1 { margin-top: 12px; font-size: var(--mrd-text-h2); line-height: var(--mrd-leading-h2); letter-spacing: var(--mrd-tracking-h2); }
 .not-found p { max-width: 520px; margin-top: 14px; font-size: var(--mrd-text-lg); }
 .not-found__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+
+/* Route loading state: the wave mark fills and drains. Appears after 200ms so quick
+   navigations never flash it; holds still under reduced motion. */
+.site-loader {
+  display: grid;
+  place-items: center;
+  min-height: 60vh;
+  opacity: 0;
+  animation: site-loader-in 160ms var(--mrd-ease) 200ms forwards;
+}
+.site-loader__mark { width: 88px; height: auto; display: block; }
+.site-loader--compact { min-height: 120px; }
+.site-loader--compact .site-loader__mark { width: 56px; }
+.site-loader__track { fill: var(--mrd-line); }
+.site-loader__level {
+  fill: var(--mrd-accent);
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: site-loader-fill 1.8s cubic-bezier(.65, 0, .35, 1) infinite;
+}
+@keyframes site-loader-in { to { opacity: 1; } }
+@keyframes site-loader-fill {
+  0% { transform: scaleX(0); transform-origin: left center; }
+  49.9% { transform: scaleX(1); transform-origin: left center; }
+  50% { transform: scaleX(1); transform-origin: right center; }
+  100% { transform: scaleX(0); transform-origin: right center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-loader { animation: none; opacity: 1; }
+  .site-loader__level { animation: none; transform: scaleX(.5); }
+}
+@media (forced-colors: active) {
+  .site-loader__track { fill: GrayText; }
+  .site-loader__level { fill: Highlight; }
+}
