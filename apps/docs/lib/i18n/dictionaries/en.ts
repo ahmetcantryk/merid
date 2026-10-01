@@ -159,7 +159,7 @@ export const en = {
     accent: "Accent",
     accents: { magenta: "Magenta (default)", petrol: "Petrol", brass: "Brass", graphite: "Graphite" },
     radius: "Radius",
-    radii: { none: "None", default: "Default", soft: "Soft", round: "Round" },
+    radii: { none: "None", default: "Sharp", soft: "Soft", round: "Round" },
     density: "Density",
     densities: { compact: "Compact", default: "Default", comfortable: "Roomy" },
     scale: "Type scale",

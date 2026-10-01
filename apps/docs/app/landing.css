@@ -106,13 +106,14 @@
 }
 .ledger__row:first-child { border-top: 0; }
 
+.rules__head { grid-column: 1 / span 4; display: grid; justify-items: start; gap: 8px; }
 .rules__name {
-  grid-column: 1 / span 4; color: var(--mrd-ink); font-size: 19px; line-height: 1.3; font-weight: var(--mrd-weight-semibold);
+  color: var(--mrd-ink); font-size: 19px; line-height: 1.3; font-weight: var(--mrd-weight-semibold);
   font-stretch: var(--mrd-h2-stretch); letter-spacing: -0.01em;
 }
 .rules__name:hover { color: var(--mrd-accent); }
-.rules__text { grid-column: 5 / span 6; color: var(--mrd-body); font-size: var(--mrd-text-md); line-height: 1.6; }
-.rules__spec { grid-column: 11 / -1; justify-self: end; color: var(--mrd-muted); font-size: 13px; white-space: nowrap; }
+.rules__text { grid-column: 5 / -1; max-width: 40em; color: var(--mrd-body); font-size: var(--mrd-text-md); line-height: 1.6; }
+.rules__spec { color: var(--mrd-body); font-size: 13.5px; white-space: nowrap; }
 
 
 /* Closing: the install command at title size, set in the mono face */
@@ -142,8 +143,7 @@
   .hero-map__sheet { inset: 16px 0 48px; }
   .band__head { margin-bottom: 40px; }
   .band__head h2, .band__head p { grid-column: 1 / -1; }
-  .rules__name, .rules__text, .rules__spec { grid-column: 1 / -1; }
-  .rules__spec { justify-self: start; margin-top: 4px; }
+  .rules__head, .rules__text { grid-column: 1 / -1; }
   .closing { padding-block: 72px 80px; }
   .closing__cmd, .closing__body { grid-column: 1 / -1; }
 }

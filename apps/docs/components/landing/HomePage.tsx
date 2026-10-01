@@ -89,11 +89,13 @@ export function HomePage({ locale }: { readonly locale: Locale }) {
           <ol className="ledger rules">
             {t.contract.map((c, i) => (
               <li key={c.rule} className="ledger__row">
-                <Link href={href(RULE_PAGES[i] ?? "/docs/foundations/principles")} className="rules__name">
-                  {c.rule}
-                </Link>
+                <div className="rules__head">
+                  <Link href={href(RULE_PAGES[i] ?? "/docs/foundations/principles")} className="rules__name">
+                    {c.rule}
+                  </Link>
+                  <code className="rules__spec">{c.spec}</code>
+                </div>
                 <p className="rules__text">{c.text}</p>
-                <code className="rules__spec">{c.spec}</code>
               </li>
             ))}
           </ol>

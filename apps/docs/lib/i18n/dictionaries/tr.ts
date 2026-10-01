@@ -158,7 +158,7 @@ export const tr: Dictionary = {
     accent: "Vurgu rengi",
     accents: { magenta: "Magenta (varsayılan)", petrol: "Petrol", brass: "Pirinç", graphite: "Grafit" },
     radius: "Köşe",
-    radii: { none: "Yok", default: "Varsayılan", soft: "Yumuşak", round: "Yuvarlak" },
+    radii: { none: "Yok", default: "Keskin", soft: "Yumuşak", round: "Yuvarlak" },
     density: "Yoğunluk",
     densities: { compact: "Sıkı", default: "Varsayılan", comfortable: "Ferah" },
     scale: "Yazı ölçeği",
