@@ -166,7 +166,7 @@ Each component has a page at **[meridui.dev](https://meridui.dev)** with live ex
 npx meridui init
 ```
 
-This installs `@meridui/react` and imports the stylesheet. If you want, it also adds an AI rules file (`AGENTS.md` or Cursor rules) and the config for the Merid MCP server in Claude Code, Cursor or VS Code. The docs publish [`llms.txt`](https://meridui.dev/llms.txt) as well. More in [Using Merid with AI](https://meridui.dev/docs/ai).
+This installs `@meridui/react`, imports the stylesheet and removes the CSS your project template ships that would override Merid, such as the Vite starter's `:root` font or Next.js's Arial `body`; with Tailwind it also puts Merid's layers after Preflight. If you want, it also adds an AI rules file (`AGENTS.md` or Cursor rules) and the config for the Merid MCP server in Claude Code, Cursor or VS Code. The docs publish [`llms.txt`](https://meridui.dev/llms.txt) as well. More in [Using Merid with AI](https://meridui.dev/docs/ai).
 
 <br>
 
@@ -199,6 +199,7 @@ To change a value everywhere, override its token in your own CSS. Rules outside 
 | [`@meridui/tokens`](packages/tokens) | Design tokens as CSS custom properties and typed JS |
 | [`@meridui/cli`](packages/cli) | `npx meridui init`: installs the package and stylesheet, and can add AI rules, MCP config and page patterns |
 | [`@meridui/mcp`](packages/mcp) | Read-only MCP server that lets AI agents look up components, tokens and the design contract |
+| [`meridui`](packages/meridui) | Short name for the CLI, so `npx meridui init` works |
 
 <br>
 
