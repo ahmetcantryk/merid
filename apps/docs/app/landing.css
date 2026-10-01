@@ -93,7 +93,7 @@
 .cindex__heading {
   padding-bottom: 10px; margin-bottom: 8px; border-bottom: 1px solid var(--mrd-rule);
   color: var(--mrd-ink); font-size: var(--mrd-text-md); font-weight: var(--mrd-weight-semibold);
-  font-stretch: var(--mrd-h2-stretch); letter-spacing: -0.005em;
+  font-stretch: var(--mrd-title-stretch); letter-spacing: -0.005em;
 }
 .cindex ul { margin: 0; padding: 0; list-style: none; }
 .cindex li a {
@@ -113,7 +113,7 @@
 .rules__head { grid-column: 1 / span 4; display: grid; justify-items: start; gap: 8px; }
 .rules__name {
   color: var(--mrd-ink); font-size: 19px; line-height: 1.3; font-weight: var(--mrd-weight-semibold);
-  font-stretch: var(--mrd-h2-stretch); letter-spacing: -0.01em;
+  font-stretch: var(--mrd-title-stretch); letter-spacing: -0.01em;
 }
 .rules__name:hover { color: var(--mrd-accent); }
 .rules__text { grid-column: 5 / -1; max-width: 40em; color: var(--mrd-body); font-size: var(--mrd-text-md); line-height: 1.6; }

@@ -51,12 +51,12 @@ main { flex: 1; }
 
 /* Type: the expanded Archivo cut carries titles; body copy stays at the normal width. */
 .t-display {
-  font-family: var(--mrd-font-display); font-stretch: var(--mrd-display-stretch); font-weight: var(--mrd-display-weight);
-  font-variation-settings: var(--mrd-display-axes); letter-spacing: var(--mrd-tracking-display); color: var(--mrd-ink);
+  font-family: var(--mrd-font-display); font-stretch: var(--mrd-display-stretch); font-weight: var(--mrd-weight-semibold);
+  letter-spacing: var(--mrd-tracking-display); color: var(--mrd-ink);
 }
 .t-title {
-  font-family: var(--mrd-h2-family); font-stretch: var(--mrd-h2-stretch); font-weight: var(--mrd-h2-weight);
-  font-variation-settings: var(--mrd-h2-axes); letter-spacing: var(--mrd-tracking-h2); color: var(--mrd-ink);
+  font-family: var(--mrd-font-display); font-stretch: var(--mrd-title-stretch); font-weight: var(--mrd-weight-semibold);
+  letter-spacing: var(--mrd-tracking-h2); color: var(--mrd-ink);
 }
 
 /* Logo: the wave takes the accent; where it passes under itself it is ink (light) or deep accent (dark). */

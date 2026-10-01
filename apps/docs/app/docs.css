@@ -14,7 +14,7 @@
 .docs-sidebar__group + .docs-sidebar__group { margin-top: 28px; }
 .docs-sidebar__heading {
   padding: 0 0 8px; color: var(--mrd-ink);
-  font-size: var(--mrd-text-sm); font-weight: var(--mrd-weight-semibold); font-stretch: var(--mrd-h2-stretch);
+  font-size: var(--mrd-text-sm); font-weight: var(--mrd-weight-semibold); font-stretch: var(--mrd-title-stretch);
 }
 .docs-sidebar ul { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--mrd-line); }
 .docs-sidebar li a {
@@ -61,14 +61,14 @@
 /* Prose: direct children only, so live previews keep component styles */
 .doc-article { color: var(--mrd-body); font-size: var(--mrd-text-md); line-height: 1.7; }
 .doc-article > h1 {
-  font-family: var(--mrd-h2-family); font-stretch: var(--mrd-h2-stretch); font-weight: var(--mrd-h2-weight);
+  font-family: var(--mrd-font-display); font-stretch: var(--mrd-title-stretch); font-weight: var(--mrd-weight-semibold);
   color: var(--mrd-ink); font-size: clamp(34px, 3.4vw, 46px); line-height: 1.06; letter-spacing: var(--mrd-tracking-h2);
   text-wrap: balance;
 }
 .doc-article > h1 + p { margin-top: 16px; color: var(--mrd-body); font-size: clamp(17px, 1.3vw, 19px); line-height: 1.55; }
 .doc-article > h2 {
   margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--mrd-line);
-  font-family: var(--mrd-h2-family); font-stretch: var(--mrd-h2-stretch); font-weight: var(--mrd-h2-weight);
+  font-family: var(--mrd-font-display); font-stretch: var(--mrd-title-stretch); font-weight: var(--mrd-weight-semibold);
   color: var(--mrd-ink); font-size: 26px; line-height: 1.2; letter-spacing: -0.02em;
 }
 .doc-article > h3 { margin-top: 36px; color: var(--mrd-ink); font-size: 18px; line-height: 1.35; letter-spacing: -0.01em; font-weight: var(--mrd-weight-semibold); }
@@ -196,7 +196,6 @@
   transition: transform var(--mrd-duration-slow) var(--mrd-ease), box-shadow var(--mrd-duration-slow) var(--mrd-ease), background-color var(--mrd-duration) var(--mrd-ease);
 }
 .motion-demo__target[data-kind="lift"]:hover { transform: translateY(-3px); box-shadow: var(--mrd-shadow-lg); }
-.motion-demo__target[data-kind="press"]:active { transform: var(--mrd-press); transition-duration: var(--mrd-duration-fast); }
 .motion-demo__target[data-kind="tint"]:hover { background: var(--mrd-tray-2); }
 
 /* Brand */
@@ -236,7 +235,7 @@
 .doc-pager__link[data-dir="next"] { grid-column: 2; text-align: right; }
 .doc-pager__dir { color: var(--mrd-muted); font-size: var(--mrd-text-sm); }
 .doc-pager__title {
-  color: var(--mrd-ink); font-size: 20px; line-height: 1.3; font-weight: var(--mrd-weight-semibold); font-stretch: var(--mrd-h2-stretch);
+  color: var(--mrd-ink); font-size: 20px; line-height: 1.3; font-weight: var(--mrd-weight-semibold); font-stretch: var(--mrd-title-stretch);
   transition: color var(--mrd-duration) var(--mrd-ease);
 }
 .doc-pager__link:hover .doc-pager__title { color: var(--mrd-accent); }
