@@ -32,3 +32,10 @@ export function SiteLoader({ label, compact = false, id = "site-loader" }: SiteL
     </div>
   );
 }
+
+/**
+ * Shows the full-screen splash once per browser session: the first page load plays one
+ * fill-and-drain cycle, later navigations skip it. Automated browsers (tests, crawlers that
+ * set navigator.webdriver) never see it. Runs before paint.
+ */
+export const splashInitScript = `try{if(navigator.webdriver||sessionStorage.getItem("mrd-splash"))document.documentElement.classList.add("no-splash");else sessionStorage.setItem("mrd-splash","1")}catch(e){document.documentElement.classList.add("no-splash")}`;

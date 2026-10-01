@@ -7,6 +7,8 @@ import { localizePath } from "@/lib/i18n/config";
 import { searchIndex, type SearchEntry } from "@/lib/search";
 import { SiteLoader } from "./SiteLoader";
 
+const LOADER_CYCLE_MS = 1800;
+
 export function SearchDialog() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -24,10 +26,15 @@ export function SearchDialog() {
 
   const load = useCallback(async () => {
     if (entries) return;
+    const started = performance.now();
     try {
       const response = await fetch(localizePath("/search-index.json", locale));
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      setEntries((await response.json()) as SearchEntry[]);
+      const data = (await response.json()) as SearchEntry[];
+      // Let the loader finish one full fill-and-drain cycle before results replace it.
+      const remaining = LOADER_CYCLE_MS - (performance.now() - started);
+      if (remaining > 0) await new Promise((done) => setTimeout(done, remaining));
+      setEntries(data);
     } catch (err) {
       console.error("[docs] search index failed to load", err);
       setError(true);

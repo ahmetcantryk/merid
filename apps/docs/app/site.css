@@ -217,8 +217,6 @@ kbd {
   display: grid;
   place-items: center;
   min-height: 60vh;
-  opacity: 0;
-  animation: site-loader-in 160ms var(--mrd-ease) 200ms forwards;
 }
 .site-loader__mark { width: 88px; height: auto; display: block; }
 .site-loader--compact { min-height: 120px; }
@@ -230,7 +228,6 @@ kbd {
   transform-origin: left center;
   animation: site-loader-fill 1.8s cubic-bezier(.65, 0, .35, 1) infinite;
 }
-@keyframes site-loader-in { to { opacity: 1; } }
 @keyframes site-loader-fill {
   0% { transform: scaleX(0); transform-origin: left center; }
   49.9% { transform: scaleX(1); transform-origin: left center; }
@@ -238,9 +235,26 @@ kbd {
   100% { transform: scaleX(0); transform-origin: right center; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .site-loader { animation: none; opacity: 1; }
   .site-loader__level { animation: none; transform: scaleX(.5); }
 }
+/* First-load splash: one full fill-and-drain cycle, then it fades away. CSS only, so it
+   can never get stuck if scripts fail. */
+.site-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  background: var(--mrd-bg);
+  animation: site-splash-out 320ms var(--mrd-ease) 1.8s forwards;
+}
+.site-splash .site-loader { min-height: 0; }
+.site-splash .site-loader__mark { width: 96px; }
+.site-splash .site-loader__level { animation-iteration-count: 1; animation-fill-mode: forwards; }
+@keyframes site-splash-out { to { opacity: 0; visibility: hidden; } }
+.no-splash .site-splash { display: none; }
+@media (prefers-reduced-motion: reduce) { .site-splash { display: none; } }
+
 @media (forced-colors: active) {
   .site-loader__track { fill: GrayText; }
   .site-loader__level { fill: Highlight; }

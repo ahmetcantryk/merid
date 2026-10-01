@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Analytics } from "@/components/Analytics";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SiteLoader, splashInitScript } from "@/components/SiteLoader";
 import { themeInitScript } from "@/components/ThemeToggle";
 import { getDictionary, htmlLang, type Locale } from "@/lib/i18n";
 import "../app/site.css";
@@ -29,8 +30,12 @@ export function RootDocument({ locale, children }: { readonly locale: Locale; re
     <html lang={htmlLang[locale]} className="mrd-root" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: splashInitScript }} />
       </head>
       <body>
+        <div className="site-splash" aria-hidden="true">
+          <SiteLoader label="" id="splash-loader" />
+        </div>
         <a href="#content" className="skip-link">
           {dict.skipToContent}
         </a>
