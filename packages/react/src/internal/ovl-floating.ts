@@ -19,6 +19,9 @@ export function useAnchored({ open, placement = "bottom-start", sideOffset = 8, 
     open,
     placement,
     strategy: "fixed",
+    // Place with left/top. The open animation animates `transform`, which would override a
+    // transform-based position and pin the panel to the viewport's top-left corner.
+    transform: false,
     whileElementsMounted: (reference, floating, update) =>
       typeof ResizeObserver === "undefined" ? () => undefined : autoUpdate(reference, floating, update),
     middleware: [
