@@ -1,5 +1,11 @@
 # @meridui/react
 
+## 0.2.1
+
+### Patch Changes
+
+- 750dbb3: Menus, popovers, selects, comboboxes, hover cards and tooltips open next to their trigger again. They were positioned with `transform`, which the open animation overrode, so outside the docs site they could appear in the top-left corner of the page. They are now placed with `left`/`top`.
+
 ## 0.2.0
 
 ### Minor Changes
