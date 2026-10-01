@@ -13,10 +13,10 @@
 
 <p>
   <a href="https://github.com/ahmetcantryk/merid/actions/workflows/ci.yml"><img src="https://github.com/ahmetcantryk/merid/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-476cff?style=flat-square" alt="MIT licence"></a>
-  <img src="https://img.shields.io/badge/React-18%20%7C%2019-476cff?style=flat-square" alt="React 18 and 19">
-  <img src="https://img.shields.io/badge/WCAG-2.2%20AA-476cff?style=flat-square" alt="WCAG 2.2 AA">
-  <img src="https://img.shields.io/badge/TypeScript-strict-476cff?style=flat-square" alt="TypeScript">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-b20965?style=flat-square" alt="MIT licence"></a>
+  <img src="https://img.shields.io/badge/React-18%20%7C%2019-b20965?style=flat-square" alt="React 18 and 19">
+  <img src="https://img.shields.io/badge/WCAG-2.2%20AA-b20965?style=flat-square" alt="WCAG 2.2 AA">
+  <img src="https://img.shields.io/badge/TypeScript-strict-b20965?style=flat-square" alt="TypeScript">
 </p>
 
 <p>
@@ -31,7 +31,7 @@
 
 </div>
 
-Merid is an accessible React component library written in **plain CSS** and a small set of **design tokens**. Hairline borders, one cool accent, soft grey trays and calm motion — so your product reads as *considered*, not decorated.
+Merid is an accessible React component library written in **plain CSS** and a small set of **design tokens**. Ink rules and a single magenta accent, both borrowed from map-making, so your product reads as *considered*, not decorated.
 
 > The name comes from ***meridian*** — a thin, precise reference line.
 
@@ -198,7 +198,7 @@ Installs `@meridui/react`, imports the stylesheet, and can add an AI rules file 
 Themes are plain attributes, so they scope to any subtree.
 
 ```tsx
-<div data-theme="dark" data-accent="violet" data-density="compact" dir="rtl">
+<div data-theme="dark" data-accent="petrol" data-density="compact" dir="rtl">
   {/* everything in here, including portaled overlays, follows */}
 </div>
 ```
@@ -218,7 +218,7 @@ Need to go deeper? Override tokens in your own CSS — it always wins over Merid
 
 | Package | Description |
 | :-- | :-- |
-| [`@meridui/react`](packages/react) | React components, stylesheet and bundled Geist fonts |
+| [`@meridui/react`](packages/react) | React components, stylesheet and bundled Archivo and Chivo Mono fonts |
 | [`@meridui/tokens`](packages/tokens) | Design tokens as CSS custom properties and typed JS |
 | [`@meridui/cli`](packages/cli) | `npx meridui init`: install, stylesheet, AI rules, MCP config and page patterns |
 | [`@meridui/mcp`](packages/mcp) | Read-only MCP server so AI agents can look up components, tokens and the design contract |
@@ -254,6 +254,6 @@ Contributions are welcome — read [CONTRIBUTING.md](CONTRIBUTING.md) and the [C
   <img src="apps/docs/public/brand/mark-light.svg" alt="" width="40">
 </picture>
 
-<sub>[MIT](LICENSE) © 2026 Ahmet Can Tiryaki · Geist & Geist Mono © Vercel, bundled under the SIL OFL 1.1 — see [NOTICE](NOTICE)</sub>
+<sub>[MIT](LICENSE) © 2026 Ahmet Can Tiryaki · Archivo & Chivo Mono © The Archivo and Chivo Project Authors, bundled under the SIL OFL 1.1 — see [NOTICE](NOTICE)</sub>
 
 </div>

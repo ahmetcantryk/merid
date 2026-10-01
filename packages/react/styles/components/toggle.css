@@ -42,7 +42,7 @@
   }
 
   .mrd-toggle:active:not(:disabled) {
-    transform: scale(0.97);
+    transform: var(--mrd-press);
   }
 
   .mrd-toggle[data-state="on"] {
@@ -51,8 +51,8 @@
   }
 
   .mrd-toggle:focus-visible {
-    outline: 2px solid var(--mrd-accent);
-    outline-offset: 2px;
+    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
+    outline-offset: var(--mrd-focus-offset);
   }
 
   .mrd-toggle:disabled {

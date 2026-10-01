@@ -40,7 +40,7 @@
     height: 16px;
     padding: 1px;
     border: 1px solid var(--mrd-line-strong);
-    border-radius: 4px;
+    border-radius: var(--mrd-radius-xs);
     background: var(--mrd-surface);
     color: transparent;
     transition:
@@ -65,8 +65,8 @@
   }
 
   .mrd-checkbox__input:focus-visible + .mrd-checkbox__icon {
-    outline: 2px solid var(--mrd-accent);
-    outline-offset: 3px;
+    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
+    outline-offset: var(--mrd-focus-offset);
   }
 
   .mrd-checkbox__text {

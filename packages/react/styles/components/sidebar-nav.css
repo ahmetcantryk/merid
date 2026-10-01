@@ -44,14 +44,21 @@
     color: var(--mrd-ink);
   }
 
+  /* The current page is marked by an accent rule on the leading edge, not a fill. */
   .mrd-sidebar-nav__item[aria-current="page"] {
-    background: var(--mrd-accent-soft);
-    color: var(--mrd-accent-strong);
+    border-radius: 0;
+    background: transparent;
+    color: var(--mrd-ink);
+    box-shadow: inset 2px 0 0 var(--mrd-accent);
+  }
+
+  .mrd-sidebar-nav__item[aria-current="page"]:dir(rtl) {
+    box-shadow: inset -2px 0 0 var(--mrd-accent);
   }
 
   .mrd-sidebar-nav__item:focus-visible {
-    outline: 2px solid var(--mrd-accent);
-    outline-offset: 2px;
+    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
+    outline-offset: var(--mrd-focus-offset);
   }
 
   .mrd-sidebar-nav__icon {

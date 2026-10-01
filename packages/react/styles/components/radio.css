@@ -83,8 +83,8 @@
   }
 
   .mrd-radio__input:focus-visible + .mrd-radio__circle {
-    outline: 2px solid var(--mrd-accent);
-    outline-offset: 3px;
+    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
+    outline-offset: var(--mrd-focus-offset);
   }
 
   .mrd-radio__text {

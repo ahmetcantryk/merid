@@ -41,22 +41,28 @@ test("every CSS variable in tokens.css appears in tokens.json", async () => {
 test("theme, accent and density are exposed as modes", async () => {
   const json = await readJson("tokens.json");
   const accent = json.color.accent;
-  assert.equal(accent.$value, "#3f63f5");
-  assert.equal(accent.$extensions["com.merid"].modes.dark, "#6b8aff");
+  assert.equal(accent.$value, "#b20965");
+  assert.equal(accent.$extensions["com.merid"].modes.dark, "#ef86ae");
   assert.equal(accent.$extensions["com.merid"].modes.violet, "#6e4ef0");
+  assert.equal(accent.$extensions["com.merid"].modes.petrol, "#035f73");
+  // Brass moves the warning tone to orange so a warning never reads as the accent.
+  const warning = json.color["warning-strong"].$extensions["com.merid"].modes;
+  assert.equal(warning.brass, "#9e4500");
+  assert.equal(warning["brass-dark"], "#f9a870");
+  assert.equal(warning.petrol, undefined);
   assert.equal(json.size["control-md"].$extensions["com.merid"].modes["pointer-coarse"], "40px");
   assert.equal(json.size["control-md"].$extensions["com.merid"].modes.compact, "28px");
 });
 
 test("JS module and Tokens Studio file", async () => {
   const mod = await import("../dist/index.js");
-  assert.equal(mod.tokens.light.accent, "#3f63f5");
-  assert.equal(mod.tokens.dark.accent, "#6b8aff");
-  assert.equal(mod.tokens.dark.bg, "#0b0d12");
+  assert.equal(mod.tokens.light.accent, "#b20965");
+  assert.equal(mod.tokens.dark.accent, "#ef86ae");
+  assert.equal(mod.tokens.dark.bg, "#0d0e10");
   assert.equal(mod.cssVar.space4, "var(--mrd-space-4)");
   const studio = await readJson("figma-tokens.json");
-  assert.equal(studio.core.color.accent.value, "#3f63f5");
-  assert.equal(studio.dark.color.accent.value, "#6b8aff");
+  assert.equal(studio.core.color.accent.value, "#b20965");
+  assert.equal(studio.dark.color.accent.value, "#ef86ae");
   assert.ok(studio.$metadata.tokenSetOrder.includes("accent-violet"));
-  assert.equal(studio.$themes.length, 8);
+  assert.equal(studio.$themes.length, 14);
 });

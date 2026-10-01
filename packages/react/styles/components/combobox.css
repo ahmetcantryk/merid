@@ -48,12 +48,17 @@
 
   .mrd-combobox__control:focus-within,
   .mrd-combobox[data-state="open"] .mrd-combobox__control {
-    border-color: var(--mrd-accent);
+    border-color: var(--mrd-focus-color);
     box-shadow: var(--mrd-focus-ring);
   }
 
   .mrd-combobox[data-invalid] .mrd-combobox__control {
     border-color: var(--mrd-danger);
+  }
+
+  .mrd-combobox[data-invalid] .mrd-combobox__control:focus-within,
+  .mrd-combobox[data-invalid][data-state="open"] .mrd-combobox__control {
+    box-shadow: var(--mrd-focus-ring-invalid);
   }
 
   .mrd-combobox[data-disabled] .mrd-combobox__control {

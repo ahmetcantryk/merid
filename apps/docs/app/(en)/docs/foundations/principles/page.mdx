@@ -1,36 +1,38 @@
 import { docMetadata } from "@/lib/i18n/metadata";
 export const metadata = docMetadata("en", "/docs/foundations/principles", {
   title: "Principles",
-  description: "The ten rules every Merid component and page is held to.",
+  description: "The eleven rules every Merid component and page is held to.",
 });
 
 # Principles
 
-These ten rules are the design contract. Every component, doc page and example follows them. If a value is not defined by a token, it is derived from an existing one — never invented.
+These eleven rules are the design contract. Every component, doc page and example follows them. If a value is not defined by a token, it is derived from an existing one, never invented.
+
+The rules come from one idea. A meridian is a line on a map, so Merid borrows from map sheets: square-cut frames, ink rules, a legend you can read at a glance, and magenta for the thing that matters.
 
 ## 1. One accent, used sparingly
 
-A single cool blue carries interactivity and selection. Everything else is ink-tinted neutrals.
+A single accent carries interactivity and selection. The default is map magenta; blue, violet, green, graphite, petrol and brass are available as presets. Everything else is ink-tinted neutrals.
 
-## 2. Separate by surface before border
+## 2. Surfaces and rules before shadows
 
-Cards sit on a tray over the page; on a tray section they flip to a white surface and a soft shadow. Borders are the last resort.
+Regions separate by tone first, with a grey tray under the page, and by a line second. A shadow means the thing floats above the page, so only menus, popovers, toasts, tooltips and dialogs have one.
 
-## 3. Hairlines only
+## 3. Two line weights
 
-Every border is 1px `--mrd-line`. Selection is a 1.5px accent ring. Never 2px, never dark borders.
+Every border is a 1px `--mrd-line` hairline. The ink rule, `--mrd-rule`, closes a table at the top and the bottom and sits under its column headings. Selection is a 1.5px accent ring around a card, or a 2px accent rule on the leading edge of a row or nav item.
 
-## 4. Soft, long, faint shadows
+## 4. Shadows only for floating surfaces
 
-Shadows are always tinted with ink, never black. The only saturated shadow is the primary button's glow.
+Shadows are long and faint and fall below the surface instead of glowing around it. Each floating surface also has its own 1px hairline. Buttons have no shadow.
 
-## 5. Generous rounding that steps down
+## 5. Square-cut corners
 
-Radius steps down as surfaces nest: 20, then 14, then 12, then 8.
+Controls, menus and tooltips are 2px, cards 3px and dialogs 4px. Full rounding stays only where the round shape means something: the radio, the switch, the slider thumb, step markers and status dots.
 
-## 6. Tight headings, relaxed body
+## 6. Wide headings, plain body
 
-Headings are 600 with negative tracking and balanced wrapping; body text has a 1.6 line height. Weight 700 is never used.
+Display headings use Archivo's wide cut at 600 with negative tracking and balanced wrapping; section titles are slightly wide. Body text is 400 with a 1.6 line height. Weight 700 is never used.
 
 ## 7. Three text tones
 
@@ -38,7 +40,7 @@ Ink, body and muted. Hierarchy comes from tone and weight, not colour.
 
 ## 8. Quiet interaction
 
-Hover is a background tint or a 2–3px lift; press is a `.97` scale; everything takes 150–200ms. Reduced motion removes all of it.
+Hover is a background tint. A pressed control sinks by 1px in 80ms; everything else takes 120–160ms on one curve. Reduced motion removes all of it.
 
 ## 9. Air
 
@@ -46,4 +48,8 @@ Big section padding, wide gaps, content capped at 1160px and reading width at or
 
 ## 10. One filled block per page
 
-At most one filled colour block on a page. No gradients — the skeleton shimmer is the only exception.
+At most one filled colour block on a page. No gradients; the skeleton shimmer is the only exception.
+
+## 11. No decorative small print
+
+Components never add eyebrows above headings or mono captions for decoration. Table column headings are the only uppercase text, set at a readable 12px, and they follow the page's `lang` so Turkish capitals come out right.

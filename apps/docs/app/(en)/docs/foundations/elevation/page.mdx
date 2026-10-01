@@ -3,18 +3,20 @@ import { ShadowScale } from "@/components/foundations";
 
 export const metadata = docMetadata("en", "/docs/foundations/elevation", {
   title: "Elevation",
-  description: "Shadow tokens, surface layering and the focus halo.",
+  description: "Shadow tokens, surface layering, the ink rule and the focus indicators.",
 });
 
 # Elevation
 
-Elevation in Merid comes from surfaces first and shadows second. A card on the page sits on a grey tray; a card on a tray flips to a white surface with a soft shadow. Borders are the last resort.
+Elevation in Merid comes from surfaces and lines. A card on the page sits on a grey tray, a table is closed by two ink rules, and a shadow appears only when something genuinely floats above the page: a menu, a popover, a toast, a tooltip or a dialog.
 
 ## Shadow scale
 
-All shadows are long, soft and faint, tinted with ink (`rgb(15 18 25 / …)`) rather than black. The only saturated shadow is the primary button's accent glow.
+Shadows are long and faint with a negative spread, so they fall below the surface instead of glowing around it. They are tinted with ink (`rgb(18 20 23 / …)`) rather than black, and every floating surface also has its own 1px hairline. Buttons have no shadow; `--mrd-shadow-accent` is `none`.
 
 <ShadowScale />
+
+`--mrd-shadow-xs` and `--mrd-shadow-sm` resolve to nothing in this identity. They stay in the scale so your own theme has a place to put them back.
 
 ## Choosing a level
 
@@ -23,17 +25,20 @@ All shadows are long, soft and faint, tinted with ink (`rgb(15 18 25 / …)`) ra
     <tr><th>Surface</th><th>Shadow</th></tr>
   </thead>
   <tbody>
-    <tr><td>Selected chip in a segmented control</td><td><code>--mrd-shadow-xs</code></td></tr>
-    <tr><td>Card on a tray, interactive card on hover</td><td><code>--mrd-shadow-md</code></td></tr>
+    <tr><td>Elevated card, interactive card on hover</td><td><code>--mrd-shadow-md</code></td></tr>
     <tr><td>Popover, toast, tooltip</td><td><code>--mrd-shadow-lg</code></td></tr>
     <tr><td>Menu</td><td><code>--mrd-shadow-xl</code></td></tr>
     <tr><td>Dialog</td><td><code>--mrd-shadow-2xl</code></td></tr>
   </tbody>
 </table>
 
-## In dark mode
+## The ink rule
 
-Shadows become black at 40–60% opacity, and elevated surfaces add a 1px ring through `--mrd-elevated-ring`. Include it next to the shadow so your own surfaces behave the same way:
+`--mrd-rule` is a 1px line in the ink colour. It closes a table at the top and the bottom and sits under the column headings, the way a ledger is ruled. It is the only dark line in the system; everything else is a `--mrd-line` hairline. In dark mode it flips to the light ink.
+
+## The hairline ring
+
+`--mrd-elevated-ring` is `0 0 0 1px var(--mrd-line)` in both themes. Add it next to the shadow so your own floating surfaces keep an edge even where the shadow is hard to see:
 
 ```css
 .floating-panel {
@@ -41,6 +46,15 @@ Shadows become black at 40–60% opacity, and elevated surfaces add a 1px ring t
 }
 ```
 
-## Focus halo
+In dark mode the shadows use black at 30–80% opacity.
 
-`--mrd-focus-ring` is a 4px accent halo at low opacity, used together with an accent border on inputs. Other controls use a 2px accent outline offset by 3px.
+## Focus
+
+Keyboard focus is a square 2px outline in the accent colour, 2px away from the control. It is built from four tokens, so a product can restyle every focus indicator at once:
+
+```css
+outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
+outline-offset: var(--mrd-focus-offset);
+```
+
+Fields work differently. They do not get a halo: on focus the border turns accent and `--mrd-focus-ring` (`inset 0 -1px 0` in the accent) thickens the bottom edge to 2px, like a line drawn under the field. An invalid field uses `--mrd-focus-ring-invalid`, the same line in the danger colour.

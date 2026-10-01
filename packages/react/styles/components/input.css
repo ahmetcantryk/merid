@@ -52,13 +52,18 @@
   .mrd-input:focus,
   .mrd-textarea:focus {
     outline: none;
-    border-color: var(--mrd-accent);
+    border-color: var(--mrd-focus-color);
     box-shadow: var(--mrd-focus-ring);
   }
 
   .mrd-input[data-invalid],
   .mrd-textarea[data-invalid] {
     border-color: var(--mrd-danger);
+  }
+
+  .mrd-input[data-invalid]:focus,
+  .mrd-textarea[data-invalid]:focus {
+    box-shadow: var(--mrd-focus-ring-invalid);
   }
 
   .mrd-input:disabled,

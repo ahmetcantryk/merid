@@ -8,14 +8,16 @@ export const metadata = docMetadata("en", "/docs/foundations/color", {
 
 # Color
 
-Merid's palette is one cool blue and a set of ink-tinted neutrals. The accent marks interaction and selection; neutrals carry everything else. Status colours appear as soft tints with strong text, never as large saturated fills.
+Merid's palette is one accent and a set of ink-tinted neutrals. The default accent is map magenta, the colour nautical and aeronautical charts keep for the information that matters most. It marks interaction and selection; the neutrals carry everything else. Status colours appear as soft tints with strong text, never as large saturated fills.
 
 ## Rules
 
 - Use the accent for things people can act on, and for the current selection. Do not use it for decoration or emphasis.
-- Separate regions with `--mrd-tray` before reaching for a border. When a border is needed it is 1px `--mrd-line`.
-- Build hierarchy with the three text tones — `ink`, `body`, `muted` — and weight, not with colour.
+- Separate regions with `--mrd-tray` before reaching for a line. Hairlines are 1px `--mrd-line`; the ink rule `--mrd-rule` is kept for closing tables.
+- Build hierarchy with the three text tones (`ink`, `body`, `muted`) and weight, not with colour.
 - A page has at most one filled colour block.
+
+Danger is a vermilion pulled towards orange rather than a crimson. Next to a magenta accent, a crimson error would read as a link or a selection; the shift keeps the two apart.
 
 ## Tokens
 
@@ -23,27 +25,50 @@ Merid's palette is one cool blue and a set of ink-tinted neutrals. The accent ma
 
 ## Contrast
 
-Ratios below are measured against the page background (`--mrd-bg`) unless noted. The AA thresholds are 4.5:1 for normal text and 3:1 for large text and user-interface components.
+Ratios below are for the default magenta preset, measured against the page background (`--mrd-bg`) unless noted. Translucent dark tints are measured after compositing them over the surface they sit on. Every pair clears the 4.5:1 AA threshold for normal-size text, in both themes.
 
 <table>
   <thead>
     <tr><th>Pair</th><th>Light</th><th>Dark</th><th>Use</th></tr>
   </thead>
   <tbody>
-    <tr><td>ink on bg</td><td>18.74</td><td>17.03</td><td>Headings, strong text</td></tr>
-    <tr><td>body on bg</td><td>6.94</td><td>8.24</td><td>Body text</td></tr>
-    <tr><td>body on tray</td><td>6.42</td><td>7.39</td><td>Text on recessed sections</td></tr>
-    <tr><td>accent-strong on accent-soft</td><td>6.98</td><td>—</td><td>Selected items, info tints</td></tr>
-    <tr><td>danger / warning / success strong on soft</td><td>5.94 / 5.46 / 5.30</td><td>—</td><td>Notices</td></tr>
-    <tr><td>muted on bg</td><td>3.21</td><td>4.25</td><td>Meta text only</td></tr>
-    <tr><td>accent on bg</td><td>4.32</td><td>6.20</td><td>Links, focus ring, controls</td></tr>
-    <tr><td>on-accent on accent</td><td>4.32</td><td>3.13</td><td>Primary button label</td></tr>
+    <tr><td>ink on bg</td><td>18.45</td><td>16.92</td><td>Headings, strong text</td></tr>
+    <tr><td>body on bg</td><td>8.77</td><td>10.02</td><td>Body text</td></tr>
+    <tr><td>body on tray</td><td>8.10</td><td>9.04</td><td>Text on recessed sections</td></tr>
+    <tr><td>muted on bg</td><td>6.04</td><td>7.25</td><td>Meta text, icons</td></tr>
+    <tr><td>muted on tray</td><td>5.57</td><td>6.55</td><td>Meta text on recessed sections</td></tr>
+    <tr><td>placeholder on surface</td><td>5.61</td><td>6.62</td><td>Input placeholders</td></tr>
+    <tr><td>accent on bg</td><td>6.73</td><td>7.99</td><td>Links, focus outline, controls</td></tr>
+    <tr><td>accent on tray</td><td>6.21</td><td>7.22</td><td>Links and controls on recessed sections</td></tr>
+    <tr><td>on-accent on accent-solid</td><td>6.73</td><td>6.73</td><td>Primary button label</td></tr>
+    <tr><td>accent-strong on accent-soft</td><td>9.11</td><td>9.05</td><td>Selected items, info tints</td></tr>
+    <tr><td>danger / warning / success strong on soft</td><td>6.76 / 5.46 / 5.30</td><td>8.33 / 9.20 / 9.47</td><td>Notices</td></tr>
+    <tr><td>white on danger-solid</td><td>5.81</td><td>5.81</td><td>Danger button label</td></tr>
   </tbody>
 </table>
 
-<Callout tone="warning" title="Known contrast gaps in 0.1">
-  Three pairs fall short of 4.5:1 for normal-size text: the muted tone on the page, the light accent used as link text, and white labels on the accent fill (most noticeably in dark mode). They meet the 3:1 threshold for large text and UI components. Fixes to `--mrd-muted`, `--mrd-accent` and the dark `--mrd-on-accent` are tracked for the next minor release and will be listed in the changelog. Until then, avoid muted text for anything a reader must understand.
-</Callout>
+## Accent presets
+
+`data-accent` swaps the accent for a subtree; see [Theming](/docs/integrations/theming). All seven presets pass the same checks in both themes. The tightest pair for each is listed below, and it is almost always the accent used as text on a tray.
+
+<table>
+  <thead>
+    <tr><th>Preset</th><th>Light accent</th><th>Dark accent</th><th>Lowest ratio</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>magenta</code> (default)</td><td><code>#b20965</code></td><td><code>#ef86ae</code></td><td>6.21</td></tr>
+    <tr><td><code>blue</code></td><td><code>#3d61f2</code></td><td><code>#6b8aff</code></td><td>4.63</td></tr>
+    <tr><td><code>violet</code></td><td><code>#6e4ef0</code></td><td><code>#9d85ff</code></td><td>4.83</td></tr>
+    <tr><td><code>green</code></td><td><code>#13804d</code></td><td><code>#3ecf8e</code></td><td>4.59</td></tr>
+    <tr><td><code>graphite</code></td><td><code>#3d4350</code></td><td><code>#c9cdd4</code></td><td>9.16</td></tr>
+    <tr><td><code>petrol</code></td><td><code>#035f73</code></td><td><code>#75c4d2</code></td><td>6.71</td></tr>
+    <tr><td><code>brass</code></td><td><code>#855c01</code></td><td><code>#d9b165</code></td><td>5.49</td></tr>
+  </tbody>
+</table>
+
+Brass is the one preset that also moves a status colour. Its accent is an amber, so under `data-accent="brass"` the warning tone shifts to orange (`#9e4500` light, `#f9a870` dark) and a warning badge never reads as an accent badge.
+
+The numbers come from `packages/react/scripts/contrast.mjs`, which prints every pair and exits with an error below 4.5:1. A test in the package fails if the script and the stylesheet ever disagree about a colour.
 
 ## Using colour in your own components
 

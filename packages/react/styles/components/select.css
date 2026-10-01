@@ -42,12 +42,16 @@
   .mrd-select__trigger:focus-visible,
   .mrd-select__trigger[data-state="open"] {
     outline: none;
-    border-color: var(--mrd-accent);
+    border-color: var(--mrd-focus-color);
     box-shadow: var(--mrd-focus-ring);
   }
 
   .mrd-select__trigger[data-invalid] {
     border-color: var(--mrd-danger);
+  }
+
+  .mrd-select__trigger[data-invalid]:is(:focus-visible, [data-state="open"]) {
+    box-shadow: var(--mrd-focus-ring-invalid);
   }
 
   .mrd-select__trigger:disabled {

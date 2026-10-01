@@ -102,8 +102,11 @@ await check("font url()s in shipped CSS resolve to packaged files", () => {
       found.push(url);
     }
   }
-  const fontExport = require.resolve("@meridui/react/fonts/Geist-Variable.woff2");
-  assert(existsSync(fontExport), "fonts/* export does not resolve");
+  for (const font of ["Archivo-latin.woff2", "Archivo-latin-ext.woff2", "ChivoMono-latin.woff2", "ChivoMono-latin-ext.woff2", "ARCHIVO-OFL.txt", "CHIVO-MONO-OFL.txt"]) {
+    const fontExport = require.resolve(`@meridui/react/fonts/${font}`);
+    assert(existsSync(fontExport), `fonts/* export does not resolve ${font}`);
+  }
+  assert(new Set(found).size === 4, `expected 4 font urls (Archivo and Chivo Mono, latin and latin-ext), found ${new Set(found).size}`);
   const pkg = JSON.parse(readFileSync(join(pkgDir, "package.json"), "utf8"));
   assert(pkg.files.includes("fonts"), "fonts/ not listed in package files");
   return `${new Set(found).size} font urls ok`;

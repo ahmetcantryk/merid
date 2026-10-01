@@ -50,8 +50,9 @@
     padding-inline-end: var(--mrd-space-10);
     color: var(--mrd-ink);
     font-size: 16px;
+    font-stretch: var(--mrd-title-stretch);
     line-height: var(--mrd-leading-h3);
-    letter-spacing: var(--mrd-tracking-h3);
+    letter-spacing: -0.01em;
     font-weight: var(--mrd-weight-semibold);
     text-wrap: balance;
   }
@@ -83,7 +84,8 @@
     padding: 0;
     border: 0;
     border-radius: var(--mrd-radius-md);
-    background: var(--mrd-tray);
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--mrd-line);
     color: var(--mrd-body);
     cursor: pointer;
     transition:
@@ -98,12 +100,12 @@
   }
 
   .mrd-dialog__close:active {
-    transform: scale(0.97);
+    transform: var(--mrd-press);
   }
 
   .mrd-dialog__close:focus-visible {
-    outline: 2px solid var(--mrd-accent);
-    outline-offset: 3px;
+    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
+    outline-offset: var(--mrd-focus-offset);
   }
 
   /* ≤ 640px: bottom sheet */

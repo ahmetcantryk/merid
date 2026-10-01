@@ -9,7 +9,8 @@ const root = path.resolve(here, "..");
 const source = path.resolve(root, "../react/styles/tokens.css");
 const dist = path.join(root, "dist");
 
-export const ACCENTS = ["blue", "violet", "green", "graphite"];
+export const ACCENTS = ["magenta", "blue", "violet", "green", "graphite", "petrol", "brass"];
+const DEFAULT_ACCENT = ACCENTS[0];
 const DENSITIES = ["compact", "comfortable"];
 
 /** Groups declarations by scope. Throws on a scope the build does not understand. */
@@ -33,13 +34,14 @@ function assertDarkMirror(scopes) {
 }
 
 /** The declared environment for a theme + accent (+ optional extra overrides), as the browser would cascade it. */
-function envFor(scopes, { theme = "light", accent = "blue", extra = [] }) {
+function envFor(scopes, { theme = "light", accent = DEFAULT_ACCENT, extra = [] }) {
   return {
     ...scopes.root,
     ...scopes.light,
     ...(theme === "dark" ? scopes.dark : {}),
-    ...scopes["accent-blue"],
-    ...(accent === "blue" ? {} : scopes[`accent-${accent}`]),
+    ...scopes["accent-base"],
+    ...scopes[`accent-${DEFAULT_ACCENT}`],
+    ...(accent === DEFAULT_ACCENT ? {} : scopes[`accent-${accent}`]),
     ...scopes.resolve,
     ...Object.assign({}, ...extra.map((s) => scopes[s])),
   };
@@ -59,7 +61,7 @@ export function resolveModes(scopes) {
     light: {},
     dark: { theme: "dark" },
     ...Object.fromEntries(
-      ACCENTS.filter((a) => a !== "blue").flatMap((a) => [
+      ACCENTS.filter((a) => a !== DEFAULT_ACCENT).flatMap((a) => [
         [a, { accent: a }],
         [`${a}-dark`, { accent: a, theme: "dark" }],
       ]),
@@ -103,7 +105,7 @@ function toDtcg(modes, raw) {
   const base = modes.light;
   let out = {
     $description:
-      "Merid design tokens (W3C DTCG format). $value is the resolved default (light theme, blue accent, default density). " +
+      "Merid design tokens (W3C DTCG format). $value is the resolved default (light theme, magenta accent, default density). " +
       "Other modes are in $extensions['com.merid'].modes; `css` holds the source expression when it references other tokens.",
   };
   for (const [name, value] of Object.entries(base)) {
@@ -147,7 +149,7 @@ function studioSet(values, base) {
 function toTokensStudio(modes) {
   const base = modes.light;
   const accentSets = Object.fromEntries(
-    ACCENTS.filter((a) => a !== "blue").flatMap((a) => [
+    ACCENTS.filter((a) => a !== DEFAULT_ACCENT).flatMap((a) => [
       [`accent-${a}`, studioSet(diff(modes[a], base), base)],
       [`accent-${a}-dark`, studioSet(diff(modes[`${a}-dark`], modes.dark), base)],
     ]),
@@ -161,8 +163,8 @@ function toTokensStudio(modes) {
     "pointer-coarse": studioSet(diff(modes["pointer-coarse"], base), base),
   };
   const themes = ACCENTS.flatMap((a) => {
-    const accent = a === "blue" ? {} : { [`accent-${a}`]: "enabled" };
-    const accentDark = a === "blue" ? {} : { [`accent-${a}-dark`]: "enabled" };
+    const accent = a === DEFAULT_ACCENT ? {} : { [`accent-${a}`]: "enabled" };
+    const accentDark = a === DEFAULT_ACCENT ? {} : { [`accent-${a}-dark`]: "enabled" };
     const label = a[0].toUpperCase() + a.slice(1);
     return [
       { id: `${a}-light`, name: `${label} / Light`, group: "Theme", selectedTokenSets: { core: "enabled", ...accent } },

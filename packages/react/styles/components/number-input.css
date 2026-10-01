@@ -35,12 +35,16 @@
   }
 
   .mrd-number-input:focus-within {
-    border-color: var(--mrd-accent);
+    border-color: var(--mrd-focus-color);
     box-shadow: var(--mrd-focus-ring);
   }
 
   .mrd-number-input[data-invalid] {
     border-color: var(--mrd-danger);
+  }
+
+  .mrd-number-input[data-invalid]:focus-within {
+    box-shadow: var(--mrd-focus-ring-invalid);
   }
 
   .mrd-number-input[data-disabled] {

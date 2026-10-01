@@ -32,8 +32,8 @@
   }
 
   .mrd-accordion__trigger:focus-visible {
-    outline: 2px solid var(--mrd-accent);
-    outline-offset: 3px;
+    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
+    outline-offset: var(--mrd-focus-offset);
     border-radius: var(--mrd-radius-xs);
   }
 

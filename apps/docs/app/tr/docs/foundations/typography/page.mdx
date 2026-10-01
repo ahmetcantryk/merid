@@ -3,12 +3,16 @@ import { TypeSpecimen } from "@/components/foundations";
 
 export const metadata = docMetadata("tr", "/docs/foundations/typography", {
   title: "Tipografi",
-  description: "Merid'in yazı tipi, tipografi ölçeği, ağırlıkları ve dizgi kuralları.",
+  description: "Merid'in yazı tipleri, tipografi ölçeği, ağırlıkları, genişlikleri ve dizgi kuralları.",
 });
 
 # Tipografi
 
-Merid metinleri **Geist** ile; kodu, etiketleri ve token adlarını **Geist Mono** ile dizer. İkisi de variable font olarak pakete dahildir. Rakamlar her yerde tabular'dır; böylece tablolarda sayılar hizalanır, fiyatlar değiştikçe kaymaz.
+Merid arayüz metinlerini ve başlıkları **Archivo** ile, kodu **Chivo Mono** ile dizer. İkisi de Omnibus-Type'ın variable font'ları, ikisi de SIL Open Font License ile lisanslı ve ikisi de `@meridui/react` paketinin içinde geliyor; bir font servisinden yüklenecek bir şey yok. Rakamlar her yerde tabular'dır; böylece tablolarda sayılar hizalanır, fiyatlar değiştikçe kaymaz.
+
+## Neden Archivo
+
+Archivo'nun gerçek bir genişlik ekseni var. Aynı dosya hem bir pafta başlığı gibi geniş dizilmiş bir başlığı hem de formdaki sıradan 14px'lik bir etiketi çiziyor. Merid ayrı bir başlık fontu ile metin fontunu eşleştirmek yerine bu ekseni kullanır; başlıklar ve arayüz iki farklı üründen gelmiş gibi durmaz. Türkçe harfleri ve lira işareti tarayıcının üst üste bindirdiği aksanlar değil, çizilmiş glifler. Chivo Mono aynı dökümhaneden çıkıyor ve aynı oranları paylaşıyor, bu yüzden kod örnekleri sayfaya sonradan yapıştırılmış gibi görünmez.
 
 ## Ölçek
 
@@ -18,13 +22,40 @@ Boyutlar token'dır: boyut için `--mrd-text-*`, satır yüksekliği için eşle
 
 Display ve bölüm boyutları `clamp()` kullanır ve viewport'la birlikte ölçeklenir. Yukarıdaki örnekler bunları temsili bir masaüstü boyutunda gösterir.
 
+## Genişlik
+
+Genişlik ikinci bir font ailesi değil, bir token. Arayüz metni normal genişlikte kalır.
+
+<table>
+  <thead>
+    <tr><th>Token</th><th>Değer</th><th>Kullanan</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>--mrd-display-stretch</code></td><td>125%</td><td>Display başlık (<code>Heading size="display"</code>)</td></tr>
+    <tr><td><code>--mrd-title-stretch</code></td><td>112%</td><td>Bölüm başlıkları (<code>size="h2"</code>) ve dialog başlıkları</td></tr>
+    <tr><td><code>--mrd-label-stretch</code></td><td>112%</td><td>Badge'ler ve tablo sütun başlıkları</td></tr>
+  </tbody>
+</table>
+
+`--mrd-font-sans` yerine genişlik ekseni olmayan bir font koyarsan bu değerlerin etkisi olmaz, tarayıcı normal genişliği kullanır.
+
 ## Ağırlıklar
 
 - **400** (`--mrd-weight-regular`): gövde metni.
-- **500** (`--mrd-weight-medium`): tüm arayüz metinleri; butonlar, etiketler, navigasyon, tab'lar.
+- **500** (`--mrd-weight-medium`): butonlardan etiketlere, navigasyondan tab'lara kadar tüm arayüz metni.
 - **600** (`--mrd-weight-semibold`): başlıklar ve vurgu gereken sayılar.
 
-700 ağırlığı hiç kullanılmaz. 600 yeterli kontrastı vermiyorsa ağırlık yerine tonu değiştir.
+700 ağırlığı hiç kullanılmaz ve pakete giren dosyalar 600'de biter; `<strong>` ya da bold istenen bir metin 600'de çizilir. 600 yeterli kontrastı vermiyorsa ağırlık yerine tonu değiştir.
+
+## Büyük harf ve Türkçe
+
+Merid süs amaçlı küçük yazı eklemez: başlıkların üstünde eyebrow yok, mono açıklama satırı yok. Kütüphanedeki tek büyük harfli metin tablo sütun başlığıdır; 12px boyutunda ve 0.04em harf aralığıyla dizilir.
+
+`text-transform: uppercase` elemanın diline göre çalışır ve Merid kendi başına metin üretmez; sonuç senin `lang` attribute'una bağlıdır. `lang="tr"` ile "Müşteri", "MÜŞTERİ" olur. `lang="en"` ile ya da hiç `lang` yokken "MÜŞTERI" olur ve bunu Türk okur ilk bakışta fark eder. `lang`'i `<html>` etiketine ve dili değişen her bloğa koy.
+
+```html
+<html lang="tr">
+```
 
 ## Kurallar
 
@@ -36,6 +67,13 @@ Display ve bölüm boyutları `clamp()` kullanır ve viewport'la birlikte ölçe
 ## Font stack'leri
 
 ```css
---mrd-font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
---mrd-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+--mrd-font-sans: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+--mrd-font-mono: "Chivo Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+--mrd-font-display: var(--mrd-font-sans);
 ```
+
+`--mrd-font-display` display başlığın fontudur. Varsayılan olarak sans'a bağlıdır; arayüzün geri kalanına dokunmadan yalnızca hero başlığını değiştirmek için bunu ayarla.
+
+## Pakette ne var
+
+Her aile iki woff2 dosyasından oluşur: latin ve latin-ext alt kümeleri. Tarayıcı ikinci dosyayı ancak sayfada o dosyadaki bir karakter geçtiğinde indirir. Noktasız ı latin dosyasında; ğ, ş, İ ve ₺ latin-ext'te. Dosyalar Merid'in kullandığı eksenlere indirildi: ağırlıkta 400 ile 600 arası, Archivo'da ayrıca genişlikte %100 ile %125 arası. Dört dosyanın toplamı 120 KB; yerlerini aldıkları Geist ikilisi 141 KB'tı. Tarayıcılar yalnızca gerçekten kullanılan fontu indirir; kendi `--mrd-font-sans` ve `--mrd-font-mono` değerlerini verirsen bu dosyaların hiçbiri istenmez.

@@ -63,12 +63,12 @@
   }
 
   .mrd-icon-button:active:not(:disabled) {
-    transform: scale(0.97);
+    transform: var(--mrd-press);
   }
 
   .mrd-icon-button:focus-visible {
-    outline: 2px solid var(--mrd-accent);
-    outline-offset: 3px;
+    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
+    outline-offset: var(--mrd-focus-offset);
   }
 
   .mrd-icon-button:disabled {

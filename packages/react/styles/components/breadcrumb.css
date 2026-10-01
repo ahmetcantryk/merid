@@ -35,8 +35,8 @@
   }
 
   .mrd-breadcrumb__link:focus-visible {
-    outline: 2px solid var(--mrd-accent);
-    outline-offset: 3px;
+    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
+    outline-offset: var(--mrd-focus-offset);
   }
 
   .mrd-breadcrumb__page {

@@ -3,26 +3,43 @@ import { RadiusScale } from "@/components/foundations";
 
 export const metadata = docMetadata("tr", "/docs/foundations/radius", {
   title: "Köşe yuvarlaklığı",
-  description: "Köşe yuvarlaklığı token'ları ve yüzeyler iç içe geçtikçe yuvarlaklığın nasıl küçüldüğü.",
+  description: "Köşe yuvarlaklığı token'ları, keskin varsayılan köşeler ve tam yuvarlaklığın hâlâ kullanıldığı yerler.",
 });
 
 # Köşe yuvarlaklığı
 
-Merid'in köşeleri cömert ve tutarlıdır. Büyük yüzeyler daha büyük yuvarlaklık alır ve elemanlar iç içe geçtikçe yuvarlaklık küçülür; böylece iç köşeler dış köşelerle eş merkezli kalır.
+Merid'in köşeleri keskindir. Kontroller, menüler ve tooltip'ler 2px kullanır; bu, küçük boyutlarda bir kenarın çizim hatası gibi görünmesini önlemeye yetecek kadar. Kartlar 3px, dialog'lar 4px kullanır; böylece bir container, içindekinden daha keskin olmaz.
 
 ## Ölçek
 
 <RadiusScale locale="tr" />
 
+Token'ların çoğu artık 2px'e çözülse de ölçek dokuz token'ın hepsini korur. Component'ler hâlâ ihtiyaç duydukları rolün adını kullanır (buton için `--mrd-radius-lg`, kart için `--mrd-radius-card`); daha yumuşak köşeler isteyen bir ürün birkaç token'ı değiştirerek her yerde tutarlı bir sonuç alır.
+
 ## İç içe kullanım
 
-Pratik kural **20 → 14 → 12 → 8**. Bir kart `--mrd-radius-card` (20px) kullanır; içindeki pencere çerçevesi `--mrd-radius-xl` (14px); onun içindeki buton `--mrd-radius-lg` (12px); butonun içindeki küçük bir kutu `--mrd-radius-sm` (8px).
+Kural **4 → 3 → 2**: bir dialog (`--mrd-radius-3xl`, 4px) kartları (`--mrd-radius-card`, 3px), kartlar da kontrolleri (`--mrd-radius-lg`, 2px) taşır. Bu boyutlarda adımlar küçük, ama çerçevesinden daha yuvarlak bir iç köşe yine yanlış görünür; sırayı koru.
 
 <DoDont
-  do={<p>İç içe geçtikçe yuvarlaklığı küçült; iki kenar arasındaki boşluk her yerde eşit görünsün.</p>}
-  dont={<p>İçteki elemana container'ıyla aynı yuvarlaklığı verme. İç köşe sıkışmış görünür.</p>}
+  do={<p>Büyük yuvarlaklığı container'a, küçüğünü içindekilere ver.</p>}
+  dont={<p>İçteki elemanı container'ından daha fazla yuvarlama. Köşe çerçeveden dışarı taşıyormuş gibi görünür.</p>}
 />
 
-## Pill'ler
+## Yuvarlak şekiller
 
-`--mrd-radius-full`, şekli yüksekliğiyle belirlenen elemanlar içindir: pill'ler, badge'ler, switch'ler ve avatar'lar. Metinli butonlarda kullanma; Merid butonları `--mrd-radius-lg` kullanır.
+`--mrd-radius-full`, yuvarlak şeklin anlam taşıdığı elemanlar için ayrılmıştır: radio, switch, slider tutamağı, progress çubuğu, adım işaretleri ve durum noktaları. Badge'ler harita lejantındaki kutular gibi dikdörtgendir, avatar'lar karedir. Buton ve input'larda tam yuvarlaklık kullanma.
+
+## Daha yumuşak köşeler
+
+Kendi ürününde her şeyi yuvarlatmak istersen ölçeği bir kez override et. Yukarıdaki iç içe kullanım sırası yine geçerli.
+
+```css
+:root {
+  --mrd-radius-xs: 4px;
+  --mrd-radius-sm: 6px;
+  --mrd-radius-md: 6px;
+  --mrd-radius-lg: 8px;
+  --mrd-radius-card: 12px;
+  --mrd-radius-3xl: 16px;
+}
+```

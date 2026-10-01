@@ -7,13 +7,17 @@
     text-wrap: balance;
   }
 
+  /* Display and section titles use the wide cut of the face. */
   .mrd-heading[data-size="display"] {
+    font-family: var(--mrd-font-display);
+    font-stretch: var(--mrd-display-stretch);
     font-size: var(--mrd-text-display);
     line-height: var(--mrd-leading-display);
     letter-spacing: var(--mrd-tracking-display);
   }
 
   .mrd-heading[data-size="h2"] {
+    font-stretch: var(--mrd-title-stretch);
     font-size: var(--mrd-text-h2);
     line-height: var(--mrd-leading-h2);
     letter-spacing: var(--mrd-tracking-h2);

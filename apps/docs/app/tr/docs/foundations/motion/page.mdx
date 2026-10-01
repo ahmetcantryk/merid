@@ -8,18 +8,18 @@ export const metadata = docMetadata("tr", "/docs/foundations/motion", {
 
 # Hareket
 
-Merid'de hareket sakindir. Bir şeyin olduğunu doğrular, izlenmeyi hiçbir zaman beklemez.
+Merid'de hareket sakin ve kısadır. Bir şeyin olduğunu doğrular, izlenmeyi hiçbir zaman beklemez. Tüm geçişler hızlı başlayıp sekmeden yerine oturan tek bir eğri kullanır.
 
 ## Token'lar
 
 <MotionTable locale="tr" />
 
-Giriş animasyonları 220ms'lik bir fade kullanır: eleman 4px yükselerek yerine otururken opaklık 0'dan 1'e çıkar.
+Giriş animasyonları 180ms'lik bir fade kullanır: eleman 4px yükselerek yerine otururken opaklık 0'dan 1'e çıkar. Overlay'ler yalnızca dikey yönde hareket eder.
 
 ## Desenler
 
-- **Hover** arka planı renklendirir ya da elemanı 2–3px yükseltir.
-- **Basma** 100ms içinde `.97`'ye küçültür.
+- **Hover** arka planı renklendirir. Etkileşimli kartlar ayrıca 3px yükselir.
+- **Basma** kontrolü 80ms içinde 1px aşağı indirir (`--mrd-press`), sanki sayfaya bastırılmış gibi. Hiçbir şey küçülmez.
 - **Açılma** fade ile belirir ve yükselir; overlay'ler arka plan örtüsünü aynı anda fade ile getirir.
 - **Dönme** yalnızca açılır-kapanır ikonlar içindir; örneğin accordion'daki artı işaretinin 45° dönmesi.
 

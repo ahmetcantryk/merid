@@ -104,12 +104,12 @@ describe("search_docs", () => {
 describe("get_tokens", () => {
   it("returns light and dark values", () => {
     const { text } = getTokens(data, "color");
-    expect(text).toContain("| `--mrd-accent` | `#3f63f5` | `#6b8aff` |");
+    expect(text).toContain("| `--mrd-accent` | `#b20965` | `#ef86ae` |");
   });
 
   it("returns a single theme", () => {
     const { text } = getTokens(data, "color", "dark");
-    expect(text).toContain("| `--mrd-accent` | `#6b8aff` |");
+    expect(text).toContain("| `--mrd-accent` | `#ef86ae` |");
   });
 
   it("errors on an unknown category", () => {

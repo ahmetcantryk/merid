@@ -3,26 +3,43 @@ import { RadiusScale } from "@/components/foundations";
 
 export const metadata = docMetadata("en", "/docs/foundations/radius", {
   title: "Radius",
-  description: "Corner radius tokens and how radius steps down as surfaces nest.",
+  description: "Corner radius tokens, the square-cut default and where full rounding is still used.",
 });
 
 # Radius
 
-Merid's corners are generous and consistent. Larger surfaces get larger radii, and radius steps down as elements nest, so inner corners stay concentric with outer ones.
+Merid's corners are square-cut. Controls, menus and tooltips use 2px, which is just enough to stop an edge from looking like a rendering error at small sizes. Cards use 3px and dialogs 4px, so a container is never sharper than what it holds.
 
 ## Scale
 
 <RadiusScale />
 
+The scale keeps all nine tokens even though most of them now resolve to 2px. Components still name the role they need (`--mrd-radius-lg` for a button, `--mrd-radius-card` for a card), so a product that wants softer corners can change a handful of tokens and get a consistent result everywhere.
+
 ## Nesting
 
-The rule of thumb is **20 → 14 → 12 → 8**. A card uses `--mrd-radius-card` (20px); a window frame inside it uses `--mrd-radius-xl` (14px); a button inside that uses `--mrd-radius-lg` (12px); a small tile inside a button uses `--mrd-radius-sm` (8px).
+The rule is **4 → 3 → 2**: a dialog (`--mrd-radius-3xl`, 4px) holds cards (`--mrd-radius-card`, 3px), which hold controls (`--mrd-radius-lg`, 2px). At these sizes the steps are small, but an inner corner that is rounder than its frame still looks wrong, so keep the order.
 
 <DoDont
-  do={<p>Step radius down as you nest, so the gap between two edges looks even all the way round.</p>}
-  dont={<p>Give an inner element the same radius as its container. The inner corner will look pinched.</p>}
+  do={<p>Give the container the larger radius and its contents the smaller one.</p>}
+  dont={<p>Round an inner element more than its container. The corner will look like it is pushing out of the frame.</p>}
 />
 
-## Pills
+## Round shapes
 
-`--mrd-radius-full` is for elements whose shape is defined by their height: pills, badges, switches and avatars. Do not use it on buttons with text; Merid buttons use `--mrd-radius-lg`.
+`--mrd-radius-full` is kept for elements whose round shape carries the meaning: the radio, the switch, the slider thumb, the progress bar, step markers and status dots. Badges are rectangular, like the keys on a map legend, and avatars are square. Do not use full rounding on buttons or inputs.
+
+## Softer corners
+
+To round everything for your own product, override the scale once. The nesting order above still applies.
+
+```css
+:root {
+  --mrd-radius-xs: 4px;
+  --mrd-radius-sm: 6px;
+  --mrd-radius-md: 6px;
+  --mrd-radius-lg: 8px;
+  --mrd-radius-card: 12px;
+  --mrd-radius-3xl: 16px;
+}
+```
