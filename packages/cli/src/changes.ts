@@ -9,6 +9,10 @@ export interface Change {
   readonly file: string;
   readonly after: string;
   readonly reason: string;
+  /** Extra lines printed under the file name, e.g. what each removed rule did. */
+  readonly details?: readonly string[];
+  /** Asked before an existing file is changed. Defaults to "Update <file>?". */
+  readonly question?: string;
 }
 
 export interface ApplyOptions {
@@ -41,13 +45,14 @@ export async function applyChanges(changes: readonly Change[], opts: ApplyOption
     }
     const exists = before !== undefined;
     opts.io.log(`\n${color.bold(exists ? "~" : "+")} ${color.bold(change.file)} ${color.dim(`— ${change.reason}`)}`);
+    for (const detail of change.details ?? []) opts.io.log(color.dim(`    ${detail}`));
     opts.io.log(colorDiff(unifiedDiff(before ?? "", change.after, change.file)));
     if (opts.dryRun) {
       outcomes.set(change.file, "planned");
       continue;
     }
     if (exists && !opts.yes) {
-      const ok = await opts.io.confirm(`Update ${change.file}?`, false);
+      const ok = await opts.io.confirm(change.question ?? `Update ${change.file}?`, false);
       if (!ok) {
         opts.io.log(color.dim(`  skipped ${change.file}${opts.io.interactive ? "" : " (non-interactive; pass --yes to apply)"}`));
         outcomes.set(change.file, "skipped");

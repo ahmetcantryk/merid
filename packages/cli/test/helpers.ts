@@ -12,9 +12,12 @@ afterEach(() => {
   while (temps.length > 0) rmSync(temps.pop() as string, { recursive: true, force: true });
 });
 
+/** Projects exactly as the generators write them (only the files the CLI reads). */
+export type TemplateFixture = "templates/vite" | "templates/vite-8" | "templates/next" | "templates/next-css" | "templates/react-router";
+
 /** Copies a fixture project into a fresh temp folder that is removed after the test. */
-export function copyFixture(name: "next-app" | "vite-app" | "react-router-app"): string {
-  const dir = mkdtempSync(path.join(tmpdir(), `merid-cli-${name}-`));
+export function copyFixture(name: "next-app" | "vite-app" | "react-router-app" | TemplateFixture): string {
+  const dir = mkdtempSync(path.join(tmpdir(), `merid-cli-${name.replace("/", "-")}-`));
   cpSync(path.join(fixtures, name), dir, { recursive: true });
   temps.push(dir);
   return dir;
@@ -40,7 +43,7 @@ export interface MemoryIo extends Io {
 }
 
 /** Captures output; answers every question with `answer` (or the fallback when `answer` is undefined). */
-export function memoryIo(answer?: boolean, interactive = answer !== undefined): MemoryIo {
+export function memoryIo(answer?: boolean | ((question: string) => boolean), interactive = answer !== undefined): MemoryIo {
   const output: string[] = [];
   const questions: string[] = [];
   return {
@@ -52,7 +55,8 @@ export function memoryIo(answer?: boolean, interactive = answer !== undefined): 
     error: (m) => output.push(`ERROR ${m}`),
     async confirm(q, fallback) {
       questions.push(q);
-      return interactive ? (answer ?? fallback) : fallback;
+      if (!interactive) return fallback;
+      return typeof answer === "function" ? answer(q) : (answer ?? fallback);
     },
   };
 }

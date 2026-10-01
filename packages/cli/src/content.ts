@@ -11,6 +11,14 @@ export function hasStylesImport(source: string): boolean {
   return /["']@meridui\/react\/(styles|components|tokens)\.css["']/.test(source);
 }
 
+/** `import "@meridui/react/styles.css";` in the file's own style: quote character and semicolons. */
+export function stylesImportLine(source: string): string {
+  const sample = /^import\s[^\n]*?(["'])[^"'\n]+\1(;?)[ \t]*\r?$/m.exec(source);
+  const quote = sample?.[1] ?? '"';
+  const semi = sample ? (sample[2] ?? "") : ";";
+  return `import ${quote}${STYLES_IMPORT}${quote}${semi}`;
+}
+
 /**
  * Adds `import "@meridui/react/styles.css";` before the first CSS import (so app CSS keeps winning in
  * source order), otherwise after the last import, otherwise after a "use client" directive, otherwise first.
@@ -18,7 +26,7 @@ export function hasStylesImport(source: string): boolean {
 export function addStylesImport(source: string): string {
   if (hasStylesImport(source)) return source;
   const eol = EOL(source);
-  const line = `import "${STYLES_IMPORT}";`;
+  const line = stylesImportLine(source);
   const lines = source.split(/\r?\n/);
   const isImport = (l: string) => /^import\s/.test(l);
   const cssAt = lines.findIndex((l) => isImport(l) && /\.css["'];?\s*$/.test(l));

@@ -3,8 +3,10 @@ import path from "node:path";
 import { readIfExists } from "../changes.js";
 import { MARK_START, MCP_CLIENTS, MCP_CLIENT_NAMES, MCP_FILES, hasMcpServer, hasStylesImport } from "../content.js";
 import { REACT_PACKAGE } from "../data.js";
-import { FRAMEWORK_NAMES, detectProject, hasDep } from "../detect.js";
+import { FRAMEWORK_NAMES, detectProject, hasDep, type Project } from "../detect.js";
 import { color } from "../io.js";
+import { LAYER_ORDER, readStylesheets, tailwindProblems, templateFindings, type Stylesheets } from "../stylesheets.js";
+import { TEMPLATE_STYLES, listSelectors } from "../templates.js";
 import type { Context } from "./context.js";
 
 export type Level = "ok" | "warn" | "fail";
@@ -32,6 +34,33 @@ function installedVersion(root: string, name: string): string | undefined {
   }
 }
 
+const FIX_WITH_INIT = "`npx @meridui/cli init` fixes this after showing the diff.";
+
+/** Unlayered rules from the project generator, and Tailwind's Preflight sitting above Merid. */
+function stylesheetChecks(project: Project, styles: Stylesheets): Check[] {
+  const checks: Check[] = templateFindings(project, styles).map(({ sheet, matches }) => ({
+    level: "warn",
+    label: `${sheet.file} still has ${project.framework ? TEMPLATE_STYLES[project.framework].name : ""} template styles that override Merid: ${listSelectors(matches)}`,
+    hint: `They sit outside any cascade layer, so they beat Merid's font, colours and component styles. ${FIX_WITH_INIT}`,
+  }));
+  const tailwind = styles.tailwind;
+  const problems = tailwindProblems(styles);
+  if (tailwind && problems.length > 0) {
+    const steps = [
+      ...(problems.includes("layer-order") ? [`add \`${LAYER_ORDER}\` at the top of ${tailwind.file}`] : []),
+      ...(problems.includes("import-order") ? [`import ${tailwind.specifier} before ${REACT_PACKAGE}/styles.css in ${styles.entry}`] : []),
+    ];
+    checks.push({
+      level: "warn",
+      label: "Tailwind's Preflight overrides Merid's components",
+      hint: `To put Merid's layers after Preflight, ${steps.join(" and ")}. ${FIX_WITH_INIT}`,
+    });
+  } else if (tailwind) {
+    checks.push({ level: "ok", label: `Tailwind layer order puts Merid after Preflight (${tailwind.file})` });
+  }
+  return checks;
+}
+
 export function runChecks(root: string): Check[] {
   const checks: Check[] = [];
   const project = detectProject(root);
@@ -41,9 +70,6 @@ export function runChecks(root: string): Check[] {
       : { level: "warn", label: "Framework not detected", hint: "Merid works anywhere React does; init only automates Next.js, Vite and React Router." },
   );
 
-  if (hasDep(project.pkg, "@meridui/react")) {
-    checks.push({ level: "warn", label: "Old package name @meridui/react in package.json", hint: `The package is now ${REACT_PACKAGE}. Replace the dependency and imports.` });
-  }
   if (!hasDep(project.pkg, REACT_PACKAGE)) {
     checks.push({ level: "fail", label: `${REACT_PACKAGE} is not a dependency`, hint: "Run `npx @meridui/cli init`." });
   } else {
@@ -61,9 +87,14 @@ export function runChecks(root: string): Check[] {
   else if (major < 18) checks.push({ level: "fail", label: `react ${react} is too old`, hint: "Merid needs React 18 or 19." });
   else checks.push({ level: "ok", label: `react ${react}` });
 
-  if (!project.entry) checks.push({ level: "warn", label: "App entry not found", hint: "Could not check the stylesheet import." });
-  else if (hasStylesImport(readIfExists(root, project.entry) ?? "")) checks.push({ level: "ok", label: `Stylesheet imported in ${project.entry}` });
-  else checks.push({ level: "fail", label: `${project.entry} does not import ${REACT_PACKAGE}/styles.css`, hint: "Run `npx @meridui/cli init` or add the import." });
+  const styles = readStylesheets(root, project);
+  if (!styles) checks.push({ level: "warn", label: "App entry not found", hint: "Could not check the stylesheet import." });
+  else {
+    const cssFile = styles.sheets.find((s) => s.specifier !== undefined && hasStylesImport(s.source))?.file;
+    if (hasStylesImport(styles.entrySource) || cssFile) checks.push({ level: "ok", label: `Stylesheet imported in ${cssFile ?? styles.entry}` });
+    else checks.push({ level: "fail", label: `${styles.entry} does not import ${REACT_PACKAGE}/styles.css`, hint: "Run `npx @meridui/cli init` or add the import." });
+    checks.push(...stylesheetChecks(project, styles));
+  }
 
   const rules = ["AGENTS.md", "CLAUDE.md"].filter((f) => readIfExists(root, f)?.includes(MARK_START));
   if (existsSync(path.join(root, ".cursor/rules/merid.mdc"))) rules.push(".cursor/rules/merid.mdc");

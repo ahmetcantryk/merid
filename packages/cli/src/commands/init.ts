@@ -1,29 +1,25 @@
 import { applyChanges, readIfExists, type Change } from "../changes.js";
-import { addStylesImport, cursorRule, upsertSection } from "../content.js";
-import { REACT_PACKAGE, STYLES_IMPORT } from "../data.js";
+import { cursorRule, upsertSection } from "../content.js";
+import { REACT_PACKAGE } from "../data.js";
 import { FRAMEWORK_NAMES, detectProject, hasDep, installCommand, type Project } from "../detect.js";
 import { color } from "../io.js";
 import { choose, type Context } from "./context.js";
 import { mcpChanges, parseClients, printOtherClients } from "./mcp.js";
+import { stylesChanges } from "./styles.js";
 
 export const RULE_FILES = ["AGENTS.md", ".cursor/rules/merid.mdc", "CLAUDE.md"] as const;
 
+/** A CLAUDE.md that pulls in AGENTS.md (`@AGENTS.md`, as create-next-app writes it) already gets the rules from there. */
+const importsAgentsFile = (claude: string | undefined): boolean => claude !== undefined && /^@AGENTS\.md\s*$/m.test(claude);
+
 export function rulesChanges(ctx: Context): Change[] {
   const rules = ctx.data.rules;
+  const claude = readIfExists(ctx.cwd, "CLAUDE.md");
   return [
     { file: "AGENTS.md", after: upsertSection(readIfExists(ctx.cwd, "AGENTS.md"), rules), reason: "Merid rules for AI agents (Codex, Cursor, Copilot, …)" },
     { file: ".cursor/rules/merid.mdc", after: cursorRule(rules), reason: "Cursor project rule" },
-    { file: "CLAUDE.md", after: upsertSection(readIfExists(ctx.cwd, "CLAUDE.md"), rules), reason: "Merid section for Claude Code" },
+    ...(importsAgentsFile(claude) ? [] : [{ file: "CLAUDE.md", after: upsertSection(claude, rules), reason: "Merid section for Claude Code" }]),
   ];
-}
-
-function stylesChange(ctx: Context, project: Project): Change | undefined {
-  if (!project.entry) {
-    ctx.io.warn(`Could not find the app entry. Add \`import "${STYLES_IMPORT}";\` to your root layout or main file.`);
-    return undefined;
-  }
-  const before = readIfExists(ctx.cwd, project.entry) ?? "";
-  return { file: project.entry, after: addStylesImport(before), reason: "import Merid's stylesheet once, at the app entry" };
 }
 
 function describe(ctx: Context, project: Project): void {
@@ -69,9 +65,8 @@ export async function initCommand(ctx: Context): Promise<number> {
   const withMcp = await choose(ctx, ctx.flags.mcp, "Add the Merid MCP server for Claude Code, Cursor and VS Code?");
 
   const ok = await install(ctx, project);
-  const styles = stylesChange(ctx, project);
   const changes = [
-    ...(styles ? [styles] : []),
+    ...stylesChanges(ctx, project),
     ...(withRules ? rulesChanges(ctx) : []),
     ...(withMcp ? mcpChanges(ctx, parseClients(ctx.flags.clients)) : []),
   ];

@@ -15,10 +15,11 @@ Usage
   npx @meridui/cli <command> [options]
 
 Commands
-  init              Install @meridui/react, import the stylesheet, add AI rules and MCP config
+  init              Install @meridui/react, import the stylesheet, remove template CSS that overrides it,
+                    add AI rules and MCP config
   add <pattern>     Copy a docs pattern into the project (app-shell, settings, auth, data-table, …)
   mcp               Write the Merid MCP server config (.mcp.json, .cursor/mcp.json, .vscode/mcp.json)
-  doctor            Check the setup
+  doctor            Check the setup, including CSS that overrides Merid
 
 Options
   -y, --yes         Accept every prompt, including overwriting files (diffs are still printed)
