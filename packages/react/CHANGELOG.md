@@ -1,5 +1,12 @@
 # @meridui/react
 
+## 0.2.1
+
+### Patch Changes
+
+- Menus, popovers, selects, comboboxes, hover cards and tooltips open next to their trigger again. They were positioned with `transform`, which the open animation overrode, so outside the docs site they could appear in the top-left corner of the page. They are now placed with `left`/`top`.
+- The package has a README now, so its npm page shows how to install and use Merid, the component list and links to the docs. The description, keywords and repository links are filled in as well.
+
 ## 0.2.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@meridui/react",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "React component library in plain CSS with cascade layers, so your own CSS wins. 60+ accessible components, design tokens, dark mode, RTL and server components.",
   "keywords": [
     "react",

@@ -1,5 +1,11 @@
 # @meridui/mcp
 
+## 0.1.1
+
+### Patch Changes
+
+- The README has configs you can paste for Claude Code, Cursor and VS Code. The setup guides that `get_setup` returns now explain which template styles override Merid and how to order Tailwind's layers, because they are built from the updated installation docs.
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@meridui/tokens",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Merid design tokens as W3C DTCG JSON, typed JavaScript, CSS custom properties and a Tokens Studio file for Figma, with light, dark, accent and density modes.",
   "keywords": [
     "design-tokens",

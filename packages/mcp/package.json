@@ -1,6 +1,6 @@
 {
   "name": "@meridui/mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP server for the Merid React component library. Gives Claude Code, Cursor and VS Code the real components, props, tokens and setup guides. Read-only and offline.",
   "keywords": [
     "mcp",

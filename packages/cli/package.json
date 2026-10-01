@@ -1,6 +1,6 @@
 {
   "name": "@meridui/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Set up the Merid React component library in Next.js, Vite or React Router: install, stylesheet, template CSS cleanup, AI rules, MCP config and page patterns.",
   "keywords": [
     "merid",
