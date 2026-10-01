@@ -41,7 +41,7 @@ export const launchTr: Dictionary["launch"] = {
     by: "Yazar",
     readPost: "Oku",
     ctaTitle: "Merid'i dene",
-    ctaText: "Sade CSS ve tek bir token setiyle erişilebilir React component'leri. MIT lisanslı.",
+    ctaText: "Düz CSS ile yazılmış erişilebilir React bileşenleri. MIT lisanslı.",
     ctaDocs: "Dokümanları oku",
     ctaGithub: "GitHub'da yıldızla",
     pendingLinkNote: "Henüz yayımlanmamış yazılara verilen bağlantılar düz metin olarak görünür.",
