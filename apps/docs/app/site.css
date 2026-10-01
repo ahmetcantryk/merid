@@ -158,7 +158,7 @@ kbd {
 }
 .search-dialog__item[aria-selected="true"] { background: var(--mrd-tray); }
 .search-dialog__title { color: var(--mrd-ink); font-size: 13.5px; font-weight: var(--mrd-weight-medium); }
-.search-dialog__meta { color: var(--mrd-muted); font-family: var(--mrd-font-mono); font-size: 11.5px; }
+.search-dialog__meta { color: var(--mrd-muted); font-size: var(--mrd-text-3xs); }
 .search-dialog__empty { padding: 20px 20px 24px; font-size: var(--mrd-text-xs); }
 .search-dialog__hint {
   display: flex; align-items: center; gap: 4px; padding: 8px 14px; margin-top: auto;
@@ -189,10 +189,11 @@ kbd {
   margin: 20px 0; border: 1px solid var(--mrd-line); border-radius: var(--mrd-radius-lg); overflow: hidden; background: var(--mrd-subtle);
 }
 .code-block__bar {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 34px; padding: 0 5px 0 12px;
+  display: flex; align-items: center; justify-content: flex-end; gap: 12px; height: 34px; padding: 0 5px 0 12px;
   border-bottom: 1px solid var(--mrd-line);
 }
-.code-block__title { color: var(--mrd-muted); font-family: var(--mrd-font-mono); font-size: 11.5px; }
+/* A file name when the code is one; a bare language tag would only be decoration. */
+.code-block__title { margin-right: auto; color: var(--mrd-muted); font-size: var(--mrd-text-3xs); font-weight: var(--mrd-weight-medium); }
 .code-block__body { overflow-x: auto; }
 .code-block__body:focus-visible, .table-wrap:focus-visible, .preview__code:focus-visible { outline: 2px solid var(--mrd-accent); outline-offset: -2px; }
 .shiki { margin: 0; padding: 14px 16px; font-size: 12.5px; line-height: 1.7; background: transparent !important; tab-size: 2; }

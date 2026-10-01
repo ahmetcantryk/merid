@@ -32,10 +32,7 @@ export function DocsSidebar() {
       <nav id="docs-sidebar-nav" className="docs-sidebar__nav" aria-label={t.navLabel}>
         {navFor(locale).map((group) => (
           <div key={group.title} className="docs-sidebar__group">
-            <p className="docs-sidebar__heading">
-              {group.title}
-              <span className="docs-sidebar__count">{group.items.length}</span>
-            </p>
+            <p className="docs-sidebar__heading">{group.title}</p>
             <ul>
               {group.items.map((item) => (
                 <li key={item.href}>
