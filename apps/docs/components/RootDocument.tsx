@@ -7,6 +7,8 @@ import { themeInitScript } from "@/components/ThemeToggle";
 import { getDictionary, htmlLang, type Locale } from "@/lib/i18n";
 import "../app/site.css";
 import "@meridui/react/styles.css";
+// TEMPORARY: Pafta tokens and fonts until @meridui/react ships them. Delete with the file.
+import "../app/pafta-preview.css";
 import "../app/landing.css";
 import "../app/docs.css";
 import "../app/studio.css";
@@ -15,7 +17,7 @@ import "../app/blog.css";
 export const rootViewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b0d12" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d0e10" },
   ],
 };
 

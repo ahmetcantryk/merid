@@ -1,0 +1,401 @@
+/*
+ * TEMPORARY. Pafta preview: the identity tokens, fonts and component details from
+ * merid-launch/identity/tokens/pafta.css, so the site shows the new look before the library ships it.
+ * Delete this file, its import in components/RootDocument.tsx and public/pafta-preview/
+ * once @meridui/react carries the Pafta tokens. The site CSS itself only reads --mrd-* tokens.
+ */
+@layer merid.tokens {
+  @font-face {
+    font-family: Archivo;
+    font-style: normal;
+    font-weight: 100 900;
+    font-stretch: 62% 125%;
+    font-display: swap;
+    src: url("/pafta-preview/archivo-100_900-62_125_-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+
+  @font-face {
+    font-family: Archivo;
+    font-style: normal;
+    font-weight: 100 900;
+    font-stretch: 62% 125%;
+    font-display: swap;
+    src: url("/pafta-preview/archivo-100_900-62_125_-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
+  @font-face {
+    font-family: "Chivo Mono";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("/pafta-preview/chivo-mono-100_900-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+
+  @font-face {
+    font-family: "Chivo Mono";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("/pafta-preview/chivo-mono-100_900-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
+  :root {
+    --mrd-petrol-50: #e9f6f9;
+    --mrd-petrol-100: #dcebf0;
+    --mrd-petrol-200: #b6e0e8;
+    --mrd-petrol-300: #95d3df;
+    --mrd-petrol-400: #75c4d2;
+    --mrd-petrol-500: #458fa4;
+    --mrd-petrol-600: #035f73;
+    --mrd-petrol-700: #025061;
+    --mrd-petrol-800: #044553;
+    --mrd-petrol-900: #003440;
+    --mrd-brass-50: #f9f5eb;
+    --mrd-brass-100: #f0e6d7;
+    --mrd-brass-200: #ecd9ae;
+    --mrd-brass-300: #e5c68a;
+    --mrd-brass-400: #d9b165;
+    --mrd-brass-500: #b0853b;
+    --mrd-brass-600: #855c01;
+    --mrd-brass-700: #744e01;
+    --mrd-brass-800: #624003;
+    --mrd-brass-900: #3e2901;
+    --mrd-magenta-50: #fef0f4;
+    --mrd-magenta-100: #fedee8;
+    --mrd-magenta-200: #fcbfd3;
+    --mrd-magenta-300: #f7a0bf;
+    --mrd-magenta-400: #ef86ae;
+    --mrd-magenta-500: #d25388;
+    --mrd-magenta-600: #b20965;
+    --mrd-magenta-700: #990155;
+    --mrd-magenta-800: #830549;
+    --mrd-magenta-900: #58002f;
+
+    --mrd-radius-xs: 2px;
+    --mrd-radius-sm: 2px;
+    --mrd-radius-md: 2px;
+    --mrd-radius-lg: 2px;
+    --mrd-radius-xl: 2px;
+    --mrd-radius-2xl: 3px;
+    --mrd-radius-card: 3px;
+    --mrd-radius-3xl: 4px;
+
+    --mrd-font-sans: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mrd-font-mono: "Chivo Mono", ui-monospace, sfmono-regular, menlo, monospace;
+    --mrd-font-display: var(--mrd-font-sans);
+    --mrd-display-stretch: 125%;
+    --mrd-display-weight: 600;
+    --mrd-display-axes: normal;
+    --mrd-tracking-display: -0.035em;
+    --mrd-leading-display: 1;
+    --mrd-tracking-h2: -0.025em;
+    --mrd-h2-stretch: 112%;
+    --mrd-h2-axes: normal;
+    --mrd-h2-weight: 600;
+    --mrd-mono-stretch: 100%;
+    --mrd-h2-family: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mrd-label-family: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mrd-label-stretch: 125%;
+    --mrd-label-tracking: 0.08em;
+    --mrd-label-transform: uppercase;
+    --mrd-label-caps: normal;
+    --mrd-label-size: 10.5px;
+
+    --mrd-duration-fast: 80ms;
+    --mrd-duration: 120ms;
+    --mrd-duration-slow: 160ms;
+    --mrd-duration-enter: 180ms;
+    --mrd-ease: cubic-bezier(0.25, 0, 0, 1);
+
+    --mrd-focus-width: 2px;
+    --mrd-focus-style: solid;
+    --mrd-focus-offset: 2px;
+    --mrd-press: translateY(1px);
+  }
+
+  :root,
+  [data-theme="light"] {
+    --mrd-bg: #ffffff;
+    --mrd-surface: #ffffff;
+    --mrd-tray: #f4f6f8;
+    --mrd-tray-2: #ebedf0;
+    --mrd-subtle: #f9fafc;
+    --mrd-line: #dde0e3;
+    --mrd-line-strong: #babec3;
+    --mrd-ink: #121417;
+    --mrd-body: #474b51;
+    --mrd-muted: #5f636a;
+    --mrd-placeholder: #64686d;
+    --mrd-control-off: #ced1d5;
+    --mrd-danger: #de3f20;
+    --mrd-danger-strong: #a52205;
+    --mrd-danger-soft: #fef2ee;
+    --mrd-warning-soft: #fff8eb;
+    --mrd-warning-strong: #93580a;
+    --mrd-success: #1f9d63;
+    --mrd-success-strong: #17744a;
+    --mrd-success-soft: #ecf8f1;
+    --mrd-tooltip-bg: #121417;
+    --mrd-tooltip-fg: #fff;
+    --mrd-backdrop: rgb(18 20 23 / 36%);
+    --mrd-shadow-xs: 0 0 0 0 transparent;
+    --mrd-shadow-sm: 0 0 0 0 transparent;
+    --mrd-shadow-md: 0 1px 0 rgb(17 19 24 / 6%);
+    --mrd-shadow-lg: 0 18px 36px -18px rgb(17 19 24 / 28%);
+    --mrd-shadow-xl: 0 18px 36px -18px rgb(17 19 24 / 28%);
+    --mrd-shadow-2xl: 0 32px 64px -24px rgb(17 19 24 / 34%);
+    --mrd-elevated-ring: 0 0 0 1px var(--mrd-line);
+    --mrd-rule: #121417;
+    --mrd-danger-solid: #c12b09;
+    --mrd-danger-solid-hover: #a52205;
+  }
+
+  [data-theme="dark"] {
+    --mrd-bg: #0d0e10;
+    --mrd-surface: #141518;
+    --mrd-tray: #181a1d;
+    --mrd-tray-2: #202225;
+    --mrd-subtle: #111214;
+    --mrd-line: #292b2f;
+    --mrd-line-strong: #3f4348;
+    --mrd-ink: #eef0f3;
+    --mrd-body: #b7bbc1;
+    --mrd-muted: #9a9fa6;
+    --mrd-placeholder: #989ca2;
+    --mrd-control-off: #35383d;
+    --mrd-danger: #f96c4a;
+    --mrd-danger-strong: #fea387;
+    --mrd-danger-soft: rgb(222 63 32 / 14%);
+    --mrd-warning-soft: rgb(245 166 35 / 12%);
+    --mrd-warning-strong: #f5c46b;
+    --mrd-success: #3ecf8e;
+    --mrd-success-strong: #7ee2b0;
+    --mrd-success-soft: rgb(62 207 142 / 12%);
+    --mrd-tooltip-bg: #eef0f3;
+    --mrd-tooltip-fg: #0d0e10;
+    --mrd-backdrop: rgb(0 0 0 / 62%);
+    --mrd-shadow-xs: 0 0 0 0 transparent;
+    --mrd-shadow-sm: 0 0 0 0 transparent;
+    --mrd-shadow-md: 0 1px 0 rgb(0 0 0 / 30%);
+    --mrd-shadow-lg: 0 18px 36px -18px rgb(0 0 0 / 70%);
+    --mrd-shadow-xl: 0 18px 36px -18px rgb(0 0 0 / 70%);
+    --mrd-shadow-2xl: 0 32px 64px -24px rgb(0 0 0 / 80%);
+    --mrd-elevated-ring: 0 0 0 1px var(--mrd-line);
+    --mrd-rule: #eef0f3;
+    --mrd-danger-solid: #c12b09;
+    --mrd-danger-solid-hover: #a52205;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --mrd-bg: #0d0e10;
+      --mrd-surface: #141518;
+      --mrd-tray: #181a1d;
+      --mrd-tray-2: #202225;
+      --mrd-subtle: #111214;
+      --mrd-line: #292b2f;
+      --mrd-line-strong: #3f4348;
+      --mrd-ink: #eef0f3;
+      --mrd-body: #b7bbc1;
+      --mrd-muted: #9a9fa6;
+      --mrd-placeholder: #989ca2;
+      --mrd-control-off: #35383d;
+      --mrd-danger: #f96c4a;
+      --mrd-danger-strong: #fea387;
+      --mrd-danger-soft: rgb(222 63 32 / 14%);
+      --mrd-warning-soft: rgb(245 166 35 / 12%);
+      --mrd-warning-strong: #f5c46b;
+      --mrd-success: #3ecf8e;
+      --mrd-success-strong: #7ee2b0;
+      --mrd-success-soft: rgb(62 207 142 / 12%);
+      --mrd-tooltip-bg: #eef0f3;
+      --mrd-tooltip-fg: #0d0e10;
+      --mrd-backdrop: rgb(0 0 0 / 62%);
+      --mrd-shadow-xs: 0 0 0 0 transparent;
+      --mrd-shadow-sm: 0 0 0 0 transparent;
+      --mrd-shadow-md: 0 1px 0 rgb(0 0 0 / 30%);
+      --mrd-shadow-lg: 0 18px 36px -18px rgb(0 0 0 / 70%);
+      --mrd-shadow-xl: 0 18px 36px -18px rgb(0 0 0 / 70%);
+      --mrd-shadow-2xl: 0 32px 64px -24px rgb(0 0 0 / 80%);
+      --mrd-elevated-ring: 0 0 0 1px var(--mrd-line);
+      --mrd-rule: #eef0f3;
+      --mrd-danger-solid: #c12b09;
+      --mrd-danger-solid-hover: #a52205;
+    }
+  }
+
+  /* New default preset (replaces blue as the :root default). */
+  :root,
+  [data-accent="magenta"] {
+    --mrd-accent-light: var(--mrd-magenta-600);
+    --mrd-accent-light-hover: var(--mrd-magenta-700);
+    --mrd-accent-light-strong: var(--mrd-magenta-800);
+    --mrd-accent-light-soft: var(--mrd-magenta-50);
+    --mrd-accent-dark: var(--mrd-magenta-400);
+    --mrd-accent-dark-hover: var(--mrd-magenta-300);
+    --mrd-accent-dark-strong: var(--mrd-magenta-200);
+    --mrd-accent-dark-soft: rgb(239 134 174 / 16%);
+    --mrd-accent-fill: var(--mrd-magenta-600);
+    --mrd-accent-fill-hover: var(--mrd-magenta-700);
+  }
+
+  [data-accent="petrol"] {
+    --mrd-accent-light: var(--mrd-petrol-600);
+    --mrd-accent-light-hover: var(--mrd-petrol-700);
+    --mrd-accent-light-strong: var(--mrd-petrol-800);
+    --mrd-accent-light-soft: var(--mrd-petrol-50);
+    --mrd-accent-dark: var(--mrd-petrol-400);
+    --mrd-accent-dark-hover: var(--mrd-petrol-300);
+    --mrd-accent-dark-strong: var(--mrd-petrol-200);
+    --mrd-accent-dark-soft: rgb(117 196 210 / 14%);
+    --mrd-accent-fill: var(--mrd-petrol-600);
+    --mrd-accent-fill-hover: var(--mrd-petrol-700);
+  }
+
+  [data-accent="brass"] {
+    --mrd-accent-light: var(--mrd-brass-600);
+    --mrd-accent-light-hover: var(--mrd-brass-700);
+    --mrd-accent-light-strong: var(--mrd-brass-800);
+    --mrd-accent-light-soft: var(--mrd-brass-50);
+    --mrd-accent-dark: var(--mrd-brass-400);
+    --mrd-accent-dark-hover: var(--mrd-brass-300);
+    --mrd-accent-dark-strong: var(--mrd-brass-200);
+    --mrd-accent-dark-soft: rgb(217 177 101 / 14%);
+    --mrd-accent-fill: var(--mrd-brass-600);
+    --mrd-accent-fill-hover: var(--mrd-brass-700);
+  }
+
+  :root,
+  [data-theme],
+  [data-accent] {
+    --mrd-focus-color: var(--mrd-accent);
+    --mrd-focus-ring: inset 0 -1px 0 var(--mrd-accent);
+    --mrd-shadow-accent: var(--mrd-if-light, none) var(--mrd-if-dark, none);
+  }
+}
+
+/* Pafta: signature details that need component CSS (Part B). */
+@layer merid.components {
+  /* Focus: one tokenised outline instead of the hard-coded "2px solid accent" in every component. */
+  [class*="mrd-"]:focus-visible,
+  .demo-focus {
+    outline: var(--mrd-focus-width) var(--mrd-focus-style) var(--mrd-focus-color);
+    outline-offset: var(--mrd-focus-offset);
+  }
+
+  .mrd-input:focus-visible,
+  .mrd-textarea:focus-visible,
+  .mrd-native-select__control:focus-visible {
+    outline: none;
+  }
+
+  .mrd-input:focus,
+  .mrd-textarea:focus,
+  .mrd-native-select__control:focus,
+  .demo-input-focus {
+    border-color: var(--mrd-focus-color);
+    box-shadow: var(--mrd-focus-ring);
+  }
+
+  /* Press: a token, not a hard-coded scale(.97). */
+  .mrd-button:active:not(:disabled, [data-loading], [aria-disabled="true"]),
+  .mrd-icon-button:active,
+  .mrd-dialog__close:active {
+    transform: var(--mrd-press);
+  }
+
+  /* Display and section headings get their own face settings. */
+  .mrd-heading[data-size="display"] {
+    font-family: var(--mrd-font-display);
+    font-stretch: var(--mrd-display-stretch);
+    font-weight: var(--mrd-display-weight);
+    font-variation-settings: var(--mrd-display-axes);
+  }
+
+  .mrd-heading[data-size="h2"] {
+    font-family: var(--mrd-h2-family);
+    font-stretch: var(--mrd-h2-stretch);
+    font-variation-settings: var(--mrd-h2-axes);
+    font-weight: var(--mrd-h2-weight);
+  }
+
+  .mrd-code,
+  .mrd-pin-input__field {
+    font-stretch: var(--mrd-mono-stretch);
+  }
+
+  .mrd-checkbox__icon {
+    border-radius: var(--mrd-radius-xs);
+  }
+
+  /* Badge = map legend key: rectangular, square swatch. */
+  .mrd-badge {
+    border-radius: var(--mrd-radius-xs);
+    height: 20px;
+    padding: 0 6px;
+    font-stretch: 112%;
+    letter-spacing: 0.01em;
+  }
+
+  .mrd-badge__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 0;
+  }
+
+  .mrd-avatar {
+    border-radius: var(--mrd-radius-sm);
+  }
+
+  /* Table = ledger: ink rule top and bottom, ink rule under the header, hairlines between rows. */
+  .mrd-table-frame {
+    border-radius: 0;
+    box-shadow: inset 0 1px 0 var(--mrd-rule), inset 0 -1px 0 var(--mrd-rule);
+    background: transparent;
+  }
+
+  .mrd-table__header {
+    background: transparent;
+    border-bottom-color: var(--mrd-rule);
+    font-size: var(--mrd-label-size);
+    font-stretch: var(--mrd-label-stretch);
+    letter-spacing: var(--mrd-label-tracking);
+    text-transform: var(--mrd-label-transform);
+  }
+
+  .mrd-table__row[data-selected] > :first-child {
+    box-shadow: inset 2px 0 0 var(--mrd-accent);
+  }
+
+  /* Segmented control: drafting tabs, no pill. */
+  .mrd-segmented,
+  .mrd-segmented__item {
+    border-radius: var(--mrd-radius-xs);
+  }
+
+  .mrd-segmented__item[data-state="on"] {
+    box-shadow: 0 0 0 1px var(--mrd-line);
+  }
+
+  /* Sidebar: the active item carries a magenta meridian, not a grey fill. */
+  .mrd-sidebar-nav__item[aria-current="page"] {
+    background: transparent;
+    color: var(--mrd-ink);
+    box-shadow: inset 2px 0 0 var(--mrd-accent);
+    border-radius: 0;
+  }
+
+  .mrd-dialog__title {
+    font-stretch: 112%;
+    letter-spacing: -0.01em;
+  }
+
+  .mrd-dialog__close {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--mrd-line);
+  }
+}
