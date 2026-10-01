@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Button, Kbd, SegmentedControl } from "@meridui/react";
+import { Button, SegmentedControl } from "@meridui/react";
 import type { Dictionary } from "@/lib/i18n";
 import { ACCENTS, DENSITIES, RADII, SCALES, THEMES, type StudioTokens } from "./tokens";
 
@@ -16,19 +16,12 @@ interface StudioControlsProps {
   readonly canReset: boolean;
 }
 
-function Row({ label, hint, id, children }: { label: string; hint?: ReactNode; id?: string; children: ReactNode }) {
+function Row({ label, id, children }: { label: string; id?: string; children: ReactNode }) {
   return (
     <div className="studio-ctl">
-      <div className="studio-ctl__head">
-        <span className="studio-ctl__label" id={id}>
-          {label}
-        </span>
-        {hint ? (
-          <span className="studio-ctl__hint" aria-hidden="true">
-            {hint}
-          </span>
-        ) : null}
-      </div>
+      <span className="studio-ctl__label" id={id}>
+        {label}
+      </span>
       {children}
     </div>
   );
@@ -46,7 +39,7 @@ export function StudioControls({ t, tokens, onChange, onReset, canReset }: Studi
         </Button>
       </div>
 
-      <Row label={t.theme} hint={<Kbd size="sm">T</Kbd>}>
+      <Row label={t.theme}>
         <SegmentedControl
           aria-label={t.theme}
           fullWidth
@@ -56,15 +49,7 @@ export function StudioControls({ t, tokens, onChange, onReset, canReset }: Studi
         />
       </Row>
 
-      <Row
-        label={t.accent}
-        id="studio-accent-label"
-        hint={
-          <>
-            <Kbd size="sm">1</Kbd>–<Kbd size="sm">4</Kbd>
-          </>
-        }
-      >
+      <Row label={t.accent} id="studio-accent-label">
         <div className="studio-swatches" role="radiogroup" aria-labelledby="studio-accent-label">
           {ACCENTS.map((a) => (
             <button
@@ -82,7 +67,7 @@ export function StudioControls({ t, tokens, onChange, onReset, canReset }: Studi
         </div>
       </Row>
 
-      <Row label={t.radius} hint={<Kbd size="sm">R</Kbd>}>
+      <Row label={t.radius}>
         <SegmentedControl
           aria-label={t.radius}
           fullWidth
@@ -92,7 +77,7 @@ export function StudioControls({ t, tokens, onChange, onReset, canReset }: Studi
         />
       </Row>
 
-      <Row label={t.density} hint={<Kbd size="sm">D</Kbd>}>
+      <Row label={t.density}>
         <SegmentedControl
           aria-label={t.density}
           fullWidth

@@ -126,7 +126,6 @@ export function Playground() {
 
       <div className="studio-window">
         <div className="studio-window__bar">
-          <span className="studio-window__address">{t.address}</span>
           {isSplit ? (
             <label className="studio-window__split">
               <span aria-hidden="true">{t.splitPosition}</span>

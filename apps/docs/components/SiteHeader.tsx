@@ -16,13 +16,6 @@ export function SiteHeader({ locale }: { readonly locale: Locale }) {
         <Link href={localizePath("/", locale)} className="site-header__brand" aria-label={t.homeLabel}>
           <Logo />
         </Link>
-        <Link
-          href={localizePath("/docs/changelog", locale)}
-          className="site-header__version"
-          aria-label={t.versionLabel(site.version)}
-        >
-          v{site.version}
-        </Link>
         <HeaderNavLinks />
         <div className="site-header__actions">
           <SearchDialog />

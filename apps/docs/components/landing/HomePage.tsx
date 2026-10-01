@@ -18,47 +18,20 @@ export function HomePage({ locale }: { readonly locale: Locale }) {
       <JsonLd data={[organization(), website(), softwareSourceCode(dict.meta.description)]} />
       <section className="band hero" aria-labelledby="hero-title">
         <div className="frame">
-          <div className="hero__grid">
-            <div>
-              <Link href={href("/docs/changelog")} className="hero__version">
-                <span className="hero__version-tag">v{site.version}</span>
-                <span>{t.releaseBadge}</span>
-                <span aria-hidden="true">→</span>
-              </Link>
-              <h1 id="hero-title">{t.heroTitle}</h1>
-              <p className="hero__lead">{t.heroLead(componentCount)}</p>
-              <div className="hero__actions">
-                <Link href={href("/docs/introduction")} className="btn" data-variant="primary">
-                  {t.getStarted}
-                </Link>
-                <Link href={href("/docs/components")} className="btn" data-variant="secondary">
-                  {t.components}
-                </Link>
-                <div className="install" aria-label={t.installLabel}>
-                  <span className="install__prompt" aria-hidden="true">$</span>
-                  <code>{site.install}</code>
-                  <CopyButton value={site.install} className="install__copy" eventLocation="hero" />
-                </div>
-              </div>
+          <h1 id="hero-title">{t.heroTitle}</h1>
+          <p className="hero__lead">{t.heroLead(componentCount)}</p>
+          <div className="hero__actions">
+            <Link href={href("/docs/introduction")} className="btn" data-variant="primary">
+              {t.getStarted}
+            </Link>
+            <Link href={href("/docs/components")} className="btn" data-variant="secondary">
+              {t.components}
+            </Link>
+            <div className="install" aria-label={t.installLabel}>
+              <span className="install__prompt" aria-hidden="true">$</span>
+              <code>{site.install}</code>
+              <CopyButton value={site.install} className="install__copy" eventLocation="hero" />
             </div>
-            <dl className="hero__spec">
-              <div>
-                <dt>{t.spec.components}</dt>
-                <dd>{componentCount}</dd>
-              </div>
-              <div>
-                <dt>{t.spec.stylesheets}</dt>
-                <dd>1</dd>
-              </div>
-              <div>
-                <dt>{t.spec.layers}</dt>
-                <dd>3</dd>
-              </div>
-              <div>
-                <dt>{t.spec.license}</dt>
-                <dd>MIT</dd>
-              </div>
-            </dl>
           </div>
         </div>
       </section>
@@ -97,12 +70,10 @@ export function HomePage({ locale }: { readonly locale: Locale }) {
             </p>
           </div>
           <ol className="contract">
-            {t.contract.map((c, i) => (
+            {t.contract.map((c) => (
               <li key={c.rule}>
-                <span className="contract__index">{String(i + 1).padStart(2, "0")}</span>
                 <span className="contract__rule">{c.rule}</span>
                 <span className="contract__text">{c.text}</span>
-                <code className="contract__spec">{c.spec}</code>
               </li>
             ))}
           </ol>
@@ -116,28 +87,6 @@ export function HomePage({ locale }: { readonly locale: Locale }) {
             <p>{t.foundationsText}</p>
           </div>
           <FoundationIndex locale={locale} />
-        </div>
-      </section>
-
-      <section className="band" aria-labelledby="release-title">
-        <div className="frame">
-          <div className="release">
-            <div className="release__meta">
-              <h2 id="release-title">{t.releaseTitle}</h2>
-              <p>
-                <code>v{site.version}</code> · <time dateTime={site.releaseDate}>{t.releaseDate}</time>
-              </p>
-              <Link href={href("/docs/changelog")}>{t.changelog}</Link>
-            </div>
-            <ul className="release__list">
-              {t.releaseNotes(componentCount).map(([area, note]) => (
-                <li key={area}>
-                  <span>{area}</span>
-                  <span>{note}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
       </section>
 
