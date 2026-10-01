@@ -21,6 +21,7 @@ import { cx } from "../../internal/ovl-cx";
 import { useControllableState } from "../../internal/ovl-use-controllable-state";
 import { useId } from "../../internal/ovl-use-id";
 import { withRef } from "../../internal/ovl-with-ref";
+import { scrollIntoList } from "../../utils/scroll-into-list";
 import { Dialog } from "../dialog/Dialog";
 import { Shortcut } from "../shortcut/Shortcut";
 import { matchesShortcut, type ShortcutKeyLabels } from "../shortcut/shortcut-keys";
@@ -135,10 +136,12 @@ function CommandRoot({
     }
   });
 
+  // Keep the active item visible by scrolling the list only (scrollIntoView would also scroll the page).
   useEffect(() => {
-    if (active === null || !listRef.current) return;
-    const el = listRef.current.querySelector<HTMLElement>(`[id="${baseId}-item-${encode(active)}"]`);
-    el?.scrollIntoView?.({ block: "nearest" });
+    const list = listRef.current;
+    if (active === null || !list) return;
+    const el = list.querySelector<HTMLElement>(`[id="${baseId}-item-${encode(active)}"]`);
+    if (el) scrollIntoList(list, el);
   }, [active, baseId]);
 
   const selectValue = useCallback((value: string) => {
