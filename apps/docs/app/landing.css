@@ -23,6 +23,10 @@
 .band__head h2 { grid-column: 1 / span 6; font-size: clamp(30px, 3.3vw, 46px); line-height: 1.06; text-wrap: balance; }
 .band__head p { grid-column: 8 / -1; max-width: 34em; color: var(--mrd-body); font-size: var(--mrd-text-md); line-height: 1.6; }
 .band__head a { font-weight: var(--mrd-weight-medium); white-space: nowrap; }
+/* Links inside running text are underlined, not told apart by colour alone. */
+.band__head p a, .closing__release a {
+  text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 45%, transparent); text-underline-offset: 3px;
+}
 
 /* Hero */
 .hero { border-bottom-color: var(--mrd-rule); }
