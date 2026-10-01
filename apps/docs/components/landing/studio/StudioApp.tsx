@@ -109,9 +109,10 @@ export function StudioApp({ t, state, onChange, mirror = false }: StudioAppProps
                 <Table density="sm" aria-label={t.tableLabel}>
                   <TableHead>
                     <TableRow>
-                      <TableHeader>{t.columns.commit}</TableHeader>
+                      {/* Git terms stay English in every locale; lang keeps upper-case labels correct. */}
+                      <TableHeader lang="en">{t.columns.commit}</TableHeader>
                       <TableHeader>{t.columns.status}</TableHeader>
-                      <TableHeader className="studio-app__col-branch">{t.columns.branch}</TableHeader>
+                      <TableHeader lang="en" className="studio-app__col-branch">{t.columns.branch}</TableHeader>
                       <TableHeader align="end">{t.columns.age}</TableHeader>
                     </TableRow>
                   </TableHead>

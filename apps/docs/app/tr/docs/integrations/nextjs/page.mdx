@@ -24,7 +24,7 @@ export const viewport: Viewport = {
   // Açık ve koyu temada --mrd-bg ile eşleşir; mobil tarayıcı arayüzü sayfayla bütünleşir.
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b0d12" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d0e10" },
   ],
 };
 
@@ -94,7 +94,7 @@ Overlay tetikleyicileri (`Dialog.Trigger`, `Popover.Trigger`, `DropdownMenu.Trig
 
 ## Fontlar
 
-Merid, Geist ve Geist Mono'yu paketinde taşır ve stil dosyasındaki `@font-face` ile yükler; başka bir şey gerekmez. Bunun yerine `next/font` kullanmak için (kendi sunucunda barınan, önceden yüklenen, layout kayması olmayan) token'ları onun değişkenine yönlendir:
+Merid, Archivo ve Chivo Mono'yu paketinde taşır ve stil dosyasındaki `@font-face` ile yükler; başka bir şey gerekmez. Bunun yerine `next/font` kullanmak için (kendi sunucunda barınan, önceden yüklenen, layout kayması olmayan) token'ları onun değişkenine yönlendir:
 
 ```tsx
 import { Inter } from "next/font/google";
@@ -110,7 +110,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 }
 ```
 
-Tarayıcılar yalnızca kullanılan font dosyalarını indirir; token başka bir yeri gösterdiği anda paketteki Geist dosyaları hiç istenmez.
+Tarayıcılar yalnızca kullanılan font dosyalarını indirir; token başka bir yeri gösterdiği anda paketteki Archivo ve Chivo Mono dosyaları hiç istenmez.
 
 ## Yanıp sönmeden dark mode
 

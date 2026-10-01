@@ -6,7 +6,7 @@ export const metadata = docMetadata("en", "/docs/installation", {
 
 # Installation
 
-Merid is published as a single package, `@meridui/react`. It contains the components, the stylesheet and the bundled Geist and Geist Mono variable fonts.
+Merid is published as a single package, `@meridui/react`. It contains the components, the stylesheet and the bundled Archivo and Chivo Mono fonts.
 
 ## Quick start with the CLI
 
@@ -84,7 +84,7 @@ createRoot(document.getElementById("root")!).render(<App />);
 
 ## Font
 
-Geist and Geist Mono variable fonts are bundled (`@meridui/react/fonts/Geist-Variable.woff2` and `GeistMono-Variable.woff2`) and loaded through `@font-face` from the package. Browsers only download a font when text uses it, so if you set your own family the file is never requested:
+Archivo and Chivo Mono are bundled as variable woff2 files (`@meridui/react/fonts/Archivo-latin.woff2`, `ChivoMono-latin.woff2` and their `-latin-ext` subsets for Turkish and other Latin languages) and loaded through `@font-face` from the package. Browsers only download a font when text uses it, so if you set your own family the file is never requested:
 
 ```css
 :root {
@@ -93,5 +93,5 @@ Geist and Geist Mono variable fonts are bundled (`@meridui/react/fonts/Geist-Var
 ```
 
 <Callout title="Licence">
-  Geist and Geist Mono (© Vercel) are distributed under the SIL Open Font License 1.1. The licence text (`GEIST-LICENSE.txt`) ships in the package next to the font files.
+  Archivo (© The Archivo Project Authors) and Chivo Mono (© The Chivo Project Authors) are distributed under the SIL Open Font License 1.1. The licence texts (`ARCHIVO-OFL.txt`, `CHIVO-MONO-OFL.txt`) ship in the package next to the font files.
 </Callout>

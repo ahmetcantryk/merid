@@ -6,9 +6,24 @@ import { trackAttrs } from "@/lib/analytics";
 import { JsonLd, organization, softwareSourceCode, website } from "@/lib/seo/jsonld";
 import { site } from "@/lib/site";
 import { ComponentIndex } from "./ComponentIndex";
-import { FoundationIndex } from "./FoundationIndex";
+import { HeroMap } from "./HeroMap";
 import { Playground } from "./Playground";
 
+/** Where each of the six rules is explained, in the order of `landing.contract`. */
+const RULE_PAGES = [
+  "/docs/foundations/color",
+  "/docs/foundations/elevation",
+  "/docs/foundations/radius",
+  "/docs/foundations/typography",
+  "/docs/foundations/motion",
+  "/docs/styling",
+] as const;
+
+/**
+ * The landing page, laid out as one map sheet: a 12-column grid between two rails, every band
+ * closed by a full-width rule, every heading on the same left edge. The hero carries the only
+ * picture, a contour map crossed by the meridian.
+ */
 export function HomePage({ locale }: { readonly locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.landing;
@@ -16,147 +31,101 @@ export function HomePage({ locale }: { readonly locale: Locale }) {
   return (
     <div className="board">
       <JsonLd data={[organization(), website(), softwareSourceCode(dict.meta.description)]} />
+
       <section className="band hero" aria-labelledby="hero-title">
-        <div className="frame">
-          <div className="hero__grid">
-            <div>
-              <Link href={href("/docs/changelog")} className="hero__version">
-                <span className="hero__version-tag">v{site.version}</span>
-                <span>{t.releaseBadge}</span>
-                <span aria-hidden="true">→</span>
+        <div className="frame hero__grid">
+          <div className="hero__copy">
+            <h1 id="hero-title" className="hero__title t-display">
+              {t.heroTitle}
+            </h1>
+            <p className="hero__lead">{t.heroLead(componentCount)}</p>
+            <div className="hero__actions">
+              <Link href={href("/docs/introduction")} className="btn" data-variant="primary" data-size="lg">
+                {t.getStarted}
               </Link>
-              <h1 id="hero-title">{t.heroTitle}</h1>
-              <p className="hero__lead">{t.heroLead(componentCount)}</p>
-              <div className="hero__actions">
-                <Link href={href("/docs/introduction")} className="btn" data-variant="primary">
-                  {t.getStarted}
-                </Link>
-                <Link href={href("/docs/components")} className="btn" data-variant="secondary">
-                  {t.components}
-                </Link>
-                <div className="install" aria-label={t.installLabel}>
-                  <span className="install__prompt" aria-hidden="true">$</span>
-                  <code>{site.install}</code>
-                  <CopyButton value={site.install} className="install__copy" eventLocation="hero" />
-                </div>
+              <div className="install" aria-label={t.installLabel}>
+                <code>{site.install}</code>
+                <CopyButton value={site.install} className="install__copy" eventLocation="hero" />
               </div>
             </div>
-            <dl className="hero__spec">
-              <div>
-                <dt>{t.spec.components}</dt>
-                <dd>{componentCount}</dd>
-              </div>
-              <div>
-                <dt>{t.spec.stylesheets}</dt>
-                <dd>1</dd>
-              </div>
-              <div>
-                <dt>{t.spec.layers}</dt>
-                <dd>3</dd>
-              </div>
-              <div>
-                <dt>{t.spec.license}</dt>
-                <dd>MIT</dd>
-              </div>
-            </dl>
           </div>
+          <HeroMap />
         </div>
       </section>
 
       <section className="band" aria-labelledby="playground-title">
         <div className="frame">
-          <div className="band__head">
-            <h2 id="playground-title">{t.playgroundTitle}</h2>
+          <header className="band__head">
+            <h2 id="playground-title" className="t-title">{t.playgroundTitle}</h2>
             <p>{t.playgroundText}</p>
-          </div>
+          </header>
           <Playground />
         </div>
       </section>
 
       <section className="band" aria-labelledby="index-title">
         <div className="frame">
-          <div className="band__head">
-            <h2 id="index-title">
+          <header className="band__head">
+            <h2 id="index-title" className="t-title">
               {t.indexTitle(componentCount)}
-              <span className="band__head-muted">{t.indexTitleMuted}</span>
+              {t.indexTitleMuted}
             </h2>
             <p>
               {t.indexText} <Link href={href("/docs/components")}>{t.indexLink}</Link>
             </p>
-          </div>
+          </header>
           <ComponentIndex locale={locale} />
         </div>
       </section>
 
       <section className="band" aria-labelledby="contract-title">
         <div className="frame">
-          <div className="band__head">
-            <h2 id="contract-title">{t.contractTitle}</h2>
+          <header className="band__head">
+            <h2 id="contract-title" className="t-title">{t.contractTitle}</h2>
             <p>
               {t.contractText} <Link href={href("/docs/foundations/principles")}>{t.contractLink}</Link>
             </p>
-          </div>
-          <ol className="contract">
+          </header>
+          <ol className="ledger rules">
             {t.contract.map((c, i) => (
-              <li key={c.rule}>
-                <span className="contract__index">{String(i + 1).padStart(2, "0")}</span>
-                <span className="contract__rule">{c.rule}</span>
-                <span className="contract__text">{c.text}</span>
-                <code className="contract__spec">{c.spec}</code>
+              <li key={c.rule} className="ledger__row">
+                <div className="rules__head">
+                  <Link href={href(RULE_PAGES[i] ?? "/docs/foundations/principles")} className="rules__name">
+                    {c.rule}
+                  </Link>
+                  <code className="rules__spec">{c.spec}</code>
+                </div>
+                <p className="rules__text">{c.text}</p>
               </li>
             ))}
           </ol>
         </div>
       </section>
 
-      <section className="band" aria-labelledby="foundations-title">
-        <div className="frame">
-          <div className="band__head">
-            <h2 id="foundations-title">{t.foundationsTitle}</h2>
-            <p>{t.foundationsText}</p>
-          </div>
-          <FoundationIndex locale={locale} />
-        </div>
-      </section>
-
-      <section className="band" aria-labelledby="release-title">
-        <div className="frame">
-          <div className="release">
-            <div className="release__meta">
-              <h2 id="release-title">{t.releaseTitle}</h2>
-              <p>
-                <code>v{site.version}</code> · <time dateTime={site.releaseDate}>{t.releaseDate}</time>
-              </p>
-              <Link href={href("/docs/changelog")}>{t.changelog}</Link>
-            </div>
-            <ul className="release__list">
-              {t.releaseNotes(componentCount).map(([area, note]) => (
-                <li key={area}>
-                  <span>{area}</span>
-                  <span>{note}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
       <section className="band band--end" aria-label={t.closingLabel}>
-        <div className="frame">
-          <div className="closing">
-            <p className="closing__cmd">
-              <span aria-hidden="true">$ </span>
-              {site.install}
-            </p>
+        <div className="frame closing">
+          <p className="closing__cmd">{site.install}</p>
+          <div className="closing__body">
             <p className="closing__text">{t.closingText}</p>
             <div className="hero__actions">
-              <Link href={href("/docs/installation")} className="btn" data-variant="primary">
+              <Link href={href("/docs/installation")} className="btn" data-variant="primary" data-size="lg">
                 {t.installation}
               </Link>
-              <a href={site.repo} className="btn" data-variant="secondary" {...trackAttrs("github_click", { location: "hero" })}>
+              <a
+                href={site.repo}
+                className="btn"
+                data-variant="secondary"
+                data-size="lg"
+                {...trackAttrs("github_click", { location: "hero" })}
+              >
                 GitHub
               </a>
             </div>
+            <p className="closing__release">
+              v{site.version}, {t.releaseBadge.toLocaleLowerCase(locale)},{" "}
+              <time dateTime={site.releaseDate}>{t.releaseDate}</time>.{" "}
+              <Link href={href("/docs/changelog")}>{t.changelog}</Link>
+            </p>
           </div>
         </div>
       </section>

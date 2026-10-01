@@ -56,7 +56,7 @@ function verification(): Metadata["verification"] {
 /** Root-layout metadata shared by every page of a locale. */
 export function rootMetadata(locale: Locale): Metadata {
   const dict = getDictionary(locale);
-  const title = `${site.name} — ${dict.meta.tagline}`;
+  const title = `${site.name}: ${dict.meta.tagline}`;
   return {
     metadataBase: new URL(site.url),
     title: { default: title, template: `%s — ${site.name}` },

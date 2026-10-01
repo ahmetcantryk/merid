@@ -7,9 +7,7 @@
   <img src="apps/docs/public/brand/logo-light.svg" alt="Merid" width="220">
 </picture>
 
-<h3>Quiet, precise components for React.</h3>
-
-<p>60+ accessible components · plain CSS · design tokens · server-component friendly</p>
+<h3>React components that don’t fight your CSS.</h3>
 
 <p>
   <a href="https://github.com/ahmetcantryk/merid/actions/workflows/ci.yml"><img src="https://github.com/ahmetcantryk/merid/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
@@ -31,46 +29,23 @@
 
 </div>
 
-Merid is an accessible React component library written in **plain CSS** and a small set of **design tokens**. Ink rules and a single magenta accent, both borrowed from map-making, so your product reads as *considered*, not decorated.
+Merid is an open source React component library. Its 60+ components are styled with one **plain CSS** file, and every rule sits in a cascade layer, so your own CSS overrides it without `!important`. The design rules, from the 1px borders to the corners that get smaller as surfaces nest, are written down in [DESIGN.md](DESIGN.md). The docs at [meridui.dev](https://meridui.dev) are complete in English and [Turkish](https://meridui.dev/tr).
 
-> The name comes from ***meridian*** — a thin, precise reference line.
+The name comes from ***meridian***, a thin reference line.
 
 <br>
 
-## Why Merid
+## Decisions
 
-<table>
-  <tr>
-    <td width="50%" valign="top">
-      <h4>Accessible by default</h4>
-      WCAG 2.2 AA target, WAI-ARIA patterns, full keyboard support, visible focus and reduced motion. An axe suite runs on every change.
-    </td>
-    <td width="50%" valign="top">
-      <h4>Plain CSS, your CSS wins</h4>
-      One stylesheet in three cascade layers. Override anything without <code>!important</code>. No runtime styling, no build plugin.
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <h4>Tokens all the way down</h4>
-      Every value is a <code>--mrd-*</code> custom property with light and dark values — ship as CSS or JS via <code>@meridui/tokens</code>.
-    </td>
-    <td width="50%" valign="top">
-      <h4>Server-component friendly</h4>
-      Static parts render on the server; interactive modules carry <code>"use client"</code>. Import any component straight into an RSC.
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <h4>Scoped themes</h4>
-      Dark mode, accent presets, density and direction — per app or per subtree. Portals inherit the scope they came from.
-    </td>
-    <td width="50%" valign="top">
-      <h4>RTL &amp; forced colors</h4>
-      Logical properties throughout, mirrored keyboard navigation, and a first-class Windows High Contrast experience.
-    </td>
-  </tr>
-</table>
+**The stylesheet stays out of your way.** One file, three cascade layers (`merid.tokens`, `merid.base`, `merid.components`). Anything you write outside them wins, so a component is restyled with ordinary CSS. There is no runtime styling and no build plugin.
+
+**Every value is a token.** Colours, spacing, radii, type and motion are `--mrd-*` custom properties with light and dark values. `@meridui/tokens` publishes the same values as CSS and typed JS.
+
+**Themes are attributes.** Dark mode, the accent preset, density and text direction are `data-*` attributes and `dir`, so they apply to a whole app or to one panel. Portalled overlays keep the scope they were opened from.
+
+**Server components work as they are.** Static parts render on the server and interactive modules carry `"use client"`, so any component can be imported straight into a React Server Component.
+
+**Accessibility is checked on every change.** Interactive parts follow the WAI-ARIA keyboard patterns, focus is always visible and reduced motion is respected. An axe suite runs in CI on every pull request, in light and dark, in English and Turkish. Logical properties make right-to-left layouts work, and Windows contrast themes get system-colour borders and focus outlines.
 
 <br>
 
@@ -105,7 +80,7 @@ export function DeleteProject({ onDelete }: { onDelete: () => void }) {
 }
 ```
 
-One stylesheet import. No theme provider — only toasts need a <code>ToastProvider</code>.
+One stylesheet import and no theme provider. Only toasts need a <code>ToastProvider</code>.
 
 <br>
 
@@ -181,7 +156,7 @@ One stylesheet import. No theme provider — only toasts need a <code>ToastProvi
 | **Layout** | Container · Section · Stack · Grid · ScrollArea · Separator |
 | **Typography** | Heading · Text · VisuallyHidden |
 
-Every component has a page with live examples, props and keyboard notes at **[meridui.dev](https://meridui.dev)**, in English and [Turkish](https://meridui.dev/tr).
+Every component has a page with live examples, props and accessibility notes at **[meridui.dev](https://meridui.dev)**, in English and [Turkish](https://meridui.dev/tr).
 
 ## Use it with AI
 
@@ -203,7 +178,7 @@ Themes are plain attributes, so they scope to any subtree.
 </div>
 ```
 
-Need to go deeper? Override tokens in your own CSS — it always wins over Merid's layers:
+To go further, override tokens in your own CSS. It always wins over Merid's layers:
 
 ```css
 :root {
@@ -227,8 +202,7 @@ Need to go deeper? Override tokens in your own CSS — it always wins over Merid
 
 ## Works with
 
-**Next.js** (App Router & RSC) · **Vite** · **React Router** · **Tailwind** · **React Hook Form** · **Zod**
-&nbsp;—&nbsp; see [`examples/`](examples) for a Next.js app and a Vite dashboard.
+**Next.js** (App Router & RSC) · **Vite** · **React Router** · **Tailwind** · **React Hook Form** · **Zod**. The [`examples/`](examples) folder has a Next.js app and a Vite dashboard.
 
 **Browsers:** Chrome & Edge 111+ · Firefox 113+ · Safari 16.4+ &nbsp;·&nbsp; **React:** 18.2 and 19
 
@@ -243,7 +217,7 @@ npm test           # unit + SSR
 npm run test:e2e   # a11y, interactions, playground
 ```
 
-Contributions are welcome — read [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md) first. Security issues go through [SECURITY.md](SECURITY.md), not public issues.
+Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md) first. Report security issues privately, as described in [SECURITY.md](SECURITY.md).
 
 <br>
 
@@ -254,6 +228,6 @@ Contributions are welcome — read [CONTRIBUTING.md](CONTRIBUTING.md) and the [C
   <img src="apps/docs/public/brand/mark-light.svg" alt="" width="40">
 </picture>
 
-<sub>[MIT](LICENSE) © 2026 Ahmet Can Tiryaki · Archivo & Chivo Mono © The Archivo and Chivo Project Authors, bundled under the SIL OFL 1.1 — see [NOTICE](NOTICE)</sub>
+<sub>[MIT](LICENSE) © 2026 Ahmet Can Tiryaki · Archivo and Chivo Mono are bundled under the SIL OFL 1.1, see [NOTICE](NOTICE)</sub>
 
 </div>

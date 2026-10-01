@@ -6,13 +6,13 @@
  * the current settings resolve to that differs from the defaults.
  */
 export const ACCENTS = [
-  { id: "blue", key: "1" },
-  { id: "violet", key: "2" },
-  { id: "green", key: "3" },
+  { id: "magenta", key: "1" },
+  { id: "petrol", key: "2" },
+  { id: "brass", key: "3" },
   { id: "graphite", key: "4" },
 ] as const;
 export const DENSITIES = ["compact", "default", "comfortable"] as const;
-export const RADII = ["none", "tight", "default", "round"] as const;
+export const RADII = ["none", "default", "soft", "round"] as const;
 export const SCALES = ["90", "100", "110"] as const;
 export const THEMES = ["light", "dark", "split"] as const;
 
@@ -30,54 +30,54 @@ export interface StudioTokens {
   readonly scale: ScaleId;
 }
 
-export const DEFAULT_TOKENS: StudioTokens = { theme: "light", accent: "blue", density: "default", radius: "default", scale: "100" };
+export const DEFAULT_TOKENS: StudioTokens = { theme: "light", accent: "magenta", density: "default", radius: "default", scale: "100" };
 
 type VarMap = Readonly<Record<string, string>>;
 
 const NEUTRAL_DARK: VarMap = {
-  "--mrd-bg": "#0b0d12",
-  "--mrd-surface": "#12151c",
-  "--mrd-tray": "#161a22",
-  "--mrd-tray-2": "#1d222c",
-  "--mrd-subtle": "#10131a",
-  "--mrd-line": "#262b35",
-  "--mrd-line-strong": "#3a404c",
-  "--mrd-ink": "#eef0f4",
-  "--mrd-body": "#a3a9b5",
-  "--mrd-muted": "#858c98",
-  "--mrd-placeholder": "#7c8390",
-  "--mrd-control-off": "#343a46",
-  "--mrd-elevated-ring": "0 0 0 1px var(--mrd-line)",
+  "--mrd-bg": "#0d0e10",
+  "--mrd-surface": "#141518",
+  "--mrd-tray": "#181a1d",
+  "--mrd-tray-2": "#202225",
+  "--mrd-subtle": "#111214",
+  "--mrd-line": "#292b2f",
+  "--mrd-line-strong": "#3f4348",
+  "--mrd-ink": "#eef0f3",
+  "--mrd-body": "#b7bbc1",
+  "--mrd-muted": "#9a9fa6",
+  "--mrd-placeholder": "#989ca2",
+  "--mrd-control-off": "#35383d",
+  "--mrd-rule": "#eef0f3",
 };
 const NEUTRAL_LIGHT: VarMap = {
-  "--mrd-bg": "#fff",
-  "--mrd-surface": "#fff",
-  "--mrd-tray": "#f5f6f8",
-  "--mrd-tray-2": "#eceef2",
-  "--mrd-subtle": "#fbfbfc",
-  "--mrd-line": "#e6e8ec",
-  "--mrd-line-strong": "#cfd4dc",
-  "--mrd-ink": "#0f1219",
-  "--mrd-body": "#535a67",
-  "--mrd-muted": "#646b78",
-  "--mrd-placeholder": "#6e7581",
-  "--mrd-control-off": "#d7dbe2",
-  "--mrd-elevated-ring": "0 0 0 0 transparent",
+  "--mrd-bg": "#ffffff",
+  "--mrd-surface": "#ffffff",
+  "--mrd-tray": "#f4f6f8",
+  "--mrd-tray-2": "#ebedf0",
+  "--mrd-subtle": "#f9fafc",
+  "--mrd-line": "#dde0e3",
+  "--mrd-line-strong": "#babec3",
+  "--mrd-ink": "#121417",
+  "--mrd-body": "#474b51",
+  "--mrd-muted": "#5f636a",
+  "--mrd-placeholder": "#64686d",
+  "--mrd-control-off": "#ced1d5",
+  "--mrd-rule": "#121417",
 };
 
 /** Resolved `--mrd-accent*` per preset and mode. */
 const ACCENT_VALUES: Record<AccentId, { light: VarMap; dark: VarMap }> = {
-  blue: {
-    light: { "--mrd-accent": "#3f63f5", "--mrd-accent-hover": "#3355e6", "--mrd-accent-strong": "#2c46b8", "--mrd-accent-soft": "#eef1ff", "--mrd-accent-solid": "#3f63f5" },
-    dark: { "--mrd-accent": "#6b8aff", "--mrd-accent-hover": "#8aa2ff", "--mrd-accent-strong": "#a9bbff", "--mrd-accent-soft": "rgb(107 138 255 / 14%)", "--mrd-accent-solid": "#3f63f5" },
+  magenta: {
+    light: { "--mrd-accent": "#b20965", "--mrd-accent-hover": "#990155", "--mrd-accent-strong": "#830549", "--mrd-accent-soft": "#fef0f4", "--mrd-accent-solid": "#b20965" },
+    dark: { "--mrd-accent": "#ef86ae", "--mrd-accent-hover": "#f7a0bf", "--mrd-accent-strong": "#fcbfd3", "--mrd-accent-soft": "rgb(239 134 174 / 16%)", "--mrd-accent-solid": "#b20965" },
   },
-  violet: {
-    light: { "--mrd-accent": "#6e4ef0", "--mrd-accent-hover": "#5f3fdc", "--mrd-accent-strong": "#4a2eb0", "--mrd-accent-soft": "#f3f0ff", "--mrd-accent-solid": "#6e4ef0" },
-    dark: { "--mrd-accent": "#9d85ff", "--mrd-accent-hover": "#b09cff", "--mrd-accent-strong": "#c6b8ff", "--mrd-accent-soft": "rgb(157 133 255 / 14%)", "--mrd-accent-solid": "#6e4ef0" },
+  petrol: {
+    light: { "--mrd-accent": "#035f73", "--mrd-accent-hover": "#025061", "--mrd-accent-strong": "#044553", "--mrd-accent-soft": "#e9f6f9", "--mrd-accent-solid": "#035f73" },
+    dark: { "--mrd-accent": "#75c4d2", "--mrd-accent-hover": "#95d3df", "--mrd-accent-strong": "#b6e0e8", "--mrd-accent-soft": "rgb(117 196 210 / 14%)", "--mrd-accent-solid": "#035f73" },
   },
-  green: {
-    light: { "--mrd-accent": "#13804d", "--mrd-accent-hover": "#0f6e42", "--mrd-accent-strong": "#0c5734", "--mrd-accent-soft": "#e9f8f0", "--mrd-accent-solid": "#13804d" },
-    dark: { "--mrd-accent": "#3ecf8e", "--mrd-accent-hover": "#5ed89d", "--mrd-accent-strong": "#7ee2b0", "--mrd-accent-soft": "rgb(62 207 142 / 12%)", "--mrd-accent-solid": "#13804d" },
+  brass: {
+    light: { "--mrd-accent": "#855c01", "--mrd-accent-hover": "#744e01", "--mrd-accent-strong": "#624003", "--mrd-accent-soft": "#f9f5eb", "--mrd-accent-solid": "#855c01" },
+    dark: { "--mrd-accent": "#d9b165", "--mrd-accent-hover": "#e5c68a", "--mrd-accent-strong": "#ecd9ae", "--mrd-accent-soft": "rgb(217 177 101 / 14%)", "--mrd-accent-solid": "#855c01" },
   },
   graphite: {
     light: { "--mrd-accent": "#3d4350", "--mrd-accent-hover": "#2e333d", "--mrd-accent-strong": "#22262e", "--mrd-accent-soft": "#eef0f3", "--mrd-accent-solid": "#3d4350" },
@@ -91,17 +91,25 @@ const DENSITY_VALUES: Record<DensityId, Readonly<Record<string, number>>> = {
   comfortable: { "--mrd-control-md": 36, "--mrd-input-md": 36, "--mrd-icon-button-md": 32, "--mrd-pill": 32, "--mrd-control-pad-md": 14, "--mrd-input-pad": 12, "--mrd-text-sm": 14.5, "--mrd-text-xs": 13.5 },
 };
 
-const RADIUS_BASE: Readonly<Record<string, number>> = {
-  "--mrd-radius-xs": 4,
-  "--mrd-radius-sm": 6,
-  "--mrd-radius-md": 6,
-  "--mrd-radius-lg": 8,
-  "--mrd-radius-xl": 10,
-  "--mrd-radius-2xl": 12,
-  "--mrd-radius-card": 14,
-  "--mrd-radius-3xl": 16,
+const RADIUS_NAMES = [
+  "--mrd-radius-xs",
+  "--mrd-radius-sm",
+  "--mrd-radius-md",
+  "--mrd-radius-lg",
+  "--mrd-radius-xl",
+  "--mrd-radius-2xl",
+  "--mrd-radius-card",
+  "--mrd-radius-3xl",
+] as const;
+/** Radius steps per option, xs to 3xl. `default` is the library's own scale. */
+const RADIUS_STEPS: Record<RadiusId, readonly number[]> = {
+  none: [0, 0, 0, 0, 0, 0, 0, 0],
+  default: [2, 2, 2, 2, 2, 3, 3, 4],
+  soft: [4, 6, 6, 8, 10, 12, 14, 16],
+  round: [6, 10, 10, 12, 14, 18, 20, 24],
 };
-const RADIUS_FACTOR: Record<RadiusId, number> = { none: 0, tight: 0.5, default: 1, round: 1.5 };
+const radiusMap = (id: RadiusId): Record<string, number> =>
+  Object.fromEntries(RADIUS_NAMES.map((name, i) => [name, RADIUS_STEPS[id][i] ?? 0]));
 
 /** Sizes the type scale multiplies; `--mrd-text-sm` / `-xs` come from the density table. */
 const TEXT_BASE: Readonly<Record<string, number>> = {
@@ -118,7 +126,7 @@ const px = (n: number) => `${Math.round(n * 100) / 100}px`;
 export function stageStyle(t: StudioTokens): Record<string, string> {
   const style: Record<string, string> = {};
   if (t.radius !== "default") {
-    for (const [name, value] of Object.entries(RADIUS_BASE)) style[name] = px(value * RADIUS_FACTOR[t.radius]);
+    for (const [name, value] of Object.entries(radiusMap(t.radius))) style[name] = px(value);
   }
   if (t.scale !== "100") {
     const factor = Number(t.scale) / 100;
@@ -133,7 +141,7 @@ function resolve(t: StudioTokens, mode: "light" | "dark"): Record<string, string
   const out: Record<string, string> = {};
   Object.assign(out, mode === "dark" ? NEUTRAL_DARK : NEUTRAL_LIGHT, ACCENT_VALUES[t.accent][mode]);
   for (const [name, value] of Object.entries(DENSITY_VALUES[t.density])) out[name] = px(value);
-  for (const [name, value] of Object.entries(RADIUS_BASE)) out[name] = px(value);
+  for (const [name, value] of Object.entries(radiusMap("default"))) out[name] = px(value);
   for (const [name, value] of Object.entries(TEXT_BASE)) out[name] = px(value);
   return { ...out, ...stageStyle(t) };
 }

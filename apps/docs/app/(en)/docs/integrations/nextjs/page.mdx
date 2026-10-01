@@ -24,7 +24,7 @@ export const viewport: Viewport = {
   // Matches --mrd-bg in light and dark so mobile browser chrome blends in.
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b0d12" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d0e10" },
   ],
 };
 
@@ -94,7 +94,7 @@ Overlay triggers (`Dialog.Trigger`, `Popover.Trigger`, `DropdownMenu.Trigger`, `
 
 ## Fonts
 
-Merid bundles Geist and Geist Mono and loads them through `@font-face` in its stylesheet, so nothing else is needed. To use `next/font` instead (self-hosted, preloaded, no layout shift), point the tokens at its variable:
+Merid bundles Archivo and Chivo Mono and loads them through `@font-face` in its stylesheet, so nothing else is needed. To use `next/font` instead (self-hosted, preloaded, no layout shift), point the tokens at its variable:
 
 ```tsx
 import { Inter } from "next/font/google";
@@ -110,7 +110,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 }
 ```
 
-Browsers only download faces that are used, so the bundled Geist files are never requested once the token points elsewhere.
+Browsers only download faces that are used, so the bundled Archivo and Chivo Mono files are never requested once the token points elsewhere.
 
 ## Dark mode without a flash
 

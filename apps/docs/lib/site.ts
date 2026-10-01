@@ -2,9 +2,9 @@ import reactPackage from "@meridui/react/package.json";
 
 export const site = {
   name: "Merid",
-  tagline: "Quiet, precise React components.",
+  tagline: "Accessible React components in plain CSS.",
   description:
-    "Merid is an accessible React component library built on plain CSS and a small set of design tokens: 1px hairlines, one cool accent, soft grey trays and calm motion.",
+    "Open source React component library with 60+ accessible components in plain CSS. Your styles override it without !important. Docs in English and Turkish.",
   url: "https://meridui.dev",
   repo: "https://github.com/ahmetcantryk/merid",
   docsSourcePath: "apps/docs/app",

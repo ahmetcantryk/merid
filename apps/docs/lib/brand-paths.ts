@@ -16,4 +16,6 @@ export const lockup = {
   wordTransform: "translate(178.028 72)",
 } as const;
 /** App icon (512 × 512): white wave with accent-strong shadows on the accent tile. */
-export const icon = { tile: "#3f63f5", wave: "#ffffff", shadow: "#2c46b8", transform: "translate(70.4 70.4) scale(0.1813)" } as const;
+export const icon = { tile: "#b20965", wave: "#ffffff", shadow: "#830549", transform: "translate(70.4 70.4) scale(0.1813)" } as const;
+/** Fixed brand colours for images rendered outside the page (Open Graph, app icons), where tokens do not reach. */
+export const brandColors = {"accent":"#b20965","accentStrong":"#830549","ink":"#121417","body":"#474b51","line":"#dde0e3","lineStrong":"#babec3","paper":"#ffffff"} as const;
