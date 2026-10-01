@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- e21a258: New navigation, overlay and data components.
+- New navigation, overlay and data components.
   
   - `Command` (with `Command.Dialog` for a ⌘K palette): searchable, grouped commands with arrow-key navigation, item shortcuts and a live result count.
   - `ContextMenu`: right-click menu that shares DropdownMenu's items, keyboard model and styles. `DropdownMenu` now exports its menu internals for this; its public API is unchanged.
@@ -13,12 +13,12 @@
   - `Shortcut` plus `formatShortcut` / `matchesShortcut`: platform-aware key combinations (`mod` is ⌘ on macOS, Ctrl elsewhere) built from `Kbd`.
   
   Every screen-reader string is a prop with an English default, and every compound part has a flat export for server components.
-- 7987cbd: Form and input components, and translatable screen reader text.
+- Form and input components, and translatable screen reader text.
   
   - New components: `Combobox` (searchable, single or multiple, async options), `Calendar` (keyboard grid, min/max, disabled days, `Intl` locales with the locale's week start), `DatePicker` (typed field + calendar popover, single day or range), `Slider` (single or range, steps, keyboard, RTL), `NumberInput` (steppers, min/max/step, `Intl.NumberFormat` formatting and parsing), `Toggle`, `ToggleGroup` / `ToggleGroupItem`, `PinInput` (one-time codes, paste and autofill) and `FileUpload` (accessible dropzone with validation).
   - Every screen reader string in the new components can be replaced through props (e.g. `previousMonthLabel`, `incrementLabel`, `getCellLabel`, `getRemoveLabel`, `getStatusText`).
   - `ToastProvider` `dismissLabel`, `Link` `externalLabel` and `AvatarGroup` `formatOverflowLabel` replace hard-coded English text. Defaults are unchanged.
-- a6a31d2: Layering, server components, router links and accessibility.
+- Layering, server components, router links and accessibility.
   
   - Floating content (Popover, DropdownMenu, Select) now uses a new `--mrd-z-popover` (105) above `--mrd-z-overlay` (100), so it works inside Dialog and Drawer.
   - Flat exports for every compound part (`DialogRoot`, `DialogContent`, `TabsList`, `StepperRoot`, `StepperStep`, …) for use in React Server Component files.
@@ -34,4 +34,5 @@
 
 ### Patch Changes
 
-- 0a289da: Breadcrumb renders in server components again: the internal ref helper no longer carries a `"use client"` boundary.
+- Breadcrumb renders in server components again: the internal ref helper no longer carries a `"use client"` boundary.
+- `Command` keeps the active item in view by scrolling its own list, so an open command list no longer scrolls the page.
