@@ -59,9 +59,9 @@
     "zod": "^4.2.0"
   },
   "devDependencies": {
-    "@modelcontextprotocol/client": "^2.2.0",
-    "@types/node": "^26.6.3",
-    "publint": "^0.3.24",
+    "@modelcontextprotocol/client": "^2.3.0",
+    "@types/node": "^26.6.4",
+    "publint": "^0.3.25",
     "typescript": "^6.0.3",
     "vitest": "^5.0.2"
   },
