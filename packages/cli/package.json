@@ -55,8 +55,8 @@
     "publint": "publint"
   },
   "devDependencies": {
-    "@types/node": "^26.6.3",
-    "publint": "^0.3.24",
+    "@types/node": "^26.6.5",
+    "publint": "^0.3.25",
     "typescript": "^6.0.3",
     "vitest": "^5.0.2"
   },
